@@ -17,7 +17,7 @@ function Publications() {
   });
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div style={{ padding: "0" }}>
       <h2>This is Publications page</h2>
       <div>
         <label htmlFor="year-select">絞り込み (Year): </label>
