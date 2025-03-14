@@ -27,6 +27,17 @@
   background-color: var(--header-text);
 }
 
+/* オーバーレイ要素のスタイル */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 半透明の黒 */
+  z-index: 5; /* 基本的な背景用 */
+}
+
 /* メニューリンク（PC用） */
 .nav-links {
   display: flex;
@@ -78,6 +89,7 @@
     background-color: var(--header-bg);
     padding-top: 1rem;
     overflow-y: auto;   /* メニューがはみ出た場合はスクロールバーを表示 */
+    z-index: 10; /* オーバーレイより上に表示 */
   }
   
   /* メニューが開いたとき */
