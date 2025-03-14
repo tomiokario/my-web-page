@@ -3,6 +3,7 @@
 ```
 my-react-site/
   ├─ public/
+  │   ├─ manifest.json    # PWA用（スマートフォン等でホーム画面に追加した際のアイコンやUI等）の設定
   │   └─ index.html
   ├─ src/
   │   ├─ components/
