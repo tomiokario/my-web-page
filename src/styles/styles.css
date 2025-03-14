@@ -1,7 +1,11 @@
 /* src/styles.css */
 body {
+  /* マージン・パディングをリセット */
   margin: 0;
   padding: 0;
+  /* フォント */
   font-family: 'Noto Sans JP', sans-serif;
+  /* 背景色 */
   background-color: #fff;
 }
+
