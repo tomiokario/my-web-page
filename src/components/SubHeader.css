@@ -1,14 +1,14 @@
 /* src/components/SubHeader.css */
 .subheader {
-  background-color: var(--accent-bg); /* ベージュ色 */
+  background-color: var(--accent-bg);
   text-align: center;
-  padding: 1rem 0;
-  margin-bottom: 1rem;
+  padding: 1.5rem 0;
+  margin-bottom: 1.5rem;
 }
 
 .subheader h2 {
   margin: 0;
   font-weight: 600;
   font-size: 1.5rem;
-  color: var(--accent-text); /* ダーク文字色 */
+  color: var(--accent-text);
 }

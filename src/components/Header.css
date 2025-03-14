@@ -5,9 +5,10 @@
 .header {
   background-color: var(--header-bg);
   color: var(--header-text);
-  height: 60px;
+  height: 57px;
   display: flex;
   align-items: center;
+  font-size: 0.9rem;
   padding: 0 1rem;
   position: relative;
 }
@@ -16,12 +17,12 @@
 .hamburger {
   display: none;
   flex-direction: column;
-  gap: 5px;
+  gap: 2px;
   cursor: pointer;
 }
 
 .bar {
-  width: 25px;
+  width: 20px;
   height: 3px;
   background-color: var(--header-text);
 }
@@ -38,11 +39,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 60px; /* ヘッダーと同じ高さ */
-  padding: 0 1rem;
-  color: var(--header-text);
-  text-decoration: none;
-  position: relative;
+  height: 57px; /* ヘッダーと同じ高さ */
+  padding: 0 0.75rem; /* メニュー同士の左右の余白 */
+  color: var(--header-text); /* ヘッダーの文字色 */
+  text-decoration: none;   /* リンク用の装飾(下線)を消す */
+  position: relative;      /* 自分自身を基準にして配置を決める */
+  width: fit-content;
+  justify-content: space-between;
 }
 
 /* PC：選択中リンクに下線を追加 */
@@ -67,14 +70,14 @@
   .nav-links {
     display: none;
     position: fixed;
-    top: 60px;                     /* ヘッダーの下 */
+    top: 57px;                     /* ヘッダーの下 */
     left: 0;
     width: 200px;                  /* メニューの横幅 */
     height: calc(100vh - 60px);      /* ヘッダー下から画面下端まで */
     flex-direction: column;
     background-color: var(--header-bg);
     padding-top: 1rem;
-    overflow-y: auto;
+    overflow-y: auto;   /* メニューがはみ出た場合はスクロールバーを表示 */
   }
   
   /* メニューが開いたとき */
@@ -84,9 +87,10 @@
   
   /* スマホ用メニューリンク：固定高さは解除して、左寄せに */
   .nav-links a {
-    padding: 0.75rem 1rem;
+    width: 100%;  /* メニューの横幅いっぱいに文字設定(色反転)を反映 */
+    padding: 0.75rem 0.75rem;
     border-bottom: 1px solid var(--header-bg);
-    height: auto;
+    height: auto; /* メニューの高さを文字に合わせる */
     justify-content: flex-start;
   }
   
