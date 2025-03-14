@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "A Study on Something",
+    "authors": "Tomioka R., Someone Else",
+    "year": 2022,
+    "journal": "Journal of Example"
+  },
+  {
+    "id": 2,
+    "title": "Another Research Topic",
+    "authors": "Tomioka R., Another Person",
+    "year": 2023,
+    "journal": "Conference on Sample"
+  },
+  {
+    "id": 3,
+    "title": "Yet Another Paper",
+    "authors": "Someone, Tomioka R.",
+    "year": 2023,
+    "journal": "Sample Symposium"
+  }
+]

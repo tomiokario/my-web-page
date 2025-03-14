@@ -1,0 +1,103 @@
+/* src/components/Header.css */
+@import "../styles/variables.css";
+
+/* ヘッダー全体 */
+.header {
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  position: relative;
+}
+
+/* ハンバーガーアイコン（PCでは非表示） */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: var(--header-text);
+}
+
+/* メニューリンク（PC用） */
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+/* PCでは各リンクをヘッダーと同じ高さに固定 */
+.nav-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px; /* ヘッダーと同じ高さ */
+  padding: 0 1rem;
+  color: var(--header-text);
+  text-decoration: none;
+  position: relative;
+}
+
+/* PC：選択中リンクに下線を追加 */
+.nav-links a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 8px;
+  background-color: var(--accent-bg);
+}
+
+/* ----- スマホ用スタイル (768px以下) ----- */
+@media (max-width: 768px) {
+  /* ハンバーガーアイコンを表示 */
+  .hamburger {
+    display: flex;
+  }
+  
+  /* メニューコンテナ：画面左側に固定し、ヘッダー下から画面下端まで背景色を適用 */
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: 60px;                     /* ヘッダーの下 */
+    left: 0;
+    width: 200px;                  /* メニューの横幅 */
+    height: calc(100vh - 60px);      /* ヘッダー下から画面下端まで */
+    flex-direction: column;
+    background-color: var(--header-bg);
+    padding-top: 1rem;
+    overflow-y: auto;
+  }
+  
+  /* メニューが開いたとき */
+  .nav-links.open {
+    display: flex;
+  }
+  
+  /* スマホ用メニューリンク：固定高さは解除して、左寄せに */
+  .nav-links a {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--header-bg);
+    height: auto;
+    justify-content: flex-start;
+  }
+  
+  /* スマホ：PC用の下線は削除 */
+  .nav-links a.active::after {
+    content: none;
+  }
+  
+  /* スマホ：選択中リンクは背景色がベージュ、文字色がダークに反転 */
+  .nav-links a.active {
+    background-color: var(--accent-bg);
+    color: var(--header-bg);
+  }
+}

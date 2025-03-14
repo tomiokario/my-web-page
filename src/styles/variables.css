@@ -1,0 +1,13 @@
+/* src/styles/variables.css */
+:root {
+  /* ヘッダー関連 */
+  --header-bg: #4c4c4c;        /* ヘッダーの背景色（ダーク色） */
+  --header-text: #fff;      /* ヘッダーの通常文字色（白） */
+  /* アクセント：選択中の場合の色（ベージュ） */
+  --accent-bg: #f4f4f4;     /* ベージュ色 */
+  --accent-text: #444;      /* 選択時の文字色（ヘッダー背景と同じ） */
+  
+  /* フッターなど他の部分も必要に応じて追加 */
+  --footer-bg: #4c4c4c;
+  --footer-text: #f4f4f4;
+}

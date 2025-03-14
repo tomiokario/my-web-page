@@ -1,0 +1,8 @@
+/* src/components/Footer.css */
+
+.footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  text-align: center;
+  padding: 0.5rem;
+}
