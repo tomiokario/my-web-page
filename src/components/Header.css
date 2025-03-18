@@ -1,119 +1,160 @@
 /* src/components/Header.css */
 @import "../styles/variables.css";
 
+/* ヘッダーコンテナ */
+.header-container {
+  position: relative;
+}
+
 /* ヘッダー全体 */
 .header {
   background-color: var(--header-bg);
   color: var(--header-text);
   height: 57px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* ヘッダーコンテンツ */
+.header-content {
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
+  justify-content: space-between;
+  height: 100%;
   padding: 0 1rem;
-  position: relative;
 }
 
-/* ハンバーガーアイコン（PCでは非表示） */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 2px;
+/* ロゴ部分 */
+.logo {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--header-text);
+  text-align: center;
+  flex: 1;
+}
+
+/* 右側のスペーサー */
+.spacer {
+  width: 24px; /* ハンバーガーメニューと同じ幅 */
+}
+
+/* ハンバーガーボタン */
+.hamburger-button {
+  background: none;
+  border: none;
+  color: var(--header-text);
   cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.bar {
-  width: 20px;
-  height: 3px;
-  background-color: var(--header-text);
+/* 閉じるボタン */
+.close-button {
+  background: none;
+  border: none;
+  color: var(--header-text);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* オーバーレイ要素のスタイル */
+/* オーバーレイ */
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 半透明の黒 */
-  z-index: 5; /* 基本的な背景用 */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+/* サイドメニュー */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 70%;
+  max-width: 300px;
+  background-color: var(--header-bg);
+  z-index: 20;
+  overflow-y: auto;
+}
+
+/* サイドメニューヘッダー */
+.side-menu-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--header-bg);
+}
+
+/* サイドメニューコンテンツ */
+.side-menu-content {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+}
+
+/* サイドメニューリンク */
+.side-menu-content a {
+  padding: 0.75rem 1rem;
+  color: var(--header-text);
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+  margin: 1px 0;
+}
+
+/* サイドメニュー：選択中リンク */
+.side-menu-content a.active {
+  background-color: var(--accent-bg);
+  color: var(--header-bg);
 }
 
 /* メニューリンク（PC用） */
-.nav-links {
+.nav-links.desktop {
   display: flex;
-  gap: 1rem;
-  margin-left: auto;
+  gap: 2rem;
 }
 
 /* PCでは各リンクをヘッダーと同じ高さに固定 */
-.nav-links a {
+.nav-links.desktop a {
   display: flex;
   align-items: center;
-  justify-content: center;
   height: 57px; /* ヘッダーと同じ高さ */
-  padding: 0 0.75rem; /* メニュー同士の左右の余白 */
+  padding: 0 0.5rem; /* メニュー同士の左右の余白 */
   color: var(--header-text); /* ヘッダーの文字色 */
   text-decoration: none;   /* リンク用の装飾(下線)を消す */
   position: relative;      /* 自分自身を基準にして配置を決める */
-  width: fit-content;
-  justify-content: space-between;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.nav-links.desktop a:hover {
+  opacity: 0.8;
 }
 
 /* PC：選択中リンクに下線を追加 */
-.nav-links a.active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -2px;
-  height: 8px;
-  background-color: var(--accent-bg);
+.nav-links.desktop a.active {
+  position: relative;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
-/* ----- スマホ用スタイル (768px以下) ----- */
-@media (max-width: 768px) {
-  /* ハンバーガーアイコンを表示 */
-  .hamburger {
-    display: flex;
-  }
-  
-  /* メニューコンテナ：画面左側に固定し、ヘッダー下から画面下端まで背景色を適用 */
-  .nav-links {
-    display: none;
-    position: fixed;
-    top: 57px;                     /* ヘッダーの下 */
-    left: 0;
-    width: 200px;                  /* メニューの横幅 */
-    height: calc(100vh - 60px);      /* ヘッダー下から画面下端まで */
-    flex-direction: column;
-    background-color: var(--header-bg);
-    padding-top: 1rem;
-    overflow-y: auto;   /* メニューがはみ出た場合はスクロールバーを表示 */
-    z-index: 10; /* オーバーレイより上に表示 */
-  }
-  
-  /* メニューが開いたとき */
-  .nav-links.open {
-    display: flex;
-  }
-  
-  /* スマホ用メニューリンク：固定高さは解除して、左寄せに */
-  .nav-links a {
-    width: 100%;  /* メニューの横幅いっぱいに文字設定(色反転)を反映 */
-    padding: 0.75rem 0.75rem;
-    border-bottom: 1px solid var(--header-bg);
-    height: auto; /* メニューの高さを文字に合わせる */
-    justify-content: flex-start;
-  }
-  
-  /* スマホ：PC用の下線は削除 */
-  .nav-links a.active::after {
-    content: none;
-  }
-  
-  /* スマホ：選択中リンクは背景色がベージュ、文字色がダークに反転 */
-  .nav-links a.active {
-    background-color: var(--accent-bg);
-    color: var(--header-bg);
-  }
+/* アクティブなリンクの下に下線を追加 */
+.nav-links.desktop a.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;  /* 下線を太くする */
+  background-color: var(--accent-bg);
 }
