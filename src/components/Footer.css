@@ -7,4 +7,7 @@
   font-size: 0.75rem;
   padding-top: 0.7rem;
   padding-bottom: 0.05rem;
+  /* フッターを下部に固定するための追加スタイル */
+  margin-top: auto; /* 上部の余白を自動調整して下部に押し出す */
+  width: 100%; /* 幅を100%に設定 */
 }
