@@ -1,28 +1,33 @@
-ディレクトリ構成
+# ディレクトリ構成
 
 ```
 my-react-site/
   ├─ public/
   │   ├─ manifest.json    # PWA用（スマートフォン等でホーム画面に追加した際のアイコンやUI等）の設定
-  │   └─ index.html
+  │   ├─ index.html
+  │   └─ markdown/        # Markdownコンテンツファイル
+  │       ├─ home.md      # ホームページのコンテンツ
+  │       └─ profilecv.md # プロフィール・CV用のコンテンツ
   ├─ src/
   │   ├─ components/
   │   │   ├─ Header.jsx
   │   │   ├─ Header.css
   │   │   ├─ Footer.jsx
-  │   │   ├─ Header.css
+  │   │   ├─ Footer.css
   │   │   ├─ Sidebar.jsx
   │   │   └─ Sidebar.css
   │   ├─ pages/
-  │   │   ├─ Home.jsx
-  │   │   ├─ ProfileCV.jsx
+  │   │   ├─ Home.jsx     # Markdownを読み込んで表示するコンポーネント
+  │   │   ├─ ProfileCV.jsx # Markdownを読み込んで表示するコンポーネント
   │   │   └─ Publications.jsx
   │   ├─ data/
-  │   │   ├─ homeContent.json
+  │   │   ├─ homeContent.json  # 現在は使用していない（Markdownに移行）
   │   │   └─ publications.json
   │   ├─ styles/
   │   │   ├─ styles.css
   │   │   └─ variables.css
+  │   ├─ utils/
+  │   │   └─ markdownLoader.js # Markdownファイルを読み込むユーティリティ
   │   ├─ App.jsx
   │   └─ index.js
   └─ package.json

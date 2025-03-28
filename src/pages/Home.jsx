@@ -1,28 +1,22 @@
-import React from "react";
-import homeData from "../data/homeContent.json";
+import React, { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import { loadMarkdown } from "../utils/markdownLoader";
 
 function Home() {
-  const { affiliation, lab, contact, accounts } = homeData;
+  const [content, setContent] = useState('# Loading...');
+
+  useEffect(() => {
+    const fetchMarkdown = async () => {
+      const markdownContent = await loadMarkdown('/markdown/home.md');
+      setContent(markdownContent);
+    };
+
+    fetchMarkdown();
+  }, []);
 
   return (
     <div style={{ padding: "0rem" }}>
-      <section>
-        <h3>Affiliation</h3>
-        <p>{affiliation}</p>
-        <p>{lab}</p>
-      </section>
-
-      <section>
-        <h3>Contact</h3>
-        <p>Mail 1: {contact.mail1}</p>
-        <p>Mail 2: {contact.mail2}</p>
-      </section>
-
-      <section>
-        <h3>Accounts</h3>
-        <p>GitHub: {accounts.github}</p>
-        <p>Google Scholar: {accounts.googleScholar}</p>
-      </section>
+      <ReactMarkdown>{content}</ReactMarkdown>
     </div>
   );
 }
