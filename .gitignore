@@ -11,6 +11,9 @@
 # production
 /build
 
+# documents
+docs/cline/
+
 # misc
 .DS_Store
 .env.local
