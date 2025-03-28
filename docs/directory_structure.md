@@ -21,7 +21,6 @@ my-react-site/
   │   │   ├─ ProfileCV.jsx # Markdownを読み込んで表示するコンポーネント
   │   │   └─ Publications.jsx
   │   ├─ data/
-  │   │   ├─ homeContent.json  # 現在は使用していない（Markdownに移行）
   │   │   └─ publications.json
   │   ├─ styles/
   │   │   ├─ styles.css
