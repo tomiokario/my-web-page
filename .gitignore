@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+# cline
+/docs/cline/
+
 # production
 /build
 
