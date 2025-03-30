@@ -58,48 +58,55 @@ test("displays correct page name for profile-cv path", () => {
 
 ### 2. ラッパーアプローチ
 
-テスト対象のコンポーネントをRouter関連のコンポーネントでラップする方法です。
+本プロジェクトで採用しているアプローチです。テスト対象のコンポーネントをRouter関連のコンポーネントでラップする方法です。
 
 ```jsx
+// SubHeader.jsxのテスト例
+import React from "react";
 import { render, screen } from "@testing-library/react";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
-import NavMenu from "../components/NavMenu";
+import "@testing-library/jest-dom";
+import { MemoryRouter } from "react-router-dom";
+import SubHeader from "../components/SubHeader";
 
-test("renders navigation links correctly", () => {
-  render(
-    <BrowserRouter>
-      <NavMenu />
-    </BrowserRouter>
-  );
-  
-  const homeLink = screen.getByRole("link", { name: /home/i });
-  expect(homeLink).toHaveAttribute("href", "/");
-});
+// ラッパーアプローチを使用したテスト
+describe("SubHeader component", () => {
+  // Profile & CVページの場合のテスト
+  test("displays correct page name for profile-cv path", () => {
+    render(
+      <MemoryRouter initialEntries={["/profile-cv"]}>
+        <SubHeader />
+      </MemoryRouter>
+    );
+    const headingElement = screen.getByText("Profile & Curriculum Vitae (CV)");
+    expect(headingElement).toBeInTheDocument();
+  });
 
-test("highlights active link based on current route", () => {
-  // 特定のルートでテストするためにMemoryRouterを使用
-  render(
-    <MemoryRouter initialEntries={["/about"]}>
-      <NavMenu />
-    </MemoryRouter>
-  );
-  
-  const aboutLink = screen.getByRole("link", { name: /about/i });
-  expect(aboutLink).toHaveClass("active");
+  // ホームページの場合のテスト
+  test("displays correct page name for home path", () => {
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <SubHeader />
+      </MemoryRouter>
+    );
+    const headingElement = screen.getByText("冨岡 莉生 (TOMIOKA Rio)");
+    expect(headingElement).toBeInTheDocument();
+  });
 });
 ```
 
 このアプローチの利点：
 - 実際のRouter動作に近いテストができる
 - コンポーネントの内部実装への依存が少ない
+- 実際のコンポーネントをテストできる
 
 欠点：
 - テストのセットアップがやや複雑
 - テストの実行が若干遅くなる可能性がある
+- 依存関係のバージョン管理が必要な場合がある
 
 ### 3. テスト用の簡易版コンポーネントを作成する
 
-本プロジェクトで採用しているアプローチです。コンポーネントのロジックを抽出した簡易版を作成し、外部依存関係を取り除きます。
+コンポーネントのロジックを抽出した簡易版を作成し、外部依存関係を取り除きます。
 
 ```jsx
 // テスト用の簡易版SubHeaderコンポーネント
@@ -217,35 +224,37 @@ test("displays correct theme based on context", () => {
 
 ## 複雑な依存関係を持つコンポーネントのテスト
 
-複数の外部依存関係を持つコンポーネント（例：App.jsx）をテストする場合、テスト用の簡易版コンポーネントを作成するアプローチが特に有効です：
+複数の外部依存関係を持つコンポーネント（例：App.jsx）をテストする場合、ラッパーアプローチが特に有効です：
 
 ```jsx
-// テスト用の簡易版Appコンポーネント
-const TestApp = () => {
-  return (
-    <div data-testid="app-container">
-      <header data-testid="header">Header</header>
-      <div data-testid="subheader">SubHeader</div>
-      <main data-testid="main-content">
-        <div>
-          <div data-testid="route-content">Route Content</div>
-        </div>
-      </main>
-      <footer data-testid="footer">Footer</footer>
-    </div>
-  );
-};
+// App.jsxのテスト例
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import App from "../App";
 
-// テスト
-describe("App component (Test Version)", () => {
+// ラッパーアプローチを使用したテスト
+describe("App component", () => {
+  // 基本的なレンダリングテスト
+  test("renders without crashing", () => {
+    render(<App />);
+  });
+
+  // 主要コンポーネントが存在するかテスト
   test("renders main components", () => {
-    render(<TestApp />);
+    render(<App />);
     
-    // 各コンポーネントが存在することを確認
-    expect(screen.getByTestId("header")).toBeInTheDocument();
-    expect(screen.getByTestId("subheader")).toBeInTheDocument();
-    expect(screen.getByTestId("main-content")).toBeInTheDocument();
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
+    // ヘッダーが存在するか確認
+    const headerElement = screen.getByRole("banner");
+    expect(headerElement).toBeInTheDocument();
+    
+    // メインコンテンツが存在するか確認
+    const mainElement = screen.getByRole("main");
+    expect(mainElement).toBeInTheDocument();
+    
+    // フッターが存在するか確認
+    const footerElement = screen.getByRole("contentinfo");
+    expect(footerElement).toBeInTheDocument();
   });
 });
 ```
