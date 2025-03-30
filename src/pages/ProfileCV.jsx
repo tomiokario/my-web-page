@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import { loadMarkdown } from "../utils/markdownLoader";
 
 function ProfileCV() {
-  const [content, setContent] = useState('# Loading...');
+  const [content, setContent] = useState('Loading...');
 
   useEffect(() => {
     const fetchMarkdown = async () => {
