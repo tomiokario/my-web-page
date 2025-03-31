@@ -1,3 +1,17 @@
+/**
+ * LanguageContextのテスト
+ *
+ * このテストファイルでは、言語切り替え機能を提供するLanguageContextの
+ * 機能をテストします。LanguageContextは、現在の言語設定の管理、
+ * 言語切り替え機能、ローカルストレージへの設定保存などの機能を持っています。
+ *
+ * テスト内容：
+ * 1. デフォルト言語が日本語（ja）であることの確認
+ * 2. ローカルストレージから言語設定を読み込む機能
+ * 3. 言語切り替え機能
+ * 4. 言語設定のローカルストレージへの保存
+ */
+
 import React from "react";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -41,6 +55,7 @@ describe("LanguageContext", () => {
   });
 
   test("provides default language as ja", () => {
+    // テスト内容: LanguageProviderのデフォルト言語が日本語（ja）であることを確認
     render(
       <LanguageProvider>
         <TestComponent />
@@ -51,6 +66,7 @@ describe("LanguageContext", () => {
   });
 
   test("uses saved language from localStorage if available", () => {
+    // テスト内容: ローカルストレージに保存された言語設定（英語）が読み込まれることを確認
     localStorageMock.getItem.mockReturnValueOnce("en");
     
     render(
@@ -63,6 +79,8 @@ describe("LanguageContext", () => {
   });
 
   test("toggles language when toggle function is called", () => {
+    // テスト内容: toggleLanguage関数を呼び出すと言語が切り替わることを確認
+    // 日本語→英語→日本語の順に切り替わることをテスト
     render(
       <LanguageProvider>
         <TestComponent />
@@ -86,6 +104,7 @@ describe("LanguageContext", () => {
   });
 
   test("saves language to localStorage when changed", () => {
+    // テスト内容: 言語を切り替えると、新しい言語設定がローカルストレージに保存されることを確認
     render(
       <LanguageProvider>
         <TestComponent />
