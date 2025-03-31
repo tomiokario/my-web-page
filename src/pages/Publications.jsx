@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useLanguage } from "../contexts/LanguageContext";
 import publicationsData from "../data/publications.json";
 
 function Publications() {
   const [selectedYear, setSelectedYear] = useState("All");
+  const { language } = useLanguage();
 
   // ユニークな年度を抽出
   const years = [
@@ -16,11 +18,14 @@ function Publications() {
     return pub.year === parseInt(selectedYear, 10);
   });
 
+  // 言語に応じたラベル
+  const filterLabel = language === 'ja' ? '絞り込み (年度)' : 'Filter by Year';
+  const allLabel = language === 'ja' ? 'すべて' : 'All';
+
   return (
     <div style={{ padding: "0" }}>
-      <h2>This is Publications page</h2>
       <div>
-        <label htmlFor="year-select">絞り込み (Year): </label>
+        <label htmlFor="year-select">{filterLabel}: </label>
         <select
           id="year-select"
           value={selectedYear}
@@ -28,7 +33,7 @@ function Publications() {
         >
           {years.map((year) => (
             <option key={year} value={year}>
-              {year}
+              {year === "All" ? allLabel : year}
             </option>
           ))}
         </select>

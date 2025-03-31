@@ -63,6 +63,45 @@
   justify-content: center;
 }
 
+/* 言語切り替えボタン */
+.language-switch-button {
+  background: none;
+  border: 1px solid var(--header-text);
+  border-radius: 4px;
+  color: var(--header-text);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background-color 0.2s, color 0.2s;
+  margin-left: 1rem;
+}
+
+.language-switch-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.language-code {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* モバイル用言語切り替えボタン */
+.language-switch-button.mobile {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0;
+  margin: 1rem 0 0 0;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.language-switch-button.mobile span {
+  margin-left: 0.5rem;
+}
+
 /* オーバーレイ */
 .overlay {
   position: fixed;

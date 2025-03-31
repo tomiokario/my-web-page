@@ -1,21 +1,25 @@
 // src/components/SubHeader.jsx
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { useLanguage } from "../contexts/LanguageContext";
+import locales from "../locales";
 import "./SubHeader.css";
 
 function SubHeader() {
   const location = useLocation();
+  const { language } = useLanguage();
+  const t = locales[language]; // 現在の言語に応じたリソースを取得
 
   let pageName = "";
   switch (location.pathname) {
     case "/":
-      pageName = "冨岡 莉生 (TOMIOKA Rio)";
+      pageName = t.subheader.home;
       break;
     case "/profile-cv":
-      pageName = "Profile & Curriculum Vitae (CV)";
+      pageName = t.subheader.profileCV;
       break;
     case "/publications":
-      pageName = "Publications";
+      pageName = t.subheader.publications;
       break;
     default:
       pageName = "";

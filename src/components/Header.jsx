@@ -1,19 +1,22 @@
 // Header.jsx
 import React, { useState, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { Menu, X, Languages } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import locales from "../locales";
 import "./Header.css";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const location = useLocation();
+  const { language, toggleLanguage } = useLanguage();
+  const t = locales[language]; // 現在の言語に応じたリソースを取得
 
   // メニュー項目の定義
   const menuItems = [
-    { path: "/", label: "Home", exact: true },
-    { path: "/profile-cv", label: "Profile・CV" },
-    { path: "/publications", label: "Publications" }
+    { path: "/", label: t.header.home, exact: true },
+    { path: "/profile-cv", label: t.header.profileCV },
+    { path: "/publications", label: t.header.publications }
   ];
 
   // 画面幅に応じてモバイル表示かどうかを判定
@@ -76,6 +79,17 @@ function Header() {
             </nav>
           )}
 
+          {/* 言語切り替えボタン */}
+          <button
+            onClick={toggleLanguage}
+            className="language-switch-button"
+            aria-label={t.languageSwitch.switchTo}
+            title={t.languageSwitch.switchTo}
+          >
+            <Languages size={20} />
+            <span className="language-code">{language === 'ja' ? 'EN' : '日本語'}</span>
+          </button>
+
           {/* 右側のスペース確保（バランス用） */}
           {isMobile && <div className="spacer"></div>}
         </div>
@@ -114,6 +128,16 @@ function Header() {
                   {item.label}
                 </NavLink>
               ))}
+              
+              {/* モバイル用言語切り替えボタン */}
+              <button
+                onClick={toggleLanguage}
+                className="language-switch-button mobile"
+                aria-label={t.languageSwitch.switchTo}
+              >
+                <Languages size={20} />
+                <span>{t.languageSwitch.switchTo}</span>
+              </button>
             </nav>
           </div>
         </>
