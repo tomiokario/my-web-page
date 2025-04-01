@@ -1,6 +1,6 @@
 ### Affiliation
 - Graduate School of Computer Science and Systems Engineering, Kyushu Institute of Technology
-- Takabayashi Lab.: [web page](http://ba84.starfree.jp/index.html)
+- [Takabayashi Lab.](http://ba84.starfree.jp/index.html)
 
 
 ### Contact
