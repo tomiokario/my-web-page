@@ -4,7 +4,7 @@
  * 使用方法:
  * node scripts/convertPublications.js
  *
- * 入力: data/publication_proper_data.csv
+ * 入力: data/publication_data.csv
  * 出力: src/data/publications.json
  */
 
