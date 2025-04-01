@@ -6,3 +6,9 @@
 ### Career
 - April 2023 - March 2024: Kyutech Research Fellow (3rd generation)
 - April 2024 - Present: Kyushu Institute Technology SPRING Scholarship Awardee
+
+### Awards and honors
+- The Institute of Image Information and Television Engineers [第25回・2022年度](https://www.ite.or.jp/contents/awards/yushukenkyu.html) [優秀研究発表賞](https://www.ite.or.jp/content/awards/)（2022/12/22）
+
+### Research-related learning experiences
+- [Horizons in Holography International summer school 17-21  June 2024](https://holohorizons.wixsite.com/home)

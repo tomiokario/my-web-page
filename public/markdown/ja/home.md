@@ -1,10 +1,9 @@
-### 所属（Affiliation）
+### 所属
 - 九州工業大学大学院情報工学府 情報創成工学専攻 博士後期課程
-（Graduate School of Computer Science and Systems Engineering, Kyushu Institute of Technology）
-- 高林研究室（Takabayashi Lab.）: [web page](http://ba84.starfree.jp/index.html)
+- [高林研究室](http://ba84.starfree.jp/index.html)
 
 
-### 連絡先（Contact）
+### 連絡先
 
 - Mail: tomioka.rio288（at）mail.kyutech.jp 
 - Mail: tomioka.rio288（at）gmail.com 
