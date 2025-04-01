@@ -67,7 +67,7 @@ describe('Publications Component', () => {
     renderWithLanguageProvider(<Publications />);
     
     // 現在のコンポーネントが新しいJSONデータ構造でどのように動作しているかを確認
-    const publicationItems = screen.getAllByRole('listitem');
+    const publicationItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
     
     // 少なくとも1つの出版物アイテムが表示されていることを確認
     expect(publicationItems.length).toBeGreaterThan(0);
@@ -81,15 +81,20 @@ describe('Publications Component', () => {
     
     // 出版物の内容が表示されていることを確認
     // 注: 著者とタイトルの分離に依存せず、出版物データの一部が表示されていることを確認
-    expect(firstItem.textContent).toContain('ISOM21');
+    // 新しい順に並んでいるため、最初の項目は2022年のものになる
+    expect(firstItem.textContent).toContain('MMS2022');
+    
+    // リストが数字の箇条書きになっていることを確認
+    const orderedList = screen.getByRole('list');
+    expect(orderedList.tagName).toBe('OL');
     
     // タグ（Year、Authorship、type、Review、Presentation）が表示されていることを確認
     const tags = firstItem.querySelectorAll('.tag');
     expect(tags.length).toBeGreaterThan(0);
-    expect(firstItem.textContent).toContain('2021');
+    expect(firstItem.textContent).toContain('2022');
     expect(firstItem.textContent).toContain('Lead author');
     expect(firstItem.textContent).toContain('Research paper');
-    expect(firstItem.textContent).toContain('Reviewed');
+    expect(firstItem.textContent).toContain('Not reviewed');
     expect(firstItem.textContent).toContain('Oral');
     
     // 一行目に年が表示されていないことを確認
@@ -101,12 +106,12 @@ describe('Publications Component', () => {
     expect(secondLine).not.toBeNull();
     
     // ジャーナル名が三行目に表示されていることを確認
-    expect(firstItem.textContent).toContain('ISOM21');
+    expect(firstItem.textContent).toContain('MMS2022');
     
     // URLリンクが表示されていることを確認
     const link = firstItem.querySelector('a');
     expect(link).not.toBeNull();
-    expect(link.getAttribute('href')).toBe('https://example.com/paper1');
+    expect(link.getAttribute('href')).toBe('https://example.com/paper2');
   });
   
   test('should filter publications using dropdown filters', () => {
@@ -114,7 +119,7 @@ describe('Publications Component', () => {
     renderWithLanguageProvider(<Publications />);
     
     // 初期状態では全ての出版物が表示されていることを確認
-    const initialItems = screen.getAllByRole('listitem');
+    const initialItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
     expect(initialItems.length).toBe(2);
     
     // 年のフィルターボタンをクリック
@@ -130,7 +135,7 @@ describe('Publications Component', () => {
     fireEvent.click(year2021Checkbox);
     
     // 2021年でフィルタリングされた出版物が表示されていることを確認
-    const yearFilteredItems = screen.getAllByRole('listitem');
+    const yearFilteredItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
     expect(yearFilteredItems.length).toBe(1);
     expect(yearFilteredItems[0].textContent).toContain('2021');
     expect(yearFilteredItems[0].textContent).not.toContain('2022');
@@ -149,7 +154,7 @@ describe('Publications Component', () => {
     
     // Lead authorでフィルタリングされた出版物が表示されていることを確認
     // 2021年のフィルターと組み合わせて、両方の条件に一致する出版物のみが表示される
-    const combinedFilteredItems = screen.getAllByRole('listitem');
+    const combinedFilteredItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
     expect(combinedFilteredItems.length).toBe(1);
     expect(combinedFilteredItems[0].textContent).toContain('2021');
     expect(combinedFilteredItems[0].textContent).toContain('Lead author');
@@ -159,7 +164,7 @@ describe('Publications Component', () => {
     fireEvent.click(resetButton);
     
     // リセット後は全ての出版物が表示されていることを確認
-    const resetItems = screen.getAllByRole('listitem');
+    const resetItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
     expect(resetItems.length).toBe(2);
   });
   
@@ -212,7 +217,7 @@ describe('Publications Component', () => {
     expect(yearFilterButton).toBeInTheDocument();
     
     // 出版物リストを確認
-    const publicationItems = screen.getAllByRole('listitem');
+    const publicationItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
     console.log('Japanese publication items:', publicationItems.map(item => item.textContent));
     
     // テスト内容: 日本語の内容が表示されることを確認
@@ -220,18 +225,21 @@ describe('Publications Component', () => {
     // 日本語の内容が含まれていることを確認
     // 注: 著者とタイトルの分離に依存せず、日本語の内容が表示されていることを確認
     const firstItem = publicationItems[0];
-    expect(firstItem.textContent).toContain('ISOM21');
+    
+    // 新しい順に並んでいることを確認（最初の項目が2022年のものであることを確認）
+    expect(firstItem.textContent).toContain('2022');
+    expect(firstItem.textContent).toContain('MMS2022');
     
     // 日本語の内容が表示されていることを確認
-    expect(firstItem.textContent).toContain('自己参照型');
+    expect(firstItem.textContent).toContain('透過行列');
     
     // 年のタグが表示されていることを確認
-    expect(firstItem.textContent).toContain('2021');
+    expect(firstItem.textContent).toContain('2022');
     expect(firstItem.textContent).toContain('冨岡');
     
     // 一行目に年が表示されていないことを確認
     const firstLine = firstItem.querySelector('strong').textContent;
-    expect(firstLine).not.toContain('2021');
+    expect(firstLine).not.toContain('2022');
     
     // タグが二行目に表示されていることを確認
     const secondLine = firstItem.querySelector('.tags-container');

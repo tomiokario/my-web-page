@@ -21,7 +21,7 @@ function Publications() {
     return match ? parseInt(match[1], 10) : null;
   };
 
-  // 出版物データを最小限の整形で処理
+  // 出版物データを最小限の整形で処理し、新しい順に並べる
   const formattedPublications = useMemo(() => {
     return publicationsData.map((pub, index) => {
       // 年度を抽出（フィルタリングに必要）
@@ -43,6 +43,9 @@ function Publications() {
         presentationType: pub.presentationType,
         others: pub.others
       };
+    }).sort((a, b) => {
+      // 新しい順に並べる（年が新しい順）
+      return (b.year || 0) - (a.year || 0);
     });
   }, []);
 
@@ -258,7 +261,7 @@ function Publications() {
         </div>
       )}
 
-      <ul style={{ marginTop: "1rem" }}>
+      <ol style={{ marginTop: "1rem" }}>
         {filteredPublications.map((pub) => (
           <li key={pub.id} style={{ marginBottom: "1.5rem" }}>
             {/* 一行目: タイトル */}
@@ -320,7 +323,7 @@ function Publications() {
             )}
           </li>
         ))}
-      </ul>
+      </ol>
     </div>
   );
 }
