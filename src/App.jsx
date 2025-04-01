@@ -11,6 +11,8 @@ import Home from "./pages/Home";
 import ProfileCV from "./pages/ProfileCV";
 import Publications from "./pages/Publications";
 
+import { SpeedInsights } from "@vercel/speed-insights/react"
+
 function App() {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
