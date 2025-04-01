@@ -83,9 +83,10 @@ describe('Publications Component', () => {
     // 注: 著者とタイトルの分離に依存せず、出版物データの一部が表示されていることを確認
     expect(firstItem.textContent).toContain('ISOM21');
     
-    // タグ（Authorship、type、Review、Presentation）が表示されていることを確認
+    // タグ（Year、Authorship、type、Review、Presentation）が表示されていることを確認
     const tags = firstItem.querySelectorAll('.tag');
     expect(tags.length).toBeGreaterThan(0);
+    expect(firstItem.textContent).toContain('2021');
     expect(firstItem.textContent).toContain('Lead author');
     expect(firstItem.textContent).toContain('Research paper');
     expect(firstItem.textContent).toContain('Reviewed');
@@ -106,6 +107,52 @@ describe('Publications Component', () => {
     const link = firstItem.querySelector('a');
     expect(link).not.toBeNull();
     expect(link.getAttribute('href')).toBe('https://example.com/paper1');
+  });
+  
+  test('should filter publications by tag', () => {
+    // テスト内容: タグによるフィルタリングが正しく機能することを確認
+    renderWithLanguageProvider(<Publications />);
+    
+    // 初期状態では全ての出版物が表示されていることを確認
+    const initialItems = screen.getAllByRole('listitem');
+    expect(initialItems.length).toBe(2);
+    
+    // タグをクリックしてフィルタリング
+    const leadAuthorTag = screen.getAllByText('Lead author')[0];
+    fireEvent.click(leadAuthorTag);
+    
+    // Lead authorタグでフィルタリングされた出版物が表示されていることを確認
+    const filteredItems = screen.getAllByRole('listitem');
+    expect(filteredItems.length).toBe(2); // 両方ともLead author
+    
+    // 別のタグでフィルタリング
+    const reviewedTag = screen.getByText('Reviewed');
+    fireEvent.click(reviewedTag);
+    
+    // Reviewedタグでフィルタリングされた出版物が表示されていることを確認
+    const reviewedItems = screen.getAllByRole('listitem');
+    expect(reviewedItems.length).toBe(1);
+    expect(reviewedItems[0].textContent).toContain('Reviewed');
+    expect(reviewedItems[0].textContent).not.toContain('Not reviewed');
+    
+    // 年のタグでフィルタリング（タグの中の2021を選択）
+    const yearTags = screen.getAllByText('2021');
+    // タグは2番目の要素（最初はオプション要素）
+    fireEvent.click(yearTags[1]);
+    
+    // 2021年のタグでフィルタリングされた出版物が表示されていることを確認
+    const yearItems = screen.getAllByRole('listitem');
+    expect(yearItems.length).toBe(1);
+    expect(yearItems[0].textContent).toContain('2021');
+    expect(yearItems[0].textContent).not.toContain('2022');
+    
+    // フィルターをリセット（言語設定に応じたテキストを使用）
+    const resetButton = screen.getByText('フィルターをリセット');
+    fireEvent.click(resetButton);
+    
+    // リセット後は全ての出版物が表示されていることを確認
+    const resetItems = screen.getAllByRole('listitem');
+    expect(resetItems.length).toBe(2);
   });
   
   test('should filter publications by year', () => {
@@ -150,6 +197,7 @@ describe('Publications Component', () => {
     // タグが表示されていることを確認
     const tags2022 = items2022[0].querySelectorAll('.tag');
     expect(tags2022.length).toBeGreaterThan(0);
+    expect(items2022[0].textContent).toContain('2022');
     expect(items2022[0].textContent).toContain('Not reviewed');
     
     // URLリンクが二行目以降に表示されていることを確認
@@ -179,6 +227,9 @@ describe('Publications Component', () => {
     
     // 日本語の内容が表示されていることを確認
     expect(firstItem.textContent).toContain('自己参照型');
+    
+    // 年のタグが表示されていることを確認
+    expect(firstItem.textContent).toContain('2021');
     expect(firstItem.textContent).toContain('冨岡');
     
     // 一行目に年が表示されていないことを確認

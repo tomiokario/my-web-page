@@ -4,6 +4,7 @@ import publicationsData from "../data/publications.json";
 
 function Publications() {
   const [selectedYear, setSelectedYear] = useState("All");
+  const [selectedTags, setSelectedTags] = useState([]);
   const { language } = useLanguage();
 
   // 日付から年を抽出する関数
@@ -47,17 +48,57 @@ function Publications() {
     return ["All", ...uniqueYears];
   }, [formattedPublications]);
 
-  // 年度フィルタリング
+  // タグによるフィルタリング
   const filteredPublications = useMemo(() => {
     return formattedPublications.filter((pub) => {
-      if (selectedYear === "All") return true;
-      return pub.year === parseInt(selectedYear, 10);
+      // 年度フィルター
+      if (selectedYear !== "All" && pub.year !== parseInt(selectedYear, 10)) {
+        return false;
+      }
+      
+      // タグフィルター
+      if (selectedTags.length > 0) {
+        // 選択されたすべてのタグに一致するかチェック
+        for (const tag of selectedTags) {
+          const pubTags = [
+            pub.year?.toString(),
+            pub.authorship,
+            pub.type,
+            pub.review,
+            pub.presentationType
+          ].filter(Boolean);
+          
+          if (!pubTags.includes(tag)) {
+            return false;
+          }
+        }
+      }
+      
+      return true;
     });
-  }, [formattedPublications, selectedYear]);
+  }, [formattedPublications, selectedYear, selectedTags]);
+
+  // タグをクリックしたときの処理
+  const handleTagClick = (tag) => {
+    if (selectedTags.includes(tag)) {
+      // すでに選択されている場合は削除
+      setSelectedTags(selectedTags.filter(t => t !== tag));
+    } else {
+      // 選択されていない場合は追加
+      setSelectedTags([...selectedTags, tag]);
+    }
+  };
+
+  // フィルターをリセットする処理
+  const resetFilters = () => {
+    setSelectedYear("All");
+    setSelectedTags([]);
+  };
 
   // 言語に応じたラベル
   const filterLabel = language === 'ja' ? '絞り込み (年度)' : 'Filter by Year';
   const allLabel = language === 'ja' ? 'すべて' : 'All';
+  const resetLabel = language === 'ja' ? 'フィルターをリセット' : 'Reset Filters';
 
   return (
     <div style={{ padding: "0" }}>
@@ -75,6 +116,46 @@ function Publications() {
           ))}
         </select>
       </div>
+      
+      {/* フィルターリセットボタン */}
+      {(selectedTags.length > 0 || selectedYear !== "All") && (
+        <button
+          onClick={resetFilters}
+          style={{
+            marginLeft: "1rem",
+            padding: "0.25rem 0.5rem",
+            backgroundColor: "#f0f0f0",
+            border: "none",
+            borderRadius: "0.25rem",
+            cursor: "pointer"
+          }}
+        >
+          {resetLabel}
+        </button>
+      )}
+      
+      {/* 選択されているタグを表示 */}
+      {selectedTags.length > 0 && (
+        <div style={{ marginTop: "0.5rem" }}>
+          <span>{language === 'ja' ? '選択中のタグ: ' : 'Selected tags: '}</span>
+          {selectedTags.map(tag => (
+            <span
+              key={tag}
+              style={{
+                backgroundColor: "#e0e0e0",
+                padding: "0.2rem 0.5rem",
+                borderRadius: "0.25rem",
+                fontSize: "0.85rem",
+                marginRight: "0.5rem",
+                cursor: "pointer"
+              }}
+              onClick={() => handleTagClick(tag)}
+            >
+              {tag} ✕
+            </span>
+          ))}
+        </div>
+      )}
 
       <ul style={{ marginTop: "1rem" }}>
         {filteredPublications.map((pub) => (
@@ -84,45 +165,80 @@ function Publications() {
               {language === 'ja' && pub.japanese ? pub.japanese : pub.name}
             </strong>
             
-            {/* 二行目: タグ（Authorship、type、Review、Presentation） */}
+            {/* 二行目: タグ（Year、Authorship、type、Review、Presentation） */}
             <div className="tags-container" style={{ marginTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              {pub.year && (
+                <span
+                  className="tag"
+                  style={{
+                    backgroundColor: selectedTags.includes(pub.year.toString()) ? "#c0e0ff" : "#f0f0f0",
+                    padding: "0.2rem 0.5rem",
+                    borderRadius: "0.25rem",
+                    fontSize: "0.85rem",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => handleTagClick(pub.year.toString())}
+                >
+                  {pub.year}
+                </span>
+              )}
               {pub.authorship && (
-                <span className="tag" style={{
-                  backgroundColor: "#f0f0f0",
-                  padding: "0.2rem 0.5rem",
-                  borderRadius: "0.25rem",
-                  fontSize: "0.85rem"
-                }}>
+                <span
+                  className="tag"
+                  style={{
+                    backgroundColor: selectedTags.includes(pub.authorship) ? "#c0e0ff" : "#f0f0f0",
+                    padding: "0.2rem 0.5rem",
+                    borderRadius: "0.25rem",
+                    fontSize: "0.85rem",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => handleTagClick(pub.authorship)}
+                >
                   {pub.authorship}
                 </span>
               )}
               {pub.type && (
-                <span className="tag" style={{
-                  backgroundColor: "#f0f0f0",
-                  padding: "0.2rem 0.5rem",
-                  borderRadius: "0.25rem",
-                  fontSize: "0.85rem"
-                }}>
+                <span
+                  className="tag"
+                  style={{
+                    backgroundColor: selectedTags.includes(pub.type) ? "#c0e0ff" : "#f0f0f0",
+                    padding: "0.2rem 0.5rem",
+                    borderRadius: "0.25rem",
+                    fontSize: "0.85rem",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => handleTagClick(pub.type)}
+                >
                   {pub.type}
                 </span>
               )}
               {pub.review && (
-                <span className="tag" style={{
-                  backgroundColor: "#f0f0f0",
-                  padding: "0.2rem 0.5rem",
-                  borderRadius: "0.25rem",
-                  fontSize: "0.85rem"
-                }}>
+                <span
+                  className="tag"
+                  style={{
+                    backgroundColor: selectedTags.includes(pub.review) ? "#c0e0ff" : "#f0f0f0",
+                    padding: "0.2rem 0.5rem",
+                    borderRadius: "0.25rem",
+                    fontSize: "0.85rem",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => handleTagClick(pub.review)}
+                >
                   {pub.review}
                 </span>
               )}
               {pub.presentationType && (
-                <span className="tag" style={{
-                  backgroundColor: "#f0f0f0",
-                  padding: "0.2rem 0.5rem",
-                  borderRadius: "0.25rem",
-                  fontSize: "0.85rem"
-                }}>
+                <span
+                  className="tag"
+                  style={{
+                    backgroundColor: selectedTags.includes(pub.presentationType) ? "#c0e0ff" : "#f0f0f0",
+                    padding: "0.2rem 0.5rem",
+                    borderRadius: "0.25rem",
+                    fontSize: "0.85rem",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => handleTagClick(pub.presentationType)}
+                >
                   {pub.presentationType}
                 </span>
               )}
