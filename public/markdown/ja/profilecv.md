@@ -9,7 +9,7 @@
 - 2023.4 - 2024.3：[先端研究フェロー](https://www.ccr.kyutech.ac.jp/dc_support/fellowship/) 第三期生 ([2023年度採用](https://www.ccr.kyutech.ac.jp/dc_support/fellowship/recruiter.php))
 - 2024.4 - 現在：[九州工業大学SPRINGスカラシップ研究学生](https://www.ccr.kyutech.ac.jp/dc_support/spring)
 
-## 学術関係受賞
+### 学術関係受賞
 映像情報メディア学会 [第25回・2022年度](https://www.ite.or.jp/contents/awards/yushukenkyu.html) [優秀研究発表賞](https://www.ite.or.jp/content/awards/)（2022年12月22日 受賞）
 
 ### Research-related learning experiences
