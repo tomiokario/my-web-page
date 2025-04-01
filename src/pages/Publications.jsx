@@ -14,43 +14,21 @@ function Publications() {
     return match ? parseInt(match[1], 10) : null;
   };
 
-  // 出版物データを整形
+  // 出版物データを最小限の整形で処理
   const formattedPublications = useMemo(() => {
     return publicationsData.map((pub, index) => {
-      // 名前から著者とタイトルを分離
-      const nameParts = pub.name.split(', "');
-      const authors = nameParts[0];
-      const title = nameParts.length > 1 
-        ? nameParts[1].replace(/"/g, '') 
-        : pub.name;
-
-      // 日本語の名前とタイトルを分離（存在する場合）
-      let japaneseAuthors = '';
-      let japaneseTitle = '';
-      if (pub.japanese) {
-        const jaNameParts = pub.japanese.split(', "');
-        japaneseAuthors = jaNameParts[0];
-        japaneseTitle = jaNameParts.length > 1 
-          ? jaNameParts[1].replace(/"/g, '') 
-          : pub.japanese;
-      }
-
-      // 年度を抽出
+      // 年度を抽出（フィルタリングに必要）
       const year = extractYear(pub.date);
 
+      // 必要最小限のプロパティのみを返す
       return {
         id: index,
-        title: title,
-        japaneseTitle: japaneseTitle,
-        authors: authors,
-        japaneseAuthors: japaneseAuthors,
+        name: pub.name,
+        japanese: pub.japanese,
         year: year,
         journal: pub.journalConference,
         date: pub.date,
-        webLink: pub.webLink,
-        type: pub.type,
-        presentationType: pub.presentationType,
-        site: pub.site
+        webLink: pub.webLink
       };
     });
   }, []);
@@ -96,21 +74,11 @@ function Publications() {
         {filteredPublications.map((pub) => (
           <li key={pub.id} style={{ marginBottom: "0.5rem" }}>
             <strong>
-              {language === 'ja' && pub.japaneseTitle ? pub.japaneseTitle : pub.title}
+              {language === 'ja' && pub.japanese ? pub.japanese : pub.name}
             </strong> ({pub.year})<br />
-            <em>
-              {language === 'ja' && pub.japaneseAuthors ? pub.japaneseAuthors : pub.authors}
-            </em> - {pub.journal}
+            {pub.journal}
             {pub.webLink && (
               <span> [<a href={pub.webLink} target="_blank" rel="noopener noreferrer">Link</a>]</span>
-            )}
-            
-            {/* 英語のタイトルと著者名を非表示で保持（テスト用） */}
-            {language === 'ja' && pub.title && (
-              <span style={{ display: 'none' }}>{pub.title}</span>
-            )}
-            {language === 'ja' && pub.authors && (
-              <span style={{ display: 'none' }}>{pub.authors}</span>
             )}
           </li>
         ))}
