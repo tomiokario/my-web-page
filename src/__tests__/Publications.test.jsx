@@ -77,12 +77,20 @@ describe('Publications Component', () => {
     
     // テスト内容: 出版物の内容が正しく表示されることを確認
     const firstItem = publicationItems[0];
-    expect(firstItem.textContent).not.toBe(' () - ');
+    expect(firstItem.textContent).not.toBe('');
     
     // 出版物の内容が表示されていることを確認
     // 注: 著者とタイトルの分離に依存せず、出版物データの一部が表示されていることを確認
-    expect(firstItem.textContent).toContain('2021');
     expect(firstItem.textContent).toContain('ISOM21');
+    
+    // 一行目に年が表示されていないことを確認
+    const firstLine = firstItem.querySelector('strong').textContent;
+    expect(firstLine).not.toContain('2021');
+    
+    // URLリンクが二行目以降に表示されていることを確認
+    const link = firstItem.querySelector('a');
+    expect(link).not.toBeNull();
+    expect(link.getAttribute('href')).toBe('https://example.com/paper1');
   });
   
   test('should filter publications by year', () => {
@@ -110,9 +118,10 @@ describe('Publications Component', () => {
     // 2021年の出版物のみが表示されていることを確認
     const items2021 = screen.getAllByRole('listitem');
     expect(items2021.length).toBe(1);
-    expect(items2021[0].textContent).toContain('2021');
     expect(items2021[0].textContent).toContain('ISOM21');
     expect(items2021[0].textContent).not.toContain('MMS2022');
+    
+    // 年度は内部的に保持されていることを確認（フィルタリングが機能している）
     
     // 2022年に変更
     fireEvent.change(yearSelect, { target: { value: '2022' } });
@@ -120,9 +129,13 @@ describe('Publications Component', () => {
     // 2022年の出版物のみが表示されていることを確認
     const items2022 = screen.getAllByRole('listitem');
     expect(items2022.length).toBe(1);
-    expect(items2022[0].textContent).toContain('2022');
     expect(items2022[0].textContent).toContain('MMS2022');
     expect(items2022[0].textContent).not.toContain('ISOM21');
+    
+    // URLリンクが二行目以降に表示されていることを確認
+    const link2022 = items2022[0].querySelector('a');
+    expect(link2022).not.toBeNull();
+    expect(link2022.getAttribute('href')).toBe('https://example.com/paper2');
   });
   
   test('should display publications in Japanese when language is set to Japanese', () => {
@@ -142,11 +155,18 @@ describe('Publications Component', () => {
     // 日本語の内容が含まれていることを確認
     // 注: 著者とタイトルの分離に依存せず、日本語の内容が表示されていることを確認
     const firstItem = publicationItems[0];
-    expect(firstItem.textContent).toContain('2021');
     expect(firstItem.textContent).toContain('ISOM21');
     
     // 日本語の内容が表示されていることを確認
     expect(firstItem.textContent).toContain('自己参照型');
     expect(firstItem.textContent).toContain('冨岡');
+    
+    // 一行目に年が表示されていないことを確認
+    const firstLine = firstItem.querySelector('strong').textContent;
+    expect(firstLine).not.toContain('2021');
+    
+    // URLリンクが二行目以降に表示されていることを確認
+    const link = firstItem.querySelector('a');
+    expect(link).not.toBeNull();
   });
 });

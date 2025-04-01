@@ -72,13 +72,17 @@ function Publications() {
 
       <ul style={{ marginTop: "1rem" }}>
         {filteredPublications.map((pub) => (
-          <li key={pub.id} style={{ marginBottom: "0.5rem" }}>
+          <li key={pub.id} style={{ marginBottom: "1rem" }}>
             <strong>
               {language === 'ja' && pub.japanese ? pub.japanese : pub.name}
-            </strong> ({pub.year})<br />
-            {pub.journal}
+            </strong><br />
+            <div>{pub.journal}</div>
             {pub.webLink && (
-              <span> [<a href={pub.webLink} target="_blank" rel="noopener noreferrer">Link</a>]</span>
+              <div>
+                <a href={pub.webLink} target="_blank" rel="noopener noreferrer">
+                  {pub.webLink}
+                </a>
+              </div>
             )}
           </li>
         ))}
