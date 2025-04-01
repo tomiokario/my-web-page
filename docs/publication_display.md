@@ -74,54 +74,60 @@ Publicationsコンポーネント（`src/pages/Publications.jsx`）は、JSONデ
 
 ### データの整形
 
-1. 名前フィールドから著者とタイトルを分離
-   ```javascript
-   const nameParts = pub.name.split(', "');
-   const authors = nameParts[0];
-   const title = nameParts.length > 1 ? nameParts[1].replace(/"/g, '') : pub.name;
-   ```
-
-2. 日本語フィールドからも同様に著者とタイトルを分離
-   ```javascript
-   const jaNameParts = pub.japanese.split(', "');
-   japaneseAuthors = jaNameParts[0];
-   japaneseTitle = jaNameParts.length > 1 ? jaNameParts[1].replace(/"/g, '') : pub.japanese;
-   ```
-
-3. 日付から年を抽出
+1. 日付から年を抽出
    ```javascript
    const match = dateString.match(/(\d{4})/);
    return match ? parseInt(match[1], 10) : null;
    ```
 
+2. 出版物データを新しい順に並べ替え
+   ```javascript
+   .sort((a, b) => {
+     // 新しい順に並べる（年が新しい順）
+     return (b.year || 0) - (a.year || 0);
+   });
+   ```
+
 ### 表示機能
 
-1. **年度フィルタリング**
-   - ユニークな年度を抽出し、ドロップダウンリストとして表示
-   - 選択された年度に基づいて出版物をフィルタリング
+1. **複数のフィルタリング機能**
+   - **年度フィルター**: 出版年でフィルタリング
+   - **著者の役割フィルター**: Lead author、Co-authorなどでフィルタリング
+   - **種類フィルター**: Research paper、Journal paperなどでフィルタリング
+   - **レビューフィルター**: Reviewed、Not reviewedなどでフィルタリング
+   - **発表タイプフィルター**: Oral、Posterなどでフィルタリング
+   - 複数のフィルターを組み合わせて使用可能
+   - フィルターのリセット機能
 
 2. **言語切替**
-   - 言語設定（ja/en）に応じて、適切な言語でタイトルと著者名を表示
-   - 日本語モードでは日本語のタイトルと著者名、英語モードでは英語のタイトルと著者名を表示
+   - 言語設定（ja/en）に応じて、適切な言語でタイトルを表示
+   - 日本語モードでは日本語のタイトル、英語モードでは英語のタイトルを表示
 
 3. **出版物リスト表示**
    - 各出版物は以下の形式で表示されます：
-     - タイトル（太字）と年
-     - 著者名（イタリック体）とジャーナル/会議名
+     - タイトル（太字）
+     - タグ（年、著者の役割、種類、レビュー、発表タイプ）
+     - ジャーナル/会議名
+     - DOI（存在する場合）
      - ウェブリンク（存在する場合）
+     - その他の情報（存在する場合）
 
 ### 表示例
 
 英語モードでの表示：
 ```
-Numerical simulations of neural network hardware based on self-referential holography (2021)
-Rio Tomioka and Masanori Takabayashi - ISOM21 [Link]
+Numerical simulations of neural network hardware based on self-referential holography
+[2021] [Lead author] [Research paper (international conference)] [Reviewed] [Oral]
+ISOM21
+https://example.com/paper1
 ```
 
 日本語モードでの表示：
 ```
-自己参照型ホログラフィを用いたニューラルネットワークハードウェアの数値シミュレーション (2021)
-冨岡莉生, 高林正典 - ISOM21 [Link]
+自己参照型ホログラフィを用いたニューラルネットワークハードウェアの数値シミュレーション
+[2021] [Lead author] [Research paper (international conference)] [Reviewed] [Oral]
+ISOM21
+https://example.com/paper1
 ```
 
 ## テスト
@@ -136,7 +142,9 @@ Rio Tomioka and Masanori Takabayashi - ISOM21 [Link]
 
 2. **Publications.test.jsx**
    - 出版物リストの正常表示
-   - 年度フィルターの機能
+   - 複数のフィルター機能のテスト（年度、著者の役割、種類、レビュー、発表タイプ）
+   - アクティブなフィルターの表示スタイル確認
+   - フィルターリセット機能のテスト
    - 言語切替（日本語/英語）の機能
 
 ## データ更新手順
