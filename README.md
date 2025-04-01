@@ -3,7 +3,7 @@
 - 仮公開ページ：https://my-web-page-fawn-seven.vercel.app/
 - original：https://www.tomiokario.com/
 
-**使い方**
+## ローカル環境での使い方
 
 パッケージのインストール（初回のみ）
 ```
@@ -13,6 +13,11 @@ npm install
 ローカルサーバの起動
 ```
 npm start
+```
+
+テスト
+```
+npm test
 ```
 
 ## 出版物データの更新方法
