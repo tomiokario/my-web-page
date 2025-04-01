@@ -109,44 +109,52 @@ describe('Publications Component', () => {
     expect(link.getAttribute('href')).toBe('https://example.com/paper1');
   });
   
-  test('should filter publications by tag', () => {
-    // テスト内容: タグによるフィルタリングが正しく機能することを確認
+  test('should filter publications using dropdown filters', () => {
+    // テスト内容: ドロップダウンフィルターが正しく機能することを確認
     renderWithLanguageProvider(<Publications />);
     
     // 初期状態では全ての出版物が表示されていることを確認
     const initialItems = screen.getAllByRole('listitem');
     expect(initialItems.length).toBe(2);
     
-    // タグをクリックしてフィルタリング
-    const leadAuthorTag = screen.getAllByText('Lead author')[0];
-    fireEvent.click(leadAuthorTag);
+    // 年のフィルターボタンをクリック
+    const yearFilterButton = screen.getByText('年度 ▼');
+    fireEvent.click(yearFilterButton);
     
-    // Lead authorタグでフィルタリングされた出版物が表示されていることを確認
-    const filteredItems = screen.getAllByRole('listitem');
-    expect(filteredItems.length).toBe(2); // 両方ともLead author
+    // ドロップダウンメニューが表示されることを確認
+    const yearDropdown = screen.getByTestId('year-dropdown');
+    expect(yearDropdown).toBeInTheDocument();
     
-    // 別のタグでフィルタリング
-    const reviewedTag = screen.getByText('Reviewed');
-    fireEvent.click(reviewedTag);
+    // 2021年のチェックボックスをクリック
+    const year2021Checkbox = screen.getByLabelText('2021');
+    fireEvent.click(year2021Checkbox);
     
-    // Reviewedタグでフィルタリングされた出版物が表示されていることを確認
-    const reviewedItems = screen.getAllByRole('listitem');
-    expect(reviewedItems.length).toBe(1);
-    expect(reviewedItems[0].textContent).toContain('Reviewed');
-    expect(reviewedItems[0].textContent).not.toContain('Not reviewed');
+    // 2021年でフィルタリングされた出版物が表示されていることを確認
+    const yearFilteredItems = screen.getAllByRole('listitem');
+    expect(yearFilteredItems.length).toBe(1);
+    expect(yearFilteredItems[0].textContent).toContain('2021');
+    expect(yearFilteredItems[0].textContent).not.toContain('2022');
     
-    // 年のタグでフィルタリング（タグの中の2021を選択）
-    const yearTags = screen.getAllByText('2021');
-    // タグは2番目の要素（最初はオプション要素）
-    fireEvent.click(yearTags[1]);
+    // 著者の役割のフィルターボタンをクリック
+    const authorshipFilterButton = screen.getByText('著者の役割 ▼');
+    fireEvent.click(authorshipFilterButton);
     
-    // 2021年のタグでフィルタリングされた出版物が表示されていることを確認
-    const yearItems = screen.getAllByRole('listitem');
-    expect(yearItems.length).toBe(1);
-    expect(yearItems[0].textContent).toContain('2021');
-    expect(yearItems[0].textContent).not.toContain('2022');
+    // ドロップダウンメニューが表示されることを確認
+    const authorshipDropdown = screen.getByTestId('authorship-dropdown');
+    expect(authorshipDropdown).toBeInTheDocument();
     
-    // フィルターをリセット（言語設定に応じたテキストを使用）
+    // Lead authorのチェックボックスをクリック
+    const leadAuthorCheckbox = screen.getByLabelText('Lead author');
+    fireEvent.click(leadAuthorCheckbox);
+    
+    // Lead authorでフィルタリングされた出版物が表示されていることを確認
+    // 2021年のフィルターと組み合わせて、両方の条件に一致する出版物のみが表示される
+    const combinedFilteredItems = screen.getAllByRole('listitem');
+    expect(combinedFilteredItems.length).toBe(1);
+    expect(combinedFilteredItems[0].textContent).toContain('2021');
+    expect(combinedFilteredItems[0].textContent).toContain('Lead author');
+    
+    // フィルターをリセット
     const resetButton = screen.getByText('フィルターをリセット');
     fireEvent.click(resetButton);
     
@@ -155,64 +163,53 @@ describe('Publications Component', () => {
     expect(resetItems.length).toBe(2);
   });
   
-  test('should filter publications by year', () => {
-    // テスト内容: 年度フィルターが正しく機能することを確認
+  test('should show active filters with different color', () => {
+    // テスト内容: アクティブなフィルターが異なる色で表示されることを確認
     renderWithLanguageProvider(<Publications />);
     
-    // 年度フィルターを取得（言語に依存しない方法で）
-    const yearSelect = screen.getByRole('combobox');
+    // 年のフィルターボタンをクリック
+    const yearFilterButton = screen.getByText('年度 ▼');
+    fireEvent.click(yearFilterButton);
     
-    // 現在選択されている年度を確認
-    console.log('Current selected year:', yearSelect.value);
+    // 2021年のチェックボックスをクリック
+    const year2021Checkbox = screen.getByLabelText('2021');
+    fireEvent.click(year2021Checkbox);
     
-    // 利用可能な年度オプションを確認
-    const yearOptions = Array.from(yearSelect.options).map(option => option.value);
-    console.log('Available year options:', yearOptions);
+    // フィルターボタンの色が変わっていることを確認
+    const activeYearFilter = screen.getByText('年度 ▼');
+    expect(activeYearFilter).toHaveAttribute('style', expect.stringContaining('background-color: rgb(192, 224, 255)'));
     
-    // テスト内容: 年度オプションが正しく抽出されることを確認
-    expect(yearOptions).toContain('2021');
-    expect(yearOptions).toContain('2022');
+    // 著者の役割のフィルターボタンをクリック
+    const authorshipFilterButton = screen.getByText('著者の役割 ▼');
+    fireEvent.click(authorshipFilterButton);
     
-    // 年度フィルターが機能するか確認
-    // 2021年を選択
-    fireEvent.change(yearSelect, { target: { value: '2021' } });
+    // Lead authorのチェックボックスをクリック
+    const leadAuthorCheckbox = screen.getByLabelText('Lead author');
+    fireEvent.click(leadAuthorCheckbox);
     
-    // 2021年の出版物のみが表示されていることを確認
-    const items2021 = screen.getAllByRole('listitem');
-    expect(items2021.length).toBe(1);
-    expect(items2021[0].textContent).toContain('ISOM21');
-    expect(items2021[0].textContent).not.toContain('MMS2022');
+    // フィルターボタンの色が変わっていることを確認
+    const activeAuthorshipFilter = screen.getByText('著者の役割 ▼');
+    expect(activeAuthorshipFilter).toHaveAttribute('style', expect.stringContaining('background-color: rgb(192, 224, 255)'));
     
-    // 年度は内部的に保持されていることを確認（フィルタリングが機能している）
+    // フィルターをリセット
+    const resetButton = screen.getByText('フィルターをリセット');
+    fireEvent.click(resetButton);
     
-    // 2022年に変更
-    fireEvent.change(yearSelect, { target: { value: '2022' } });
+    // フィルターボタンの色が元に戻っていることを確認
+    const inactiveYearFilter = screen.getByText('年度 ▼');
+    expect(inactiveYearFilter).toHaveAttribute('style', expect.stringContaining('background-color: rgb(240, 240, 240)'));
     
-    // 2022年の出版物のみが表示されていることを確認
-    const items2022 = screen.getAllByRole('listitem');
-    expect(items2022.length).toBe(1);
-    expect(items2022[0].textContent).toContain('MMS2022');
-    expect(items2022[0].textContent).not.toContain('ISOM21');
-    
-    // タグが表示されていることを確認
-    const tags2022 = items2022[0].querySelectorAll('.tag');
-    expect(tags2022.length).toBeGreaterThan(0);
-    expect(items2022[0].textContent).toContain('2022');
-    expect(items2022[0].textContent).toContain('Not reviewed');
-    
-    // URLリンクが二行目以降に表示されていることを確認
-    const link2022 = items2022[0].querySelector('a');
-    expect(link2022).not.toBeNull();
-    expect(link2022.getAttribute('href')).toBe('https://example.com/paper2');
+    const inactiveAuthorshipFilter = screen.getByText('著者の役割 ▼');
+    expect(inactiveAuthorshipFilter).toHaveAttribute('style', expect.stringContaining('background-color: rgb(240, 240, 240)'));
   });
   
   test('should display publications in Japanese when language is set to Japanese', () => {
     // テスト内容: 言語設定が日本語の場合、出版物が日本語で表示されることを確認
     renderWithLanguageProvider(<Publications />, { language: 'ja' });
     
-    // フィルターラベルが日本語になっていることを確認
-    const filterLabel = screen.getByText(/絞り込み \(年度\)/i);
-    expect(filterLabel).toBeInTheDocument();
+    // フィルターボタンが日本語になっていることを確認
+    const yearFilterButton = screen.getByText('年度 ▼');
+    expect(yearFilterButton).toBeInTheDocument();
     
     // 出版物リストを確認
     const publicationItems = screen.getAllByRole('listitem');
