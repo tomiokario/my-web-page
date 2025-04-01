@@ -11,7 +11,10 @@ import Home from "./pages/Home";
 import ProfileCV from "./pages/ProfileCV";
 import Publications from "./pages/Publications";
 
-import { SpeedInsights } from "@vercel/speed-insights/react"
+// テスト環境では@vercel/speed-insights/reactをインポートしない
+const SpeedInsights = process.env.NODE_ENV === 'test'
+  ? () => null
+  : require('@vercel/speed-insights/react').SpeedInsights;
 
 function App() {
   return (
@@ -42,6 +45,7 @@ function App() {
           </div>
         </Router>
       </LanguageProvider>
+      <SpeedInsights />
     </MantineProvider>
   );
 }
