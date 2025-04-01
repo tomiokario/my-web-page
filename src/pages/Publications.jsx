@@ -28,7 +28,13 @@ function Publications() {
         year: year,
         journal: pub.journalConference,
         date: pub.date,
-        webLink: pub.webLink
+        webLink: pub.webLink,
+        doi: pub.doi,
+        type: pub.type,
+        review: pub.review,
+        authorship: pub.authorship,
+        presentationType: pub.presentationType,
+        others: pub.others
       };
     });
   }, []);
@@ -72,16 +78,77 @@ function Publications() {
 
       <ul style={{ marginTop: "1rem" }}>
         {filteredPublications.map((pub) => (
-          <li key={pub.id} style={{ marginBottom: "1rem" }}>
+          <li key={pub.id} style={{ marginBottom: "1.5rem" }}>
+            {/* 一行目: タイトル */}
             <strong>
               {language === 'ja' && pub.japanese ? pub.japanese : pub.name}
-            </strong><br />
-            <div>{pub.journal}</div>
+            </strong>
+            
+            {/* 二行目: タグ（Authorship、type、Review、Presentation） */}
+            <div className="tags-container" style={{ marginTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              {pub.authorship && (
+                <span className="tag" style={{
+                  backgroundColor: "#f0f0f0",
+                  padding: "0.2rem 0.5rem",
+                  borderRadius: "0.25rem",
+                  fontSize: "0.85rem"
+                }}>
+                  {pub.authorship}
+                </span>
+              )}
+              {pub.type && (
+                <span className="tag" style={{
+                  backgroundColor: "#f0f0f0",
+                  padding: "0.2rem 0.5rem",
+                  borderRadius: "0.25rem",
+                  fontSize: "0.85rem"
+                }}>
+                  {pub.type}
+                </span>
+              )}
+              {pub.review && (
+                <span className="tag" style={{
+                  backgroundColor: "#f0f0f0",
+                  padding: "0.2rem 0.5rem",
+                  borderRadius: "0.25rem",
+                  fontSize: "0.85rem"
+                }}>
+                  {pub.review}
+                </span>
+              )}
+              {pub.presentationType && (
+                <span className="tag" style={{
+                  backgroundColor: "#f0f0f0",
+                  padding: "0.2rem 0.5rem",
+                  borderRadius: "0.25rem",
+                  fontSize: "0.85rem"
+                }}>
+                  {pub.presentationType}
+                </span>
+              )}
+            </div>
+            
+            {/* 三行目: ジャーナル名 */}
+            <div style={{ marginTop: "0.5rem" }}>{pub.journal}</div>
+            
+            {/* 四行目以降: DOI、URL、Others */}
+            {pub.doi && (
+              <div style={{ marginTop: "0.25rem" }}>
+                DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer">
+                  {pub.doi}
+                </a>
+              </div>
+            )}
             {pub.webLink && (
-              <div>
+              <div style={{ marginTop: "0.25rem" }}>
                 <a href={pub.webLink} target="_blank" rel="noopener noreferrer">
                   {pub.webLink}
                 </a>
+              </div>
+            )}
+            {pub.others && (
+              <div style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#555" }}>
+                {pub.others}
               </div>
             )}
           </li>

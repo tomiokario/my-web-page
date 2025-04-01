@@ -83,11 +83,26 @@ describe('Publications Component', () => {
     // 注: 著者とタイトルの分離に依存せず、出版物データの一部が表示されていることを確認
     expect(firstItem.textContent).toContain('ISOM21');
     
+    // タグ（Authorship、type、Review、Presentation）が表示されていることを確認
+    const tags = firstItem.querySelectorAll('.tag');
+    expect(tags.length).toBeGreaterThan(0);
+    expect(firstItem.textContent).toContain('Lead author');
+    expect(firstItem.textContent).toContain('Research paper');
+    expect(firstItem.textContent).toContain('Reviewed');
+    expect(firstItem.textContent).toContain('Oral');
+    
     // 一行目に年が表示されていないことを確認
     const firstLine = firstItem.querySelector('strong').textContent;
     expect(firstLine).not.toContain('2021');
     
-    // URLリンクが二行目以降に表示されていることを確認
+    // タグが二行目に表示されていることを確認
+    const secondLine = firstItem.querySelector('.tags-container');
+    expect(secondLine).not.toBeNull();
+    
+    // ジャーナル名が三行目に表示されていることを確認
+    expect(firstItem.textContent).toContain('ISOM21');
+    
+    // URLリンクが表示されていることを確認
     const link = firstItem.querySelector('a');
     expect(link).not.toBeNull();
     expect(link.getAttribute('href')).toBe('https://example.com/paper1');
@@ -132,6 +147,11 @@ describe('Publications Component', () => {
     expect(items2022[0].textContent).toContain('MMS2022');
     expect(items2022[0].textContent).not.toContain('ISOM21');
     
+    // タグが表示されていることを確認
+    const tags2022 = items2022[0].querySelectorAll('.tag');
+    expect(tags2022.length).toBeGreaterThan(0);
+    expect(items2022[0].textContent).toContain('Not reviewed');
+    
     // URLリンクが二行目以降に表示されていることを確認
     const link2022 = items2022[0].querySelector('a');
     expect(link2022).not.toBeNull();
@@ -165,7 +185,11 @@ describe('Publications Component', () => {
     const firstLine = firstItem.querySelector('strong').textContent;
     expect(firstLine).not.toContain('2021');
     
-    // URLリンクが二行目以降に表示されていることを確認
+    // タグが二行目に表示されていることを確認
+    const secondLine = firstItem.querySelector('.tags-container');
+    expect(secondLine).not.toBeNull();
+    
+    // URLリンクが表示されていることを確認
     const link = firstItem.querySelector('a');
     expect(link).not.toBeNull();
   });
