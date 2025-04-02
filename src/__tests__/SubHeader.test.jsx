@@ -17,6 +17,7 @@ import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
 import SubHeader from "../components/SubHeader";
 import { LanguageProvider } from "../contexts/LanguageContext";
+import { MantineProvider } from "@mantine/core";
 import locales from "../locales";
 
 // テスト用のラッパーコンポーネント
@@ -39,9 +40,11 @@ const TestWrapper = ({ children, initialLanguage = "ja" }) => {
   });
 
   return (
-    <LanguageProvider>
-      {children}
-    </LanguageProvider>
+    <MantineProvider>
+      <LanguageProvider>
+        {children}
+      </LanguageProvider>
+    </MantineProvider>
   );
 };
 

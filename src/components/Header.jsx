@@ -1,16 +1,127 @@
 // Header.jsx
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
-import { Menu, X, Languages } from "lucide-react";
+import { Languages } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 import locales from "../locales";
-import "./Header.css";
+import {
+  Header as MantineHeader,
+  Group,
+  Container,
+  Button,
+  createStyles
+} from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+
+// remヘルパー関数の定義（Mantineのバージョンでremがエクスポートされていない場合）
+const rem = (size) => `${size / 16}rem`;
+
+// スタイルの定義
+const useStyles = createStyles((theme) => ({
+  header: {
+    backgroundColor: "#3c3c3c",
+    borderBottom: 0,
+    position: "relative",
+    zIndex: 1,
+  },
+  container: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: "100%",
+    [theme.fn.smallerThan("sm")]: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      paddingTop: rem(8),
+      paddingBottom: rem(8),
+      height: "auto",
+    },
+  },
+  logoContainer: {
+    [theme.fn.smallerThan("sm")]: {
+      width: "100%",
+      textAlign: "center",
+      marginBottom: rem(10),
+    },
+  },
+  links: {
+    display: "flex",
+    gap: theme.spacing.md,
+    // PC版では右寄せ
+    marginLeft: "auto",
+    [theme.fn.smallerThan("sm")]: {
+      gap: theme.spacing.xs,
+      // スマホ版では中央揃え
+      marginLeft: 0,
+      justifyContent: "center",
+      flex: 1,
+      order: 1,
+    },
+  },
+  languageButtonContainer: {
+    marginLeft: theme.spacing.md, // PC版でメニューとボタンの間に空白を追加
+    [theme.fn.smallerThan("sm")]: {
+      order: 2,
+      marginLeft: 0, // スマホ版では余白を削除
+    },
+  },
+  navLink: {
+    display: "block",
+    lineHeight: 1,
+    padding: `${rem(8)} ${rem(12)}`,
+    borderRadius: theme.radius.sm,
+    textDecoration: "none",
+    color: "#fff",
+    fontSize: theme.fontSizes.sm,
+    fontWeight: 500,
+    [theme.fn.smallerThan("sm")]: {
+      padding: `${rem(6)} ${rem(8)}`,
+      fontSize: theme.fontSizes.xs,
+    },
+    "&:hover": {
+      opacity: 0.8,
+    },
+  },
+  navLinkActive: {
+    position: "relative",
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      bottom: -8,
+      left: 0,
+      width: "100%",
+      height: 4,
+      backgroundColor: "#f4f4f4",
+    },
+    [theme.fn.smallerThan("sm")]: {
+      "&::after": {
+        bottom: -6,
+        height: 3,
+      },
+    },
+  },
+  languageButton: {
+    backgroundColor: "transparent",
+    border: "1px solid #fff",
+    color: "#fff",
+    padding: `${rem(4)} ${rem(8)}`,
+    minWidth: "auto",
+    height: "auto",
+    fontSize: theme.fontSizes.sm, // PC版のフォントサイズ
+    [theme.fn.smallerThan("sm")]: {
+      fontSize: theme.fontSizes.xs, // スマホ版のフォントサイズ（メニューと同じ）
+    },
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+    },
+  },
+}));
 
 function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const { classes, cx } = useStyles();
   const { language, toggleLanguage } = useLanguage();
   const t = locales[language]; // 現在の言語に応じたリソースを取得
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   // メニュー項目の定義
   const menuItems = [
@@ -19,130 +130,45 @@ function Header() {
     { path: "/publications", label: t.header.publications }
   ];
 
-  // 画面幅に応じてモバイル表示かどうかを判定
-  useEffect(() => {
-    const checkScreenWidth = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkScreenWidth();
-    window.addEventListener('resize', checkScreenWidth);
-    
-    return () => {
-      window.removeEventListener('resize', checkScreenWidth);
-    };
-  }, []);
-
-  // メニューを開閉する関数
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  // リンクをクリックしたときにメニューを閉じる
-  const handleLinkClick = () => {
-    setIsOpen(false);
-  };
-
   return (
-    <div className="header-container">
-      <header className="header">
-        <div className="header-content">
-          {/* モバイル用ハンバーガーメニューボタン（左側に配置） */}
-          {isMobile && (
-            <button
-              onClick={toggleMenu}
-              className="hamburger-button"
-              aria-label="Open menu"
-            >
-              <Menu size={24} />
-            </button>
-          )}
-
-          {/* ロゴ部分 */}
+    <MantineHeader height={isMobile ? "auto" : 57} className={classes.header}>
+      <Container className={classes.container} fluid>
+        {/* ロゴ部分 */}
+        <div className={classes.logoContainer}>
           <div className="logo">
           </div>
+        </div>
 
-          {/* PC・タブレット用メニュー */}
-          {!isMobile && (
-            <nav className="nav-links desktop">
-              {menuItems.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  end={item.exact}
-                  onClick={handleLinkClick}
-                  className={({ isActive }) => isActive ? "active" : ""}
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
-          )}
+        {/* ナビゲーションリンク */}
+        <Group className={classes.links} spacing={5}>
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              end={item.exact}
+              className={({ isActive }) =>
+                cx(classes.navLink, { [classes.navLinkActive]: isActive })
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </Group>
 
-          {/* 言語切り替えボタン */}
-          <button
+        {/* 言語切り替えボタン */}
+        <div className={classes.languageButtonContainer}>
+          <Button
             onClick={toggleLanguage}
-            className="language-switch-button"
+            className={classes.languageButton}
             aria-label={t.languageSwitch.switchTo}
             title={t.languageSwitch.switchTo}
+            leftIcon={<Languages size={20} />}
           >
-            <Languages size={20} />
-            <span className="language-code">{language === 'ja' ? 'EN' : '日本語'}</span>
-          </button>
-
-          {/* 右側のスペース確保（バランス用） */}
-          {isMobile && <div className="spacer"></div>}
+            {language === 'ja' ? 'EN' : '日本語'}
+          </Button>
         </div>
-      </header>
-
-      {/* モバイル用サイドメニュー */}
-      {isMobile && isOpen && (
-        <>
-          {/* オーバーレイ（半透明の黒色） */}
-          <div
-            className="overlay"
-            onClick={toggleMenu}
-          />
-          
-          {/* サイドメニュー */}
-          <div className="side-menu">
-            <div className="side-menu-header">
-              <button
-                onClick={toggleMenu}
-                className="close-button"
-                aria-label="Close menu"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            
-            <nav className="side-menu-content">
-              {menuItems.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  end={item.exact}
-                  onClick={handleLinkClick}
-                  className={({ isActive }) => isActive ? "active" : ""}
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-              
-              {/* モバイル用言語切り替えボタン */}
-              <button
-                onClick={toggleLanguage}
-                className="language-switch-button mobile"
-                aria-label={t.languageSwitch.switchTo}
-              >
-                <Languages size={20} />
-                <span>{t.languageSwitch.switchTo}</span>
-              </button>
-            </nav>
-          </div>
-        </>
-      )}
-    </div>
+      </Container>
+    </MantineHeader>
   );
 }
 
