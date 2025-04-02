@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import publicationsData from "../data/publications.json";
 
@@ -12,6 +12,7 @@ function Publications() {
     presentationType: []
   });
   const { language } = useLanguage();
+  const filterRefs = useRef({}); // 各フィルター要素の参照を保持
 
   // 日付から年を抽出する関数
   const extractYear = (dateString) => {
@@ -160,12 +161,35 @@ function Publications() {
   };
   const resetLabel = language === 'ja' ? 'フィルターをリセット' : 'Reset Filters';
 
+  // ドロップダウンの外側をクリックしたときに閉じる処理
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (openDropdown) {
+        const currentFilterRef = filterRefs.current[openDropdown];
+        if (currentFilterRef && !currentFilterRef.contains(event.target)) {
+          setOpenDropdown(null);
+        }
+      }
+    };
+
+    // イベントリスナーを追加
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // クリーンアップ時にイベントリスナーを削除
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openDropdown]); // openDropdown が変更されたときにのみ再実行
+
   return (
     <div style={{ padding: "0" }}>
       {/* フィルターボタン */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1rem" }}>
         {Object.entries(filterLabels).map(([category, label]) => (
-          <div key={category} style={{ position: "relative" }}>
+          <div
+            key={category}
+            style={{ position: "relative" }}
+            ref={el => filterRefs.current[category] = el} // ref を設定
+          >
             <button
               onClick={() => toggleDropdown(category)}
               style={{
@@ -195,6 +219,7 @@ function Publications() {
                   minWidth: "200px",
                   boxShadow: "0 2px 5px rgba(0,0,0,0.2)"
                 }}
+                // ref は親の div に設定済みなので、ここでは不要
               >
                 {filterOptions[category].map(option => (
                   <div key={option} style={{ marginBottom: "0.25rem" }}>

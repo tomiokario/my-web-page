@@ -185,4 +185,32 @@ describe('Publications Component', () => {
     expect(screen.getByText('著者の役割 ▼')).toBeInTheDocument();
     expect(screen.getByText('種類 ▼')).toBeInTheDocument();
   });
+
+  test('should close dropdown when clicking outside', () => {
+    // テスト内容: プルダウンメニュー以外の場所をクリックするとメニューが閉じることを確認
+    renderWithLanguageProvider(<Publications />);
+
+    // 年のフィルターボタンをクリックしてドロップダウンを開く
+    const yearFilterButton = screen.getByText('年度 ▼');
+    fireEvent.click(yearFilterButton);
+
+    // ドロップダウンが表示されていることを確認
+    const yearDropdown = screen.getByTestId('year-dropdown');
+    expect(yearDropdown).toBeInTheDocument();
+
+    // ドキュメントのbodyをクリック（メニュー外のクリックをシミュレート）
+    fireEvent.mouseDown(document.body); // mouseDown イベントを使用
+
+    // ドロップダウンが閉じている（非表示になっている）ことを確認
+    expect(screen.queryByTestId('year-dropdown')).not.toBeInTheDocument();
+
+    // 別のフィルター（著者の役割）でも同様にテスト
+    const authorshipFilterButton = screen.getByText('著者の役割 ▼');
+    fireEvent.click(authorshipFilterButton);
+    const authorshipDropdown = screen.getByTestId('authorship-dropdown');
+    expect(authorshipDropdown).toBeInTheDocument();
+
+    fireEvent.mouseDown(document.body);
+    expect(screen.queryByTestId('authorship-dropdown')).not.toBeInTheDocument();
+  });
 });
