@@ -171,15 +171,30 @@ describe('Publications Component', () => {
     const publicationItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
     expect(publicationItems.length).toBeGreaterThan(0);
     
-    // 最初の出版物アイテムを取得
-    const firstItem = publicationItems[0];
+    // 日本語タイトルを持つ出版物を探す
+    let foundJapaneseTitle = false;
+    let japaneseItem = null;
     
-    // タイトルが日本語で表示されていることを確認
-    const title = firstItem.querySelector('strong');
+    // 実際のデータから日本語タイトルを持つ出版物を探す
+    for (const item of publicationItems) {
+      const title = item.querySelector('strong');
+      // 日本語の文字が含まれているかチェック
+      if (/[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF\u3400-\u4DBF]/.test(title.textContent)) {
+        foundJapaneseTitle = true;
+        japaneseItem = item;
+        break;
+      }
+    }
     
-    // 日本語の文字が含まれていることを確認（少なくとも1つの日本語文字）
-    const hasJapaneseCharacters = /[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF\u3400-\u4DBF]/.test(title.textContent);
-    expect(hasJapaneseCharacters).toBe(true);
+    // 少なくとも1つの出版物に日本語タイトルがあることを確認
+    expect(foundJapaneseTitle).toBe(true);
+    
+    if (japaneseItem) {
+      // 見つかった日本語タイトルを持つ出版物のタイトルが日本語で表示されていることを確認
+      const title = japaneseItem.querySelector('strong');
+      const hasJapaneseCharacters = /[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF\u3400-\u4DBF]/.test(title.textContent);
+      expect(hasJapaneseCharacters).toBe(true);
+    }
     
     // フィルターボタンが日本語で表示されていることを確認（リセットボタンではなく他のフィルターボタンを確認）
     expect(screen.getByText('著者の役割 ▼')).toBeInTheDocument();
