@@ -10,6 +10,9 @@
     "doi": "",
     "webLink": "https://www.isom.jp/PDF/ISOM21_Advance%20Program.pdf",
     "date": "2021年10月3日 → 2021年10月6日",
+    "startDate": "2021-10-03",
+    "endDate": "2021-10-06",
+    "sortableDate": "2021-10-03",
     "others": "",
     "site": "online",
     "journalConference": "ISOM21"
@@ -25,6 +28,9 @@
     "doi": "",
     "webLink": "https://www.ite.or.jp/ken/paper/202202210A94/",
     "date": "2022年2月21日",
+    "startDate": "2022-02-21",
+    "endDate": "2022-02-21",
+    "sortableDate": "2022-02-21",
     "others": "",
     "site": "online",
     "journalConference": "MMS2022"
@@ -40,6 +46,9 @@
     "doi": "",
     "webLink": "https://www.i-w-holography.org/archives/iwh2021-top/iwh2021-program/",
     "date": "2022年3月11日 → 2022年3月12日",
+    "startDate": "2022-03-11",
+    "endDate": "2022-03-12",
+    "sortableDate": "2022-03-11",
     "others": "",
     "site": "",
     "journalConference": "IWH2021"
@@ -55,6 +64,9 @@
     "doi": "",
     "webLink": "https://www.brain.kyutech.ac.jp/~neuro/2021/12/08/3rdsympo/?lang=en",
     "date": "2022年3月18日 → 2022年3月19日",
+    "startDate": "2022-03-18",
+    "endDate": "2022-03-19",
+    "sortableDate": "2022-03-18",
     "others": "",
     "site": "Premier Hotel Mojiko, Kitakyushu, Fukuoka, Japan",
     "journalConference": "the 3rd International Symposium on Neuromorphic AI Hardware"
@@ -70,6 +82,9 @@
     "doi": "",
     "webLink": "https://opg.optica.org/abstract.cfm?uri=ISISOM-2022-ITuPJ_01",
     "date": "2022年7月31日 → 2022年8月3日",
+    "startDate": "2022-07-31",
+    "endDate": "2022-08-03",
+    "sortableDate": "2022-07-31",
     "others": "",
     "site": "Sapporo Convention Center, Sapporo, Hokkaido, Japan",
     "journalConference": "ISOM2022"
@@ -85,6 +100,9 @@
     "doi": "",
     "webLink": "http://sigasd.ipsj.or.jp/?p=1574",
     "date": "2022年12月2日",
+    "startDate": "2022-12-02",
+    "endDate": "2022-12-02",
+    "sortableDate": "2022-12-02",
     "others": "",
     "site": "",
     "journalConference": "第25回ASD研究会"
@@ -100,6 +118,9 @@
     "doi": "",
     "webLink": "http://www.jswe.jp/division/kyushu/2022/entry.html",
     "date": "2022年12月10日",
+    "startDate": "2022-12-10",
+    "endDate": "2022-12-10",
+    "sortableDate": "2022-12-10",
     "others": "",
     "site": "",
     "journalConference": "第7回福祉工学会九州支部大会"
@@ -115,6 +136,9 @@
     "doi": "",
     "webLink": "https://kyutech.repo.nii.ac.jp/records/2000113",
     "date": "2022年12月13日 → 2022年12月15日",
+    "startDate": "2022-12-13",
+    "endDate": "2022-12-15",
+    "sortableDate": "2022-12-13",
     "others": "",
     "site": "",
     "journalConference": "the 4th International Symposium on Neuromorphic AI Hardware"
@@ -130,6 +154,9 @@
     "doi": "",
     "webLink": "https://kyutech.repo.nii.ac.jp/records/2000111",
     "date": "2022年12月13日 → 2022年12月15日",
+    "startDate": "2022-12-13",
+    "endDate": "2022-12-15",
+    "sortableDate": "2022-12-13",
     "others": "",
     "site": "ART HOTEL Kokura New Tagawa, Kitakyushu, Fukuoka, Japan",
     "journalConference": "the 4th International Symposium on Neuromorphic AI Hardware"
@@ -145,6 +172,9 @@
     "doi": "",
     "webLink": "https://npip.ed.kyushu-u.ac.jp/pdf/2nd_optneuro_flyer_v3_1.pdf",
     "date": "2023年3月13日 → 2023年3月14日",
+    "startDate": "2023-03-13",
+    "endDate": "2023-03-14",
+    "sortableDate": "2023-03-13",
     "others": "",
     "site": "九州大学伊都ゲストハウス 多目的ホール, Fukuoka, Japan",
     "journalConference": "第２回光ニューロワークショップ"
@@ -155,11 +185,17 @@
     "japanese": "",
     "type": "Journal paper：原著論文",
     "review": "Reviewed",
-    "authorship": "Corresponding author, Lead author",
+    "authorship": [
+      "Corresponding author",
+      "Lead author"
+    ],
     "presentationType": "",
     "doi": "https://doi.org/10.1007/s10043-023-00810-2",
     "webLink": "",
     "date": "2023年4月28日",
+    "startDate": "2023-04-28",
+    "endDate": "2023-04-28",
+    "sortableDate": "2023-04-28",
     "others": "SharedIt link (full text, view only): https://rdcu.be/daZfo",
     "site": "",
     "journalConference": "Optical Review"
@@ -175,6 +211,9 @@
     "doi": "",
     "webLink": "https://www.i-photonics.jp/meetings/meetings2023.html#20230721SGSIPG",
     "date": "2023年7月21日",
+    "startDate": "2023-07-21",
+    "endDate": "2023-07-21",
+    "sortableDate": "2023-07-21",
     "others": "",
     "site": "東京工業大学大岡山キャンパス　西9号館1階　コラボレーションルーム, Tokyo, Japan",
     "journalConference": "情報フォトニクス研究討論会2023"
@@ -190,6 +229,9 @@
     "doi": "",
     "webLink": "https://www.photoniccomputing.jp/activities/2023_08_07_region_meeting_online.php",
     "date": "2023年8月7日 → 2023年8月8日",
+    "startDate": "2023-08-07",
+    "endDate": "2023-08-08",
+    "sortableDate": "2023-08-07",
     "others": "",
     "site": "東京大学工学部６号館３階セミナー室A・D・B・C, Tokyo, Japan",
     "journalConference": "光の極限性能を生かすフォトニックコンピューティング 第三回領域会議"
@@ -205,6 +247,9 @@
     "doi": "",
     "webLink": "https://www.i-photonics.jp/dhip2023/index.html#",
     "date": "2023年12月18日 → 2023年12月20日",
+    "startDate": "2023-12-18",
+    "endDate": "2023-12-20",
+    "sortableDate": "2023-12-18",
     "others": "",
     "site": "B-con Plaza, Beppu, Oita, Japan",
     "journalConference": "DHIP2023"
@@ -220,6 +265,9 @@
     "doi": "",
     "webLink": "https://kyutech.repo.nii.ac.jp/records/2000785",
     "date": "2024年3月1日 → 2024年3月2日",
+    "startDate": "2024-03-01",
+    "endDate": "2024-03-02",
+    "sortableDate": "2024-03-01",
     "others": "",
     "site": "",
     "journalConference": "the 5th International Symposium on Neuromorphic AI Hardware"
@@ -231,10 +279,16 @@
     "type": "Research paper (international conference)：国際会議",
     "review": "Reviewed",
     "authorship": "Lead author",
-    "presentationType": "Oral, Poster",
+    "presentationType": [
+      "Oral",
+      "Poster"
+    ],
     "doi": "",
     "webLink": "https://kyutech.repo.nii.ac.jp/records/2000786",
     "date": "2024年3月1日 → 2024年3月2日",
+    "startDate": "2024-03-01",
+    "endDate": "2024-03-02",
+    "sortableDate": "2024-03-01",
     "others": "",
     "site": "RIHGA Royal Hotel Kokura, Kitakyushu, Fukuoka, Japan",
     "journalConference": "the 5th International Symposium on Neuromorphic AI Hardware"
@@ -250,6 +304,9 @@
     "doi": "",
     "webLink": "https://kyutech.repo.nii.ac.jp/records/2000826",
     "date": "2024年3月10日",
+    "startDate": "2024-03-10",
+    "endDate": "2024-03-10",
+    "sortableDate": "2024-03-10",
     "others": "",
     "site": "",
     "journalConference": "Photonics NEWS"
@@ -265,6 +322,9 @@
     "doi": "",
     "webLink": "https://www.photoniccomputing.jp/activities/2024_03_11_symposium_session3.php",
     "date": "2024年3月11日 → 2024年3月12日",
+    "startDate": "2024-03-11",
+    "endDate": "2024-03-12",
+    "sortableDate": "2024-03-11",
     "others": "",
     "site": "Ito Hall, Ito International Research Center, the University of Tokyo, Tokyo, Japan",
     "journalConference": "The First International Symposium on Photonic Computing"
@@ -280,6 +340,9 @@
     "doi": "",
     "webLink": "https://www.brain.kyutech.ac.jp/~neuro/2024/03/30/materials-meet-robots-2024/?lang=en",
     "date": "2024年5月7日 → 2024年5月8日",
+    "startDate": "2024-05-07",
+    "endDate": "2024-05-08",
+    "sortableDate": "2024-05-07",
     "others": "",
     "site": "Conference Center of Kitakyushu Science and Research Park, Kitakyushu, Fukuoka, Japan",
     "journalConference": "Materials Meet Robots 2024"
@@ -295,6 +358,9 @@
     "doi": "",
     "webLink": "https://kyutech.repo.nii.ac.jp/records/2001193",
     "date": "2024年7月10日 → 2024年7月12日",
+    "startDate": "2024-07-10",
+    "endDate": "2024-07-12",
+    "sortableDate": "2024-07-10",
     "others": "",
     "site": "",
     "journalConference": "ODF2024"
@@ -310,6 +376,9 @@
     "doi": "",
     "webLink": "https://scholar.google.co.jp/citations?view_op=view_citation&hl=ja&user=15WrAiYAAAAJ&authuser=1&citation_for_view=15WrAiYAAAAJ:Y0pCki6q_DkC",
     "date": "2024年7月10日 → 2024年7月12日",
+    "startDate": "2024-07-10",
+    "endDate": "2024-07-12",
+    "sortableDate": "2024-07-10",
     "others": "",
     "site": "University of Arizona, Tucson, Arizona, USA",
     "journalConference": "ODF2024"
@@ -325,6 +394,9 @@
     "doi": "",
     "webLink": "https://isom.jp/PDF/FInal_Presentation_List_in_ISOM24.pdf",
     "date": "2024年10月20日 → 2024年10月23日",
+    "startDate": "2024-10-20",
+    "endDate": "2024-10-23",
+    "sortableDate": "2024-10-20",
     "others": "",
     "site": "",
     "journalConference": "ISOM2024"
@@ -340,6 +412,9 @@
     "doi": "",
     "webLink": "https://isom.jp/PDF/FInal_Presentation_List_in_ISOM24.pdf",
     "date": "2024年10月20日 → 2024年10月23日",
+    "startDate": "2024-10-20",
+    "endDate": "2024-10-23",
+    "sortableDate": "2024-10-20",
     "others": "",
     "site": "",
     "journalConference": "ISOM2024"
@@ -355,6 +430,9 @@
     "doi": "",
     "webLink": "https://www.ite.or.jp/ken/paper/20241205vAN8/",
     "date": "2024年12月5日",
+    "startDate": "2024-12-05",
+    "endDate": "2024-12-05",
+    "sortableDate": "2024-12-05",
     "others": "",
     "site": "",
     "journalConference": "MMS2024(愛媛)"
@@ -370,6 +448,9 @@
     "doi": "",
     "webLink": "https://www.i-w-holography.org/",
     "date": "2024年12月10日 → 2024年12月12日",
+    "startDate": "2024-12-10",
+    "endDate": "2024-12-12",
+    "sortableDate": "2024-12-10",
     "others": "",
     "site": "Ala Moana Hotel, Honolulu, Hawaii, USA",
     "journalConference": "IWH2024"
@@ -385,6 +466,9 @@
     "doi": "",
     "webLink": "https://www.photoniccomputing.jp/activities/2024_12_17_symposium_session.php",
     "date": "2024年12月17日",
+    "startDate": "2024-12-17",
+    "endDate": "2024-12-17",
+    "sortableDate": "2024-12-17",
     "others": "",
     "site": "国立研究開発法人 情報通信研究機構 本部 ３号館１階 セミナー室前 展示スペース（東京都小金井市）",
     "journalConference": "「光の極限性能を生かすフォトニックコンピューティングの創成」第2回公開シンポジウム"
@@ -400,6 +484,9 @@
     "doi": "",
     "webLink": "https://www.ite.or.jp/ken/paper/20250219kANt/",
     "date": "2025年2月19日",
+    "startDate": "2025-02-19",
+    "endDate": "2025-02-19",
+    "sortableDate": "2025-02-19",
     "others": "",
     "site": "",
     "journalConference": "MMS2024(北海道)"
@@ -415,6 +502,9 @@
     "doi": "",
     "webLink": "",
     "date": "2025年3月3日 → 2025年3月4日",
+    "startDate": "2025-03-03",
+    "endDate": "2025-03-04",
+    "sortableDate": "2025-03-03",
     "others": "",
     "site": "Kitakyushu, Fukuoka, Japan",
     "journalConference": "the 6th International Symposium on Neuromorphic AI Hardware"

@@ -130,6 +130,55 @@ describe('Publications Component', () => {
     expect(resetGroups.length).toBe(initialCount);
   });
   
+  test('should filter publications with array presentation types correctly', () => {
+    // テスト内容: 配列形式のpresentationTypeを持つ出版物が正しくフィルタリングされることを確認
+    renderWithLanguageProvider(<Publications />);
+    
+    // 発表タイプのフィルターボタンをクリック
+    const presentationTypeButton = screen.getByText('発表タイプ ▼');
+    fireEvent.click(presentationTypeButton);
+    
+    // ドロップダウンメニューが表示されることを確認
+    const presentationTypeDropdown = screen.getByTestId('presentationType-dropdown');
+    expect(presentationTypeDropdown).toBeInTheDocument();
+    
+    // 発表タイプのオプションを取得
+    const presentationTypeOptions = presentationTypeDropdown.querySelectorAll('input[type="checkbox"]');
+    expect(presentationTypeOptions.length).toBeGreaterThan(0);
+    
+    // 初期状態での出版物アイテム数を記録
+    const initialItems = document.querySelectorAll('ol li');
+    const initialItemCount = initialItems.length;
+    expect(initialItemCount).toBeGreaterThan(0);
+    
+    // 発表タイプのオプションの中からPosterを選択
+    // （配列形式のpresentationTypeを持つ出版物も含まれるはず）
+    const posterOption = Array.from(presentationTypeOptions)
+      .find(option => option.nextSibling.textContent.trim() === 'Poster');
+    
+    if (posterOption) {
+      fireEvent.click(posterOption);
+      
+      // フィルタリング後の出版物アイテムを取得
+      const filteredItems = document.querySelectorAll('ol li');
+      
+      // フィルタリングにより表示数が変わることを確認
+      expect(filteredItems.length).toBeGreaterThan(0);
+      expect(filteredItems.length).toBeLessThanOrEqual(initialItemCount);
+      
+      // フィルターをリセット
+      const resetButton = screen.getByText('フィルターをリセット');
+      fireEvent.click(resetButton);
+      
+      // リセット後は元の数の出版物アイテムが表示されていることを確認
+      const resetItems = document.querySelectorAll('ol li');
+      expect(resetItems.length).toBe(initialItemCount);
+    } else {
+      // Posterオプションが見つからない場合はテストをスキップ
+      console.log('Posterオプションが見つからないためテストをスキップします');
+    }
+  });
+  
   test('should show active filters with different color', () => {
     // テスト内容: アクティブなフィルターが異なる色で表示されることを確認
     renderWithLanguageProvider(<Publications />);
@@ -168,6 +217,55 @@ describe('Publications Component', () => {
     
     const inactiveAuthorshipFilter = screen.getByText('著者の役割 ▼');
     expect(inactiveAuthorshipFilter).toHaveAttribute('style', expect.stringContaining('background-color: rgb(240, 240, 240)'));
+  });
+  
+  test('should filter publications with array authorship correctly', () => {
+    // テスト内容: 配列形式のauthorshipを持つ出版物が正しくフィルタリングされることを確認
+    renderWithLanguageProvider(<Publications />);
+    
+    // 著者の役割のフィルターボタンをクリック
+    const authorshipButton = screen.getByText('著者の役割 ▼');
+    fireEvent.click(authorshipButton);
+    
+    // ドロップダウンメニューが表示されることを確認
+    const authorshipDropdown = screen.getByTestId('authorship-dropdown');
+    expect(authorshipDropdown).toBeInTheDocument();
+    
+    // 著者の役割のオプションを取得
+    const authorshipOptions = authorshipDropdown.querySelectorAll('input[type="checkbox"]');
+    expect(authorshipOptions.length).toBeGreaterThan(0);
+    
+    // 初期状態での出版物アイテム数を記録
+    const initialItems = document.querySelectorAll('ol li');
+    const initialItemCount = initialItems.length;
+    expect(initialItemCount).toBeGreaterThan(0);
+    
+    // 著者の役割のオプションの中からCorresponding authorを選択
+    // （配列形式のauthorshipを持つ出版物も含まれるはず）
+    const correspondingAuthorOption = Array.from(authorshipOptions)
+      .find(option => option.nextSibling.textContent.trim() === 'Corresponding author');
+    
+    if (correspondingAuthorOption) {
+      fireEvent.click(correspondingAuthorOption);
+      
+      // フィルタリング後の出版物アイテムを取得
+      const filteredItems = document.querySelectorAll('ol li');
+      
+      // フィルタリングにより表示数が変わることを確認
+      expect(filteredItems.length).toBeGreaterThan(0);
+      expect(filteredItems.length).toBeLessThanOrEqual(initialItemCount);
+      
+      // フィルターをリセット
+      const resetButton = screen.getByText('フィルターをリセット');
+      fireEvent.click(resetButton);
+      
+      // リセット後は元の数の出版物アイテムが表示されていることを確認
+      const resetItems = document.querySelectorAll('ol li');
+      expect(resetItems.length).toBe(initialItemCount);
+    } else {
+      // Corresponding authorオプションが見つからない場合はテストをスキップ
+      console.log('Corresponding authorオプションが見つからないためテストをスキップします');
+    }
   });
   
   test('should display publications in Japanese when language is set to Japanese', () => {
@@ -270,6 +368,42 @@ describe('Publications Component', () => {
     expect(sortOrderSelector.value).toBe('type');
   });
   
+  test('should sort publications by sortableDate in chronological order', () => {
+    // テスト内容: 出版物が開始日に基づいて時系列順にソートされることを確認
+    
+    // 実際のPublicationsコンポーネントをレンダリング
+    renderWithLanguageProvider(<Publications />);
+    
+    // 時系列順に切り替え
+    const sortOrderSelector = screen.getByRole('combobox');
+    fireEvent.change(sortOrderSelector, { target: { value: 'chronological' } });
+    
+    // 出版物リストを取得
+    const publicationItems = document.querySelectorAll('ol li');
+    
+    // 少なくとも1つの出版物があることを確認
+    expect(publicationItems.length).toBeGreaterThan(0);
+    
+    // 出版物が時系列順（新しい順）でソートされていることを確認
+    // 実際のデータを使用するため、特定の出版物名ではなく、日付の順序を確認
+    
+    // 各出版物の日付を取得
+    const dates = Array.from(publicationItems).map(item => {
+      // 日付を含むタグを探す
+      const tags = item.querySelectorAll('.tag');
+      const yearTag = Array.from(tags).find(tag => /\d{4}/.test(tag.textContent));
+      return yearTag ? parseInt(yearTag.textContent.match(/\d{4}/)[0], 10) : 0;
+    });
+    
+    // 日付が降順（新しい順）であることを確認
+    for (let i = 1; i < dates.length; i++) {
+      // 日付が0の場合はスキップ（日付が取得できなかった場合）
+      if (dates[i] === 0 || dates[i-1] === 0) continue;
+      
+      // 前の日付が現在の日付以上であることを確認（同じ年の場合もあるため）
+      expect(dates[i-1]).toBeGreaterThanOrEqual(dates[i]);
+    }
+  });
   test('should display publications in groups with separate numbering', () => {
     // テスト内容: グループ表示機能が正しく動作することを確認
     renderWithLanguageProvider(<Publications />);

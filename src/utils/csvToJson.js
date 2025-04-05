@@ -41,17 +41,90 @@ function csvToJson(csvFilePath) {
       // 各値をヘッダーと対応させてオブジェクトを作成
       const obj = {};
       
+      // カンマで区切られた値を配列に変換する関数
+      const processCommaSeparatedValue = (value) => {
+        const trimmedValue = (value || '').trim();
+        if (trimmedValue.includes(',')) {
+          return trimmedValue.split(',').map(item => item.trim());
+        }
+        return trimmedValue;
+      };
+      
+      // 日付を開始日と終了日に分割し、ソート可能な形式に変換する関数
+      const processDate = (dateString) => {
+        if (!dateString) return { startDate: '', endDate: '', sortableDate: '' };
+        
+        // 日付が「2021年10月3日 → 2021年10月6日」のような形式かチェック
+        const dateRangeMatch = dateString.match(/(\d{4})年(\d{1,2})月(\d{1,2})日(?:\s*→\s*(\d{4})年(\d{1,2})月(\d{1,2})日)?/);
+        
+        if (dateRangeMatch) {
+          // 開始日を取得
+          const startYear = dateRangeMatch[1];
+          const startMonth = dateRangeMatch[2].padStart(2, '0');
+          const startDay = dateRangeMatch[3].padStart(2, '0');
+          const startDate = `${startYear}-${startMonth}-${startDay}`;
+          
+          // 終了日を取得（存在する場合）
+          let endDate = '';
+          if (dateRangeMatch[4]) {
+            const endYear = dateRangeMatch[4];
+            const endMonth = dateRangeMatch[5].padStart(2, '0');
+            const endDay = dateRangeMatch[6].padStart(2, '0');
+            endDate = `${endYear}-${endMonth}-${endDay}`;
+          } else {
+            endDate = startDate; // 終了日がない場合は開始日と同じ
+          }
+          
+          return {
+            startDate,
+            endDate,
+            sortableDate: startDate // ソート用の日付は開始日を使用
+          };
+        }
+        
+        // 「2021年10月」のような年月のみの形式をチェック
+        const yearMonthMatch = dateString.match(/(\d{4})年(\d{1,2})月/);
+        if (yearMonthMatch) {
+          const year = yearMonthMatch[1];
+          const month = yearMonthMatch[2].padStart(2, '0');
+          const date = `${year}-${month}-01`; // 日付は1日とする
+          
+          return {
+            startDate: date,
+            endDate: date,
+            sortableDate: date
+          };
+        }
+        
+        // その他の形式の場合はそのまま返す
+        return {
+          startDate: dateString,
+          endDate: dateString,
+          sortableDate: dateString
+        };
+      };
+      
       // 各列の値をマッピング（値が存在する場合のみtrim()を適用）
       obj.hasEmptyFields = (values[0] || '').trim() === 'Yes';
       obj.name = (values[1] || '').trim();
       obj.japanese = (values[2] || '').trim();
       obj.type = (values[3] || '').trim();
       obj.review = (values[4] || '').trim();
-      obj.authorship = (values[5] || '').trim();
-      obj.presentationType = (values[6] || '').trim();
+      
+      // カンマで区切られる可能性のあるフィールドは配列に変換
+      obj.authorship = processCommaSeparatedValue(values[5]);
+      obj.presentationType = processCommaSeparatedValue(values[6]);
       obj.doi = (values[7] || '').trim();
       obj.webLink = (values[8] || '').trim();
-      obj.date = (values[9] || '').trim();
+      
+      // 日付を処理
+      const dateValue = (values[9] || '').trim();
+      const processedDate = processDate(dateValue);
+      obj.date = dateValue; // 元の日付文字列も保持
+      obj.startDate = processedDate.startDate;
+      obj.endDate = processedDate.endDate;
+      obj.sortableDate = processedDate.sortableDate;
+      
       obj.others = (values[10] || '').trim();
       obj.site = (values[11] || '').trim();
       obj.journalConference = (values[12] || '').trim();

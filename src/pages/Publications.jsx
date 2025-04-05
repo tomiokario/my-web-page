@@ -52,7 +52,10 @@ function Publications() {
         review: pub.review,
         authorship: pub.authorship,
         presentationType: pub.presentationType,
-        others: pub.others
+        others: pub.others,
+        startDate: pub.startDate,
+        endDate: pub.endDate,
+        sortableDate: pub.sortableDate
       };
     });
   }, []);
@@ -60,8 +63,12 @@ function Publications() {
   // 並び順に基づいて出版物を並べ替え
   const sortedPublications = useMemo(() => {
     if (sortOrder === 'chronological') {
-      // 時系列順（新しい順）
+      // 時系列順（新しい順）- 開始日に基づくソート
       return [...formattedPublications].sort((a, b) => {
+        // sortableDateが存在する場合はそれを使用、存在しない場合は年を使用
+        if (a.sortableDate && b.sortableDate) {
+          return a.sortableDate > b.sortableDate ? -1 : a.sortableDate < b.sortableDate ? 1 : 0;
+        }
         return (b.year || 0) - (a.year || 0);
       });
     } else {
@@ -75,7 +82,10 @@ function Publications() {
           return typeIndexA - typeIndexB;
         }
         
-        // 同じ種類の場合は年の新しい順
+        // 同じ種類の場合は開始日の新しい順
+        if (a.sortableDate && b.sortableDate) {
+          return a.sortableDate > b.sortableDate ? -1 : a.sortableDate < b.sortableDate ? 1 : 0;
+        }
         return (b.year || 0) - (a.year || 0);
       });
     }
@@ -95,8 +105,18 @@ function Publications() {
       if (pub.year && !options.year.includes(pub.year.toString())) {
         options.year.push(pub.year.toString());
       }
-      if (pub.authorship && !options.authorship.includes(pub.authorship)) {
-        options.authorship.push(pub.authorship);
+      
+      // authorshipが配列の場合は各要素を個別に処理
+      if (pub.authorship) {
+        if (Array.isArray(pub.authorship)) {
+          pub.authorship.forEach(role => {
+            if (!options.authorship.includes(role)) {
+              options.authorship.push(role);
+            }
+          });
+        } else if (!options.authorship.includes(pub.authorship)) {
+          options.authorship.push(pub.authorship);
+        }
       }
       if (pub.type && !options.type.includes(pub.type)) {
         options.type.push(pub.type);
@@ -104,8 +124,17 @@ function Publications() {
       if (pub.review && !options.review.includes(pub.review)) {
         options.review.push(pub.review);
       }
-      if (pub.presentationType && !options.presentationType.includes(pub.presentationType)) {
-        options.presentationType.push(pub.presentationType);
+      // presentationTypeが配列の場合は各要素を個別に処理
+      if (pub.presentationType) {
+        if (Array.isArray(pub.presentationType)) {
+          pub.presentationType.forEach(type => {
+            if (!options.presentationType.includes(type)) {
+              options.presentationType.push(type);
+            }
+          });
+        } else if (!options.presentationType.includes(pub.presentationType)) {
+          options.presentationType.push(pub.presentationType);
+        }
       }
     });
     
@@ -121,8 +150,21 @@ function Publications() {
       }
       
       // 著者の役割フィルター
-      if (selectedFilters.authorship.length > 0 && !selectedFilters.authorship.includes(pub.authorship)) {
-        return false;
+      if (selectedFilters.authorship.length > 0) {
+        // authorshipが配列の場合
+        if (Array.isArray(pub.authorship)) {
+          // 選択されたフィルターのいずれかが配列内に存在するかチェック
+          const hasMatchingRole = pub.authorship.some(role =>
+            selectedFilters.authorship.includes(role)
+          );
+          if (!hasMatchingRole) {
+            return false;
+          }
+        }
+        // authorshipが文字列の場合
+        else if (!selectedFilters.authorship.includes(pub.authorship)) {
+          return false;
+        }
       }
       
       // タイプフィルター
@@ -136,8 +178,21 @@ function Publications() {
       }
       
       // 発表タイプフィルター
-      if (selectedFilters.presentationType.length > 0 && !selectedFilters.presentationType.includes(pub.presentationType)) {
-        return false;
+      if (selectedFilters.presentationType.length > 0) {
+        // presentationTypeが配列の場合
+        if (Array.isArray(pub.presentationType)) {
+          // 選択されたフィルターのいずれかが配列内に存在するかチェック
+          const hasMatchingType = pub.presentationType.some(type =>
+            selectedFilters.presentationType.includes(type)
+          );
+          if (!hasMatchingType) {
+            return false;
+          }
+        }
+        // presentationTypeが文字列の場合
+        else if (!selectedFilters.presentationType.includes(pub.presentationType)) {
+          return false;
+        }
       }
       
       return true;
@@ -436,9 +491,25 @@ function Publications() {
                       </span>
                     )}
                     {pub.authorship && (
-                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                        {pub.authorship}
-                      </span>
+                      <>
+                        {Array.isArray(pub.authorship) ? (
+                          // 配列の場合は各要素を個別のタグとして表示
+                          pub.authorship.map((role, index) => (
+                            <span
+                              key={`${pub.id}-role-${index}`}
+                              className="tag"
+                              style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem", marginRight: "0.5rem" }}
+                            >
+                              {role}
+                            </span>
+                          ))
+                        ) : (
+                          // 文字列の場合は単一のタグとして表示
+                          <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                            {pub.authorship}
+                          </span>
+                        )}
+                      </>
                     )}
                     {pub.type && (
                       <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
@@ -451,16 +522,57 @@ function Publications() {
                       </span>
                     )}
                     {pub.presentationType && (
-                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                        {pub.presentationType}
-                      </span>
+                      <>
+                        {Array.isArray(pub.presentationType) ? (
+                          // 配列の場合は各要素を個別のタグとして表示
+                          pub.presentationType.map((type, index) => (
+                            <span
+                              key={`${pub.id}-type-${index}`}
+                              className="tag"
+                              style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem", marginRight: "0.5rem" }}
+                            >
+                              {type}
+                            </span>
+                          ))
+                        ) : (
+                          // 文字列の場合は単一のタグとして表示
+                          <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                            {pub.presentationType}
+                          </span>
+                        )}
+                      </>
                     )}
                   </div>
                   
                   {/* 三行目: ジャーナル名 */}
                   <div style={{ marginTop: "0.5rem" }}>{pub.journal}</div>
                   
-                  {/* 四行目以降: DOI、URL、Others */}
+                  {/* 四行目: 開始日、終了日、場所 */}
+                  {(pub.startDate || pub.site) && (
+                    <div style={{ marginTop: "0.25rem", fontSize: "0.9rem", color: "#555" }}>
+                      {/* 開始日と終了日が同じ場合は開始日のみ表示 */}
+                      {pub.startDate && (
+                        <>
+                          {language === 'ja' ? '日付: ' : 'Date: '}
+                          {pub.startDate === pub.endDate ?
+                            pub.startDate :
+                            `${pub.startDate} → ${pub.endDate}`
+                          }
+                        </>
+                      )}
+                      
+                      {/* 場所がある場合は表示 */}
+                      {pub.site && (
+                        <>
+                          {pub.startDate && <span style={{ margin: "0 0.5rem" }}>|</span>}
+                          {language === 'ja' ? '場所: ' : 'Location: '}
+                          {pub.site}
+                        </>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* 五行目以降: DOI、URL、Others */}
                   {pub.doi && (
                     <div style={{ marginTop: "0.25rem" }}>
                       DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer">
