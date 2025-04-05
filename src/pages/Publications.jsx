@@ -52,7 +52,10 @@ function Publications() {
         review: pub.review,
         authorship: pub.authorship,
         presentationType: pub.presentationType,
-        others: pub.others
+        others: pub.others,
+        startDate: pub.startDate,
+        endDate: pub.endDate,
+        sortableDate: pub.sortableDate
       };
     });
   }, []);
@@ -60,8 +63,12 @@ function Publications() {
   // 並び順に基づいて出版物を並べ替え
   const sortedPublications = useMemo(() => {
     if (sortOrder === 'chronological') {
-      // 時系列順（新しい順）
+      // 時系列順（新しい順）- 開始日に基づくソート
       return [...formattedPublications].sort((a, b) => {
+        // sortableDateが存在する場合はそれを使用、存在しない場合は年を使用
+        if (a.sortableDate && b.sortableDate) {
+          return a.sortableDate > b.sortableDate ? -1 : a.sortableDate < b.sortableDate ? 1 : 0;
+        }
         return (b.year || 0) - (a.year || 0);
       });
     } else {
@@ -75,7 +82,10 @@ function Publications() {
           return typeIndexA - typeIndexB;
         }
         
-        // 同じ種類の場合は年の新しい順
+        // 同じ種類の場合は開始日の新しい順
+        if (a.sortableDate && b.sortableDate) {
+          return a.sortableDate > b.sortableDate ? -1 : a.sortableDate < b.sortableDate ? 1 : 0;
+        }
         return (b.year || 0) - (a.year || 0);
       });
     }
@@ -537,7 +547,32 @@ function Publications() {
                   {/* 三行目: ジャーナル名 */}
                   <div style={{ marginTop: "0.5rem" }}>{pub.journal}</div>
                   
-                  {/* 四行目以降: DOI、URL、Others */}
+                  {/* 四行目: 開始日、終了日、場所 */}
+                  {(pub.startDate || pub.site) && (
+                    <div style={{ marginTop: "0.25rem", fontSize: "0.9rem", color: "#555" }}>
+                      {/* 開始日と終了日が同じ場合は開始日のみ表示 */}
+                      {pub.startDate && (
+                        <>
+                          {language === 'ja' ? '日付: ' : 'Date: '}
+                          {pub.startDate === pub.endDate ?
+                            pub.startDate :
+                            `${pub.startDate} → ${pub.endDate}`
+                          }
+                        </>
+                      )}
+                      
+                      {/* 場所がある場合は表示 */}
+                      {pub.site && (
+                        <>
+                          {pub.startDate && <span style={{ margin: "0 0.5rem" }}>|</span>}
+                          {language === 'ja' ? '場所: ' : 'Location: '}
+                          {pub.site}
+                        </>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* 五行目以降: DOI、URL、Others */}
                   {pub.doi && (
                     <div style={{ marginTop: "0.25rem" }}>
                       DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer">

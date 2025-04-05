@@ -368,6 +368,42 @@ describe('Publications Component', () => {
     expect(sortOrderSelector.value).toBe('type');
   });
   
+  test('should sort publications by sortableDate in chronological order', () => {
+    // テスト内容: 出版物が開始日に基づいて時系列順にソートされることを確認
+    
+    // 実際のPublicationsコンポーネントをレンダリング
+    renderWithLanguageProvider(<Publications />);
+    
+    // 時系列順に切り替え
+    const sortOrderSelector = screen.getByRole('combobox');
+    fireEvent.change(sortOrderSelector, { target: { value: 'chronological' } });
+    
+    // 出版物リストを取得
+    const publicationItems = document.querySelectorAll('ol li');
+    
+    // 少なくとも1つの出版物があることを確認
+    expect(publicationItems.length).toBeGreaterThan(0);
+    
+    // 出版物が時系列順（新しい順）でソートされていることを確認
+    // 実際のデータを使用するため、特定の出版物名ではなく、日付の順序を確認
+    
+    // 各出版物の日付を取得
+    const dates = Array.from(publicationItems).map(item => {
+      // 日付を含むタグを探す
+      const tags = item.querySelectorAll('.tag');
+      const yearTag = Array.from(tags).find(tag => /\d{4}/.test(tag.textContent));
+      return yearTag ? parseInt(yearTag.textContent.match(/\d{4}/)[0], 10) : 0;
+    });
+    
+    // 日付が降順（新しい順）であることを確認
+    for (let i = 1; i < dates.length; i++) {
+      // 日付が0の場合はスキップ（日付が取得できなかった場合）
+      if (dates[i] === 0 || dates[i-1] === 0) continue;
+      
+      // 前の日付が現在の日付以上であることを確認（同じ年の場合もあるため）
+      expect(dates[i-1]).toBeGreaterThanOrEqual(dates[i]);
+    }
+  });
   test('should display publications in groups with separate numbering', () => {
     // テスト内容: グループ表示機能が正しく動作することを確認
     renderWithLanguageProvider(<Publications />);

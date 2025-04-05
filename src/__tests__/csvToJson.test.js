@@ -222,4 +222,69 @@ No,"Test Author, ""Single Type""",テスト,Test Type,Reviewed,Lead author,Oral,
       }
     }
   });
+  
+  test('processes dates correctly into start and end dates', () => {
+    // テスト内容: 日付が正しく開始日と終了日に分割され、ソート可能な形式で格納されることを確認
+    
+    // テスト用のCSVデータを準備（様々な形式の日付を含む）
+    const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
+No,"Test Date Range",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2021年10月3日 → 2021年10月6日,,Test Site,Test Journal
+No,"Test Single Date",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2022年5月15日,,Test Site,Test Journal
+No,"Test Year Month Only",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023年7月,,Test Site,Test Journal
+No,"Test Empty Date",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,,,Test Site,Test Journal
+`;
+    
+    // 一時ファイルのパスを設定
+    const tempDir = path.join(__dirname, '../../temp');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+    
+    const tempFilePath = path.join(tempDir, 'temp_dates.csv');
+    
+    // テスト前に一時ファイルが存在する場合は削除
+    if (fs.existsSync(tempFilePath)) {
+      fs.unlinkSync(tempFilePath);
+    }
+    
+    // 一時ファイルに書き込み
+    fs.writeFileSync(tempFilePath, testCsvData, 'utf8');
+    
+    try {
+      // 変換処理を実行
+      const jsonData = csvToJson(tempFilePath);
+      
+      // 4つのデータが正しく変換されていることを確認
+      expect(jsonData.length).toBe(4);
+      
+      // 日付範囲が正しく処理されていることを確認
+      expect(jsonData[0].date).toBe('2021年10月3日 → 2021年10月6日');
+      expect(jsonData[0].startDate).toBe('2021-10-03');
+      expect(jsonData[0].endDate).toBe('2021-10-06');
+      expect(jsonData[0].sortableDate).toBe('2021-10-03');
+      
+      // 単一の日付が正しく処理されていることを確認
+      expect(jsonData[1].date).toBe('2022年5月15日');
+      expect(jsonData[1].startDate).toBe('2022-05-15');
+      expect(jsonData[1].endDate).toBe('2022-05-15');
+      expect(jsonData[1].sortableDate).toBe('2022-05-15');
+      
+      // 年月のみの日付が正しく処理されていることを確認
+      expect(jsonData[2].date).toBe('2023年7月');
+      expect(jsonData[2].startDate).toBe('2023-07-01');
+      expect(jsonData[2].endDate).toBe('2023-07-01');
+      expect(jsonData[2].sortableDate).toBe('2023-07-01');
+      
+      // 空の日付が正しく処理されていることを確認
+      expect(jsonData[3].date).toBe('');
+      expect(jsonData[3].startDate).toBe('');
+      expect(jsonData[3].endDate).toBe('');
+      expect(jsonData[3].sortableDate).toBe('');
+    } finally {
+      // テスト後に一時ファイルを削除
+      if (fs.existsSync(tempFilePath)) {
+        fs.unlinkSync(tempFilePath);
+      }
+    }
+  });
 });
