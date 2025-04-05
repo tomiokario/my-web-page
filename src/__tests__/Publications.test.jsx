@@ -66,7 +66,7 @@ describe('Publications Component', () => {
     // 出版物の構造を確認
     
     // 1. タイトルが表示されていることを確認
-    const title = within(firstItem).getByText(/.+/, { selector: 'strong' });
+    const title = within(firstItem).getByText(/.+/, { selector: 'div.mantine-1si5u8a' });
     expect(title).toBeInTheDocument();
     expect(title).toHaveTextContent(/.+/);
     
@@ -283,7 +283,7 @@ describe('Publications Component', () => {
     const items = screen.getAllByRole('listitem');
     
     // 日本語の文字を含むタイトルを探す
-    const titles = screen.getAllByText(/.+/, { selector: 'strong' });
+    const titles = screen.getAllByText(/.+/, { selector: 'div.mantine-1si5u8a' });
     const japaneseRegex = /[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF\u3400-\u4DBF]/;
     
     // 日本語のタイトルを持つ要素を探す
@@ -300,7 +300,7 @@ describe('Publications Component', () => {
     
     if (japaneseItem) {
       // 見つかった日本語タイトルを持つ出版物のタイトルが日本語で表示されていることを確認
-      const title = japaneseItem.querySelector('strong');
+      const title = japaneseItem.querySelector('div.mantine-1si5u8a');
       const hasJapaneseCharacters = /[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF\u3400-\u4DBF]/.test(title.textContent);
       expect(hasJapaneseCharacters).toBe(true);
     }
