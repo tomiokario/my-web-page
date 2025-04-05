@@ -17,6 +17,7 @@
 # documents
 docs/cline/
 docs/pull_requests/
+docs/refactoring/
 
 # misc
 .DS_Store

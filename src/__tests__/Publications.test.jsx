@@ -66,7 +66,7 @@ describe('Publications Component', () => {
     // 出版物の構造を確認
     
     // 1. タイトルが表示されていることを確認
-    const title = within(firstItem).getByText(/.+/, { selector: 'strong' });
+    const title = within(firstItem).getByText(/.+/, { selector: 'div.mantine-1si5u8a' });
     expect(title).toBeInTheDocument();
     expect(title).toHaveTextContent(/.+/);
     
@@ -100,7 +100,7 @@ describe('Publications Component', () => {
     expect(initialCount).toBeGreaterThan(0);
     
     // 年のフィルターボタンをクリック
-    const yearFilterButton = screen.getByText('年度 ▼');
+    const yearFilterButton = screen.getByTestId('year-filter-button');
     fireEvent.click(yearFilterButton);
     
     // ドロップダウンメニューが表示されることを確認
@@ -121,7 +121,7 @@ describe('Publications Component', () => {
     expect(yearFilteredGroups.length).toBeGreaterThan(0);
     
     // フィルターをリセット
-    const resetButton = screen.getByText('フィルターをリセット');
+    const resetButton = screen.getByTestId('reset-filters-button');
     fireEvent.click(resetButton);
     // リセット後は元の数のグループが表示されていることを確認
     const resetGroups = screen.getAllByRole('heading', { level: 3 });
@@ -133,7 +133,7 @@ describe('Publications Component', () => {
     renderWithLanguageProvider(<Publications />);
     
     // 発表タイプのフィルターボタンをクリック
-    const presentationTypeButton = screen.getByText('発表タイプ ▼');
+    const presentationTypeButton = screen.getByTestId('presentationType-filter-button');
     fireEvent.click(presentationTypeButton);
     
     // ドロップダウンメニューが表示されることを確認
@@ -170,7 +170,7 @@ describe('Publications Component', () => {
     expect(filteredItems.length).toBeGreaterThanOrEqual(1);
     
     // フィルターをリセット
-    const resetButton = screen.getByText('フィルターをリセット');
+    const resetButton = screen.getByTestId('reset-filters-button');
     fireEvent.click(resetButton);
     
     // リセット後は元の数の出版物アイテムが表示されていることを確認
@@ -178,44 +178,46 @@ describe('Publications Component', () => {
     expect(resetItems.length).toBe(initialItemCount);
   });
   
-  test('should show active filters with different color', () => {
-    // テスト内容: アクティブなフィルターが異なる色で表示されることを確認
+  test('should show active filters and reset them', () => {
+    // テスト内容: アクティブなフィルターが表示され、リセットできることを確認
     renderWithLanguageProvider(<Publications />);
     
+    // 初期状態では、アクティブフィルターが表示されていないことを確認
+    expect(screen.queryByTestId('active-filters')).not.toBeInTheDocument();
+    
     // 年のフィルターボタンをクリック
-    const yearFilterButton = screen.getByText('年度 ▼');
+    const yearFilterButton = screen.getByTestId('year-filter-button');
     fireEvent.click(yearFilterButton);
     
     // 2021年のチェックボックスをクリック
     const year2021Checkbox = screen.getByLabelText('2021');
     fireEvent.click(year2021Checkbox);
     
-    // フィルターボタンの色が変わっていることを確認
-    const activeYearFilter = screen.getByText('年度 ▼');
-    expect(activeYearFilter).toHaveAttribute('style', expect.stringContaining('background-color: rgb(192, 224, 255)'));
+    // アクティブフィルターが表示されていることを確認
+    expect(screen.getByTestId('active-filters')).toBeInTheDocument();
+    
+    // 年のフィルタータグが表示されていることを確認
+    expect(screen.getByText('年度:')).toBeInTheDocument();
+    expect(screen.getByText('2021 ✕')).toBeInTheDocument();
     
     // 著者の役割のフィルターボタンをクリック
-    const authorshipFilterButton = screen.getByText('著者の役割 ▼');
+    const authorshipFilterButton = screen.getByTestId('authorship-filter-button');
     fireEvent.click(authorshipFilterButton);
     
     // Lead authorのチェックボックスをクリック
     const leadAuthorCheckbox = screen.getByLabelText('Lead author');
     fireEvent.click(leadAuthorCheckbox);
     
-    // フィルターボタンの色が変わっていることを確認
-    const activeAuthorshipFilter = screen.getByText('著者の役割 ▼');
-    expect(activeAuthorshipFilter).toHaveAttribute('style', expect.stringContaining('background-color: rgb(192, 224, 255)'));
+    // 著者の役割のフィルタータグが表示されていることを確認
+    expect(screen.getByText('著者の役割:')).toBeInTheDocument();
+    expect(screen.getByText('Lead author ✕')).toBeInTheDocument();
     
     // フィルターをリセット
-    const resetButton = screen.getByText('フィルターをリセット');
+    const resetButton = screen.getByTestId('reset-filters-button');
     fireEvent.click(resetButton);
     
-    // フィルターボタンの色が元に戻っていることを確認
-    const inactiveYearFilter = screen.getByText('年度 ▼');
-    expect(inactiveYearFilter).toHaveAttribute('style', expect.stringContaining('background-color: rgb(240, 240, 240)'));
-    
-    const inactiveAuthorshipFilter = screen.getByText('著者の役割 ▼');
-    expect(inactiveAuthorshipFilter).toHaveAttribute('style', expect.stringContaining('background-color: rgb(240, 240, 240)'));
+    // リセット後はアクティブフィルターが表示されていないことを確認
+    expect(screen.queryByTestId('active-filters')).not.toBeInTheDocument();
   });
   
   test('should filter publications with array authorship correctly', () => {
@@ -228,7 +230,7 @@ describe('Publications Component', () => {
     expect(initialItemCount).toBeGreaterThanOrEqual(1);
     
     // Act - 著者の役割のフィルターボタンをクリック
-    const authorshipButton = screen.getByText('著者の役割 ▼');
+    const authorshipButton = screen.getByTestId('authorship-filter-button');
     fireEvent.click(authorshipButton);
     
     // ドロップダウンメニューが表示されることを確認
@@ -259,7 +261,7 @@ describe('Publications Component', () => {
     expect(filteredItems.length).toBeGreaterThanOrEqual(1);
     
     // フィルターをリセット
-    const resetButton = screen.getByText('フィルターをリセット');
+    const resetButton = screen.getByTestId('reset-filters-button');
     fireEvent.click(resetButton);
     
     // リセット後は元の数の出版物アイテムが表示されていることを確認
@@ -272,8 +274,8 @@ describe('Publications Component', () => {
     renderWithLanguageProvider(<Publications />, { language: 'ja' });
     
     // フィルターボタンが日本語になっていることを確認
-    const yearFilterButton = screen.getByText('年度 ▼');
-    expect(yearFilterButton).toBeInTheDocument();
+    const yearFilterButton = screen.getByTestId('year-filter-button');
+    expect(yearFilterButton).toHaveTextContent('年度 ▼');
     
     // グループヘッダーを取得
     const groupHeaders = screen.getAllByRole('heading', { level: 3 });
@@ -283,7 +285,7 @@ describe('Publications Component', () => {
     const items = screen.getAllByRole('listitem');
     
     // 日本語の文字を含むタイトルを探す
-    const titles = screen.getAllByText(/.+/, { selector: 'strong' });
+    const titles = screen.getAllByText(/.+/, { selector: 'div.mantine-1si5u8a' });
     const japaneseRegex = /[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF\u3400-\u4DBF]/;
     
     // 日本語のタイトルを持つ要素を探す
@@ -300,14 +302,14 @@ describe('Publications Component', () => {
     
     if (japaneseItem) {
       // 見つかった日本語タイトルを持つ出版物のタイトルが日本語で表示されていることを確認
-      const title = japaneseItem.querySelector('strong');
+      const title = japaneseItem.querySelector('div.mantine-1si5u8a');
       const hasJapaneseCharacters = /[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF\u3400-\u4DBF]/.test(title.textContent);
       expect(hasJapaneseCharacters).toBe(true);
     }
     
     // フィルターボタンが日本語で表示されていることを確認（リセットボタンではなく他のフィルターボタンを確認）
-    expect(screen.getByText('著者の役割 ▼')).toBeInTheDocument();
-    expect(screen.getByText('種類 ▼')).toBeInTheDocument();
+    expect(screen.getByTestId('authorship-filter-button')).toHaveTextContent('著者の役割 ▼');
+    expect(screen.getByTestId('type-filter-button')).toHaveTextContent('種類 ▼');
   });
 
   test('should close dropdown when clicking outside', () => {
@@ -315,7 +317,7 @@ describe('Publications Component', () => {
     renderWithLanguageProvider(<Publications />);
 
     // 年のフィルターボタンをクリックしてドロップダウンを開く
-    const yearFilterButton = screen.getByText('年度 ▼');
+    const yearFilterButton = screen.getByTestId('year-filter-button');
     fireEvent.click(yearFilterButton);
 
     // ドロップダウンが表示されていることを確認
@@ -329,7 +331,7 @@ describe('Publications Component', () => {
     expect(screen.queryByTestId('year-dropdown')).not.toBeInTheDocument();
 
     // 別のフィルター（著者の役割）でも同様にテスト
-    const authorshipFilterButton = screen.getByText('著者の役割 ▼');
+    const authorshipFilterButton = screen.getByTestId('authorship-filter-button');
     fireEvent.click(authorshipFilterButton);
     const authorshipDropdown = screen.getByTestId('authorship-dropdown');
     expect(authorshipDropdown).toBeInTheDocument();
