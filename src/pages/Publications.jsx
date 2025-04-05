@@ -306,9 +306,6 @@ function Publications() {
     });
   };
 
-  // フィルターが選択されているかどうか
-  const hasActiveFilters = Object.values(selectedFilters).some(filters => filters.length > 0);
-
   // 言語に応じたラベル
   const filterLabels = {
     year: language === 'ja' ? '年度' : 'Year',
