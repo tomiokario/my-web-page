@@ -2,6 +2,8 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import publicationsData from "../data/publications.json";
 import PublicationGroup from "../components/publications/PublicationGroup";
+import FilterDropdown from "../components/publications/FilterDropdown";
+import ActiveFilters from "../components/publications/ActiveFilters";
 
 // 出版物の種類の順序を定義
 const TYPE_ORDER = [
@@ -360,106 +362,28 @@ function Publications() {
       {/* フィルターボタン */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1rem" }}>
         {Object.entries(filterLabels).map(([category, label]) => (
-          <div
+          <FilterDropdown
             key={category}
-            style={{ position: "relative" }}
-            ref={el => filterRefs.current[category] = el} // ref を設定
-          >
-            <button
-              onClick={() => toggleDropdown(category)}
-              style={{
-                padding: "0.5rem 1rem",
-                backgroundColor: selectedFilters[category].length > 0 ? "#c0e0ff" : "#f0f0f0",
-                border: "none",
-                borderRadius: "0.25rem",
-                cursor: "pointer",
-                fontWeight: selectedFilters[category].length > 0 ? "bold" : "normal"
-              }}
-            >
-              {label} ▼
-            </button>
-            
-            {openDropdown === category && (
-              <div
-                data-testid={`${category}-dropdown`}
-                style={{
-                  position: "absolute",
-                  top: "100%",
-                  left: 0,
-                  zIndex: 10,
-                  backgroundColor: "white",
-                  border: "1px solid #ccc",
-                  borderRadius: "0.25rem",
-                  padding: "0.5rem",
-                  minWidth: "200px",
-                  boxShadow: "0 2px 5px rgba(0,0,0,0.2)"
-                }}
-                // ref は親の div に設定済みなので、ここでは不要
-              >
-                {filterOptions[category].map(option => (
-                  <div key={option} style={{ marginBottom: "0.25rem" }}>
-                    <label style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
-                      <input
-                        type="checkbox"
-                        checked={selectedFilters[category].includes(option)}
-                        onChange={() => toggleFilter(category, option)}
-                        style={{ marginRight: "0.5rem" }}
-                      />
-                      {option}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+            category={category}
+            label={label}
+            options={filterOptions[category]}
+            selectedValues={selectedFilters[category]}
+            isOpen={openDropdown === category}
+            onToggleDropdown={toggleDropdown}
+            onToggleFilter={toggleFilter}
+            filterRef={el => filterRefs.current[category] = el}
+          />
         ))}
       </div>
       
-      {/* フィルターリセットボタン */}
-      {hasActiveFilters && (
-        <button 
-          onClick={resetFilters}
-          style={{
-            padding: "0.5rem 1rem",
-            backgroundColor: "#f0f0f0",
-            border: "none",
-            borderRadius: "0.25rem",
-            cursor: "pointer",
-            marginLeft: "0.5rem"
-          }}
-        >
-          {resetLabel}
-        </button>
-      )}
-      
-      {/* 選択されているフィルターを表示 */}
-      {hasActiveFilters && (
-        <div style={{ marginTop: "0.5rem", marginBottom: "1rem" }}>
-          {Object.entries(selectedFilters).map(([category, values]) => 
-            values.length > 0 && (
-              <div key={category} style={{ marginBottom: "0.25rem" }}>
-                <span style={{ fontWeight: "bold" }}>{filterLabels[category]}: </span>
-                {values.map(value => (
-                  <span 
-                    key={value}
-                    style={{
-                      backgroundColor: "#e0e0e0",
-                      padding: "0.2rem 0.5rem",
-                      borderRadius: "0.25rem",
-                      fontSize: "0.85rem",
-                      marginRight: "0.5rem",
-                      cursor: "pointer"
-                    }}
-                    onClick={() => toggleFilter(category, value)}
-                  >
-                    {value} ✕
-                  </span>
-                ))}
-              </div>
-            )
-          )}
-        </div>
-      )}
+      {/* アクティブフィルターの表示 */}
+      <ActiveFilters
+        selectedFilters={selectedFilters}
+        filterLabels={filterLabels}
+        onToggleFilter={toggleFilter}
+        onResetFilters={resetFilters}
+        resetLabel={resetLabel}
+      />
 
       {/* グループ化された出版物リスト */}
       <div style={{ marginTop: "1rem" }}>
