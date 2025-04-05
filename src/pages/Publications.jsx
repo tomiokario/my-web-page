@@ -20,7 +20,7 @@ function Publications() {
     review: [],
     presentationType: []
   });
-  const [sortOrder, setSortOrder] = useState('chronological'); // 'chronological' または 'type'
+  const [sortOrder, setSortOrder] = useState('type'); // 'chronological' または 'type'
   const { language } = useLanguage();
   const filterRefs = useRef({}); // 各フィルター要素の参照を保持
 
@@ -260,9 +260,8 @@ function Publications() {
     presentationType: language === 'ja' ? '発表タイプ' : 'Presentation Type'
   };
   const resetLabel = language === 'ja' ? 'フィルターをリセット' : 'Reset Filters';
-  const sortOrderLabel = language === 'ja' ? '並び順:' : 'Sort Order:';
-  const chronologicalLabel = language === 'ja' ? '時系列（新しい順）' : 'Chronological (Newest First)';
-  const typeBasedLabel = language === 'ja' ? '種類順' : 'By Type';
+  const yearBasedLabel = language === 'ja' ? '年で表示' : 'By year';
+  const typeBasedLabel = language === 'ja' ? '種類で表示' : 'By type';
 
   // ドロップダウンの外側をクリックしたときに閉じる処理
   useEffect(() => {
@@ -287,22 +286,18 @@ function Publications() {
     <div style={{ padding: "0" }}>
       {/* 並び順選択 */}
       <div style={{ marginBottom: "1rem" }}>
-        <label htmlFor="sortOrder" style={{ marginRight: "0.5rem" }}>
-          {sortOrderLabel}
-        </label>
         <select
           id="sortOrder"
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
-          aria-label={sortOrderLabel}
           style={{
             padding: "0.5rem",
             borderRadius: "0.25rem",
             border: "1px solid #ccc"
           }}
         >
-          <option value="chronological">{chronologicalLabel}</option>
           <option value="type">{typeBasedLabel}</option>
+          <option value="chronological">{yearBasedLabel}</option>
         </select>
       </div>
 

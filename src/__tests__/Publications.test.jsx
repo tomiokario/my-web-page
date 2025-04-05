@@ -248,48 +248,48 @@ describe('Publications Component', () => {
     expect(screen.queryByTestId('authorship-dropdown')).not.toBeInTheDocument();
   });
 
-  test('should toggle between chronological and type-based sorting', () => {
+  test('should toggle between type-based and chronological sorting', () => {
     // テスト内容: 並び順の切り替え機能が正しく動作することを確認
     renderWithLanguageProvider(<Publications />);
     
-    // デフォルトでは時系列順（新しい順）になっていることを確認
-    const sortOrderSelector = screen.getByLabelText('並び順:');
+    // デフォルトでは種類順になっていることを確認
+    const sortOrderSelector = screen.getByRole('combobox');
     expect(sortOrderSelector).toBeInTheDocument();
+    expect(sortOrderSelector.value).toBe('type');
+    
+    // 年順に切り替え
+    fireEvent.change(sortOrderSelector, { target: { value: 'chronological' } });
+    
+    // 年順になっていることを確認
     expect(sortOrderSelector.value).toBe('chronological');
     
-    // 種類順に切り替え
+    // 種類順に戻す
     fireEvent.change(sortOrderSelector, { target: { value: 'type' } });
     
     // 種類順になっていることを確認
     expect(sortOrderSelector.value).toBe('type');
-    
-    // 時系列順に戻す
-    fireEvent.change(sortOrderSelector, { target: { value: 'chronological' } });
-    
-    // 時系列順になっていることを確認
-    expect(sortOrderSelector.value).toBe('chronological');
   });
   
   test('should display publications in groups with separate numbering', () => {
     // テスト内容: グループ表示機能が正しく動作することを確認
     renderWithLanguageProvider(<Publications />);
     
-    // 時系列順の場合、年度ごとにグループ化されていることを確認
-    const yearGroups = screen.getAllByRole('heading', { level: 3 });
-    expect(yearGroups.length).toBeGreaterThan(0);
+    // 種類順の場合、種類ごとにグループ化されていることを確認
+    const typeGroups = screen.getAllByRole('heading', { level: 3 });
+    expect(typeGroups.length).toBeGreaterThan(0);
     
     // 各グループ内でリストが1から始まっていることを確認
-    const firstGroup = yearGroups[0].nextElementSibling;
+    const firstGroup = typeGroups[0].nextElementSibling;
     expect(firstGroup.tagName).toBe('OL');
     expect(firstGroup.getAttribute('start')).toBe('1');
     
-    // 種類順に切り替え
-    const sortOrderSelector = screen.getByLabelText('並び順:');
-    fireEvent.change(sortOrderSelector, { target: { value: 'type' } });
+    // 年順に切り替え
+    const sortOrderSelector = screen.getByRole('combobox');
+    fireEvent.change(sortOrderSelector, { target: { value: 'chronological' } });
     
-    // 種類ごとにグループ化されていることを確認
-    const typeGroups = screen.getAllByRole('heading', { level: 3 });
-    expect(typeGroups.length).toBeGreaterThan(0);
+    // 年度ごとにグループ化されていることを確認
+    const yearGroups = screen.getAllByRole('heading', { level: 3 });
+    expect(yearGroups.length).toBeGreaterThan(0);
     
     // 各グループ内でリストが1から始まっていることを確認
     const firstTypeGroup = typeGroups[0].nextElementSibling;
