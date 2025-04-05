@@ -11,6 +11,9 @@
  * 2. フィルターボタンのクリックでドロップダウンメニューが表示され、選択したフィルター条件に基づいて出版物リストが絞り込まれることを確認
  * 3. アクティブなフィルターが視覚的に区別され、リセットボタンでフィルターがクリアされることを確認
  * 4. 言語設定が日本語の場合、出版物情報が日本語で表示されることを確認
+ *
+ * 5. 並び順の切り替え機能が正しく動作し、時系列順と種類順で出版物が適切に並び替えられることを確認
+ * 6. グループ表示機能が正しく動作し、年度または種類ごとにグループ化されて表示されることを確認
  */
 
 import React from 'react';
@@ -37,8 +40,18 @@ describe('Publications Component', () => {
     // テスト内容: 出版物リストが正しくレンダリングされることを確認
     renderWithLanguageProvider(<Publications />);
     
-    // 出版物リストの要素を取得
-    const publicationItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
+    // グループヘッダーを取得
+    const groupHeaders = screen.getAllByRole('heading', { level: 3 });
+    
+    // 少なくとも1つのグループが表示されていることを確認
+    expect(groupHeaders.length).toBeGreaterThan(0);
+    
+    // 最初のグループ内の出版物リストを取得
+    const firstGroup = groupHeaders[0].nextElementSibling;
+    expect(firstGroup.tagName).toBe('OL');
+    
+    // グループ内の出版物アイテムを取得
+    const publicationItems = firstGroup.querySelectorAll('li');
     
     // 少なくとも1つの出版物アイテムが表示されていることを確認
     expect(publicationItems.length).toBeGreaterThan(0);
@@ -48,8 +61,7 @@ describe('Publications Component', () => {
     expect(firstItem.textContent).not.toBe('');
     
     // リストが数字の箇条書きになっていることを確認
-    const orderedList = screen.getByRole('list');
-    expect(orderedList.tagName).toBe('OL');
+    expect(firstGroup.tagName).toBe('OL');
     
     // 出版物の構造を確認
     
@@ -84,9 +96,9 @@ describe('Publications Component', () => {
     // テスト内容: ドロップダウンフィルターが正しく機能することを確認
     renderWithLanguageProvider(<Publications />);
     
-    // 初期状態での出版物数を記録
-    const initialItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
-    const initialCount = initialItems.length;
+    // 初期状態でのグループ数を記録
+    const initialGroups = screen.getAllByRole('heading', { level: 3 });
+    const initialCount = initialGroups.length;
     expect(initialCount).toBeGreaterThan(0);
     
     // 年のフィルターボタンをクリック
@@ -104,19 +116,18 @@ describe('Publications Component', () => {
     // 最初の年のチェックボックスをクリック
     fireEvent.click(yearOptions[0]);
     
-    // フィルタリング後の出版物リストを確認
-    const yearFilteredItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
+    // フィルタリング後のグループを確認
+    const yearFilteredGroups = screen.getAllByRole('heading', { level: 3 });
     
     // フィルタリングにより表示数が変わることを確認（増減どちらの可能性もあるため、変化したことだけを確認）
-    expect(yearFilteredItems.length).not.toBe(0);
+    expect(yearFilteredGroups.length).toBeGreaterThan(0);
     
     // フィルターをリセット
     const resetButton = screen.getByText('フィルターをリセット');
     fireEvent.click(resetButton);
-    
-    // リセット後は元の数の出版物が表示されていることを確認
-    const resetItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
-    expect(resetItems.length).toBe(initialCount);
+    // リセット後は元の数のグループが表示されていることを確認
+    const resetGroups = screen.getAllByRole('heading', { level: 3 });
+    expect(resetGroups.length).toBe(initialCount);
   });
   
   test('should show active filters with different color', () => {
@@ -167,23 +178,31 @@ describe('Publications Component', () => {
     const yearFilterButton = screen.getByText('年度 ▼');
     expect(yearFilterButton).toBeInTheDocument();
     
-    // 出版物リストを確認
-    const publicationItems = screen.getAllByRole('listitem', { within: screen.getByRole('list') });
-    expect(publicationItems.length).toBeGreaterThan(0);
+    // グループヘッダーを取得
+    const groupHeaders = screen.getAllByRole('heading', { level: 3 });
+    expect(groupHeaders.length).toBeGreaterThan(0);
     
-    // 日本語タイトルを持つ出版物を探す
+    // 各グループ内の出版物を確認
     let foundJapaneseTitle = false;
     let japaneseItem = null;
     
-    // 実際のデータから日本語タイトルを持つ出版物を探す
-    for (const item of publicationItems) {
-      const title = item.querySelector('strong');
-      // 日本語の文字が含まれているかチェック
-      if (/[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF\u3400-\u4DBF]/.test(title.textContent)) {
-        foundJapaneseTitle = true;
-        japaneseItem = item;
-        break;
+    // すべてのグループを調査
+    for (const header of groupHeaders) {
+      const group = header.nextElementSibling;
+      const items = group.querySelectorAll('li');
+      
+      // 各アイテムを調査
+      for (const item of items) {
+        const title = item.querySelector('strong');
+        // 日本語の文字が含まれているかチェック
+        if (/[\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF\u3400-\u4DBF]/.test(title.textContent)) {
+          foundJapaneseTitle = true;
+          japaneseItem = item;
+          break;
+        }
       }
+      
+      if (foundJapaneseTitle) break;
     }
     
     // 少なくとも1つの出版物に日本語タイトルがあることを確認
@@ -227,5 +246,54 @@ describe('Publications Component', () => {
 
     fireEvent.mouseDown(document.body);
     expect(screen.queryByTestId('authorship-dropdown')).not.toBeInTheDocument();
+  });
+
+  test('should toggle between type-based and chronological sorting', () => {
+    // テスト内容: 並び順の切り替え機能が正しく動作することを確認
+    renderWithLanguageProvider(<Publications />);
+    
+    // デフォルトでは種類順になっていることを確認
+    const sortOrderSelector = screen.getByRole('combobox');
+    expect(sortOrderSelector).toBeInTheDocument();
+    expect(sortOrderSelector.value).toBe('type');
+    
+    // 年順に切り替え
+    fireEvent.change(sortOrderSelector, { target: { value: 'chronological' } });
+    
+    // 年順になっていることを確認
+    expect(sortOrderSelector.value).toBe('chronological');
+    
+    // 種類順に戻す
+    fireEvent.change(sortOrderSelector, { target: { value: 'type' } });
+    
+    // 種類順になっていることを確認
+    expect(sortOrderSelector.value).toBe('type');
+  });
+  
+  test('should display publications in groups with separate numbering', () => {
+    // テスト内容: グループ表示機能が正しく動作することを確認
+    renderWithLanguageProvider(<Publications />);
+    
+    // 種類順の場合、種類ごとにグループ化されていることを確認
+    const typeGroups = screen.getAllByRole('heading', { level: 3 });
+    expect(typeGroups.length).toBeGreaterThan(0);
+    
+    // 各グループ内でリストが1から始まっていることを確認
+    const firstGroup = typeGroups[0].nextElementSibling;
+    expect(firstGroup.tagName).toBe('OL');
+    expect(firstGroup.getAttribute('start')).toBe('1');
+    
+    // 年順に切り替え
+    const sortOrderSelector = screen.getByRole('combobox');
+    fireEvent.change(sortOrderSelector, { target: { value: 'chronological' } });
+    
+    // 年度ごとにグループ化されていることを確認
+    const yearGroups = screen.getAllByRole('heading', { level: 3 });
+    expect(yearGroups.length).toBeGreaterThan(0);
+    
+    // 各グループ内でリストが1から始まっていることを確認
+    const firstTypeGroup = typeGroups[0].nextElementSibling;
+    expect(firstTypeGroup.tagName).toBe('OL');
+    expect(firstTypeGroup.getAttribute('start')).toBe('1');
   });
 });

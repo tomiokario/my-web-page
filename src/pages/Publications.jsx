@@ -2,6 +2,15 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import publicationsData from "../data/publications.json";
 
+// 出版物の種類の順序を定義
+const TYPE_ORDER = [
+  "Journal paper：原著論文",
+  "Invited paper：招待論文",
+  "Research paper (international conference)：国際会議",
+  "Research paper (domestic conference)：国内会議",
+  "Miscellaneous"
+];
+
 function Publications() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
@@ -11,6 +20,7 @@ function Publications() {
     review: [],
     presentationType: []
   });
+  const [sortOrder, setSortOrder] = useState('type'); // 'chronological' または 'type'
   const { language } = useLanguage();
   const filterRefs = useRef({}); // 各フィルター要素の参照を保持
 
@@ -22,7 +32,7 @@ function Publications() {
     return match ? parseInt(match[1], 10) : null;
   };
 
-  // 出版物データを最小限の整形で処理し、新しい順に並べる
+  // 出版物データを整形
   const formattedPublications = useMemo(() => {
     return publicationsData.map((pub, index) => {
       // 年度を抽出（フィルタリングに必要）
@@ -44,11 +54,32 @@ function Publications() {
         presentationType: pub.presentationType,
         others: pub.others
       };
-    }).sort((a, b) => {
-      // 新しい順に並べる（年が新しい順）
-      return (b.year || 0) - (a.year || 0);
     });
   }, []);
+
+  // 並び順に基づいて出版物を並べ替え
+  const sortedPublications = useMemo(() => {
+    if (sortOrder === 'chronological') {
+      // 時系列順（新しい順）
+      return [...formattedPublications].sort((a, b) => {
+        return (b.year || 0) - (a.year || 0);
+      });
+    } else {
+      // 種類順
+      return [...formattedPublications].sort((a, b) => {
+        // まず種類で並べ替え
+        const typeIndexA = TYPE_ORDER.indexOf(a.type) !== -1 ? TYPE_ORDER.indexOf(a.type) : TYPE_ORDER.length;
+        const typeIndexB = TYPE_ORDER.indexOf(b.type) !== -1 ? TYPE_ORDER.indexOf(b.type) : TYPE_ORDER.length;
+        
+        if (typeIndexA !== typeIndexB) {
+          return typeIndexA - typeIndexB;
+        }
+        
+        // 同じ種類の場合は年の新しい順
+        return (b.year || 0) - (a.year || 0);
+      });
+    }
+  }, [formattedPublications, sortOrder]);
 
   // 利用可能なフィルターオプションを抽出
   const filterOptions = useMemo(() => {
@@ -83,7 +114,7 @@ function Publications() {
   
   // フィルタリング
   const filteredPublications = useMemo(() => {
-    return formattedPublications.filter((pub) => {
+    return sortedPublications.filter((pub) => {
       // 年度フィルター
       if (selectedFilters.year.length > 0 && !selectedFilters.year.includes(pub.year?.toString())) {
         return false;
@@ -111,7 +142,76 @@ function Publications() {
       
       return true;
     });
-  }, [formattedPublications, selectedFilters]);
+  }, [sortedPublications, selectedFilters]);
+
+  // 出版物をグループ化する
+  const groupedPublications = useMemo(() => {
+    const groups = {};
+    
+    filteredPublications.forEach(pub => {
+      let groupKey;
+      
+      if (sortOrder === 'chronological') {
+        // 時系列順の場合は年でグループ化
+        groupKey = pub.year ? pub.year.toString() : 'Unknown';
+      } else {
+        // 種類順の場合は種類でグループ化
+        groupKey = pub.type || 'Unknown';
+      }
+      
+      if (!groups[groupKey]) {
+        groups[groupKey] = [];
+      }
+      
+      groups[groupKey].push(pub);
+    });
+    
+    // グループをソート
+    let sortedGroups = [];
+    
+    if (sortOrder === 'chronological') {
+      // 年の降順（新しい順）
+      sortedGroups = Object.keys(groups)
+        .sort((a, b) => {
+          if (a === 'Unknown') return 1;
+          if (b === 'Unknown') return -1;
+          return parseInt(b) - parseInt(a);
+        })
+        .map(key => ({
+          name: key,
+          items: groups[key]
+        }));
+    } else {
+      // 種類の指定順
+      sortedGroups = TYPE_ORDER
+        .filter(type => groups[type])
+        .map(type => ({
+          name: type,
+          items: groups[type]
+        }));
+      
+      // 定義されていない種類があれば追加
+      Object.keys(groups)
+        .filter(key => !TYPE_ORDER.includes(key) && key !== 'Unknown')
+        .sort()
+        .forEach(key => {
+          sortedGroups.push({
+            name: key,
+            items: groups[key]
+          });
+        });
+      
+      // Unknown があれば最後に追加
+      if (groups['Unknown']) {
+        sortedGroups.push({
+          name: 'Unknown',
+          items: groups['Unknown']
+        });
+      }
+    }
+    
+    return sortedGroups;
+  }, [filteredPublications, sortOrder]);
 
   // ドロップダウンを開く/閉じる処理
   const toggleDropdown = (dropdown) => {
@@ -160,6 +260,8 @@ function Publications() {
     presentationType: language === 'ja' ? '発表タイプ' : 'Presentation Type'
   };
   const resetLabel = language === 'ja' ? 'フィルターをリセット' : 'Reset Filters';
+  const yearBasedLabel = language === 'ja' ? '年で表示' : 'By year';
+  const typeBasedLabel = language === 'ja' ? '種類で表示' : 'By type';
 
   // ドロップダウンの外側をクリックしたときに閉じる処理
   useEffect(() => {
@@ -182,6 +284,23 @@ function Publications() {
 
   return (
     <div style={{ padding: "0" }}>
+      {/* 並び順選択 */}
+      <div style={{ marginBottom: "1rem" }}>
+        <select
+          id="sortOrder"
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+          style={{
+            padding: "0.5rem",
+            borderRadius: "0.25rem",
+            border: "1px solid #ccc"
+          }}
+        >
+          <option value="type">{typeBasedLabel}</option>
+          <option value="chronological">{yearBasedLabel}</option>
+        </select>
+      </div>
+
       {/* フィルターボタン */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1rem" }}>
         {Object.entries(filterLabels).map(([category, label]) => (
@@ -286,69 +405,87 @@ function Publications() {
         </div>
       )}
 
-      <ol style={{ marginTop: "1rem" }}>
-        {filteredPublications.map((pub) => (
-          <li key={pub.id} style={{ marginBottom: "1.5rem" }}>
-            {/* 一行目: タイトル */}
-            <strong>
-              {language === 'ja' && pub.japanese ? pub.japanese : pub.name}
-            </strong>
+      {/* グループ化された出版物リスト */}
+      <div style={{ marginTop: "1rem" }}>
+        {groupedPublications.map((group, groupIndex) => (
+          <div key={groupIndex} style={{ marginBottom: "2rem" }}>
+            {/* グループヘッダー */}
+            <h3 style={{
+              marginBottom: "0.5rem",
+              padding: "0.5rem",
+              backgroundColor: "#f5f5f5",
+              borderRadius: "0.25rem"
+            }}>
+              {group.name}
+            </h3>
             
-            {/* 二行目: タグ（Year、Authorship、type、Review、Presentation） */}
-            <div className="tags-container" style={{ marginTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-              {pub.year && (
-                <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                  {pub.year}
-                </span>
-              )}
-              {pub.authorship && (
-                <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                  {pub.authorship}
-                </span>
-              )}
-              {pub.type && (
-                <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                  {pub.type}
-                </span>
-              )}
-              {pub.review && (
-                <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                  {pub.review}
-                </span>
-              )}
-              {pub.presentationType && (
-                <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                  {pub.presentationType}
-                </span>
-              )}
-            </div>
-            
-            {/* 三行目: ジャーナル名 */}
-            <div style={{ marginTop: "0.5rem" }}>{pub.journal}</div>
-            
-            {/* 四行目以降: DOI、URL、Others */}
-            {pub.doi && (
-              <div style={{ marginTop: "0.25rem" }}>
-                DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer">
-                  {pub.doi}
-                </a>
-              </div>
-            )}
-            {pub.webLink && (
-              <div style={{ marginTop: "0.25rem" }}>
-                <a href={pub.webLink} target="_blank" rel="noopener noreferrer">
-                  {pub.webLink}
-                </a>
-              </div>
-            )}
-            {pub.others && (
-              <div style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#555" }}>
-                {pub.others}
-              </div>
-            )}
-          </li>
+            {/* グループ内の出版物リスト（番号は1から始まる） */}
+            <ol start={1} style={{ marginTop: "0.5rem" }}>
+              {group.items.map((pub) => (
+                <li key={pub.id} style={{ marginBottom: "1.5rem" }}>
+                  {/* 一行目: タイトル */}
+                  <strong>
+                    {language === 'ja' && pub.japanese ? pub.japanese : pub.name}
+                  </strong>
+                  
+                  {/* 二行目: タグ（Year、Authorship、type、Review、Presentation） */}
+                  <div className="tags-container" style={{ marginTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                    {pub.year && (
+                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                        {pub.year}
+                      </span>
+                    )}
+                    {pub.authorship && (
+                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                        {pub.authorship}
+                      </span>
+                    )}
+                    {pub.type && (
+                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                        {pub.type}
+                      </span>
+                    )}
+                    {pub.review && (
+                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                        {pub.review}
+                      </span>
+                    )}
+                    {pub.presentationType && (
+                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                        {pub.presentationType}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* 三行目: ジャーナル名 */}
+                  <div style={{ marginTop: "0.5rem" }}>{pub.journal}</div>
+                  
+                  {/* 四行目以降: DOI、URL、Others */}
+                  {pub.doi && (
+                    <div style={{ marginTop: "0.25rem" }}>
+                      DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer">
+                        {pub.doi}
+                      </a>
+                    </div>
+                  )}
+                  {pub.webLink && (
+                    <div style={{ marginTop: "0.25rem" }}>
+                      <a href={pub.webLink} target="_blank" rel="noopener noreferrer">
+                        {pub.webLink}
+                      </a>
+                    </div>
+                  )}
+                  {pub.others && (
+                    <div style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#555" }}>
+                      {pub.others}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </div>
         ))}
-      </ol>
+      </div>
     </div>
   );
 }
