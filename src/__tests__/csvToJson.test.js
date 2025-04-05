@@ -128,4 +128,98 @@ No,,,,,,,,,,,,
       }
     }
   });
+  
+  test('handles comma-separated authorship correctly', () => {
+    // テスト内容: カンマで区切られた著者の役割が配列として処理されることを確認
+    
+    // テスト用のCSVデータを準備（カンマで区切られた著者の役割を含む）
+    const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
+No,"Test Author, ""Multiple Roles""",テスト,Test Type,Reviewed,"Corresponding author, Lead author",Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
+No,"Test Author, ""Single Role""",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
+`;
+    
+    // 一時ファイルのパスを設定
+    const tempDir = path.join(__dirname, '../../temp');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+    
+    const tempFilePath = path.join(tempDir, 'temp_authorship.csv');
+    
+    // テスト前に一時ファイルが存在する場合は削除
+    if (fs.existsSync(tempFilePath)) {
+      fs.unlinkSync(tempFilePath);
+    }
+    
+    // 一時ファイルに書き込み
+    fs.writeFileSync(tempFilePath, testCsvData, 'utf8');
+    
+    try {
+      // 変換処理を実行
+      const jsonData = csvToJson(tempFilePath);
+      
+      // 2つのデータが正しく変換されていることを確認
+      expect(jsonData.length).toBe(2);
+      
+      // カンマで区切られた著者の役割が配列として処理されていることを確認
+      expect(Array.isArray(jsonData[0].authorship)).toBe(true);
+      expect(jsonData[0].authorship).toEqual(['Corresponding author', 'Lead author']);
+      
+      // 単一の著者の役割は文字列として処理されていることを確認
+      expect(Array.isArray(jsonData[1].authorship)).toBe(false);
+      expect(jsonData[1].authorship).toBe('Lead author');
+    } finally {
+      // テスト後に一時ファイルを削除
+      if (fs.existsSync(tempFilePath)) {
+        fs.unlinkSync(tempFilePath);
+      }
+    }
+  });
+
+  test('handles comma-separated presentation types correctly', () => {
+    // テスト内容: カンマで区切られた発表タイプが配列として処理されることを確認
+    
+    // テスト用のCSVデータを準備（カンマで区切られた発表タイプを含む）
+    const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
+No,"Test Author, ""Multiple Types""",テスト,Test Type,Reviewed,Lead author,"Oral, Poster",,https://example.com,2023-01-01,,Test Site,Test Journal
+No,"Test Author, ""Single Type""",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
+`;
+    
+    // 一時ファイルのパスを設定
+    const tempDir = path.join(__dirname, '../../temp');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+    
+    const tempFilePath = path.join(tempDir, 'temp_presentation_types.csv');
+    
+    // テスト前に一時ファイルが存在する場合は削除
+    if (fs.existsSync(tempFilePath)) {
+      fs.unlinkSync(tempFilePath);
+    }
+    
+    // 一時ファイルに書き込み
+    fs.writeFileSync(tempFilePath, testCsvData, 'utf8');
+    
+    try {
+      // 変換処理を実行
+      const jsonData = csvToJson(tempFilePath);
+      
+      // 2つのデータが正しく変換されていることを確認
+      expect(jsonData.length).toBe(2);
+      
+      // カンマで区切られた発表タイプが配列として処理されていることを確認
+      expect(Array.isArray(jsonData[0].presentationType)).toBe(true);
+      expect(jsonData[0].presentationType).toEqual(['Oral', 'Poster']);
+      
+      // 単一の発表タイプは文字列として処理されていることを確認
+      expect(Array.isArray(jsonData[1].presentationType)).toBe(false);
+      expect(jsonData[1].presentationType).toBe('Oral');
+    } finally {
+      // テスト後に一時ファイルを削除
+      if (fs.existsSync(tempFilePath)) {
+        fs.unlinkSync(tempFilePath);
+      }
+    }
+  });
 });

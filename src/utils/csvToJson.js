@@ -41,14 +41,25 @@ function csvToJson(csvFilePath) {
       // 各値をヘッダーと対応させてオブジェクトを作成
       const obj = {};
       
+      // カンマで区切られた値を配列に変換する関数
+      const processCommaSeparatedValue = (value) => {
+        const trimmedValue = (value || '').trim();
+        if (trimmedValue.includes(',')) {
+          return trimmedValue.split(',').map(item => item.trim());
+        }
+        return trimmedValue;
+      };
+      
       // 各列の値をマッピング（値が存在する場合のみtrim()を適用）
       obj.hasEmptyFields = (values[0] || '').trim() === 'Yes';
       obj.name = (values[1] || '').trim();
       obj.japanese = (values[2] || '').trim();
       obj.type = (values[3] || '').trim();
       obj.review = (values[4] || '').trim();
-      obj.authorship = (values[5] || '').trim();
-      obj.presentationType = (values[6] || '').trim();
+      
+      // カンマで区切られる可能性のあるフィールドは配列に変換
+      obj.authorship = processCommaSeparatedValue(values[5]);
+      obj.presentationType = processCommaSeparatedValue(values[6]);
       obj.doi = (values[7] || '').trim();
       obj.webLink = (values[8] || '').trim();
       obj.date = (values[9] || '').trim();

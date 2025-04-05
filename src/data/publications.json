@@ -155,7 +155,10 @@
     "japanese": "",
     "type": "Journal paper：原著論文",
     "review": "Reviewed",
-    "authorship": "Corresponding author, Lead author",
+    "authorship": [
+      "Corresponding author",
+      "Lead author"
+    ],
     "presentationType": "",
     "doi": "https://doi.org/10.1007/s10043-023-00810-2",
     "webLink": "",
@@ -231,7 +234,10 @@
     "type": "Research paper (international conference)：国際会議",
     "review": "Reviewed",
     "authorship": "Lead author",
-    "presentationType": "Oral, Poster",
+    "presentationType": [
+      "Oral",
+      "Poster"
+    ],
     "doi": "",
     "webLink": "https://kyutech.repo.nii.ac.jp/records/2000786",
     "date": "2024年3月1日 → 2024年3月2日",

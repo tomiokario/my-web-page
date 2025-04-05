@@ -95,8 +95,18 @@ function Publications() {
       if (pub.year && !options.year.includes(pub.year.toString())) {
         options.year.push(pub.year.toString());
       }
-      if (pub.authorship && !options.authorship.includes(pub.authorship)) {
-        options.authorship.push(pub.authorship);
+      
+      // authorshipが配列の場合は各要素を個別に処理
+      if (pub.authorship) {
+        if (Array.isArray(pub.authorship)) {
+          pub.authorship.forEach(role => {
+            if (!options.authorship.includes(role)) {
+              options.authorship.push(role);
+            }
+          });
+        } else if (!options.authorship.includes(pub.authorship)) {
+          options.authorship.push(pub.authorship);
+        }
       }
       if (pub.type && !options.type.includes(pub.type)) {
         options.type.push(pub.type);
@@ -104,8 +114,17 @@ function Publications() {
       if (pub.review && !options.review.includes(pub.review)) {
         options.review.push(pub.review);
       }
-      if (pub.presentationType && !options.presentationType.includes(pub.presentationType)) {
-        options.presentationType.push(pub.presentationType);
+      // presentationTypeが配列の場合は各要素を個別に処理
+      if (pub.presentationType) {
+        if (Array.isArray(pub.presentationType)) {
+          pub.presentationType.forEach(type => {
+            if (!options.presentationType.includes(type)) {
+              options.presentationType.push(type);
+            }
+          });
+        } else if (!options.presentationType.includes(pub.presentationType)) {
+          options.presentationType.push(pub.presentationType);
+        }
       }
     });
     
@@ -121,8 +140,21 @@ function Publications() {
       }
       
       // 著者の役割フィルター
-      if (selectedFilters.authorship.length > 0 && !selectedFilters.authorship.includes(pub.authorship)) {
-        return false;
+      if (selectedFilters.authorship.length > 0) {
+        // authorshipが配列の場合
+        if (Array.isArray(pub.authorship)) {
+          // 選択されたフィルターのいずれかが配列内に存在するかチェック
+          const hasMatchingRole = pub.authorship.some(role =>
+            selectedFilters.authorship.includes(role)
+          );
+          if (!hasMatchingRole) {
+            return false;
+          }
+        }
+        // authorshipが文字列の場合
+        else if (!selectedFilters.authorship.includes(pub.authorship)) {
+          return false;
+        }
       }
       
       // タイプフィルター
@@ -136,8 +168,21 @@ function Publications() {
       }
       
       // 発表タイプフィルター
-      if (selectedFilters.presentationType.length > 0 && !selectedFilters.presentationType.includes(pub.presentationType)) {
-        return false;
+      if (selectedFilters.presentationType.length > 0) {
+        // presentationTypeが配列の場合
+        if (Array.isArray(pub.presentationType)) {
+          // 選択されたフィルターのいずれかが配列内に存在するかチェック
+          const hasMatchingType = pub.presentationType.some(type =>
+            selectedFilters.presentationType.includes(type)
+          );
+          if (!hasMatchingType) {
+            return false;
+          }
+        }
+        // presentationTypeが文字列の場合
+        else if (!selectedFilters.presentationType.includes(pub.presentationType)) {
+          return false;
+        }
       }
       
       return true;
@@ -436,9 +481,25 @@ function Publications() {
                       </span>
                     )}
                     {pub.authorship && (
-                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                        {pub.authorship}
-                      </span>
+                      <>
+                        {Array.isArray(pub.authorship) ? (
+                          // 配列の場合は各要素を個別のタグとして表示
+                          pub.authorship.map((role, index) => (
+                            <span
+                              key={`${pub.id}-role-${index}`}
+                              className="tag"
+                              style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem", marginRight: "0.5rem" }}
+                            >
+                              {role}
+                            </span>
+                          ))
+                        ) : (
+                          // 文字列の場合は単一のタグとして表示
+                          <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                            {pub.authorship}
+                          </span>
+                        )}
+                      </>
                     )}
                     {pub.type && (
                       <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
@@ -451,9 +512,25 @@ function Publications() {
                       </span>
                     )}
                     {pub.presentationType && (
-                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                        {pub.presentationType}
-                      </span>
+                      <>
+                        {Array.isArray(pub.presentationType) ? (
+                          // 配列の場合は各要素を個別のタグとして表示
+                          pub.presentationType.map((type, index) => (
+                            <span
+                              key={`${pub.id}-type-${index}`}
+                              className="tag"
+                              style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem", marginRight: "0.5rem" }}
+                            >
+                              {type}
+                            </span>
+                          ))
+                        ) : (
+                          // 文字列の場合は単一のタグとして表示
+                          <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                            {pub.presentationType}
+                          </span>
+                        )}
+                      </>
                     )}
                   </div>
                   
