@@ -22,6 +22,29 @@ const { csvToJson } = require('../utils/csvToJson');
 // テストデータのパス
 const CSV_FILE_PATH = path.join(__dirname, '../../data/publication_data.csv');
 
+// ヘルパー関数: 一時ファイルの作成
+function createTempCsvFile(content, filename = 'temp_test.csv') {
+  const tempDir = path.join(__dirname, '../../temp');
+  if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
+  }
+  
+  const tempFilePath = path.join(tempDir, filename);
+  if (fs.existsSync(tempFilePath)) {
+    fs.unlinkSync(tempFilePath);
+  }
+  
+  fs.writeFileSync(tempFilePath, content, 'utf8');
+  return tempFilePath;
+}
+
+// ヘルパー関数: 一時ファイルの削除
+function removeTempFile(filePath) {
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+}
+
 describe('CSV to JSON conversion', () => {
   // 各テストの前に実行される処理
   beforeAll(() => {
@@ -34,6 +57,22 @@ describe('CSV to JSON conversion', () => {
     const tempDir = path.join(__dirname, '../../temp');
     if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir, { recursive: true });
+    }
+  });
+  
+  // 各テストの後に実行される処理
+  afterAll(() => {
+    // テスト用ディレクトリのクリーンアップ（空の場合のみ削除）
+    const tempDir = path.join(__dirname, '../../temp');
+    if (fs.existsSync(tempDir)) {
+      try {
+        const files = fs.readdirSync(tempDir);
+        if (files.length === 0) {
+          fs.rmdirSync(tempDir);
+        }
+      } catch (error) {
+        console.log('テスト用ディレクトリのクリーンアップに失敗しました:', error);
+      }
     }
   });
 
@@ -81,9 +120,7 @@ describe('CSV to JSON conversion', () => {
   });
 
   test('handles empty or malformed lines correctly', () => {
-    // テスト内容: 空行や不正な形式の行が適切に処理されることを確認
-    
-    // テスト用のCSVデータを準備
+    // Arrange - テスト用のCSVデータを準備
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
 No,"Test Author, ""Test Title""",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
 
@@ -91,27 +128,14 @@ Invalid Line with no commas
 No,,,,,,,,,,,,
 `;
     
-    // 一時ファイルのパスを設定（テスト専用ディレクトリを使用）
-    const tempDir = path.join(__dirname, '../../temp');
-    // テスト用ディレクトリが存在しない場合は作成
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
-    }
-    
-    const tempFilePath = path.join(tempDir, 'temp_test.csv');
-    
-    // テスト前に一時ファイルが存在する場合は削除
-    if (fs.existsSync(tempFilePath)) {
-      fs.unlinkSync(tempFilePath);
-    }
-    
-    // 一時ファイルに書き込み
-    fs.writeFileSync(tempFilePath, testCsvData, 'utf8');
+    // 一時ファイルを作成
+    const tempFilePath = createTempCsvFile(testCsvData, 'temp_test.csv');
     
     try {
-      // 変換処理を実行
+      // Act - 変換処理を実行
       const jsonData = csvToJson(tempFilePath);
       
+      // Assert - 結果を検証
       // 空行や不正な行がスキップされ、有効なデータのみが変換されることを確認
       expect(jsonData.length).toBe(1);
       expect(jsonData[0].name).toBe('Test Author, "Test Title"');
@@ -122,42 +146,26 @@ No,,,,,,,,,,,,
       // 空の値が適切に処理されていることを確認
       expect(jsonData[0].doi).toBe('');
     } finally {
-      // テスト後に一時ファイルを削除
-      if (fs.existsSync(tempFilePath)) {
-        fs.unlinkSync(tempFilePath);
-      }
+      // クリーンアップ - 一時ファイルを削除
+      removeTempFile(tempFilePath);
     }
   });
   
   test('handles comma-separated authorship correctly', () => {
-    // テスト内容: カンマで区切られた著者の役割が配列として処理されることを確認
-    
-    // テスト用のCSVデータを準備（カンマで区切られた著者の役割を含む）
+    // Arrange - テスト用のCSVデータを準備
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
 No,"Test Author, ""Multiple Roles""",テスト,Test Type,Reviewed,"Corresponding author, Lead author",Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
 No,"Test Author, ""Single Role""",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
 `;
     
-    // 一時ファイルのパスを設定
-    const tempDir = path.join(__dirname, '../../temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
-    }
-    
-    const tempFilePath = path.join(tempDir, 'temp_authorship.csv');
-    
-    // テスト前に一時ファイルが存在する場合は削除
-    if (fs.existsSync(tempFilePath)) {
-      fs.unlinkSync(tempFilePath);
-    }
-    
-    // 一時ファイルに書き込み
-    fs.writeFileSync(tempFilePath, testCsvData, 'utf8');
+    // 一時ファイルを作成
+    const tempFilePath = createTempCsvFile(testCsvData, 'temp_authorship.csv');
     
     try {
-      // 変換処理を実行
+      // Act - 変換処理を実行
       const jsonData = csvToJson(tempFilePath);
       
+      // Assert - 結果を検証
       // 2つのデータが正しく変換されていることを確認
       expect(jsonData.length).toBe(2);
       
@@ -169,42 +177,25 @@ No,"Test Author, ""Single Role""",テスト,Test Type,Reviewed,Lead author,Oral,
       expect(Array.isArray(jsonData[1].authorship)).toBe(false);
       expect(jsonData[1].authorship).toBe('Lead author');
     } finally {
-      // テスト後に一時ファイルを削除
-      if (fs.existsSync(tempFilePath)) {
-        fs.unlinkSync(tempFilePath);
-      }
+      // クリーンアップ - 一時ファイルを削除
+      removeTempFile(tempFilePath);
     }
   });
-
   test('handles comma-separated presentation types correctly', () => {
-    // テスト内容: カンマで区切られた発表タイプが配列として処理されることを確認
-    
-    // テスト用のCSVデータを準備（カンマで区切られた発表タイプを含む）
+    // Arrange - テスト用のCSVデータを準備
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
 No,"Test Author, ""Multiple Types""",テスト,Test Type,Reviewed,Lead author,"Oral, Poster",,https://example.com,2023-01-01,,Test Site,Test Journal
 No,"Test Author, ""Single Type""",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
 `;
     
-    // 一時ファイルのパスを設定
-    const tempDir = path.join(__dirname, '../../temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
-    }
-    
-    const tempFilePath = path.join(tempDir, 'temp_presentation_types.csv');
-    
-    // テスト前に一時ファイルが存在する場合は削除
-    if (fs.existsSync(tempFilePath)) {
-      fs.unlinkSync(tempFilePath);
-    }
-    
-    // 一時ファイルに書き込み
-    fs.writeFileSync(tempFilePath, testCsvData, 'utf8');
+    // 一時ファイルを作成
+    const tempFilePath = createTempCsvFile(testCsvData, 'temp_presentation_types.csv');
     
     try {
-      // 変換処理を実行
+      // Act - 変換処理を実行
       const jsonData = csvToJson(tempFilePath);
       
+      // Assert - 結果を検証
       // 2つのデータが正しく変換されていることを確認
       expect(jsonData.length).toBe(2);
       
@@ -216,17 +207,13 @@ No,"Test Author, ""Single Type""",テスト,Test Type,Reviewed,Lead author,Oral,
       expect(Array.isArray(jsonData[1].presentationType)).toBe(false);
       expect(jsonData[1].presentationType).toBe('Oral');
     } finally {
-      // テスト後に一時ファイルを削除
-      if (fs.existsSync(tempFilePath)) {
-        fs.unlinkSync(tempFilePath);
-      }
+      // クリーンアップ - 一時ファイルを削除
+      removeTempFile(tempFilePath);
     }
   });
   
   test('processes dates correctly into start and end dates', () => {
-    // テスト内容: 日付が正しく開始日と終了日に分割され、ソート可能な形式で格納されることを確認
-    
-    // テスト用のCSVデータを準備（様々な形式の日付を含む）
+    // Arrange - テスト用のCSVデータを準備
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
 No,"Test Date Range",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2021年10月3日 → 2021年10月6日,,Test Site,Test Journal
 No,"Test Single Date",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2022年5月15日,,Test Site,Test Journal
@@ -234,26 +221,14 @@ No,"Test Year Month Only",テスト,Test Type,Reviewed,Lead author,Oral,,https:/
 No,"Test Empty Date",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,,,Test Site,Test Journal
 `;
     
-    // 一時ファイルのパスを設定
-    const tempDir = path.join(__dirname, '../../temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
-    }
-    
-    const tempFilePath = path.join(tempDir, 'temp_dates.csv');
-    
-    // テスト前に一時ファイルが存在する場合は削除
-    if (fs.existsSync(tempFilePath)) {
-      fs.unlinkSync(tempFilePath);
-    }
-    
-    // 一時ファイルに書き込み
-    fs.writeFileSync(tempFilePath, testCsvData, 'utf8');
+    // 一時ファイルを作成
+    const tempFilePath = createTempCsvFile(testCsvData, 'temp_dates.csv');
     
     try {
-      // 変換処理を実行
+      // Act - 変換処理を実行
       const jsonData = csvToJson(tempFilePath);
       
+      // Assert - 結果を検証
       // 4つのデータが正しく変換されていることを確認
       expect(jsonData.length).toBe(4);
       
@@ -281,10 +256,8 @@ No,"Test Empty Date",テスト,Test Type,Reviewed,Lead author,Oral,,https://exam
       expect(jsonData[3].endDate).toBe('');
       expect(jsonData[3].sortableDate).toBe('');
     } finally {
-      // テスト後に一時ファイルを削除
-      if (fs.existsSync(tempFilePath)) {
-        fs.unlinkSync(tempFilePath);
-      }
+      // クリーンアップ - 一時ファイルを削除
+      removeTempFile(tempFilePath);
     }
   });
 });

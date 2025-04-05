@@ -484,9 +484,9 @@ function Publications() {
                   </strong>
                   
                   {/* 二行目: タグ（Year、Authorship、type、Review、Presentation） */}
-                  <div className="tags-container" style={{ marginTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                  <div className="tags-container" data-testid="tags-container" style={{ marginTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
                     {pub.year && (
-                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                      <span className="tag" data-testid="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
                         {pub.year}
                       </span>
                     )}
@@ -498,6 +498,7 @@ function Publications() {
                             <span
                               key={`${pub.id}-role-${index}`}
                               className="tag"
+                              data-testid="tag"
                               style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem", marginRight: "0.5rem" }}
                             >
                               {role}
@@ -505,19 +506,19 @@ function Publications() {
                           ))
                         ) : (
                           // 文字列の場合は単一のタグとして表示
-                          <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                          <span className="tag" data-testid="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
                             {pub.authorship}
                           </span>
                         )}
                       </>
                     )}
                     {pub.type && (
-                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                      <span className="tag" data-testid="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
                         {pub.type}
                       </span>
                     )}
                     {pub.review && (
-                      <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                      <span className="tag" data-testid="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
                         {pub.review}
                       </span>
                     )}
@@ -529,6 +530,7 @@ function Publications() {
                             <span
                               key={`${pub.id}-type-${index}`}
                               className="tag"
+                              data-testid="tag"
                               style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem", marginRight: "0.5rem" }}
                             >
                               {type}
@@ -536,7 +538,7 @@ function Publications() {
                           ))
                         ) : (
                           // 文字列の場合は単一のタグとして表示
-                          <span className="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
+                          <span className="tag" data-testid="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
                             {pub.presentationType}
                           </span>
                         )}
