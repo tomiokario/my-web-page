@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import publicationsData from "../data/publications.json";
+import PublicationGroup from "../components/publications/PublicationGroup";
 
 // 出版物の種類の順序を定義
 const TYPE_ORDER = [
@@ -463,141 +464,12 @@ function Publications() {
       {/* グループ化された出版物リスト */}
       <div style={{ marginTop: "1rem" }}>
         {groupedPublications.map((group, groupIndex) => (
-          <div key={groupIndex} style={{ marginBottom: "2rem" }}>
-            {/* グループヘッダー */}
-            <h3 style={{
-              marginBottom: "0.5rem",
-              padding: "0.5rem",
-              backgroundColor: "#f5f5f5",
-              borderRadius: "0.25rem"
-            }}>
-              {group.name}
-            </h3>
-            
-            {/* グループ内の出版物リスト（番号は1から始まる） */}
-            <ol start={1} style={{ marginTop: "0.5rem" }}>
-              {group.items.map((pub) => (
-                <li key={pub.id} style={{ marginBottom: "1.5rem" }}>
-                  {/* 一行目: タイトル */}
-                  <strong>
-                    {language === 'ja' && pub.japanese ? pub.japanese : pub.name}
-                  </strong>
-                  
-                  {/* 二行目: タグ（Year、Authorship、type、Review、Presentation） */}
-                  <div className="tags-container" data-testid="tags-container" style={{ marginTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                    {pub.year && (
-                      <span className="tag" data-testid="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                        {pub.year}
-                      </span>
-                    )}
-                    {pub.authorship && (
-                      <>
-                        {Array.isArray(pub.authorship) ? (
-                          // 配列の場合は各要素を個別のタグとして表示
-                          pub.authorship.map((role, index) => (
-                            <span
-                              key={`${pub.id}-role-${index}`}
-                              className="tag"
-                              data-testid="tag"
-                              style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem", marginRight: "0.5rem" }}
-                            >
-                              {role}
-                            </span>
-                          ))
-                        ) : (
-                          // 文字列の場合は単一のタグとして表示
-                          <span className="tag" data-testid="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                            {pub.authorship}
-                          </span>
-                        )}
-                      </>
-                    )}
-                    {pub.type && (
-                      <span className="tag" data-testid="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                        {pub.type}
-                      </span>
-                    )}
-                    {pub.review && (
-                      <span className="tag" data-testid="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                        {pub.review}
-                      </span>
-                    )}
-                    {pub.presentationType && (
-                      <>
-                        {Array.isArray(pub.presentationType) ? (
-                          // 配列の場合は各要素を個別のタグとして表示
-                          pub.presentationType.map((type, index) => (
-                            <span
-                              key={`${pub.id}-type-${index}`}
-                              className="tag"
-                              data-testid="tag"
-                              style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem", marginRight: "0.5rem" }}
-                            >
-                              {type}
-                            </span>
-                          ))
-                        ) : (
-                          // 文字列の場合は単一のタグとして表示
-                          <span className="tag" data-testid="tag" style={{ backgroundColor: "#f0f0f0", padding: "0.2rem 0.5rem", borderRadius: "0.25rem", fontSize: "0.85rem" }}>
-                            {pub.presentationType}
-                          </span>
-                        )}
-                      </>
-                    )}
-                  </div>
-                  
-                  {/* 三行目: ジャーナル名 */}
-                  <div style={{ marginTop: "0.5rem" }}>{pub.journal}</div>
-                  
-                  {/* 四行目: 開始日、終了日、場所 */}
-                  {(pub.startDate || pub.site) && (
-                    <div style={{ marginTop: "0.25rem", fontSize: "0.9rem", color: "#555" }}>
-                      {/* 開始日と終了日が同じ場合は開始日のみ表示 */}
-                      {pub.startDate && (
-                        <>
-                          {language === 'ja' ? '日付: ' : 'Date: '}
-                          {pub.startDate === pub.endDate ?
-                            pub.startDate :
-                            `${pub.startDate} → ${pub.endDate}`
-                          }
-                        </>
-                      )}
-                      
-                      {/* 場所がある場合は表示 */}
-                      {pub.site && (
-                        <>
-                          {pub.startDate && <span style={{ margin: "0 0.5rem" }}>|</span>}
-                          {language === 'ja' ? '場所: ' : 'Location: '}
-                          {pub.site}
-                        </>
-                      )}
-                    </div>
-                  )}
-                  
-                  {/* 五行目以降: DOI、URL、Others */}
-                  {pub.doi && (
-                    <div style={{ marginTop: "0.25rem" }}>
-                      DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer">
-                        {pub.doi}
-                      </a>
-                    </div>
-                  )}
-                  {pub.webLink && (
-                    <div style={{ marginTop: "0.25rem" }}>
-                      <a href={pub.webLink} target="_blank" rel="noopener noreferrer">
-                        {pub.webLink}
-                      </a>
-                    </div>
-                  )}
-                  {pub.others && (
-                    <div style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#555" }}>
-                      {pub.others}
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </div>
+          <PublicationGroup
+            key={groupIndex}
+            name={group.name}
+            items={group.items}
+            language={language}
+          />
         ))}
       </div>
     </div>
