@@ -96,13 +96,16 @@ const ja = {
   header: {
     home: 'ホーム',
     profileCV: 'プロフィール・CV',
-    publications: '出版物'
+    publications: '出版物',
+    works: '業務'
   },
   // サブヘッダー
   subheader: {
     home: '冨岡 莉生 (TOMIOKA Rio)',
     profileCV: 'プロフィール & 履歴書 (CV)',
-    publications: '出版物'
+    publications: '出版物',
+    works: '業務',
+    computerSystem2025: 'コンピュータシステム(2025)'
   },
   // フッター
   footer: {
@@ -126,13 +129,16 @@ const en = {
   header: {
     home: 'Home',
     profileCV: 'Profile & CV',
-    publications: 'Publications'
+    publications: 'Publications',
+    works: 'Works'
   },
   // サブヘッダー
   subheader: {
     home: 'TOMIOKA Rio',
     profileCV: 'Profile & Curriculum Vitae (CV)',
-    publications: 'Publications'
+    publications: 'Publications',
+    works: 'Works',
+    computerSystem2025: 'Computer System (2025)'
   },
   // フッター
   footer: {

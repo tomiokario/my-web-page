@@ -4,13 +4,16 @@ const en = {
   header: {
     home: 'Home',
     profileCV: 'Profile & CV',
-    publications: 'Publications'
+    publications: 'Publications',
+    works: 'Works'
   },
   // サブヘッダー
   subheader: {
     home: 'TOMIOKA Rio',
     profileCV: 'Profile & Curriculum Vitae (CV)',
-    publications: 'Publications'
+    publications: 'Publications',
+    works: 'Works',
+    computerSystem2025: 'Computer System (2025)'
   },
   // フッター
   footer: {

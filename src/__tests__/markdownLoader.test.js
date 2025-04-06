@@ -114,4 +114,40 @@ describe("markdownLoader", () => {
     // エラーメッセージが返されるか確認
     expect(content).toBe("# Error loading content");
   });
+
+  // サブディレクトリを含むパスのテスト
+  test("loads markdown file from subdirectory with language", async () => {
+    // テスト内容: サブディレクトリを含むパスで言語固有のMarkdownファイルを読み込むことを確認
+    // 成功レスポンスをモック
+    fetch.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        text: () => Promise.resolve("# Subdirectory Content")
+      })
+    );
+
+    const content = await loadMarkdown("/markdown/works/test.md", "ja");
+    
+    // 正しいパスでfetchが呼ばれたか確認
+    expect(fetch).toHaveBeenCalledWith("/markdown/ja/works/test.md");
+    expect(content).toBe("# Subdirectory Content");
+  });
+
+  // 複数階層のサブディレクトリを含むパスのテスト
+  test("loads markdown file from nested subdirectories with language", async () => {
+    // テスト内容: 複数階層のサブディレクトリを含むパスで言語固有のMarkdownファイルを読み込むことを確認
+    // 成功レスポンスをモック
+    fetch.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        text: () => Promise.resolve("# Nested Subdirectory Content")
+      })
+    );
+
+    const content = await loadMarkdown("/markdown/works/2025/test.md", "en");
+    
+    // 正しいパスでfetchが呼ばれたか確認
+    expect(fetch).toHaveBeenCalledWith("/markdown/en/works/2025/test.md");
+    expect(content).toBe("# Nested Subdirectory Content");
+  });
 });

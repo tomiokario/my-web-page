@@ -93,6 +93,7 @@ describe("Header component", () => {
     expect(screen.getByText(locales.ja.header.home)).toBeInTheDocument();
     expect(screen.getByText(locales.ja.header.profileCV)).toBeInTheDocument();
     expect(screen.getByText(locales.ja.header.publications)).toBeInTheDocument();
+    expect(screen.getByText(locales.ja.header.works)).toBeInTheDocument();
   });
 
   // 言語切り替えボタンのテスト
@@ -129,6 +130,7 @@ describe("Header component", () => {
     expect(screen.getByText(locales.en.header.home)).toBeInTheDocument();
     expect(screen.getByText(locales.en.header.profileCV)).toBeInTheDocument();
     expect(screen.getByText(locales.en.header.publications)).toBeInTheDocument();
+    expect(screen.getByText(locales.en.header.works)).toBeInTheDocument();
   });
 
   // モバイル表示でのテスト
@@ -155,6 +157,7 @@ describe("Header component", () => {
       expect(screen.getByText(locales.ja.header.home)).toBeInTheDocument();
       expect(screen.getByText(locales.ja.header.profileCV)).toBeInTheDocument();
       expect(screen.getByText(locales.ja.header.publications)).toBeInTheDocument();
+      expect(screen.getByText(locales.ja.header.works)).toBeInTheDocument();
     });
 
     test("displays language switch button in mobile view", () => {
@@ -188,6 +191,7 @@ describe("Header component", () => {
       expect(screen.getByText(locales.en.header.home)).toBeInTheDocument();
       expect(screen.getByText(locales.en.header.profileCV)).toBeInTheDocument();
       expect(screen.getByText(locales.en.header.publications)).toBeInTheDocument();
+      expect(screen.getByText(locales.en.header.works)).toBeInTheDocument();
     });
 
     test("displays language switch button with Japanese text", () => {

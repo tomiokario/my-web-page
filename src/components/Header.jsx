@@ -127,7 +127,8 @@ function Header() {
   const menuItems = [
     { path: "/", label: t.header.home, exact: true },
     { path: "/profile-cv", label: t.header.profileCV },
-    { path: "/publications", label: t.header.publications }
+    { path: "/publications", label: t.header.publications },
+    { path: "/works", label: t.header.works }
   ];
 
   return (

@@ -48,15 +48,15 @@ function PublicationsView({
 
   // 言語に応じたラベル
   const filterLabels = {
-    year: language === 'ja' ? '年度' : 'Year',
+    year: language === 'ja' ? '出版年' : 'Year',
     authorship: language === 'ja' ? '著者の役割' : 'Authorship',
     type: language === 'ja' ? '種類' : 'Type',
     review: language === 'ja' ? 'レビュー' : 'Review',
     presentationType: language === 'ja' ? '発表タイプ' : 'Presentation Type'
   };
   const resetLabel = language === 'ja' ? 'フィルターをリセット' : 'Reset Filters';
-  const yearBasedLabel = language === 'ja' ? '年で表示' : 'By year';
-  const typeBasedLabel = language === 'ja' ? '種類で表示' : 'By type';
+  const yearBasedLabel = language === 'ja' ? '年別に表示' : 'By year';
+  const typeBasedLabel = language === 'ja' ? '種類別に表示' : 'By type';
 
   return (
     <div className={classes.container}>
