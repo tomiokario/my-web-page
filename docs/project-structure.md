@@ -18,7 +18,17 @@ my-web-page/
 │       ├── home.md           # ホームページのコンテンツ
 │       ├── profilecv.md      # プロフィール・CVページのコンテンツ
 │       ├── en/               # 英語版マークダウン
+│       │   ├── home.md       # 英語版ホームページ
+│       │   ├── profilecv.md  # 英語版プロフィール・CV
+│       │   ├── works.md      # 英語版業務ページ
+│       │   └── works/        # 英語版業務詳細ページ
+│       │       └── computer-system-2025.md # コンピュータシステム2025（英語）
 │       └── ja/               # 日本語版マークダウン
+│           ├── home.md       # 日本語版ホームページ
+│           ├── profilecv.md  # 日本語版プロフィール・CV
+│           ├── works.md      # 日本語版業務ページ
+│           └── works/        # 日本語版業務詳細ページ
+│               └── computer-system-2025.md # コンピュータシステム2025（日本語）
 ├── scripts/                   # ユーティリティスクリプト
 │   └── convertPublications.js # CSVからJSONへの変換スクリプト
 ├── src/                       # ソースコード
@@ -44,7 +54,9 @@ my-web-page/
 │   ├── pages/                # ページコンポーネント
 │   │   ├── Home.jsx          # ホームページ
 │   │   ├── ProfileCV.jsx     # プロフィール・CVページ
-│   │   └── Publications.jsx  # 出版物ページ
+│   │   ├── Publications.jsx  # 出版物ページ
+│   │   ├── Works.jsx         # 業務ページ
+│   │   └── ComputerSystem2025.jsx # コンピュータシステム2025ページ
 │   ├── styles/               # スタイルシート
 │   │   ├── styles.css        # グローバルスタイル
 │   │   └── variables.css     # CSSカスタムプロパティ
@@ -69,6 +81,8 @@ my-web-page/
 - **Home.jsx**: ホームページ。マークダウンコンテンツを読み込んで表示します。
 - **ProfileCV.jsx**: プロフィールと履歴書のページ。マークダウンコンテンツを読み込んで表示します。
 - **Publications.jsx**: 出版物一覧ページ。出版物データの取得、フィルタリング、並び替えの状態管理を行います。
+- **Works.jsx**: 業務紹介ページ。マークダウンコンテンツを読み込んで表示します。
+- **ComputerSystem2025.jsx**: コンピュータシステム2025の詳細ページ。マークダウンコンテンツを読み込んで表示します。
 
 ### 共通コンポーネント
 
@@ -127,6 +141,8 @@ graph TD
     F --> H[Home]
     F --> I[ProfileCV]
     F --> J[Publications]
+    F --> P[Works]
+    F --> Q[ComputerSystem2025]
     J --> K[PublicationsView]
     K --> L[FilterDropdown]
     K --> M[ActiveFilters]
