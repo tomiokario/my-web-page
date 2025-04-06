@@ -48,7 +48,7 @@ function PublicationsView({
 
   // 言語に応じたラベル
   const filterLabels = {
-    year: language === 'ja' ? '年度' : 'Year',
+    year: language === 'ja' ? '出版年' : 'Year',
     authorship: language === 'ja' ? '著者の役割' : 'Authorship',
     type: language === 'ja' ? '種類' : 'Type',
     review: language === 'ja' ? 'レビュー' : 'Review',
