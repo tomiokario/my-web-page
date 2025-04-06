@@ -55,8 +55,8 @@ function PublicationsView({
     presentationType: language === 'ja' ? '発表タイプ' : 'Presentation Type'
   };
   const resetLabel = language === 'ja' ? 'フィルターをリセット' : 'Reset Filters';
-  const yearBasedLabel = language === 'ja' ? '年で表示' : 'By year';
-  const typeBasedLabel = language === 'ja' ? '種類で表示' : 'By type';
+  const yearBasedLabel = language === 'ja' ? '年別に表示' : 'By year';
+  const typeBasedLabel = language === 'ja' ? '種類別に表示' : 'By type';
 
   return (
     <div className={classes.container}>
