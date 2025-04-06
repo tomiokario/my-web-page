@@ -16,5 +16,5 @@
 - Google scholar: [rio tomioka](https://scholar.google.co.jp/citations?hl=ja&user=15WrAiYAAAAJ&view_op=list_works&authuser=2&gmla=AETOMgGLOlj9mEF4kGQxV_Dc8_FDvt9j5J9PBNxmGexBuSs9z-DCXMonXGG3VRJn5j0R-9YIZ6b01K-SIZ7XI6PpJwR4oMktM3KBLvx3Zg7AdrvM9Sd40SflSkA)
 
 ### Current works
-The University of Kitakyushu, Faculty of Economics and Business Administration
-Department of Economics, "Computer System", Part-time Lecturer 
+The University of Kitakyushu, Faculty of Economics and Business Administration Department of Economics, "Computer System", Part-time Lecturer 
+- For more details, please check [here](/works/computer-system-2025).

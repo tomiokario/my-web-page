@@ -10,6 +10,8 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import ProfileCV from "./pages/ProfileCV";
 import Publications from "./pages/Publications";
+import Works from "./pages/Works";
+import ComputerSystem2025 from "./pages/ComputerSystem2025";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/profile-cv" element={<ProfileCV />} />
                   <Route path="/publications" element={<Publications />} />
+                  <Route path="/works" element={<Works />} />
+                  <Route path="/works/computer-system-2025" element={<ComputerSystem2025 />} />
                 </Routes>
               </div>
             </main>

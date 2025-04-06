@@ -93,6 +93,34 @@ describe("SubHeader component", () => {
       const headingElement = screen.getByText(locales.ja.subheader.publications);
       expect(headingElement).toBeInTheDocument();
     });
+  
+    // Worksページの場合のテスト
+    test("displays correct Japanese page name for works path", () => {
+      // テスト内容: /worksパスにアクセスした場合、日本語の「業務」が表示されることを確認
+      render(
+        <TestWrapper initialLanguage="ja">
+          <MemoryRouter initialEntries={["/works"]}>
+            <SubHeader />
+          </MemoryRouter>
+        </TestWrapper>
+      );
+      const headingElement = screen.getByText(locales.ja.subheader.works);
+      expect(headingElement).toBeInTheDocument();
+    });
+  
+    // Computer System 2025ページの場合のテスト
+    test("displays correct Japanese page name for computer-system-2025 path", () => {
+      // テスト内容: /works/computer-system-2025パスにアクセスした場合、日本語の「コンピュータシステム(2025)」が表示されることを確認
+      render(
+        <TestWrapper initialLanguage="ja">
+          <MemoryRouter initialEntries={["/works/computer-system-2025"]}>
+            <SubHeader />
+          </MemoryRouter>
+        </TestWrapper>
+      );
+      const headingElement = screen.getByText(locales.ja.subheader.computerSystem2025);
+      expect(headingElement).toBeInTheDocument();
+    });
   });
 
   // 英語モードでのテスト
@@ -136,6 +164,34 @@ describe("SubHeader component", () => {
         </TestWrapper>
       );
       const headingElement = screen.getByText(locales.en.subheader.publications);
+      expect(headingElement).toBeInTheDocument();
+    });
+  
+    // Worksページの場合のテスト
+    test("displays correct English page name for works path", () => {
+      // テスト内容: /worksパスにアクセスした場合、英語の「Works」が表示されることを確認
+      render(
+        <TestWrapper initialLanguage="en">
+          <MemoryRouter initialEntries={["/works"]}>
+            <SubHeader />
+          </MemoryRouter>
+        </TestWrapper>
+      );
+      const headingElement = screen.getByText(locales.en.subheader.works);
+      expect(headingElement).toBeInTheDocument();
+    });
+  
+    // Computer System 2025ページの場合のテスト
+    test("displays correct English page name for computer-system-2025 path", () => {
+      // テスト内容: /works/computer-system-2025パスにアクセスした場合、英語の「Computer System (2025)」が表示されることを確認
+      render(
+        <TestWrapper initialLanguage="en">
+          <MemoryRouter initialEntries={["/works/computer-system-2025"]}>
+            <SubHeader />
+          </MemoryRouter>
+        </TestWrapper>
+      );
+      const headingElement = screen.getByText(locales.en.subheader.computerSystem2025);
       expect(headingElement).toBeInTheDocument();
     });
   });

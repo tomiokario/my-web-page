@@ -31,7 +31,10 @@ function SubHeader() {
   const t = locales[language]; // 現在の言語に応じたリソースを取得
 
   let pageName = "";
-  switch (location.pathname) {
+  // パスの最初の部分を取得（例：/works/computer-system-2025 → /works）
+  const basePath = '/' + location.pathname.split('/')[1];
+  
+  switch (basePath) {
     case "/":
       pageName = t.subheader.home;
       break;
@@ -40,6 +43,20 @@ function SubHeader() {
       break;
     case "/publications":
       pageName = t.subheader.publications;
+      break;
+    case "/works":
+      // /works/xxx の形式かどうかをチェック
+      if (location.pathname.split('/').length > 2) {
+        // 特定のパスに対して特別なタイトルを表示
+        if (location.pathname === "/works/computer-system-2025") {
+          pageName = t.subheader.computerSystem2025;
+        } else {
+          // その他の詳細ページには一般的なタイトルを表示
+          pageName = t.subheader.works;
+        }
+      } else {
+        pageName = t.subheader.works;
+      }
       break;
     default:
       pageName = "";
