@@ -96,7 +96,7 @@ describe("SubHeader component", () => {
   
     // Worksページの場合のテスト
     test("displays correct Japanese page name for works path", () => {
-      // テスト内容: /worksパスにアクセスした場合、日本語の「業務」が表示されることを確認
+      // テスト内容: /worksパスにアクセスした場合、日本語の「仕事」が表示されることを確認
       render(
         <TestWrapper initialLanguage="ja">
           <MemoryRouter initialEntries={["/works"]}>
