@@ -17,13 +17,13 @@ public/markdown/
 ├── en/                    # 英語版コンテンツ
 │   ├── home.md            # 英語版ホームページ
 │   ├── profilecv.md       # 英語版プロフィール・CVページ
-│   ├── works.md           # 英語版業務ページ
+│   ├── works.md           # 英語版仕事ページ
 │   └── works/             # 英語版業務詳細ページ
 │       └── computer-system-2025.md # コンピュータシステム2025（英語）
 └── ja/                    # 日本語版コンテンツ
     ├── home.md            # 日本語版ホームページ
     ├── profilecv.md       # 日本語版プロフィール・CVページ
-    ├── works.md           # 日本語版業務ページ
+    ├── works.md       # 日本語版仕事ページ
     └── works/             # 日本語版業務詳細ページ
         └── computer-system-2025.md # コンピュータシステム2025（日本語）
 ```

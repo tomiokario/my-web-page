@@ -5,7 +5,7 @@ const ja = {
     home: 'ホーム',
     profileCV: 'プロフィール・CV',
     publications: '出版物',
-    works: '業務'
+    works: '仕事'
   },
   // サブヘッダー
   subheader: {
@@ -22,6 +22,17 @@ const ja = {
   // 言語切り替えボタン
   languageSwitch: {
     switchTo: '英語に切り替え'
+  },
+  // 出版物
+  publications: {
+    year: '出版年',
+    authorship: '著者の役割',
+    type: '種類',
+    review: 'レビュー',
+    presentationType: '発表タイプ',
+    resetFilters: 'フィルターをリセット',
+    sortByType: '種類で表示',
+    sortByChronological: '年で表示'
   }
 };
 

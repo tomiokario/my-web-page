@@ -97,14 +97,14 @@ const ja = {
     home: 'ホーム',
     profileCV: 'プロフィール・CV',
     publications: '出版物',
-    works: '業務'
+    works: '仕事'
   },
   // サブヘッダー
   subheader: {
     home: '冨岡 莉生 (TOMIOKA Rio)',
     profileCV: 'プロフィール & 履歴書 (CV)',
     publications: '出版物',
-    works: '業務',
+    works: '仕事',
     computerSystem2025: 'コンピュータシステム(2025)'
   },
   // フッター

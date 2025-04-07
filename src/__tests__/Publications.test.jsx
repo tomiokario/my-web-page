@@ -197,7 +197,7 @@ describe('Publications Component', () => {
     expect(screen.getByTestId('active-filters')).toBeInTheDocument();
     
     // 年のフィルタータグが表示されていることを確認
-    expect(screen.getByText('年度:')).toBeInTheDocument();
+    expect(screen.getByText('出版年:')).toBeInTheDocument();
     expect(screen.getByText('2021 ✕')).toBeInTheDocument();
     
     // 著者の役割のフィルターボタンをクリック
@@ -275,7 +275,7 @@ describe('Publications Component', () => {
     
     // フィルターボタンが日本語になっていることを確認
     const yearFilterButton = screen.getByTestId('year-filter-button');
-    expect(yearFilterButton).toHaveTextContent('年度 ▼');
+    expect(yearFilterButton).toHaveTextContent('出版年 ▼');
     
     // グループヘッダーを取得
     const groupHeaders = screen.getAllByRole('heading', { level: 3 });
