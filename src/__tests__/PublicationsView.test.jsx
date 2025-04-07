@@ -152,7 +152,7 @@ describe('PublicationsView', () => {
     
     // 日本語の場合
     render(<PublicationsView {...{ ...mockProps, language: 'ja' }} />);
-    expect(screen.getByText('種類で表示')).toBeInTheDocument();
-    expect(screen.getByText('年で表示')).toBeInTheDocument();
+    expect(screen.getByText('種類別に表示')).toBeInTheDocument();
+    expect(screen.getByText('年別に表示')).toBeInTheDocument();
   });
 });
