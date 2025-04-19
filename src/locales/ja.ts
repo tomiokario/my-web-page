@@ -1,5 +1,37 @@
 // 日本語のリソースファイル
-const ja = {
+interface JaLocale {
+  header: {
+    home: string;
+    profileCV: string;
+    publications: string;
+    works: string;
+  };
+  subheader: {
+    home: string;
+    profileCV: string;
+    publications: string;
+    works: string;
+    computerSystem2025: string;
+  };
+  footer: {
+    copyright: string;
+  };
+  languageSwitch: {
+    switchTo: string;
+  };
+  publications: {
+    year: string;
+    authorship: string;
+    type: string;
+    review: string;
+    presentationType: string;
+    resetFilters: string;
+    sortByType: string;
+    sortByChronological: string;
+  };
+}
+
+const ja: JaLocale = {
   // ヘッダーメニュー
   header: {
     home: 'ホーム',

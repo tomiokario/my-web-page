@@ -3,7 +3,7 @@
  */
 
 // Markdownファイルを読み込む関数
-export const loadMarkdown = async (filePath, language = 'ja') => {
+export const loadMarkdown = async (filePath: string, language: string = 'ja'): Promise<string> => {
   try {
     // 言語に応じたパスを生成
     // 例: /markdown/home.md → /markdown/ja/home.md または /markdown/en/home.md
@@ -34,7 +34,7 @@ export const loadMarkdown = async (filePath, language = 'ja') => {
     console.log('Loading markdown from:', langPath, '(fallback:', filePath, ')');
     
     // まず言語固有のファイルを試す
-    let response = await fetch(langPath);
+    let response: Response = await fetch(langPath);
     
     // 言語固有のファイルが存在しない場合は、元のパスを試す（後方互換性のため）
     if (!response.ok) {
@@ -44,10 +44,10 @@ export const loadMarkdown = async (filePath, language = 'ja') => {
       }
     }
     
-    const text = await response.text();
+    const text: string = await response.text();
     return text;
-  } catch (error) {
-    console.error('Error loading markdown:', error);
+  } catch (error: any) {
+    console.error('Error loading markdown:', error.message);
     return '# Error loading content';
   }
 };
