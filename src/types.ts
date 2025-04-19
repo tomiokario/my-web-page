@@ -1,7 +1,7 @@
 // src/types.ts
 
 export interface Publication {
-  id: number;
+  id: number; // idを必須に戻す
   hasEmptyFields: boolean;
   name: string;
   japanese: string;
