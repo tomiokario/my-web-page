@@ -2,15 +2,15 @@
  * 出版物データをCSVからJSONに変換するスクリプト
  *
  * 使用方法:
- * node scripts/convertPublications.js
+ * npx ts-node scripts/convertPublications.ts
  *
  * 入力: data/publication_data.csv
  * 出力: src/data/publications.json
  */
 
-const fs = require('fs');
-const path = require('path');
-const { csvToJson, convertAndSave } = require('../src/utils/csvToJson');
+import * as fs from 'fs';
+import * as path from 'path';
+import { csvToJson, convertAndSave } from '../src/utils/csvToJson';
 
 /**
  * メイン処理：CSVをJSONに変換してファイルに保存する

@@ -1,9 +1,9 @@
 // src/components/SubHeader.jsx
 import React from "react";
-import { useLocation } from "react-router-dom";
-import { useLanguage } from "../contexts/LanguageContext";
-import locales from "../locales";
-import { Box, Title, createStyles } from "@mantine/core";
+import { useLocation, Location } from "react-router-dom";
+import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
+import locales, { Locales } from "../locales";
+import { Box, Title, createStyles, MantineTheme } from "@mantine/core";
 
 // スタイルの定義
 const useStyles = createStyles((theme) => ({
@@ -26,9 +26,9 @@ const useStyles = createStyles((theme) => ({
 
 function SubHeader() {
   const { classes } = useStyles();
-  const location = useLocation();
-  const { language } = useLanguage();
-  const t = locales[language]; // 現在の言語に応じたリソースを取得
+  const location: Location = useLocation();
+  const { language } = useLanguage() as LanguageContextType;
+  const t: Locales[keyof Locales] = locales[language as keyof Locales]; // 現在の言語に応じたリソースを取得
 
   let pageName = "";
   // パスの最初の部分を取得（例：/works/computer-system-2025 → /works）

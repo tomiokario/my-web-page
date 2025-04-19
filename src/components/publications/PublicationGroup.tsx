@@ -1,9 +1,17 @@
 import React from "react";
-import { createStyles } from "@mantine/core";
+import { createStyles, MantineTheme } from "@mantine/core";
 import PublicationItem from "./PublicationItem";
+import { Publication } from "../../types";
+
+// PublicationGroupPropsインターフェースを追加
+interface PublicationGroupProps {
+  name: string;
+  items: Publication[];
+  language: string;
+}
 
 // スタイルの定義
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme: MantineTheme) => ({
   group: {
     marginBottom: theme.spacing.xl * 2,
   },
@@ -23,10 +31,10 @@ const useStyles = createStyles((theme) => ({
  * 
  * @param {Object} props
  * @param {string} props.name - グループ名
- * @param {Array} props.items - 出版物アイテムの配列
+ * @param {Publication[]} props.items - 出版物アイテムの配列
  * @param {string} props.language - 現在の言語設定（'ja'または'en'）
  */
-function PublicationGroup({ name, items, language }) {
+function PublicationGroup({ name, items, language }: PublicationGroupProps) {
   const { classes } = useStyles();
   
   return (

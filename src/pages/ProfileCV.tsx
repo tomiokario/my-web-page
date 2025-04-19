@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
 import { loadMarkdown } from "../utils/markdownLoader";
 
-function Works() {
-  const [content, setContent] = useState('Loading...');
-  const { language } = useLanguage();
+function ProfileCV() {
+  const [content, setContent] = useState<string>('Loading...');
+  const { language } = useLanguage() as LanguageContextType;
 
   useEffect(() => {
     const fetchMarkdown = async () => {
-      const markdownContent = await loadMarkdown('/markdown/works.md', language);
+      const markdownContent: string = await loadMarkdown('/markdown/profilecv.md', language);
       setContent(markdownContent);
     };
 
@@ -23,4 +23,4 @@ function Works() {
   );
 }
 
-export default Works;
+export default ProfileCV;

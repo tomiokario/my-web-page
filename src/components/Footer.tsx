@@ -1,11 +1,11 @@
 import React from "react";
-import { useLanguage } from "../contexts/LanguageContext";
-import locales from "../locales";
+import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
+import locales, { Locales } from "../locales";
 import "./Footer.css";
 
 function Footer() {
-  const { language } = useLanguage();
-  const t = locales[language]; // 現在の言語に応じたリソースを取得
+  const { language } = useLanguage() as LanguageContextType;
+  const t: Locales[keyof Locales] = locales[language as keyof Locales]; // 現在の言語に応じたリソースを取得
 
   return (
     <footer className="footer">

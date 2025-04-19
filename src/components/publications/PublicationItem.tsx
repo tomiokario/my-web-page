@@ -1,8 +1,15 @@
 import React from "react";
-import { createStyles } from "@mantine/core";
+import { createStyles, MantineTheme } from "@mantine/core";
+import { Publication } from "../../types";
+
+// PublicationItemPropsインターフェースを追加
+interface PublicationItemProps {
+  publication: Publication;
+  language: string;
+}
 
 // スタイルの定義
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme: MantineTheme) => ({
   item: {
     marginBottom: theme.spacing.lg,
   },
@@ -46,10 +53,10 @@ const useStyles = createStyles((theme) => ({
  * 単一の出版物エントリを表示するコンポーネント
  * 
  * @param {Object} props
- * @param {Object} props.publication - 出版物データ
+ * @param {Publication} props.publication - 出版物データ
  * @param {string} props.language - 現在の言語設定（'ja'または'en'）
  */
-function PublicationItem({ publication, language }) {
+function PublicationItem({ publication, language }: PublicationItemProps) {
   const { classes } = useStyles();
   
   return (
@@ -125,7 +132,7 @@ function PublicationItem({ publication, language }) {
       </div>
       
       {/* 三行目: ジャーナル名 */}
-      <div className={classes.journal}>{publication.journal}</div>
+      <div className={classes.journal}>{publication.journalConference || publication.journal}</div>
       
       {/* 四行目: 開始日、終了日、場所 */}
       {(publication.startDate || publication.site) && (

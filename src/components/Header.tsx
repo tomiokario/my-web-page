@@ -2,19 +2,20 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Languages } from "lucide-react";
-import { useLanguage } from "../contexts/LanguageContext";
-import locales from "../locales";
+import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
+import locales, { Locales } from "../locales";
 import {
   Header as MantineHeader,
   Group,
   Container,
   Button,
-  createStyles
+  createStyles,
+  MantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
 // remヘルパー関数の定義（Mantineのバージョンでremがエクスポートされていない場合）
-const rem = (size) => `${size / 16}rem`;
+const rem = (size: number) => `${size / 16}rem`;
 
 // スタイルの定義
 const useStyles = createStyles((theme) => ({
@@ -119,8 +120,8 @@ const useStyles = createStyles((theme) => ({
 
 function Header() {
   const { classes, cx } = useStyles();
-  const { language, toggleLanguage } = useLanguage();
-  const t = locales[language]; // 現在の言語に応じたリソースを取得
+  const { language, toggleLanguage } = useLanguage() as LanguageContextType;
+  const t = locales[language as keyof Locales]; // 現在の言語に応じたリソースを取得
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   // メニュー項目の定義

@@ -1,10 +1,36 @@
 import React from "react";
-import { createStyles } from "@mantine/core";
+import { createStyles, MantineTheme } from "@mantine/core";
 import PublicationGroup from "./PublicationGroup";
 import FilterDropdown from "./FilterDropdown";
 import ActiveFilters from "./ActiveFilters";
+import { SelectedFilters } from "../../hooks/useFilters";
+import { Publication } from "../../types";
 
-const useStyles = createStyles((theme) => ({
+// PublicationsViewPropsインターフェースを追加
+interface PublicationsViewProps {
+  sortOrder: "type" | "chronological";
+  onSortOrderChange: (newSortOrder: "type" | "chronological") => void;
+  selectedFilters: SelectedFilters;
+  openDropdown: string | null;
+  filterOptions: {
+    year: string[];
+    authorship: string[];
+    type: string[];
+    review: string[];
+    presentationType: string[];
+  };
+  groupedPublications: Array<{
+    name: string;
+    items: Publication[];
+  }>;
+  filterRefs: React.MutableRefObject<Record<string, HTMLElement | null>>;
+  toggleDropdown: (dropdown: string | null) => void;
+  toggleFilter: (category: keyof SelectedFilters, value: string) => void;
+  resetFilters: () => void;
+  language: string;
+}
+
+const useStyles = createStyles((theme: MantineTheme) => ({
   container: {
     padding: 0,
   },
@@ -43,7 +69,7 @@ function PublicationsView({
   toggleFilter,
   resetFilters,
   language,
-}) {
+}: PublicationsViewProps) {
   const { classes } = useStyles();
 
   // 言語に応じたラベル
@@ -65,7 +91,7 @@ function PublicationsView({
         <select
           id="sortOrder"
           value={sortOrder}
-          onChange={(e) => onSortOrderChange(e.target.value)}
+          onChange={(e) => onSortOrderChange(e.target.value as "type" | "chronological")}
           className={classes.sortOrderSelect}
           data-testid="sort-order-select"
         >
@@ -79,14 +105,14 @@ function PublicationsView({
         {Object.entries(filterLabels).map(([category, label]) => (
           <FilterDropdown
             key={category}
-            category={category}
+            category={category as keyof SelectedFilters}
             label={label}
-            options={filterOptions[category]}
-            selectedValues={selectedFilters[category]}
+            options={filterOptions[category as keyof typeof filterOptions]}
+            selectedValues={selectedFilters[category as keyof SelectedFilters]}
             isOpen={openDropdown === category}
             onToggleDropdown={toggleDropdown}
             onToggleFilter={toggleFilter}
-            filterRef={el => filterRefs.current[category] = el}
+            filterRef={(el: HTMLElement | null) => filterRefs.current[category] = el}
           />
         ))}
       </div>

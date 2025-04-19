@@ -1,5 +1,27 @@
 // 英語のリソースファイル
-const en = {
+interface EnLocale {
+  header: {
+    home: string;
+    profileCV: string;
+    publications: string;
+    works: string;
+  };
+  subheader: {
+    home: string;
+    profileCV: string;
+    publications: string;
+    works: string;
+    computerSystem2025: string;
+  };
+  footer: {
+    copyright: string;
+  };
+  languageSwitch: {
+    switchTo: string;
+  };
+}
+
+const en: EnLocale = {
   // ヘッダーメニュー
   header: {
     home: 'Home',
