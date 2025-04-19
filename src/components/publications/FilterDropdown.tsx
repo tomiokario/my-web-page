@@ -1,7 +1,20 @@
 import React from "react";
-import { createStyles } from "@mantine/core";
+import { createStyles, MantineTheme } from "@mantine/core";
+import { SelectedFilters } from "../../hooks/useFilters";
 
-const useStyles = createStyles((theme) => ({
+// FilterDropdownPropsインターフェースを追加
+interface FilterDropdownProps {
+  category: keyof SelectedFilters;
+  label: string;
+  options: string[];
+  selectedValues: string[];
+  isOpen: boolean;
+  onToggleDropdown: (dropdown: string | null) => void;
+  onToggleFilter: (category: keyof SelectedFilters, value: string) => void;
+  filterRef: (el: HTMLElement | null) => void;
+}
+
+const useStyles = createStyles((theme: MantineTheme) => ({
   filterContainer: {
     position: "relative",
   },
@@ -53,7 +66,7 @@ function FilterDropdown({
   onToggleDropdown,
   onToggleFilter,
   filterRef,
-}) {
+}: FilterDropdownProps) {
   const { classes, cx } = useStyles();
 
   return (
@@ -78,12 +91,16 @@ function FilterDropdown({
         >
           {options.map((option) => (
             <div key={option} className={classes.optionContainer}>
-              <label className={classes.optionLabel}>
+              <label className={classes.optionLabel} htmlFor={`${category}-${option}`}>
                 <input
+                  id={`${category}-${option}`}
                   type="checkbox"
                   checked={selectedValues.includes(option)}
                   onChange={() => onToggleFilter(category, option)}
                   className={classes.checkbox}
+                  role="checkbox"
+                  aria-checked={selectedValues.includes(option)}
+                  aria-label={option}
                 />
                 {option}
               </label>

@@ -1,10 +1,16 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+
+// コンテキストの値の型定義
+export interface LanguageContextType {
+  language: string;
+  toggleLanguage: () => void;
+}
 
 // 言語コンテキストを作成
-const LanguageContext = createContext();
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 // 言語プロバイダーコンポーネント
-export const LanguageProvider = ({ children }) => {
+export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   // ローカルストレージから言語設定を取得するか、デフォルトで日本語を使用
   const [language, setLanguage] = useState(() => {
     const savedLanguage = localStorage.getItem('language');
@@ -34,5 +40,5 @@ export const useLanguage = () => {
   if (!context) {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
-  return context;
+  return context as LanguageContextType;
 };
