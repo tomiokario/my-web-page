@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { useNavigate } from "react-router-dom";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useNavigate, NavigateFunction } from "react-router-dom";
+import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
 import { loadMarkdown } from "../utils/markdownLoader";
 
 function ComputerSystem2025() {
-  const [content, setContent] = useState('Loading...');
-  const [error, setError] = useState(null);
-  const { language } = useLanguage();
-  const navigate = useNavigate();
+  const [content, setContent] = useState<string>('Loading...');
+  const [error, setError] = useState<string | null>(null);
+  const { language } = useLanguage() as LanguageContextType;
+  const navigate: NavigateFunction = useNavigate();
 
   useEffect(() => {
     const fetchMarkdown = async () => {
       try {
         // 特定のマークダウンファイルのパスを直接指定
-        const markdownContent = await loadMarkdown('/markdown/works/computer-system-2025.md', language);
+        const markdownContent: string = await loadMarkdown('/markdown/works/computer-system-2025.md', language);
         setContent(markdownContent);
         setError(null);
-      } catch (err) {
-        console.error("Error loading computer system content:", err);
+      } catch (err: any) {
+        console.error("Error loading computer system content:", err.message);
         setError("Failed to load content");
         setContent("# Content not found");
       }
