@@ -36,13 +36,13 @@ export function csvToJson(csvFilePath: string): Publication[] {
 
   // 各行を処理（ヘッダー行をスキップ）
   for (let i = 1; i < lines.length; i++) {
-    const line = lines[i];
+    const line = lines[i].trim(); // 行の前後の空白と改行コードを除去
     // 空行をスキップ
-    if (!line.trim()) continue;
+    if (!line) continue; // trim() した結果が空文字列ならスキップ
 
     try {
       // 行をCSVとして正しく解析（引用符内のカンマを考慮）
-      const values: string[] = parseCSVLine(line);
+      const values: string[] = parseCSVLine(line); // trim() 済みの行を渡す
 
       // 値の数がヘッダーの数より少ない場合や、必要な列（名前など）がない場合はスキップ
       if (values.length < headers.length || !values[1] || values[1].trim() === '') continue;
@@ -174,7 +174,7 @@ function parseCSVLine(line: string): string[] {
       }
     } else if (char === ',' && !inQuotes) {
       // 引用符の外側のカンマは区切り文字
-      result.push(current);
+      result.push(current.trim()); // フィールドを配列に追加する際にtrimする
       current = '';
     } else {
       // それ以外の文字は現在の値に追加
@@ -183,7 +183,7 @@ function parseCSVLine(line: string): string[] {
   }
 
   // 最後の値を追加
-  result.push(current);
+  result.push(current.trim()); // 最後の値もtrimする
 
   return result;
 }

@@ -19,11 +19,11 @@ const fs = require('fs');
 const path = require('path');
 const { csvToJson } = require('../utils/csvToJson');
 
-// テストデータのパス
-const CSV_FILE_PATH = path.join(__dirname, '../../data/publication_data.csv');
+// テストデータのパス (dataディレクトリがsrc配下に移動したためパスを更新)
+const CSV_FILE_PATH = path.join(__dirname, '../data/publication_data.csv');
 
 // ヘルパー関数: 一時ファイルの作成
-function createTempCsvFile(content, filename = 'temp_test.csv') {
+function createTempCsvFile(content: string, filename = 'temp_test.csv') {
   const tempDir = path.join(__dirname, '../../temp');
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
@@ -39,7 +39,7 @@ function createTempCsvFile(content, filename = 'temp_test.csv') {
 }
 
 // ヘルパー関数: 一時ファイルの削除
-function removeTempFile(filePath) {
+function removeTempFile(filePath: string) {
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
   }
@@ -110,8 +110,11 @@ describe('CSV to JSON conversion', () => {
     
     // 特定のデータが正しく変換されていることを確認
     expect(firstItem.name).toContain('Rio Tomioka');
-    expect(firstItem.type).toContain('Research paper');
-    
+    const expectedType = 'Research paper (international conference)：国際会議';
+    // 文字コード配列を比較して、目に見えない文字の問題を回避
+    expect(firstItem.type.trim().split('').map((c: string) => c.charCodeAt(0)))
+      .toEqual(expectedType.split('').map((c: string) => c.charCodeAt(0)));
+
     // 日付から年が正しく抽出できることを確認（Publications.jsxで使用される機能）
     const dateRegex = /(\d{4})/;
     const match = firstItem.date.match(dateRegex);

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-// import publicationsData from "../data/publications.json"; // 削除: 引数で受け取るように変更
+import publicationsData from "../data/publications.json"; // 正しいパスに修正 (src/hooks -> src/data)
 import { Publication } from "../types"; // Publication型をインポート
 
 // 出版物の種類の順序を定義
@@ -30,10 +30,12 @@ export interface UsePublicationsReturn {
  * @param {Object} options - オプション
  * @param {string} options.sortOrder - 並び順 ('chronological' または 'type')
  * @param {Publication[]} options.filteredPublications - フィルタリング済みの出版物データ
- * @param {Publication[]} options.publicationsData - 元の出版物データ
+ * @param {Publication[]} options.publicationsData - 元の出版物データ (引数で受け取るように戻す)
  * @returns {UsePublicationsReturn} 処理済みの出版物データと関連関数
  */
-function usePublications({ sortOrder, filteredPublications, publicationsData }: { sortOrder: string; filteredPublications: Publication[]; publicationsData: Publication[] }): UsePublicationsReturn {
+// 引数に publicationsData を再度追加
+function usePublications({ sortOrder, filteredPublications, publicationsData: inputPublicationsData }: { sortOrder: string; filteredPublications: Publication[]; publicationsData: Publication[] }): UsePublicationsReturn {
+
   // 日付から年を抽出する関数
   const extractYear = (dateString: string | undefined | null): number | null => {
     if (!dateString) return null;
@@ -44,9 +46,8 @@ function usePublications({ sortOrder, filteredPublications, publicationsData }: 
 
   // 出版物データを整形
   const formattedPublications = useMemo<Publication[]>(() => {
-    // publicationsDataの型が不明なため、anyとして扱い、Publication型にマッピング
-    // 引数で受け取った publicationsData を使用
-    return publicationsData.map((pub: any, index: number): Publication => {
+    // 引数で受け取った inputPublicationsData を使用
+    return inputPublicationsData.map((pub: any, index: number): Publication => {
       // 年度を抽出（フィルタリングに必要）
       const year = extractYear(pub.date);
 
@@ -78,7 +79,8 @@ function usePublications({ sortOrder, filteredPublications, publicationsData }: 
         sortableDate: pub.sortableDate || ''
       };
     });
-  }, []);
+  // 依存配列を inputPublicationsData に変更
+  }, [inputPublicationsData]);
 
   // 並び順に基づいて出版物を並べ替え
   const sortedPublications = useMemo<Publication[]>(() => {

@@ -6,8 +6,8 @@ import { execSync } from 'child_process';
 const TEMP_DIR = path.join(__dirname, 'temp_convert_test');
 // テスト用の入力CSVファイルパス
 const INPUT_CSV_PATH = path.join(TEMP_DIR, 'input.csv');
-// スクリプトによって生成されるJSONファイルの期待されるパス
-const EXPECTED_OUTPUT_JSON_PATH = path.join(__dirname, '../../../src/data/publications.json'); // パス修正
+// スクリプトによって生成されるJSONファイルの期待されるパス (dataディレクトリがsrc配下に移動したためパスを更新)
+const EXPECTED_OUTPUT_JSON_PATH = path.join(__dirname, '../../data/publications.json');
 
 // テスト用のCSVデータ (13列に合わせる)
 const sampleCsvData = `未入力項目有り,名前（著者名と論文タイトル）,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
@@ -71,8 +71,8 @@ describe('convertPublications Script', () => {
 
   // 各テストの後に一時ディレクトリと関連ファイルを削除
   afterEach(() => {
-      const originalDataPath = path.join(__dirname, '../../data/publication_data.csv');
-      const tempDataPath = path.join(__dirname, '../../data/publication_data.csv.temp');
+      const originalDataPath = path.join(__dirname, '../../data/publication_data.csv'); // パス更新
+      const tempDataPath = path.join(__dirname, '../../data/publication_data.csv.temp'); // パス更新
 
       if (fs.existsSync(TEMP_DIR)) {
           fs.rmSync(TEMP_DIR, { recursive: true, force: true });
@@ -103,9 +103,9 @@ describe('convertPublications Script', () => {
     // 仮: スクリプトが入力パスを第一引数、出力パスを第二引数で受け取ると仮定
     // const command = `ts-node --compiler-options '{"module":"CommonJS"}' ${path.join(__dirname, '../convertPublications.ts')} ${INPUT_CSV_PATH} ${EXPECTED_OUTPUT_JSON_PATH}`;
 
-    // スクリプトが固定パスを参照するため、入力ファイルを data/publication_data.csv にコピー
-    const originalDataPath = path.join(__dirname, '../../../data/publication_data.csv'); // パス修正
-    const tempDataPath = path.join(__dirname, '../../../data/publication_data.csv.temp'); // パス修正
+    // スクリプトが固定パスを参照するため、入力ファイルを src/data/publication_data.csv にコピー (パス更新)
+    const originalDataPath = path.join(__dirname, '../../data/publication_data.csv');
+    const tempDataPath = path.join(__dirname, '../../data/publication_data.csv.temp');
 
     // 元ファイルをバックアップ (存在する場合)
     if (fs.existsSync(originalDataPath)) {
@@ -143,8 +143,8 @@ describe('convertPublications Script', () => {
 
   test('should exit with error if input CSV file does not exist', () => {
     // beforeEach でファイルを作成しないため、ここでは準備しない
-    const originalDataPath = path.join(__dirname, '../../../data/publication_data.csv'); // パス修正
-    const tempDataPath = path.join(__dirname, '../../../data/publication_data.csv.temp'); // パス修正
+    const originalDataPath = path.join(__dirname, '../../data/publication_data.csv'); // パス更新
+    const tempDataPath = path.join(__dirname, '../../data/publication_data.csv.temp'); // パス更新
 
      // 元ファイルをバックアップ (存在する場合)
      if (fs.existsSync(originalDataPath)) {
@@ -183,8 +183,8 @@ Yes,"Invalid" Paper 2","無効論文2","Type B","Rev B","Auth B","Poster","DOI B
     }
     fs.writeFileSync(INPUT_CSV_PATH, invalidCsvData);
 
-    const originalDataPath = path.join(__dirname, '../../../data/publication_data.csv'); // パス修正
-    const tempDataPath = path.join(__dirname, '../../../data/publication_data.csv.temp'); // パス修正
+    const originalDataPath = path.join(__dirname, '../../data/publication_data.csv'); // パス更新
+    const tempDataPath = path.join(__dirname, '../../data/publication_data.csv.temp'); // パス更新
 
     // 元ファイルをバックアップ (存在する場合)
     if (fs.existsSync(originalDataPath)) {

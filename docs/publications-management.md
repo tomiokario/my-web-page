@@ -77,7 +77,7 @@ CSV変換の詳細なロジックは `src/utils/csvToJson.ts` に実装されて
 ### 変換スクリプトの実行方法
 
 ```bash
-ts-node scripts/convertPublications.ts
+npm run convert-publications
 ```
 
 ## JSONデータ構造
@@ -152,12 +152,12 @@ ts-node scripts/convertPublications.ts
 
 出版物データを更新するには、以下の手順に従ってください：
 
-1. Notionから最新の出版物データをCSV形式でエクスポートします。（**TODO:** 具体的なエクスポート手順（対象データベース、ビュー、オプション等）をここに追記してください。）
+1. Notionから最新の出版物データをCSV形式でエクスポートします（AIエージェントではなく人間が行います）。
 2. エクスポートしたCSVファイルを `data/publication_data.csv` に配置します。
 3. 以下のコマンドを実行して、CSVデータをJSONに変換します：
 
    ```bash
-   ts-node scripts/convertPublications.ts
+   npm run convert-publications
    ```
 
 4. 変換が成功すると、`src/data/publications.json` が更新されます。

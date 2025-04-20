@@ -16,6 +16,7 @@ npm start
 ```
 
 テスト
+- issue 37を参照してください．testを実施した場合，通常のjsonファイルが上書きされるため，npm startやタスク終了の前にconvert-publicationを実施する必要があります．
 ```
 npm test
 ```
@@ -24,10 +25,10 @@ npm test
 
 CSVファイルから出版物データをJSONに変換するツールを用意しています。
 
-1. 最新の出版物データを`data/publication_data.csv`に配置
+1. 最新の出版物データを`src/data/publication_data.csv`に配置
 2. 以下のコマンドを実行
    ```
-   ts-node scripts/convertPublications.ts
+   npm run convert-publications
    ```
 3. 変換されたJSONデータが`src/data/publications.json`に保存され、Webサイトで使用可能になります
 

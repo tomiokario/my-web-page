@@ -26,8 +26,8 @@
   "scripts": {
     "start": "NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
     "build": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
-    "test": "react-scripts test --watchAll=false",
-    "test:watch": "react-scripts test",
+    "test": "react-scripts test --watchAll=false --runInBand",
+    "test:watch": "react-scripts test --runInBand",
     "eject": "react-scripts eject",
     "convert-publications": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/convertPublications.ts"
   },
