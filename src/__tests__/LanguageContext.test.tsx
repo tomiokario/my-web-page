@@ -19,10 +19,10 @@ import { LanguageProvider, useLanguage } from "../contexts/LanguageContext";
 
 // ローカルストレージのモック
 const localStorageMock = (() => {
-  let store = {};
+  let store: Record<string, string> = {}; // 型を指定
   return {
-    getItem: jest.fn(key => store[key] || null),
-    setItem: jest.fn((key, value) => {
+    getItem: jest.fn((key: string) => store[key] || null), // keyの型を指定
+    setItem: jest.fn((key: string, value: string) => { // keyとvalueの型を指定
       store[key] = value.toString();
     }),
     clear: jest.fn(() => {
@@ -115,6 +115,10 @@ describe("LanguageContext", () => {
     fireEvent.click(screen.getByTestId("toggle-button"));
     
     // ローカルストレージに保存されたか確認
+    // 初期化時("ja")と切り替え時("en")の2回呼ばれる
+    expect(localStorageMock.setItem).toHaveBeenCalledWith("language", "ja");
     expect(localStorageMock.setItem).toHaveBeenCalledWith("language", "en");
+    // setItem のモック関数自体が合計2回呼び出されたことを確認
+    expect(localStorageMock.setItem).toHaveBeenCalledTimes(2);
   });
 });

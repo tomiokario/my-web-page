@@ -165,7 +165,8 @@ describe("Header component", () => {
       
       // 日本語のメニュー項目が表示されているか確認
       expect(screen.getByText(locales.ja.header.home)).toBeInTheDocument();
-      expect(screen.getByText(locales.ja.header.profileCV)).toBeInTheDocument();
+      // モバイル表示ではラベルが短縮されるため、直接文字列で比較
+      expect(screen.getByText("プロフィール")).toBeInTheDocument();
       expect(screen.getByText(locales.ja.header.publications)).toBeInTheDocument();
       expect(screen.getByText(locales.ja.header.works)).toBeInTheDocument();
     });
@@ -184,6 +185,66 @@ describe("Header component", () => {
       
       // 言語コードが表示されているか確認
       expect(languageButton).toHaveTextContent("EN");
+    });
+
+    test("displays correct language button text on small screens (<= 480px)", () => {
+      // 480px以下の画面幅をシミュレート
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: (query: string) => ({
+          matches: query === '(max-width: 768px)' || query === '(max-width: 480px)', // 768pxと480px以下でtrue
+          media: query,
+          onchange: null,
+          addListener: () => {},
+          removeListener: () => {},
+          addEventListener: () => {},
+          removeEventListener: () => {},
+          dispatchEvent: () => false,
+        }),
+      });
+
+      // 日本語モードで初期描画
+      render(
+        <TestWrapper initialLanguage="ja">
+          <Header />
+        </TestWrapper>
+      );
+
+      // 初期状態（日本語モード）のボタンテキストを確認
+      let languageButton = screen.getByRole("button", { name: new RegExp(locales.ja.languageSwitch.switchTo) });
+      expect(languageButton).toHaveTextContent("EN"); // 480px以下、日本語モードでは "EN"
+
+      // ボタンをクリックして英語モードに切り替え
+      fireEvent.click(languageButton);
+
+      // 英語モードでのボタンテキストとaria-labelを確認
+      languageButton = screen.getByRole("button", { name: new RegExp(locales.en.languageSwitch.switchTo) });
+      expect(languageButton).toHaveTextContent("日本語"); // 480px以下、英語モードでは "日本語"
+    });
+
+    test("displays correct language button text on very small screens (<= 375px)", () => {
+      // 375px以下の画面幅をシミュレート
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: (query: string) => ({
+          matches: query === '(max-width: 768px)' || query === '(max-width: 480px)' || query === '(max-width: 375px)', // 3つのクエリでtrue
+          media: query,
+          onchange: null,
+          addListener: () => {},
+          removeListener: () => {},
+          addEventListener: () => {},
+          removeEventListener: () => {},
+          dispatchEvent: () => false,
+        }),
+      });
+
+      render(
+        <TestWrapper initialLanguage="en"> {/* 英語モードでテスト */}
+          <Header />
+        </TestWrapper>
+      );
+      const languageButton = screen.getByRole("button", { name: new RegExp(locales.en.languageSwitch.switchTo) });
+      expect(languageButton).toHaveTextContent("日"); // 375px以下では "日"
     });
   });
 

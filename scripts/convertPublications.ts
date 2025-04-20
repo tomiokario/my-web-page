@@ -17,10 +17,10 @@ import { csvToJson, convertAndSave } from '../src/utils/csvToJson';
  */
 function main() {
   try {
-    // ファイルパスを設定
-    const csvFilePath = path.join(__dirname, '../data/publication_data.csv');
+    // ファイルパスを設定 (dataディレクトリがsrc配下に移動したためパスを更新)
+    const csvFilePath = path.join(__dirname, '../src/data/publication_data.csv');
     const jsonFilePath = path.join(__dirname, '../src/data/publications.json');
-    
+
     // CSVファイルが存在するか確認
     if (!fs.existsSync(csvFilePath)) {
       console.error(`エラー: CSVファイル ${csvFilePath} が見つかりません`);

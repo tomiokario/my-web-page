@@ -29,6 +29,7 @@ export interface UseFiltersReturn {
   toggleDropdown: (dropdown: string | null) => void;
   toggleFilter: (category: keyof SelectedFilters, value: string) => void;
   resetFilters: () => void;
+  updatePublications: (newPublications: Publication[]) => void; // 追加
 }
 
 /**
@@ -37,7 +38,8 @@ export interface UseFiltersReturn {
  * @param {Publication[]} options.publications - 出版物データ
  * @returns {UseFiltersReturn} フィルタリング関連の状態と関数
  */
-function useFilters({ publications }: { publications: Publication[] }): UseFiltersReturn {
+function useFilters({ publications: initialPublications }: { publications: Publication[] }): UseFiltersReturn {
+  const [publications, setPublications] = useState<Publication[]>(initialPublications); // 内部状態として保持
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
     year: [],
@@ -231,6 +233,15 @@ function useFilters({ publications }: { publications: Publication[] }): UseFilte
     };
   }, [openDropdown]); // openDropdown が変更されたときにのみ再実行
 
+  // 外部から出版物データを更新する関数
+  const updatePublications = (newPublications: Publication[]) => {
+    setPublications(newPublications);
+    // フィルターオプションも再計算されるように依存配列に publications を追加済み
+    // filteredPublications も再計算される
+    // 必要であれば、ここでフィルター状態をリセットするなどの処理も追加可能
+    // resetFilters(); // 例: データ更新時にフィルターをリセットする場合
+  };
+
   return {
     selectedFilters,
     openDropdown,
@@ -239,7 +250,8 @@ function useFilters({ publications }: { publications: Publication[] }): UseFilte
     filterRefs,
     toggleDropdown,
     toggleFilter,
-    resetFilters
+    resetFilters,
+    updatePublications // 追加
   };
 }
 

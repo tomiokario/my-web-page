@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from "react";
 import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
-import usePublications, { UsePublicationsReturn } from "../hooks/usePublications";
-import useFilters, { UseFiltersReturn } from "../hooks/useFilters";
+import usePublications from "../hooks/usePublications"; // UsePublicationsReturn は不要に
+import useFilters from "../hooks/useFilters"; // UseFiltersReturn は不要に
 import PublicationsView from "../components/publications/PublicationsView";
+import publicationsData from "../data/publications.json"; // インポートを元に戻す
 
 /**
  * 出版物ページのメインコンポーネント
@@ -12,22 +13,27 @@ function Publications() {
   const [sortOrder, setSortOrder] = useState<"type" | "chronological">('type'); // 'chronological' または 'type'
   const { language } = useLanguage() as LanguageContextType;
 
-  // 出版物関連のカスタムフック - 最初に呼び出して基本データを取得
+  // usePublications フックを先に呼び出し、publicationsData を渡す
   const publicationsResult = usePublications({
     sortOrder,
-    filteredPublications: []
+    filteredPublications: [], // 初期呼び出しではフィルターなし
+    publicationsData // インポートしたデータを渡す
   });
 
-  // フィルター関連のカスタムフック
+  // useFilters フックに publicationsResult.sortedPublications を渡す
   const filtersResult = useFilters({
     publications: publicationsResult.sortedPublications
   });
 
-  // フィルター適用後の出版物データを取得
+  // フィルター適用後の groupedPublications を取得 (再度 usePublications を呼び出す必要はない)
+  // groupedPublications は usePublications の内部で計算されるため、
+  // filtersResult.filteredPublications を usePublications に渡す必要があった以前の実装に戻す
   const { groupedPublications } = usePublications({
-    sortOrder,
-    filteredPublications: filtersResult.filteredPublications
+      sortOrder,
+      filteredPublications: filtersResult.filteredPublications, // フィルター結果を渡す
+      publicationsData // publicationsData も渡す
   });
+
 
   // 並び順変更ハンドラー
   const handleSortOrderChange = (newSortOrder: "type" | "chronological") => {

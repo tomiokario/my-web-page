@@ -18,8 +18,8 @@ my-web-pageは、個人のウェブサイトを構築するためのReactプロ�
 
 ## 技術スタック
 
-- **フロントエンド**: React 19.0.0
-- **UIライブラリ**: Mantine 5.10.5
+- **フロントエンド**: React 18.3.1
+- **UIライブラリ**: Mantine 7.17.4
 - **ルーティング**: React Router 6.3.0
 - **マークダウン**: React Markdown 6.0.3
 - **テスト**: Jest, React Testing Library
@@ -58,9 +58,11 @@ npm test
 - `npm start` - 開発サーバーを起動（http://localhost:3000）
 - `npm test` - テストを実行
 - `npm run build` - 本番用ビルドを作成
-- `node scripts/convertPublications.js` - 出版物データをCSVからJSONに変換
+- `npm run convert-publications` - 出版物データをCSVからJSONに変換
 
 ## 開発ルール
+
+基本的にはドキュメント駆動開発（[DocDD](DocDD.md)）に沿って進行する．
 
 プロジェクトの開発ルールは[.clinerules](./../.clinerules)ファイルに定義されています。主なルールは以下の通りです：
 

@@ -17,6 +17,15 @@ import App from "../App";
 import { MantineEmotionProvider, emotionTransform } from '@mantine/emotion';
 import { mantineCache } from '../mantineEmotionCache';
 
+// Publicationsページをモック（JSONインポートエラー回避のため）
+jest.mock('../pages/Publications', () => {
+  const MockPublications = () => <div data-testid="mock-publications-page">Mock Publications Page</div>;
+  return {
+    __esModule: true,
+    default: MockPublications,
+  };
+});
+
 // App.tsxには既にMantineProvider、LanguageProvider、Routerが含まれているため、
 // renderWithProvidersを使用せず、MantineEmotionProviderのみを追加
 const renderApp = () => {

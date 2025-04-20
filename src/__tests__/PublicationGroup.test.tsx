@@ -17,6 +17,7 @@ import '@testing-library/jest-dom';
 import PublicationGroup from '../components/publications/PublicationGroup';
 import { renderWithProviders } from '../test-utils/test-utils';
 import { Publication } from '../types';
+import { createPublications } from '../test-utils/factories/publicationFactory'; // ファクトリ関数をインポート
 
 // PublicationItemコンポーネントをモック
 jest.mock('../components/publications/PublicationItem', () => {
@@ -35,69 +36,13 @@ jest.mock('../components/publications/PublicationItem', () => {
   };
 });
 
-// テスト用のモックデータ
-const mockItems: Publication[] = [
-  {
-    id: 1,
-    hasEmptyFields: false,
-    name: "Publication 1",
-    japanese: "出版物 1",
-    type: "Type A",
-    review: "Reviewed",
-    authorship: "Author A",
-    presentationType: "Oral",
-    doi: "",
-    webLink: "",
-    date: "",
-    startDate: "",
-    endDate: "",
-    sortableDate: "",
-    year: 2021,
-    others: "",
-    site: "",
-    journalConference: "Conf A"
-  },
-  {
-    id: 2,
-    hasEmptyFields: false,
-    name: "Publication 2",
-    japanese: "出版物 2",
-    type: "Type B",
-    review: "Reviewed",
-    authorship: "Author B",
-    presentationType: "Poster",
-    doi: "",
-    webLink: "",
-    date: "",
-    startDate: "",
-    endDate: "",
-    sortableDate: "",
-    year: 2021,
-    others: "",
-    site: "",
-    journalConference: "Conf B"
-  },
-  {
-    id: 3,
-    hasEmptyFields: false,
-    name: "Publication 3",
-    japanese: "出版物 3",
-    type: "Type C",
-    review: "Reviewed",
-    authorship: "Author C",
-    presentationType: "Oral",
-    doi: "",
-    webLink: "",
-    date: "",
-    startDate: "",
-    endDate: "",
-    sortableDate: "",
-    year: 2021,
-    others: "",
-    site: "",
-    journalConference: "Conf C"
-  }
-];
+// ファクトリ関数を使用してテストデータを生成
+const mockItems = createPublications(3, [
+  { id: 1, name: "Publication 1", japanese: "出版物 1", type: "Type A", year: 2021, journalConference: "Conf A", presentationType: "Oral" },
+  { id: 2, name: "Publication 2", japanese: "出版物 2", type: "Type B", year: 2021, journalConference: "Conf B", presentationType: "Poster" },
+  { id: 3, name: "Publication 3", japanese: "出版物 3", type: "Type C", year: 2021, journalConference: "Conf C", presentationType: "Oral" },
+]);
+
 
 describe('PublicationGroup Component', () => {
   // 基本的なレンダリングテスト

@@ -9,7 +9,8 @@
 - ログや出力に認証情報を含めない
 
 ## 開発フロー
-- 変更前にテストが通ることを確認し、変更後も全テストが通ることを確認する
+- **ドキュメント駆動開発 (DocDD)** を基本とし、人間はドキュメントの作成とレビューに責任を持つ。実装はテスト駆動開発 (TDD) に従う。
+- 変更前にテストが通ることを確認し、変更後も全テストが通ることを確認する。
 
 ## テスト規約
 - テストファイルは `src/__tests__` ディレクトリに配置し、`.test.jsx` または `.test.js` の拡張子を使用
@@ -28,7 +29,7 @@
 ## データ管理
 - 出版物データは CSV から JSON への変換プロセスを通じて管理
 - CSVファイルは元データであるため直接編集せず、更新は Notionでの操作をユーザーに依頼する
-- JSON変換には `scripts/convertPublications.js` を使用
+- JSON変換には `ts-node scripts/convertPublications.ts` を使用
 
 ## 多言語対応
 - `LanguageContext` と `useLanguage` フックを使用して言語状態を管理
@@ -38,7 +39,7 @@
 ## コンテンツ管理
 - マークダウンコンテンツは `public/markdown` ディレクトリで管理
 - コンテンツ更新後は開発サーバーで表示を確認してからコミット
-- 出版物データ更新後は `node scripts/convertPublications.js` を実行してJSONを生成
+- 出版物データ更新後は `ts-node scripts/convertPublications.ts` を実行してJSONを生成
 
 ## ドキュメント
 - コードの変更に伴い、必要に応じてドキュメントと.clinerulesを更新
