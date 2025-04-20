@@ -18,13 +18,15 @@ my-web-pageでは、出版物データを以下のフローで管理していま
 ```mermaid
 flowchart LR
     A[Notion] --> B[CSV Data<br>data/publication_data.csv]
-    B --> C[convertPublications.js]
+    B --> C[convertPublications.ts]
     C --> D[JSON Data<br>src/data/publications.json]
-    D --> E[usePublications Hook]
-    E --> F[Publications Component]
-    F --> G[useFilters Hook]
+    D --> E[usePublications Hook (.ts)]
+    E --> F[Publications Component (.tsx)]
+    F --> G[useFilters Hook (.ts)]
     G --> H[Filtered Data]
-    H --> I[PublicationsView]
+    H --> I[PublicationsView (.tsx)]
+    I --> J[PublicationGroup (.tsx)]
+    J --> K[PublicationItem (.tsx)]
 ```
 
 ## CSVデータ形式
@@ -56,51 +58,11 @@ No,"Tomioka R, et al. Title of the paper","冨岡莉生, 他. 論文のタイト
 
 ### 変換スクリプト
 
-変換スクリプト（`scripts/convertPublications.js`）は、CSVファイルを読み込み、JSONに変換して保存します。
-
-```javascript
-// scripts/convertPublications.js
-const fs = require('fs');
-const path = require('path');
-const { csvToJson, convertAndSave } = require('../src/utils/csvToJson');
-
-function main() {
-  try {
-    // ファイルパスを設定
-    const csvFilePath = path.join(__dirname, '../data/publication_data.csv');
-    const jsonFilePath = path.join(__dirname, '../src/data/publications.json');
-    
-    // CSVファイルが存在するか確認
-    if (!fs.existsSync(csvFilePath)) {
-      console.error(`エラー: CSVファイル ${csvFilePath} が見つかりません`);
-      process.exit(1);
-    }
-    
-    // CSVをJSONに変換して保存
-    const success = convertAndSave(csvFilePath, jsonFilePath);
-    
-    if (success) {
-      // 変換されたJSONデータを読み込んで件数を表示
-      const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
-      console.log(`変換が完了しました。${jsonData.length}件のデータが ${jsonFilePath} に保存されました。`);
-      process.exit(0);
-    } else {
-      console.error('変換に失敗しました。');
-      process.exit(1);
-    }
-  } catch (error) {
-    console.error('エラーが発生しました:', error);
-    process.exit(1);
-  }
-}
-
-// スクリプトを実行
-main();
-```
+変換スクリプト（`scripts/convertPublications.ts`）は、CSVファイルを読み込み、JSONに変換して保存します。
 
 ### CSV変換ユーティリティ
 
-CSV変換の詳細なロジックは `src/utils/csvToJson.js` に実装されています。主な機能は以下の通りです：
+CSV変換の詳細なロジックは `src/utils/csvToJson.ts` に実装されています。主な機能は以下の通りです：
 
 1. CSVファイルの読み込み
 2. CSVデータの解析（引用符内のカンマを考慮）
@@ -116,7 +78,9 @@ CSV変換の詳細なロジックは `src/utils/csvToJson.js` に実装されて
 ### 変換スクリプトの実行方法
 
 ```bash
-node scripts/convertPublications.js
+ts-node scripts/convertPublications.ts
+# または、ビルド後のJavaScriptファイルを実行する場合:
+# node dist/scripts/convertPublications.js
 ```
 
 ## JSONデータ構造
@@ -152,10 +116,10 @@ node scripts/convertPublications.js
 
 出版物データの処理には、2つの主要なカスタムフックを使用しています：
 
-1. **usePublications**: 出版物データの取得、整形、並び替え、グループ化を行います。
-2. **useFilters**: フィルタリング機能を提供します。
+1. **usePublications (`src/hooks/usePublications.ts`)**: 出版物データの取得、整形、並び替え、グループ化を行います。
+2. **useFilters (`src/hooks/useFilters.ts`)**: フィルタリング機能を提供します。
 
-#### usePublications.js
+#### usePublications.ts
 
 `usePublications` フックは以下の機能を提供します：
 
@@ -163,53 +127,7 @@ node scripts/convertPublications.js
 - 時系列順または種類順での並び替え
 - 年度別または種類別のグループ化
 
-```javascript
-// src/hooks/usePublications.js（主要部分）
-function usePublications({ sortOrder, filteredPublications }) {
-  // 日付から年を抽出する関数
-  const extractYear = (dateString) => {
-    if (!dateString) return null;
-    const match = dateString.match(/(\d{4})/);
-    return match ? parseInt(match[1], 10) : null;
-  };
-
-  // 出版物データを整形
-  const formattedPublications = useMemo(() => {
-    return publicationsData.map((pub, index) => ({
-      id: index,
-      name: pub.name,
-      japanese: pub.japanese,
-      year: extractYear(pub.date),
-      // その他のプロパティ...
-    }));
-  }, []);
-
-  // 並び順に基づいて出版物を並べ替え
-  const sortedPublications = useMemo(() => {
-    if (sortOrder === 'chronological') {
-      // 時系列順（新しい順）
-      // ...
-    } else {
-      // 種類順
-      // ...
-    }
-  }, [formattedPublications, sortOrder]);
-
-  // 出版物をグループ化
-  const groupedPublications = useMemo(() => {
-    // グループ化ロジック...
-  }, [filteredPublications, sortOrder]);
-
-  return {
-    formattedPublications,
-    sortedPublications,
-    groupedPublications,
-    extractYear
-  };
-}
-```
-
-#### useFilters.js
+#### useFilters.ts
 
 `useFilters` フックは以下の機能を提供します：
 
@@ -218,106 +136,20 @@ function usePublications({ sortOrder, filteredPublications }) {
 - フィルタリングロジックの実装
 - ドロップダウンUIの制御
 
-```javascript
-// src/hooks/useFilters.js（主要部分）
-function useFilters({ publications }) {
-  const [openDropdown, setOpenDropdown] = useState(null);
-  const [selectedFilters, setSelectedFilters] = useState({
-    year: [],
-    authorship: [],
-    type: [],
-    review: [],
-    presentationType: []
-  });
-
-  // 利用可能なフィルターオプションを抽出
-  const filterOptions = useMemo(() => {
-    // オプション抽出ロジック...
-  }, [publications]);
-  
-  // フィルタリング
-  const filteredPublications = useMemo(() => {
-    return publications.filter((pub) => {
-      // フィルタリングロジック...
-    });
-  }, [publications, selectedFilters]);
-
-  // その他の関数（toggleDropdown, toggleFilter, resetFilters）...
-
-  return {
-    selectedFilters,
-    openDropdown,
-    filterOptions,
-    filteredPublications,
-    filterRefs,
-    toggleDropdown,
-    toggleFilter,
-    resetFilters
-  };
-}
-```
-
 ### 出版物ページの構成
 
 出版物ページは以下のコンポーネントで構成されています：
 
-1. **Publications.jsx**: データ取得と状態管理を担当
-2. **PublicationsView.jsx**: UIレンダリングを担当
-3. **PublicationGroup.jsx**: 出版物グループを表示
-4. **PublicationItem.jsx**: 個々の出版物項目を表示
-5. **FilterDropdown.jsx**: フィルタードロップダウンを表示
-6. **ActiveFilters.jsx**: 現在適用されているフィルターを表示
+1. **Publications.tsx**: データ取得と状態管理を担当
+2. **PublicationsView.tsx**: UIレンダリングを担当
+3. **PublicationGroup.tsx**: 出版物グループを表示
+4. **PublicationItem.tsx**: 個々の出版物項目を表示
+5. **FilterDropdown.tsx**: フィルタードロップダウンを表示
+6. **ActiveFilters.tsx**: 現在適用されているフィルターを表示
 
-#### Publications.jsx
+#### Publications.tsx
 
-```jsx
-// src/pages/Publications.jsx
-function Publications() {
-  const [sortOrder, setSortOrder] = useState('type'); // 'chronological' または 'type'
-  const { language } = useLanguage();
-
-  // フィルター関連のカスタムフック
-  const {
-    selectedFilters,
-    openDropdown,
-    filterOptions,
-    filteredPublications,
-    filterRefs,
-    toggleDropdown,
-    toggleFilter,
-    resetFilters
-  } = useFilters({
-    publications: usePublications({ sortOrder, filteredPublications: [] }).sortedPublications
-  });
-
-  // 出版物関連のカスタムフック
-  const { groupedPublications } = usePublications({
-    sortOrder,
-    filteredPublications
-  });
-
-  // 並び順変更ハンドラー
-  const handleSortOrderChange = (newSortOrder) => {
-    setSortOrder(newSortOrder);
-  };
-
-  return (
-    <PublicationsView
-      sortOrder={sortOrder}
-      onSortOrderChange={handleSortOrderChange}
-      selectedFilters={selectedFilters}
-      openDropdown={openDropdown}
-      filterOptions={filterOptions}
-      groupedPublications={groupedPublications}
-      filterRefs={filterRefs}
-      toggleDropdown={toggleDropdown}
-      toggleFilter={toggleFilter}
-      resetFilters={resetFilters}
-      language={language}
-    />
-  );
-}
-```
+`Publications.tsx` コンポーネントは、`usePublications` と `useFilters` フックを利用して、出版物データの取得、フィルタリング、並び替えの状態を管理し、`PublicationsView.tsx` に必要なデータを渡します。並び順の変更などのユーザーインタラクションもここで処理されます。
 
 ## 出版物データの更新方法
 
@@ -328,7 +160,9 @@ function Publications() {
 3. 以下のコマンドを実行して、CSVデータをJSONに変換します：
 
    ```bash
-   node scripts/convertPublications.js
+   ts-node scripts/convertPublications.ts
+   # または、ビルド後のJavaScriptファイルを実行する場合:
+   # node dist/scripts/convertPublications.js
    ```
 
 4. 変換が成功すると、`src/data/publications.json` が更新されます。

@@ -15,49 +15,9 @@ my-web-pageは、日本語と英語の2つの言語をサポートしていま�
 
 言語コンテキストは、アプリケーション全体で言語設定を共有するために使用されます。
 
-### LanguageContext.js
+### LanguageContext.tsx
 
-```jsx
-// src/contexts/LanguageContext.js
-import React, { createContext, useState, useContext, useEffect } from 'react';
-
-// 言語コンテキストを作成
-const LanguageContext = createContext();
-
-// 言語プロバイダーコンポーネント
-export const LanguageProvider = ({ children }) => {
-  // ローカルストレージから言語設定を取得するか、デフォルトで日本語を使用
-  const [language, setLanguage] = useState(() => {
-    const savedLanguage = localStorage.getItem('language');
-    return savedLanguage || 'ja'; // デフォルトは日本語
-  });
-
-  // 言語が変更されたらローカルストレージに保存
-  useEffect(() => {
-    localStorage.setItem('language', language);
-  }, [language]);
-
-  // 言語を切り替える関数
-  const toggleLanguage = () => {
-    setLanguage(prevLang => prevLang === 'ja' ? 'en' : 'ja');
-  };
-
-  return (
-    <LanguageContext.Provider value={{ language, toggleLanguage }}>
-      {children}
-    </LanguageContext.Provider>
-  );
-};
-
-// カスタムフック - 言語コンテキストを使用するためのフック
-export const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
-};
-```
+`src/contexts/LanguageContext.tsx` で定義されています。
 
 ### 主な機能
 
@@ -71,137 +31,25 @@ export const useLanguage = () => {
 
 言語リソースは、`src/locales` ディレクトリ内の言語ファイルで定義されています。
 
-### locales/index.js
+### locales/index.ts
 
-```jsx
-// src/locales/index.js
-import en from './en';
-import ja from './ja';
+`src/locales/index.ts` で各言語のリソースをまとめてエクスポートしています。
 
-// 言語リソースをまとめたオブジェクト
-const locales = {
-  en,
-  ja
-};
+### locales/ja.ts（日本語リソース）
 
-export default locales;
-```
+`src/locales/ja.ts` に日本語のテキストリソースが定義されています。
 
-### locales/ja.js（日本語リソース）
+### locales/en.ts（英語リソース）
 
-```jsx
-// src/locales/ja.js
-const ja = {
-  // ヘッダーメニュー
-  header: {
-    home: 'ホーム',
-    profileCV: 'プロフィール・CV',
-    publications: '出版物',
-    works: '仕事'
-  },
-  // サブヘッダー
-  subheader: {
-    home: '冨岡 莉生 (TOMIOKA Rio)',
-    profileCV: 'プロフィール & 履歴書 (CV)',
-    publications: '出版物',
-    works: '仕事',
-    computerSystem2025: 'コンピュータシステム(2025)'
-  },
-  // フッター
-  footer: {
-    copyright: '© 2025 冨岡 莉生'
-  },
-  // 言語切り替えボタン
-  languageSwitch: {
-    switchTo: '英語に切り替え'
-  }
-};
-
-export default ja;
-```
-
-### locales/en.js（英語リソース）
-
-```jsx
-// src/locales/en.js
-const en = {
-  // ヘッダーメニュー
-  header: {
-    home: 'Home',
-    profileCV: 'Profile & CV',
-    publications: 'Publications',
-    works: 'Works'
-  },
-  // サブヘッダー
-  subheader: {
-    home: 'TOMIOKA Rio',
-    profileCV: 'Profile & Curriculum Vitae (CV)',
-    publications: 'Publications',
-    works: 'Works',
-    computerSystem2025: 'Computer System (2025)'
-  },
-  // フッター
-  footer: {
-    copyright: '© 2025 TOMIOKA Rio'
-  },
-  // 言語切り替えボタン
-  languageSwitch: {
-    switchTo: 'Switch to Japanese'
-  }
-};
-
-export default en;
-```
+`src/locales/en.ts` に英語のテキストリソースが定義されています。
 
 ## 言語リソースの使用方法
 
-コンポーネント内で言語リソースを使用する方法は以下の通りです：
-
-```jsx
-import React from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
-import locales from '../locales';
-
-function MyComponent() {
-  const { language } = useLanguage();
-  const texts = locales[language];
-  
-  return (
-    <div>
-      <h1>{texts.header.home}</h1>
-      <p>{texts.footer.copyright}</p>
-    </div>
-  );
-}
-
-export default MyComponent;
-```
+コンポーネント内では `useLanguage` フックで現在の言語を取得し、`locales` オブジェクトから対応する言語のテキストを取得して使用します。
 
 ## 言語切り替えボタンの実装
 
-ヘッダーコンポーネントには、言語を切り替えるためのボタンが実装されています：
-
-```jsx
-import React from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
-import locales from '../locales';
-
-function Header() {
-  const { language, toggleLanguage } = useLanguage();
-  const texts = locales[language];
-  
-  return (
-    <header>
-      {/* ナビゲーションメニュー等 */}
-      <button onClick={toggleLanguage}>
-        {texts.languageSwitch.switchTo}
-      </button>
-    </header>
-  );
-}
-
-export default Header;
-```
+ヘッダーコンポーネントなどでは `useLanguage` フックから `toggleLanguage` 関数を取得し、ボタンのクリックイベントなどで呼び出すことで言語を切り替えます。
 
 ## 言語固有のマークダウンコンテンツ
 
@@ -209,7 +57,7 @@ export default Header;
 
 ## 多言語対応のテスト
 
-多言語対応の機能は、`src/__tests__/LanguageContext.test.js`でテストされています。テストでは以下の点を確認しています：
+多言語対応の機能は、`src/__tests__/LanguageContext.test.tsx`でテストされています。テストでは以下の点を確認しています：
 
 - デフォルト言語が正しく設定されるか
 - 言語切り替え機能が正しく動作するか
@@ -221,10 +69,10 @@ export default Header;
 
 新しい言語を追加する場合は、以下の手順に従ってください：
 
-1. `src/locales` ディレクトリに新しい言語ファイル（例：`fr.js`）を作成します。
-2. `src/locales/index.js` に新しい言語を追加します。
+1. `src/locales` ディレクトリに新しい言語ファイル（例：`fr.ts`）を作成します。
+2. `src/locales/index.ts` に新しい言語を追加します。
 3. `public/markdown` ディレクトリに新しい言語のサブディレクトリ（例：`fr`）を作成し、マークダウンファイルを追加します。
-4. `LanguageContext.js` の `toggleLanguage` 関数を修正して、複数の言語間で切り替えられるようにします。
+4. `LanguageContext.tsx` の `toggleLanguage` 関数を修正して、複数の言語間で切り替えられるようにします。
 
 ## 注意点
 

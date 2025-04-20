@@ -152,7 +152,7 @@ npm start
 3. 以下のコマンドを実行して、CSVデータをJSONに変換します：
 
    ```bash
-   node scripts/convertPublications.js
+   ts-node scripts/convertPublications.ts
    ```
 
 4. 変換が成功すると、`src/data/publications.json` が更新されます。
@@ -180,6 +180,9 @@ npm test
 特定のテストファイルを実行するには：
 
 ```bash
+# 例: ComponentName.test.tsx を実行
+npm test -- ComponentName.test.tsx
+# または、ファイル名の一部を指定
 npm test -- ComponentName
 ```
 
@@ -228,10 +231,10 @@ npm test -- --coverage
 
 ### ファイル命名規則
 
-- コンポーネント: `PascalCase.jsx`
-- フック: `useHookName.js`
-- ユーティリティ: `camelCase.js`
-- テスト: `ComponentName.test.jsx` または `hookName.test.js`
+- コンポーネント: `PascalCase.tsx`
+- フック: `useHookName.ts`
+- ユーティリティ: `camelCase.ts`
+- テスト: `ComponentName.test.tsx` または `hookName.test.ts`
 
 ## パフォーマンス最適化
 
@@ -245,19 +248,7 @@ npm test -- --coverage
 
 ### コード分割
 
-大きなコンポーネントは、必要に応じて動的インポートを使用して分割します：
-
-```jsx
-const LazyComponent = React.lazy(() => import('./LazyComponent'));
-
-function App() {
-  return (
-    <React.Suspense fallback={<div>Loading...</div>}>
-      <LazyComponent />
-    </React.Suspense>
-  );
-}
-```
+大きなコンポーネントは、必要に応じて `React.lazy` と動的インポート (`import('./LazyComponent.tsx')`) を使用して分割します。`React.Suspense` でラップして、読み込み中のフォールバックUIを表示します。
 
 ## トラブルシューティング
 

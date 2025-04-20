@@ -30,41 +30,41 @@ my-web-page/
 │           └── works/        # 日本語版業務詳細ページ
 │               └── computer-system-2025.md # コンピュータシステム2025（日本語）
 ├── scripts/                   # ユーティリティスクリプト
-│   └── convertPublications.js # CSVからJSONへの変換スクリプト
+│   └── convertPublications.ts # CSVからJSONへの変換スクリプト
 ├── src/                       # ソースコード
-│   ├── App.jsx               # アプリケーションのルートコンポーネント
-│   ├── index.js              # エントリーポイント
-│   ├── __tests__/            # テストファイル
-│   ├── components/           # 再利用可能なコンポーネント
-│   │   ├── Footer.jsx        # フッターコンポーネント
-│   │   ├── Header.jsx        # ヘッダーコンポーネント
-│   │   ├── SubHeader.jsx     # サブヘッダーコンポーネント
-│   │   └── publications/     # 出版物関連のコンポーネント
-│   ├── contexts/             # Reactコンテキスト
-│   │   └── LanguageContext.js # 言語コンテキスト
+│   ├── App.tsx               # アプリケーションのルートコンポーネント
+│   ├── index.tsx             # エントリーポイント
+│   ├── __tests__/            # テストファイル (.test.tsx, .test.ts)
+│   ├── components/           # 再利用可能なコンポーネント (.tsx)
+│   │   ├── Footer.tsx        # フッターコンポーネント
+│   │   ├── Header.tsx        # ヘッダーコンポーネント
+│   │   ├── SubHeader.tsx     # サブヘッダーコンポーネント
+│   │   └── publications/     # 出版物関連のコンポーネント (.tsx)
+│   ├── contexts/             # Reactコンテキスト (.tsx)
+│   │   └── LanguageContext.tsx # 言語コンテキスト
 │   ├── data/                 # 処理済みデータ（JSON）
 │   │   └── publications.json # 変換された出版物データ
-│   ├── hooks/                # カスタムフック
-│   │   ├── useFilters.js     # フィルタリング機能のフック
-│   │   └── usePublications.js # 出版物データ処理のフック
-│   ├── locales/              # 多言語リソース
-│   │   ├── en.js             # 英語リソース
-│   │   ├── index.js          # リソースのエクスポート
-│   │   └── ja.js             # 日本語リソース
-│   ├── pages/                # ページコンポーネント
-│   │   ├── Home.jsx          # ホームページ
-│   │   ├── ProfileCV.jsx     # プロフィール・CVページ
-│   │   ├── Publications.jsx  # 出版物ページ
-│   │   ├── Works.jsx         # 仕事ページ
-│   │   └── ComputerSystem2025.jsx # コンピュータシステム2025ページ
+│   ├── hooks/                # カスタムフック (.ts)
+│   │   ├── useFilters.ts     # フィルタリング機能のフック
+│   │   └── usePublications.ts # 出版物データ処理のフック
+│   ├── locales/              # 多言語リソース (.ts)
+│   │   ├── en.ts             # 英語リソース
+│   │   ├── index.ts          # リソースのエクスポート
+│   │   └── ja.ts             # 日本語リソース
+│   ├── pages/                # ページコンポーネント (.tsx)
+│   │   ├── Home.tsx          # ホームページ
+│   │   ├── ProfileCV.tsx     # プロフィール・CVページ
+│   │   ├── Publications.tsx  # 出版物ページ
+│   │   ├── Works.tsx         # 仕事ページ
+│   │   └── ComputerSystem2025.tsx # コンピュータシステム2025ページ
 │   ├── styles/               # スタイルシート
 │   │   ├── styles.css        # グローバルスタイル
 │   │   └── variables.css     # CSSカスタムプロパティ
-│   └── utils/                # ユーティリティ関数
-│       ├── csvToJson.js      # CSV→JSON変換ユーティリティ
-│       └── markdownLoader.js  # マークダウン読み込みユーティリティ
+│   └── utils/                # ユーティリティ関数 (.ts)
+│       ├── csvToJson.ts      # CSV→JSON変換ユーティリティ
+│       └── markdownLoader.ts  # マークダウン読み込みユーティリティ
 ├── .gitignore                # Gitの除外ファイル設定
-├── jest.config.js            # Jestの設定
+├── jest.config.js            # Jestの設定 (TypeScript用に ts-jest などの設定が必要な場合があります)
 ├── package.json              # npm設定と依存関係
 └── README.md                 # プロジェクト概要
 ```
@@ -73,41 +73,41 @@ my-web-page/
 
 ### アプリケーション構造
 
-- **App.jsx**: アプリケーションのルートコンポーネント。ルーティング設定、レイアウト構造、グローバルプロバイダー（MantineProvider、LanguageProvider）を定義しています。
-- **index.js**: Reactアプリケーションのエントリーポイント。
+- **App.tsx**: アプリケーションのルートコンポーネント。ルーティング設定、レイアウト構造、グローバルプロバイダー（MantineProvider、LanguageProvider）を定義しています。
+- **index.tsx**: Reactアプリケーションのエントリーポイント。
 
 ### ページコンポーネント
 
-- **Home.jsx**: ホームページ。マークダウンコンテンツを読み込んで表示します。
-- **ProfileCV.jsx**: プロフィールと履歴書のページ。マークダウンコンテンツを読み込んで表示します。
-- **Publications.jsx**: 出版物一覧ページ。出版物データの取得、フィルタリング、並び替えの状態管理を行います。
-- **Works.jsx**: 仕事紹介ページ。マークダウンコンテンツを読み込んで表示します。
-- **ComputerSystem2025.jsx**: コンピュータシステム2025の詳細ページ。マークダウンコンテンツを読み込んで表示します。
+- **Home.tsx**: ホームページ。マークダウンコンテンツを読み込んで表示します。
+- **ProfileCV.tsx**: プロフィールと履歴書のページ。マークダウンコンテンツを読み込んで表示します。
+- **Publications.tsx**: 出版物一覧ページ。出版物データの取得、フィルタリング、並び替えの状態管理を行います。
+- **Works.tsx**: 仕事紹介ページ。マークダウンコンテンツを読み込んで表示します。
+- **ComputerSystem2025.tsx**: コンピュータシステム2025の詳細ページ。マークダウンコンテンツを読み込んで表示します。
 
 ### 共通コンポーネント
 
-- **Header.jsx**: サイト全体のヘッダー。ナビゲーションメニューと言語切り替えボタンを含みます。
-- **SubHeader.jsx**: 各ページのタイトルを表示するベージュ帯のコンポーネント。
-- **Footer.jsx**: サイト全体のフッター。著作権情報などを表示します。
+- **Header.tsx**: サイト全体のヘッダー。ナビゲーションメニューと言語切り替えボタンを含みます。
+- **SubHeader.tsx**: 各ページのタイトルを表示するベージュ帯のコンポーネント。
+- **Footer.tsx**: サイト全体のフッター。著作権情報などを表示します。
 
 ### 出版物関連コンポーネント
 
-- **PublicationsView.jsx**: 出版物一覧のUIコンポーネント。フィルターと並び替えのUIを提供します。
-- **PublicationGroup.jsx**: 出版物をグループ化して表示するコンポーネント。
-- **PublicationItem.jsx**: 個々の出版物項目を表示するコンポーネント。
-- **FilterDropdown.jsx**: フィルタードロップダウンコンポーネント。
-- **ActiveFilters.jsx**: 現在適用されているフィルターを表示するコンポーネント。
+- **PublicationsView.tsx**: 出版物一覧のUIコンポーネント。フィルターと並び替えのUIを提供します。
+- **PublicationGroup.tsx**: 出版物をグループ化して表示するコンポーネント。
+- **PublicationItem.tsx**: 個々の出版物項目を表示するコンポーネント。
+- **FilterDropdown.tsx**: フィルタードロップダウンコンポーネント。
+- **ActiveFilters.tsx**: 現在適用されているフィルターを表示するコンポーネント。
 
 ### コンテキストとフック
 
-- **LanguageContext.js**: 言語設定を管理するコンテキスト。言語の切り替えと保存を担当します。
-- **usePublications.js**: 出版物データの取得、整形、並び替え、グループ化を行うカスタムフック。
-- **useFilters.js**: フィルタリング機能を提供するカスタムフック。
+- **LanguageContext.tsx**: 言語設定を管理するコンテキスト。言語の切り替えと保存を担当します。
+- **usePublications.ts**: 出版物データの取得、整形、並び替え、グループ化を行うカスタムフック。
+- **useFilters.ts**: フィルタリング機能を提供するカスタムフック。
 
 ### ユーティリティ
 
-- **csvToJson.js**: CSVファイルをJSONに変換するユーティリティ関数。
-- **markdownLoader.js**: マークダウンファイルを読み込むユーティリティ関数。
+- **csvToJson.ts**: CSVファイルをJSONに変換するユーティリティ関数。
+- **markdownLoader.ts**: マークダウンファイルを読み込むユーティリティ関数。
 
 ## データフロー
 
@@ -115,15 +115,15 @@ my-web-page/
 
 ```mermaid
 flowchart LR
-    A[CSV Data<br>data/publication_data.csv] --> B[convertPublications.js]
+    A[CSV Data<br>data/publication_data.csv] --> B[convertPublications.ts]
     B --> C[JSON Data<br>src/data/publications.json]
-    C --> D[usePublications Hook]
-    D --> E[Publications Component]
-    E --> F[useFilters Hook]
+    C --> D[usePublications Hook (.ts)]
+    D --> E[Publications Component (.tsx)]
+    E --> F[useFilters Hook (.ts)]
     F --> G[Filtered Data]
-    G --> H[PublicationsView]
-    H --> I[PublicationGroup]
-    I --> J[PublicationItem]
+    G --> H[PublicationsView (.tsx)]
+    H --> I[PublicationGroup (.tsx)]
+    I --> J[PublicationItem (.tsx)]
 ```
 
 ## コンポーネント階層
@@ -132,22 +132,22 @@ flowchart LR
 
 ```mermaid
 graph TD
-    A[App] --> B[LanguageProvider]
+    A[App (.tsx)] --> B[LanguageProvider (.tsx)]
     B --> C[Router]
-    C --> D[Header]
-    C --> E[SubHeader]
+    C --> D[Header (.tsx)]
+    C --> E[SubHeader (.tsx)]
     C --> F[Main Content]
-    C --> G[Footer]
-    F --> H[Home]
-    F --> I[ProfileCV]
-    F --> J[Publications]
-    F --> P[Works]
-    F --> Q[ComputerSystem2025]
-    J --> K[PublicationsView]
-    K --> L[FilterDropdown]
-    K --> M[ActiveFilters]
-    K --> N[PublicationGroup]
-    N --> O[PublicationItem]
+    C --> G[Footer (.tsx)]
+    F --> H[Home (.tsx)]
+    F --> I[ProfileCV (.tsx)]
+    F --> J[Publications (.tsx)]
+    F --> P[Works (.tsx)]
+    F --> Q[ComputerSystem2025 (.tsx)]
+    J --> K[PublicationsView (.tsx)]
+    K --> L[FilterDropdown (.tsx)]
+    K --> M[ActiveFilters (.tsx)]
+    K --> N[PublicationGroup (.tsx)]
+    N --> O[PublicationItem (.tsx)]
 ```
 
 ## 多言語対応の構造
@@ -156,10 +156,10 @@ graph TD
 
 ```mermaid
 flowchart TD
-    A[LanguageContext] --> B[useLanguage Hook]
-    B --> C[Components]
-    D[locales/ja.js] --> A
-    E[locales/en.js] --> A
+    A[LanguageContext (.tsx)] --> B[useLanguage Hook (.ts)]
+    B --> C[Components (.tsx)]
+    D[locales/ja.ts] --> A
+    E[locales/en.ts] --> A
     F[localStorage] <--> A
 ```
 
