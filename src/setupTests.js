@@ -5,3 +5,5 @@
 import '@testing-library/jest-dom';
 
 // テスト環境のグローバル設定をここに追加できます
+// Add polyfill for ResizeObserver
+global.ResizeObserver = require('resize-observer-polyfill');

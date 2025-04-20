@@ -12,20 +12,10 @@
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react'; // Import within
 import '@testing-library/jest-dom';
 import PublicationGroup from '../components/publications/PublicationGroup';
-
-// PublicationItemコンポーネントをモック
-jest.mock('../components/publications/PublicationItem', () => {
-  return function MockPublicationItem({ publication, language }) {
-    return (
-      <div data-testid="publication-item" data-publication-id={publication.id} data-language={language}>
-        {publication.name}
-      </div>
-    );
-  };
-});
+import PublicationItem from '../components/publications/PublicationItem'; // Import the actual component
 
 // テスト用のモックデータ
 const mockItems = [
@@ -33,19 +23,45 @@ const mockItems = [
     id: 1,
     name: "Publication 1",
     japanese: "出版物 1",
-    year: 2021
+    type: "Research paper (international conference)：国際会議",
+    review: "Reviewed",
+    authorship: "Lead author",
+    presentationType: "Oral",
+    doi: "10.1234/pub1",
+    webLink: "https://example.com/pub1",
+    date: "2021年10月3日",
+    startDate: "2021-10-03",
+    endDate: "2021-10-03",
+    sortableDate: "2021-10-03",
+    year: 2021,
+    others: "Award 1",
+    site: "Site 1",
+    journalConference: "Conf 1"
   },
   {
     id: 2,
     name: "Publication 2",
     japanese: "出版物 2",
-    year: 2021
+    type: "Journal paper：原著論文",
+    review: "Reviewed",
+    authorship: ["Corresponding author", "Lead author"],
+    presentationType: ["Poster"],
+    doi: "10.1234/pub2",
+    webLink: "", // No web link
+    date: "2021年5月15日",
+    startDate: "2021-05-15",
+    endDate: "2021-05-15",
+    sortableDate: "2021-05-15",
+    year: 2021,
+    others: "",
+    site: "Site 2",
+    journalConference: "Journal 1"
   },
   {
     id: 3,
     name: "Publication 3",
     japanese: "出版物 3",
-    year: 2021
+    year: 2021 // Minimal data for testing rendering
   }
 ];
 
@@ -72,18 +88,15 @@ describe('PublicationGroup Component', () => {
     expect(list.tagName).toBe('OL');
     
     // 出版物アイテムが正しい数だけ表示されていることを確認
-    const items = screen.getAllByTestId('publication-item');
+    const items = screen.getAllByRole('listitem');
     expect(items).toHaveLength(3);
     
-    // 各出版物アイテムが正しいデータを持っていることを確認
-    expect(items[0]).toHaveAttribute('data-publication-id', '1');
-    expect(items[1]).toHaveAttribute('data-publication-id', '2');
-    expect(items[2]).toHaveAttribute('data-publication-id', '3');
-    
-    // 各出版物アイテムに正しい言語設定が渡されていることを確認
-    items.forEach(item => {
-      expect(item).toHaveAttribute('data-language', 'en');
-    });
+    // 最初の出版物アイテムの内容が正しく表示されていることを確認 (英語)
+    const firstItem = items[0];
+    expect(within(firstItem).getByText(mockItems[0].name)).toBeInTheDocument(); // English title
+    expect(within(firstItem).getByText('2021')).toBeInTheDocument(); // Year tag
+    expect(within(firstItem).getByText('Lead author')).toBeInTheDocument(); // Authorship tag
+    expect(within(firstItem).getByText('10.1234/pub1')).toBeInTheDocument(); // DOI link text
   });
   
   // 言語設定のテスト
@@ -97,10 +110,11 @@ describe('PublicationGroup Component', () => {
     );
     
     // 各出版物アイテムに正しい言語設定が渡されていることを確認
-    const items = screen.getAllByTestId('publication-item');
-    items.forEach(item => {
-      expect(item).toHaveAttribute('data-language', 'ja');
-    });
+    // 最初のアイテムのタイトルが日本語になっていることを確認
+    const items = screen.getAllByRole('listitem');
+    const firstItem = items[0];
+    expect(within(firstItem).getByText(mockItems[0].japanese)).toBeInTheDocument(); // Japanese title
+    expect(within(firstItem).queryByText(mockItems[0].name)).not.toBeInTheDocument(); // English title should not be present
   });
   
   // 空のアイテムリストのテスト
