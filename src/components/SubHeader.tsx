@@ -12,16 +12,16 @@ const useStyles = createStyles((theme) => ({
   subheader: {
     backgroundColor: "#f4f4f4",
     textAlign: "center",
-    padding: theme.spacing.xl,
-    marginBottom: theme.spacing.xl,
+    padding: theme.spacing.md, // 中くらいのパディング
+    marginBottom: theme.spacing.lg, // 中くらいのマージン
   },
   title: {
     margin: 0,
-    fontWeight: 600,
-    fontSize: theme.fontSizes.xl,
+    fontWeight: 700, // ボールド（太字）に変更
+    fontSize: theme.fontSizes.lg, // 元のサイズに近づける
     color: "#1c1c1c",
     '@media (max-width: 768px)': {
-      fontSize: theme.fontSizes.lg,
+      fontSize: theme.fontSizes.md, // 元のサイズに近づける
     },
   },
 }));
@@ -69,7 +69,7 @@ function SubHeader() {
 
   return (
     <Box className={classes.subheader}>
-      <Title order={2} className={classes.title}>{pageName}</Title>
+      <h2 className={classes.title} style={{ fontWeight: 700 }}>{pageName}</h2>
     </Box>
   );
 }

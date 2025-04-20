@@ -74,8 +74,8 @@ const useStyles = createStyles((theme) => ({
     borderRadius: theme.radius.sm,
     textDecoration: "none",
     color: "#fff",
-    fontSize: theme.fontSizes.sm,
-    fontWeight: 500,
+    fontSize: "0.85rem", // smとxsの中間サイズ
+    fontWeight: 400,
     '@media (max-width: 768px)': {
       padding: `${rem(6)} ${rem(8)}`,
       fontSize: theme.fontSizes.xs,
@@ -103,18 +103,14 @@ const useStyles = createStyles((theme) => ({
     },
   },
   languageButton: {
-    backgroundColor: "transparent",
-    border: "1px solid #fff",
-    color: "#fff",
-    padding: `${rem(4)} ${rem(8)}`,
+    padding: `${rem(6)} ${rem(10)}`,
     minWidth: "auto",
     height: "auto",
     fontSize: theme.fontSizes.sm, // PC版のフォントサイズ
+    borderRadius: theme.radius.md,
     '@media (max-width: 768px)': {
       fontSize: theme.fontSizes.xs, // スマホ版のフォントサイズ（メニューと同じ）
-    },
-    "&:hover": {
-      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      padding: `${rem(4)} ${rem(8)}`,
     },
   },
 }));
@@ -163,10 +159,28 @@ function Header() {
           <Button
             onClick={toggleLanguage}
             className={classes.languageButton}
+            variant="outline"
+            styles={{
+              root: {
+                backgroundColor: "#3c3c3c",
+                borderColor: "#fff",
+                color: "#fff",
+                fontFamily: "'Noto Sans JP', sans-serif",
+                fontWeight: 400,
+                "&:hover": {
+                  backgroundColor: "#4c4c4c",
+                  borderColor: "#fff",
+                }
+              },
+              label: {
+                fontFamily: "'Noto Sans JP', sans-serif",
+                fontWeight: 400,
+              }
+            }}
             aria-label={t.languageSwitch.switchTo}
             title={t.languageSwitch.switchTo}
           >
-            <Languages size={20} style={{ marginRight: '8px' }} />
+            <Languages size={16} style={{ marginRight: '6px' }} />
             {language === 'ja' ? 'EN' : '日本語'}
           </Button>
         </div>
