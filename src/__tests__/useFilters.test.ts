@@ -1,12 +1,12 @@
 import { renderHook, act } from '@testing-library/react';
 import useFilters from '../hooks/useFilters';
+import { createPublications } from '../test-utils/factories/publicationFactory'; // ファクトリ関数をインポート
 
 describe('useFilters', () => {
-  // テスト用の出版物データ
-  const mockPublications = [
+  // ファクトリ関数を使用してテストデータを生成
+  const mockPublications = createPublications(3, [
     {
       id: 0,
-      name: 'Test Publication 1',
       year: 2022,
       type: 'Journal paper：原著論文',
       review: 'Peer-reviewed',
@@ -15,23 +15,21 @@ describe('useFilters', () => {
     },
     {
       id: 1,
-      name: 'Test Publication 2',
       year: 2021,
       type: 'Research paper (international conference)：国際会議',
       review: 'Non-peer-reviewed',
-      authorship: 'Corresponding author',
-      presentationType: 'Poster'
+      authorship: 'Corresponding author', // 文字列も許容
+      presentationType: 'Poster' // 文字列も許容
     },
     {
       id: 2,
-      name: 'Test Publication 3',
       year: 2022,
       type: 'Invited paper：招待論文',
       review: 'Peer-reviewed',
       authorship: ['Co-author'],
       presentationType: ['Oral', 'Invited']
     }
-  ];
+  ]);
 
   describe('filterOptions', () => {
     it('出版物データから利用可能なフィルターオプションを正しく抽出する', () => {

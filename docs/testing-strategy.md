@@ -260,7 +260,7 @@ describe('CSV to JSON conversion', () => {
 
 テストでは、Jest のモック機能 (`jest.mock`, `jest.fn`) を使用して、外部依存関係（モジュール、コンポーネント、関数）をモックし、テストを分離し、予測可能にします。
 
-テスト対象が依存している外部モジュール、コンポーネント、または関数を制御するためにモックを使用します。
+テスト対象が依存している外部モジュール、コンポーネント、または関数を制御するためにモックを使用します。テストデータのモックについては、後述の「テストデータの管理」セクションも参照してください。
 
 ### モジュールのモック
 
@@ -339,6 +339,58 @@ test('calls onSortOrderChange when sort order is changed', () => {
   expect(mockOnSortOrderChange).toHaveBeenCalledWith('chronological');
 });
 ```
+
+## テストデータの管理
+
+テストの安定性と保守性を高めるために、テストデータの管理には以下の方法を採用しています。
+
+### テストデータファクトリ
+
+複雑なデータ構造（例: `Publication` オブジェクト）をテストで使用する場合、テストデータファクトリを使用します。ファクトリ関数は `src/test-utils/factories/` ディレクトリに配置します。
+
+-   **目的**: テストごとに必要なデータを簡単に生成し、デフォルト値を提供しつつ、特定のプロパティを上書きできるようにします。
+-   **例**: `src/test-utils/factories/publicationFactory.ts` では、`createPublication` 関数と `createPublications` 関数を提供しています。
+
+```typescript
+// src/__tests__/PublicationItem.test.tsx より
+import { createPublication } from '../test-utils/factories/publicationFactory';
+
+// ファクトリ関数を使用してテストデータを生成
+const mockPublication = createPublication({
+  id: 1,
+  name: "Specific Test Name",
+  year: 2024,
+}, 0); // index 0
+
+test('renders publication item', () => {
+  renderWithProviders(<PublicationItem publication={mockPublication} language="en" />);
+  // ...アサーション...
+});
+```
+
+### 共通モックデータ
+
+複数のテストファイルで共通して使用される可能性のあるモックデータセットは、`src/test-utils/mocks/` ディレクトリに集約します。
+
+-   **目的**: 同じようなモックデータの重複定義を防ぎ、一元管理します。
+-   **例**: `src/test-utils/mocks/publications.ts` では、`mockPublications` という共通の出版物データ配列をエクスポートしています。
+
+### `__mocks__` ディレクトリによる自動モック
+
+特定のモジュール（特に JSON ファイルなどのデータモジュール）を複数のテストで一貫してモックしたい場合、Jest の `__mocks__` ディレクトリ機能を利用します。
+
+-   **目的**: `jest.mock()` を各テストファイルで呼び出す手間を省き、モックの実装を一箇所にまとめます。
+-   **仕組み**: モックしたいモジュールと同じ階層に `__mocks__` ディレクトリを作成し、その中に元のモジュール名と同じ名前のファイル（拡張子は `.js` または `.ts`）を作成します。このファイルからモックしたい値をエクスポートします。
+-   **例**: `src/data/publications.json` をモックするために、`src/data/__mocks__/publications.json.ts` を作成し、共通モックデータをエクスポートしています。
+
+```typescript
+// src/data/__mocks__/publications.json.ts
+import { mockPublications } from '../../test-utils/mocks/publications';
+
+export default mockPublications;
+```
+
+これにより、`src/__tests__/Publications.test.tsx` のようなテストファイルでは、明示的に `jest.mock('../data/publications.json', ...)` を呼び出す必要がなく、自動的にモックデータが使用されます。
 
 ## テスト環境のセットアップ
 

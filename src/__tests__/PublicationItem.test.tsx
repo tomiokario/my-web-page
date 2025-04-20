@@ -17,17 +17,17 @@ import '@testing-library/jest-dom';
 import PublicationItem from '../components/publications/PublicationItem';
 import { renderWithProviders } from '../test-utils/test-utils';
 import { Publication } from '../types';
+import { createPublication } from '../test-utils/factories/publicationFactory'; // ファクトリ関数をインポート
 
-// テスト用のモックデータ
-const mockPublication: Publication = {
+// ファクトリ関数を使用してテストデータを生成
+const mockPublication = createPublication({
   id: 1,
-  hasEmptyFields: false, // 追加
   name: "Rio Tomioka and Masanori Takabayashi, \"Numerical simulations of neural network hardware based on self-referential holography,\"",
   japanese: "冨岡莉生, 高林正典, \"自己参照型ホログラフィに基づくニューラルネットワークハードウェアの数値シミュレーション,\"",
   type: "Research paper (international conference)：国際会議",
   review: "Reviewed",
-  authorship: "Lead author",
-  presentationType: "Oral",
+  authorship: "Lead author", // 文字列として渡す
+  presentationType: "Oral", // 文字列として渡す
   doi: "10.1234/example",
   webLink: "https://example.com",
   date: "2021年10月3日 → 2021年10月6日",
@@ -37,16 +37,16 @@ const mockPublication: Publication = {
   year: 2021,
   others: "Best Paper Award",
   site: "online",
-  journalConference: "ISOM21" // journalから変更
-};
+  journalConference: "ISOM21"
+}, 0); // index 0
 
 // 配列形式のauthorshipとpresentationTypeを持つモックデータ
-const mockPublicationWithArrays: Publication = {
-  ...mockPublication,
+const mockPublicationWithArrays = createPublication({
+  ...mockPublication, // 基本データをコピー
   id: 2,
-  authorship: ["Corresponding author", "Lead author"],
-  presentationType: ["Oral", "Poster"]
-};
+  authorship: ["Corresponding author", "Lead author"], // 配列で上書き
+  presentationType: ["Oral", "Poster"] // 配列で上書き
+}, 1); // index 1
 
 describe('PublicationItem Component', () => {
   // 基本的なレンダリングテスト
@@ -125,14 +125,16 @@ describe('PublicationItem Component', () => {
   
   // 省略可能なフィールドが欠けている場合のテスト
   test('handles missing optional fields gracefully', () => {
-    const publicationWithMissingFields: Publication = {
-      ...mockPublication,
+    // ファクトリ関数を使用して、省略可能なフィールドを空文字列で上書き
+    const publicationWithMissingFields = createPublication({
+      ...mockPublication, // 基本データをコピー
+      id: 3, // IDを変更
       doi: '',
       webLink: '',
       site: '',
       others: ''
-    };
-    
+    }, 2); // index 2
+
     renderWithProviders(<PublicationItem publication={publicationWithMissingFields} language="en" />);
     
     // DOIリンクが表示されていないことを確認

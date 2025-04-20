@@ -4,6 +4,7 @@ import PublicationsView from '../components/publications/PublicationsView';
 import { renderWithProviders } from '../test-utils/test-utils';
 import { Publication } from '../types';
 import { SelectedFilters } from '../hooks/useFilters';
+import { createPublication } from '../test-utils/factories/publicationFactory'; // ファクトリ関数をインポート
 
 // モックデータ
 const mockProps = {
@@ -27,14 +28,15 @@ const mockProps = {
   groupedPublications: [
     {
       name: 'Journal paper：原著論文',
+      // ファクトリ関数を使用してアイテムを生成
       items: [
-        {
+        createPublication({
           id: 1,
           name: 'Test Publication 1',
           japanese: 'テスト出版物1',
           year: 2022,
           type: 'Journal paper：原著論文'
-        } as Publication
+        }, 0) // index 0 で生成
       ]
     }
   ],
