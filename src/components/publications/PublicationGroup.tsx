@@ -1,5 +1,6 @@
 import React from "react";
-import { createStyles, MantineTheme } from "@mantine/core";
+import { createStyles } from "@mantine/emotion";
+import { MantineTheme } from "@mantine/core";
 import PublicationItem from "./PublicationItem";
 import { Publication } from "../../types";
 
@@ -13,7 +14,7 @@ interface PublicationGroupProps {
 // スタイルの定義
 const useStyles = createStyles((theme: MantineTheme) => ({
   group: {
-    marginBottom: theme.spacing.xl * 2,
+    marginBottom: theme.spacing.xl,
   },
   header: {
     marginBottom: theme.spacing.xs,

@@ -1,6 +1,7 @@
 import React from "react";
-import { createStyles, MantineTheme } from "@mantine/core";
-import { SelectedFilters } from "../../hooks/useFilters";
+import { createStyles } from "@mantine/emotion";
+import { MantineTheme } from "@mantine/core";
+import useFilters, { SelectedFilters } from "../../hooks/useFilters";
 
 interface ActiveFiltersProps {
   selectedFilters: SelectedFilters;
@@ -19,20 +20,20 @@ const useStyles = createStyles((theme: MantineTheme): ActiveFiltersStyles => ({
     marginBottom: theme.spacing.md,
   },
   filterCategory: {
-    marginBottom: theme.spacing.xs / 2,
+    marginBottom: theme.spacing.xs,
   },
   categoryLabel: {
     fontWeight: "bold",
   },
   filterTag: {
     backgroundColor: theme.colors.gray[2],
-    padding: `${theme.spacing.xs / 4}px ${theme.spacing.xs}px`,
+    padding: `${theme.spacing.xs} ${theme.spacing.xs}`,
     borderRadius: theme.radius.sm,
     fontSize: theme.fontSizes.xs,
     marginRight: theme.spacing.xs,
     cursor: "pointer",
     display: "inline-block",
-    marginBottom: theme.spacing.xs / 2,
+    marginBottom: theme.spacing.xs,
   },
   resetButton: {
     padding: "0.5rem 1rem",
@@ -52,11 +53,8 @@ function ActiveFilters({
   resetLabel,
 }: ActiveFiltersProps) {
   const { classes } = useStyles();
-  
-  // Object.valuesの戻り値の型推論に関するエラーを解消
-  const hasActiveFilters = Object.values(selectedFilters).some(
-    (filters): filters is string[] => Array.isArray(filters) && filters.length > 0
-  );
+  const hasActiveFilters = Object.values(selectedFilters)
+    .some((filters): filters is string[] => Array.isArray(filters) && filters.length > 0);
 
   if (!hasActiveFilters) {
     return null;
@@ -73,31 +71,25 @@ function ActiveFilters({
       </button>
 
       <div className={classes.activeFiltersContainer} data-testid="active-filters">
-        {/* 型アサーションを修正し、nullチェックを追加 */}
-        {selectedFilters && Object.entries(selectedFilters).map(
-          ([category, values]) => {
-            // valuesが配列であることを確認
-            if (Array.isArray(values) && values.length > 0) {
-              return (
-                <div key={category} className={classes.filterCategory}>
-                  <span className={classes.categoryLabel}>
-                    {filterLabels[category as string]}:{" "}
+        {(Object.entries(selectedFilters) as [keyof SelectedFilters, string[]][]).map(
+          ([category, values]: [keyof SelectedFilters, string[]]) =>
+            values.length > 0 && (
+              <div key={category} className={classes.filterCategory}>
+                <span className={classes.categoryLabel}>
+                  {filterLabels[category]}:{" "}
+                </span>
+                {values.map((value: string) => (
+                  <span
+                    key={value}
+                    className={classes.filterTag}
+                    onClick={() => onToggleFilter(category, value)}
+                    data-testid={`filter-tag-${category}-${value}`}
+                  >
+                    {value} ✕
                   </span>
-                  {values.map((value: string) => (
-                    <span
-                      key={value}
-                      className={classes.filterTag}
-                      onClick={() => onToggleFilter(category as keyof SelectedFilters, value)}
-                      data-testid={`filter-tag-${category}-${value}`}
-                    >
-                      {value} ✕
-                    </span>
-                  ))}
-                </div>
-              );
-            }
-            return null;
-          }
+                ))}
+              </div>
+            )
         )}
       </div>
     </div>

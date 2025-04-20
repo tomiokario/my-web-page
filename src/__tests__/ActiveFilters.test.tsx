@@ -1,6 +1,8 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import ActiveFilters from "../components/publications/ActiveFilters";
+import { renderWithProviders } from "../test-utils/test-utils";
+import { SelectedFilters } from "../hooks/useFilters";
 
 describe("ActiveFilters", () => {
   const mockProps = {
@@ -10,7 +12,7 @@ describe("ActiveFilters", () => {
       type: [],
       review: [],
       presentationType: []
-    },
+    } as SelectedFilters,
     filterLabels: {
       year: "Year",
       authorship: "Authorship",
@@ -24,7 +26,7 @@ describe("ActiveFilters", () => {
   };
 
   test("renders reset button with correct label", () => {
-    render(<ActiveFilters {...mockProps} />);
+    renderWithProviders(<ActiveFilters {...mockProps} />);
     
     const resetButton = screen.getByTestId("reset-filters-button");
     expect(resetButton).toBeInTheDocument();
@@ -32,7 +34,7 @@ describe("ActiveFilters", () => {
   });
 
   test("calls onResetFilters when reset button is clicked", () => {
-    render(<ActiveFilters {...mockProps} />);
+    renderWithProviders(<ActiveFilters {...mockProps} />);
     
     const resetButton = screen.getByTestId("reset-filters-button");
     fireEvent.click(resetButton);
@@ -41,14 +43,14 @@ describe("ActiveFilters", () => {
   });
 
   test("renders active filters container", () => {
-    render(<ActiveFilters {...mockProps} />);
+    renderWithProviders(<ActiveFilters {...mockProps} />);
     
     const activeFiltersContainer = screen.getByTestId("active-filters");
     expect(activeFiltersContainer).toBeInTheDocument();
   });
 
   test("renders filter categories with labels", () => {
-    render(<ActiveFilters {...mockProps} />);
+    renderWithProviders(<ActiveFilters {...mockProps} />);
     
     // 選択されているフィルターのカテゴリラベルが表示されていることを確認
     expect(screen.getByText("Year:")).toBeInTheDocument();
@@ -61,7 +63,7 @@ describe("ActiveFilters", () => {
   });
 
   test("renders filter tags for selected values", () => {
-    render(<ActiveFilters {...mockProps} />);
+    renderWithProviders(<ActiveFilters {...mockProps} />);
     
     // 選択されているフィルター値がタグとして表示されていることを確認
     expect(screen.getByTestId("filter-tag-year-2021")).toBeInTheDocument();
@@ -75,7 +77,7 @@ describe("ActiveFilters", () => {
   });
 
   test("calls onToggleFilter when filter tag is clicked", () => {
-    render(<ActiveFilters {...mockProps} />);
+    renderWithProviders(<ActiveFilters {...mockProps} />);
     
     const filterTag = screen.getByTestId("filter-tag-year-2021");
     fireEvent.click(filterTag);
@@ -92,12 +94,13 @@ describe("ActiveFilters", () => {
         type: [],
         review: [],
         presentationType: []
-      }
+      } as SelectedFilters
     };
     
-    const { container } = render(<ActiveFilters {...props} />);
+    const { container } = renderWithProviders(<ActiveFilters {...props} />);
     
-    // コンポーネントが何も描画しないことを確認
-    expect(container).toBeEmptyDOMElement();
+    // コンポーネントが何も描画しないことを確認 (Mantineのスタイル要素は除く)
+    // getByTestIdで要素が見つからないことを確認する方がより堅牢
+    expect(screen.queryByTestId("active-filters")).not.toBeInTheDocument();
   });
 });

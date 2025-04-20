@@ -1,5 +1,6 @@
 import React from "react";
-import { createStyles, MantineTheme } from "@mantine/core";
+import { createStyles } from "@mantine/emotion";
+import { MantineTheme } from "@mantine/core";
 import { SelectedFilters } from "../../hooks/useFilters";
 
 // FilterDropdownPropsインターフェースを追加
@@ -45,7 +46,7 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
   },
   optionContainer: {
-    marginBottom: theme.spacing.xs / 2,
+    marginBottom: theme.spacing.xs,
   },
   optionLabel: {
     display: "flex",

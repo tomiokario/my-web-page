@@ -12,41 +12,10 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import { MemoryRouter } from "react-router-dom";
+import { screen } from "@testing-library/react";
 import SubHeader from "../components/SubHeader";
-import { LanguageProvider } from "../contexts/LanguageContext";
-import { MantineProvider } from "@mantine/core";
 import locales from "../locales";
-
-// テスト用のラッパーコンポーネント
-const TestWrapper = ({ children, initialLanguage = "ja" }) => {
-  // localStorage のモックを作成
-  const localStorageMock = (() => {
-    let store = { language: initialLanguage };
-    return {
-      getItem: jest.fn(key => store[key]),
-      setItem: jest.fn((key, value) => {
-        store[key] = value;
-      })
-    };
-  })();
-
-  // テスト用に localStorage をモック
-  Object.defineProperty(window, 'localStorage', {
-    value: localStorageMock,
-    writable: true
-  });
-
-  return (
-    <MantineProvider>
-      <LanguageProvider>
-        {children}
-      </LanguageProvider>
-    </MantineProvider>
-  );
-};
+import { renderWithProviders } from "../test-utils/test-utils";
 
 // ラッパーアプローチを使用したテスト
 describe("SubHeader component", () => {
@@ -55,12 +24,12 @@ describe("SubHeader component", () => {
     // Profile & CVページの場合のテスト
     test("displays correct Japanese page name for profile-cv path", () => {
       // テスト内容: /profile-cvパスにアクセスした場合、日本語の「プロフィール & 履歴書 (CV)」が表示されることを確認
-      render(
-        <TestWrapper initialLanguage="ja">
-          <MemoryRouter initialEntries={["/profile-cv"]}>
-            <SubHeader />
-          </MemoryRouter>
-        </TestWrapper>
+      renderWithProviders(
+        <SubHeader />,
+        { 
+          initialLanguage: "ja",
+          memoryRouterEntries: ["/profile-cv"]
+        }
       );
       const headingElement = screen.getByText(locales.ja.subheader.profileCV);
       expect(headingElement).toBeInTheDocument();
@@ -69,12 +38,12 @@ describe("SubHeader component", () => {
     // ホームページの場合のテスト
     test("displays correct Japanese page name for home path", () => {
       // テスト内容: ルートパス(/)にアクセスした場合、日本語の「冨岡 莉生 (TOMIOKA Rio)」が表示されることを確認
-      render(
-        <TestWrapper initialLanguage="ja">
-          <MemoryRouter initialEntries={["/"]}>
-            <SubHeader />
-          </MemoryRouter>
-        </TestWrapper>
+      renderWithProviders(
+        <SubHeader />,
+        { 
+          initialLanguage: "ja",
+          memoryRouterEntries: ["/"]
+        }
       );
       const headingElement = screen.getByText(locales.ja.subheader.home);
       expect(headingElement).toBeInTheDocument();
@@ -83,12 +52,12 @@ describe("SubHeader component", () => {
     // Publicationsページの場合のテスト
     test("displays correct Japanese page name for publications path", () => {
       // テスト内容: /publicationsパスにアクセスした場合、日本語の「出版物」が表示されることを確認
-      render(
-        <TestWrapper initialLanguage="ja">
-          <MemoryRouter initialEntries={["/publications"]}>
-            <SubHeader />
-          </MemoryRouter>
-        </TestWrapper>
+      renderWithProviders(
+        <SubHeader />,
+        { 
+          initialLanguage: "ja",
+          memoryRouterEntries: ["/publications"]
+        }
       );
       const headingElement = screen.getByText(locales.ja.subheader.publications);
       expect(headingElement).toBeInTheDocument();
@@ -97,12 +66,12 @@ describe("SubHeader component", () => {
     // Worksページの場合のテスト
     test("displays correct Japanese page name for works path", () => {
       // テスト内容: /worksパスにアクセスした場合、日本語の「仕事」が表示されることを確認
-      render(
-        <TestWrapper initialLanguage="ja">
-          <MemoryRouter initialEntries={["/works"]}>
-            <SubHeader />
-          </MemoryRouter>
-        </TestWrapper>
+      renderWithProviders(
+        <SubHeader />,
+        { 
+          initialLanguage: "ja",
+          memoryRouterEntries: ["/works"]
+        }
       );
       const headingElement = screen.getByText(locales.ja.subheader.works);
       expect(headingElement).toBeInTheDocument();
@@ -111,12 +80,12 @@ describe("SubHeader component", () => {
     // Computer System 2025ページの場合のテスト
     test("displays correct Japanese page name for computer-system-2025 path", () => {
       // テスト内容: /works/computer-system-2025パスにアクセスした場合、日本語の「コンピュータシステム(2025)」が表示されることを確認
-      render(
-        <TestWrapper initialLanguage="ja">
-          <MemoryRouter initialEntries={["/works/computer-system-2025"]}>
-            <SubHeader />
-          </MemoryRouter>
-        </TestWrapper>
+      renderWithProviders(
+        <SubHeader />,
+        { 
+          initialLanguage: "ja",
+          memoryRouterEntries: ["/works/computer-system-2025"]
+        }
       );
       const headingElement = screen.getByText(locales.ja.subheader.computerSystem2025);
       expect(headingElement).toBeInTheDocument();
@@ -128,12 +97,12 @@ describe("SubHeader component", () => {
     // Profile & CVページの場合のテスト
     test("displays correct English page name for profile-cv path", () => {
       // テスト内容: /profile-cvパスにアクセスした場合、英語の「Profile & Curriculum Vitae (CV)」が表示されることを確認
-      render(
-        <TestWrapper initialLanguage="en">
-          <MemoryRouter initialEntries={["/profile-cv"]}>
-            <SubHeader />
-          </MemoryRouter>
-        </TestWrapper>
+      renderWithProviders(
+        <SubHeader />,
+        { 
+          initialLanguage: "en",
+          memoryRouterEntries: ["/profile-cv"]
+        }
       );
       const headingElement = screen.getByText(locales.en.subheader.profileCV);
       expect(headingElement).toBeInTheDocument();
@@ -142,12 +111,12 @@ describe("SubHeader component", () => {
     // ホームページの場合のテスト
     test("displays correct English page name for home path", () => {
       // テスト内容: ルートパス(/)にアクセスした場合、英語の「TOMIOKA Rio」が表示されることを確認
-      render(
-        <TestWrapper initialLanguage="en">
-          <MemoryRouter initialEntries={["/"]}>
-            <SubHeader />
-          </MemoryRouter>
-        </TestWrapper>
+      renderWithProviders(
+        <SubHeader />,
+        { 
+          initialLanguage: "en",
+          memoryRouterEntries: ["/"]
+        }
       );
       const headingElement = screen.getByText(locales.en.subheader.home);
       expect(headingElement).toBeInTheDocument();
@@ -156,12 +125,12 @@ describe("SubHeader component", () => {
     // Publicationsページの場合のテスト
     test("displays correct English page name for publications path", () => {
       // テスト内容: /publicationsパスにアクセスした場合、英語の「Publications」が表示されることを確認
-      render(
-        <TestWrapper initialLanguage="en">
-          <MemoryRouter initialEntries={["/publications"]}>
-            <SubHeader />
-          </MemoryRouter>
-        </TestWrapper>
+      renderWithProviders(
+        <SubHeader />,
+        { 
+          initialLanguage: "en",
+          memoryRouterEntries: ["/publications"]
+        }
       );
       const headingElement = screen.getByText(locales.en.subheader.publications);
       expect(headingElement).toBeInTheDocument();
@@ -170,12 +139,12 @@ describe("SubHeader component", () => {
     // Worksページの場合のテスト
     test("displays correct English page name for works path", () => {
       // テスト内容: /worksパスにアクセスした場合、英語の「Works」が表示されることを確認
-      render(
-        <TestWrapper initialLanguage="en">
-          <MemoryRouter initialEntries={["/works"]}>
-            <SubHeader />
-          </MemoryRouter>
-        </TestWrapper>
+      renderWithProviders(
+        <SubHeader />,
+        { 
+          initialLanguage: "en",
+          memoryRouterEntries: ["/works"]
+        }
       );
       const headingElement = screen.getByText(locales.en.subheader.works);
       expect(headingElement).toBeInTheDocument();
@@ -184,12 +153,12 @@ describe("SubHeader component", () => {
     // Computer System 2025ページの場合のテスト
     test("displays correct English page name for computer-system-2025 path", () => {
       // テスト内容: /works/computer-system-2025パスにアクセスした場合、英語の「Computer System (2025)」が表示されることを確認
-      render(
-        <TestWrapper initialLanguage="en">
-          <MemoryRouter initialEntries={["/works/computer-system-2025"]}>
-            <SubHeader />
-          </MemoryRouter>
-        </TestWrapper>
+      renderWithProviders(
+        <SubHeader />,
+        { 
+          initialLanguage: "en",
+          memoryRouterEntries: ["/works/computer-system-2025"]
+        }
       );
       const headingElement = screen.getByText(locales.en.subheader.computerSystem2025);
       expect(headingElement).toBeInTheDocument();
@@ -199,13 +168,14 @@ describe("SubHeader component", () => {
   // 未知のパスの場合のテスト
   test("does not render for unknown path", () => {
     // テスト内容: 未知のパス(/unknown)にアクセスした場合、SubHeaderコンポーネントが何も表示しないことを確認
-    const { container } = render(
-      <TestWrapper>
-        <MemoryRouter initialEntries={["/unknown"]}>
-          <SubHeader />
-        </MemoryRouter>
-      </TestWrapper>
+    const { queryByRole } = renderWithProviders(
+      <SubHeader />,
+      { 
+        initialLanguage: "ja",
+        memoryRouterEntries: ["/unknown"]
+      }
     );
-    expect(container.firstChild).toBeNull();
+    // SubHeaderの内容（見出し）が存在しないことを確認
+    expect(queryByRole('heading')).toBeNull();
   });
 });

@@ -5,13 +5,13 @@ import { Languages } from "lucide-react";
 import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
 import locales, { Locales } from "../locales";
 import {
-  Header as MantineHeader,
+  Box,
   Group,
   Container,
   Button,
-  createStyles,
   MantineTheme,
 } from "@mantine/core";
+import { createStyles } from "@mantine/emotion";
 import { useMediaQuery } from "@mantine/hooks";
 
 // remヘルパー関数の定義（Mantineのバージョンでremがエクスポートされていない場合）
@@ -24,13 +24,14 @@ const useStyles = createStyles((theme) => ({
     borderBottom: 0,
     position: "relative",
     zIndex: 1,
+    height: "auto",
   },
   container: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     height: "100%",
-    [theme.fn.smallerThan("sm")]: {
+    '@media (max-width: 768px)': {
       flexDirection: "row",
       flexWrap: "wrap",
       paddingTop: rem(8),
@@ -39,7 +40,7 @@ const useStyles = createStyles((theme) => ({
     },
   },
   logoContainer: {
-    [theme.fn.smallerThan("sm")]: {
+    '@media (max-width: 768px)': {
       width: "100%",
       textAlign: "center",
       marginBottom: rem(10),
@@ -50,7 +51,7 @@ const useStyles = createStyles((theme) => ({
     gap: theme.spacing.md,
     // PC版では右寄せ
     marginLeft: "auto",
-    [theme.fn.smallerThan("sm")]: {
+    '@media (max-width: 768px)': {
       gap: theme.spacing.xs,
       // スマホ版では中央揃え
       marginLeft: 0,
@@ -61,7 +62,7 @@ const useStyles = createStyles((theme) => ({
   },
   languageButtonContainer: {
     marginLeft: theme.spacing.md, // PC版でメニューとボタンの間に空白を追加
-    [theme.fn.smallerThan("sm")]: {
+    '@media (max-width: 768px)': {
       order: 2,
       marginLeft: 0, // スマホ版では余白を削除
     },
@@ -75,7 +76,7 @@ const useStyles = createStyles((theme) => ({
     color: "#fff",
     fontSize: theme.fontSizes.sm,
     fontWeight: 500,
-    [theme.fn.smallerThan("sm")]: {
+    '@media (max-width: 768px)': {
       padding: `${rem(6)} ${rem(8)}`,
       fontSize: theme.fontSizes.xs,
     },
@@ -94,7 +95,7 @@ const useStyles = createStyles((theme) => ({
       height: 4,
       backgroundColor: "#f4f4f4",
     },
-    [theme.fn.smallerThan("sm")]: {
+    '@media (max-width: 768px)': {
       "&::after": {
         bottom: -6,
         height: 3,
@@ -109,7 +110,7 @@ const useStyles = createStyles((theme) => ({
     minWidth: "auto",
     height: "auto",
     fontSize: theme.fontSizes.sm, // PC版のフォントサイズ
-    [theme.fn.smallerThan("sm")]: {
+    '@media (max-width: 768px)': {
       fontSize: theme.fontSizes.xs, // スマホ版のフォントサイズ（メニューと同じ）
     },
     "&:hover": {
@@ -133,7 +134,7 @@ function Header() {
   ];
 
   return (
-    <MantineHeader height={isMobile ? "auto" : 57} className={classes.header}>
+    <Box className={classes.header} style={{ height: isMobile ? "auto" : 57 }}>
       <Container className={classes.container} fluid>
         {/* ロゴ部分 */}
         <div className={classes.logoContainer}>
@@ -142,7 +143,7 @@ function Header() {
         </div>
 
         {/* ナビゲーションリンク */}
-        <Group className={classes.links} spacing={5}>
+        <Group className={classes.links}>
           {menuItems.map((item) => (
             <NavLink
               key={item.path}
@@ -164,13 +165,13 @@ function Header() {
             className={classes.languageButton}
             aria-label={t.languageSwitch.switchTo}
             title={t.languageSwitch.switchTo}
-            leftIcon={<Languages size={20} />}
           >
+            <Languages size={20} style={{ marginRight: '8px' }} />
             {language === 'ja' ? 'EN' : '日本語'}
           </Button>
         </div>
       </Container>
-    </MantineHeader>
+    </Box>
   );
 }
 

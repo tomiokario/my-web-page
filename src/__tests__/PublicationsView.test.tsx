@@ -1,10 +1,13 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, cleanup } from '@testing-library/react';
 import PublicationsView from '../components/publications/PublicationsView';
+import { renderWithProviders } from '../test-utils/test-utils';
+import { Publication } from '../types';
+import { SelectedFilters } from '../hooks/useFilters';
 
 // モックデータ
 const mockProps = {
-  sortOrder: 'type',
+  sortOrder: 'type' as 'type' | 'chronological',
   onSortOrderChange: jest.fn(),
   selectedFilters: {
     year: ['2022'],
@@ -12,7 +15,7 @@ const mockProps = {
     type: [],
     review: [],
     presentationType: []
-  },
+  } as SelectedFilters,
   openDropdown: null,
   filterOptions: {
     year: ['2022', '2021', '2020'],
@@ -31,11 +34,11 @@ const mockProps = {
           japanese: 'テスト出版物1',
           year: 2022,
           type: 'Journal paper：原著論文'
-        }
+        } as Publication
       ]
     }
   ],
-  filterRefs: { current: {} },
+  filterRefs: { current: {} } as React.MutableRefObject<Record<string, HTMLElement | null>>,
   toggleDropdown: jest.fn(),
   toggleFilter: jest.fn(),
   resetFilters: jest.fn(),
@@ -44,7 +47,15 @@ const mockProps = {
 
 // PublicationGroupコンポーネントをモック
 jest.mock('../components/publications/PublicationGroup', () => {
-  return function MockPublicationGroup({ name, items, language }) {
+  return function MockPublicationGroup({ 
+    name, 
+    items, 
+    language 
+  }: { 
+    name: string; 
+    items: Publication[]; 
+    language: string 
+  }) {
     return (
       <div data-testid="publication-group">
         <div data-testid="group-name">{name}</div>
@@ -57,7 +68,15 @@ jest.mock('../components/publications/PublicationGroup', () => {
 
 // FilterDropdownコンポーネントをモック
 jest.mock('../components/publications/FilterDropdown', () => {
-  return function MockFilterDropdown({ category, label, onToggleDropdown }) {
+  return function MockFilterDropdown({ 
+    category, 
+    label, 
+    onToggleDropdown 
+  }: { 
+    category: string; 
+    label: string; 
+    onToggleDropdown: (category: string) => void 
+  }) {
     return (
       <button 
         data-testid={`filter-dropdown-${category}`}
@@ -71,7 +90,15 @@ jest.mock('../components/publications/FilterDropdown', () => {
 
 // ActiveFiltersコンポーネントをモック
 jest.mock('../components/publications/ActiveFilters', () => {
-  return function MockActiveFilters({ selectedFilters, onResetFilters, resetLabel }) {
+  return function MockActiveFilters({ 
+    selectedFilters, 
+    onResetFilters, 
+    resetLabel 
+  }: { 
+    selectedFilters: SelectedFilters; 
+    onResetFilters: () => void; 
+    resetLabel: string 
+  }) {
     return (
       <div data-testid="active-filters">
         <button 
@@ -89,8 +116,14 @@ jest.mock('../components/publications/ActiveFilters', () => {
 });
 
 describe('PublicationsView', () => {
+  // 各テスト後にクリーンアップ
+  afterEach(() => {
+    cleanup();
+    jest.clearAllMocks();
+  });
+
   test('renders correctly with provided props', () => {
-    render(<PublicationsView {...mockProps} />);
+    renderWithProviders(<PublicationsView {...mockProps} />);
     
     // 並び順選択が正しくレンダリングされていることを確認
     expect(screen.getByTestId('sort-order-select')).toBeInTheDocument();
@@ -115,7 +148,7 @@ describe('PublicationsView', () => {
   });
   
   test('calls onSortOrderChange when sort order is changed', () => {
-    render(<PublicationsView {...mockProps} />);
+    renderWithProviders(<PublicationsView {...mockProps} />);
     
     // 並び順を変更
     fireEvent.change(screen.getByTestId('sort-order-select'), { target: { value: 'chronological' } });
@@ -125,7 +158,7 @@ describe('PublicationsView', () => {
   });
   
   test('calls toggleDropdown when filter dropdown is clicked', () => {
-    render(<PublicationsView {...mockProps} />);
+    renderWithProviders(<PublicationsView {...mockProps} />);
     
     // フィルタードロップダウンをクリック
     fireEvent.click(screen.getByTestId('filter-dropdown-year'));
@@ -135,7 +168,7 @@ describe('PublicationsView', () => {
   });
   
   test('calls resetFilters when reset button is clicked', () => {
-    render(<PublicationsView {...mockProps} />);
+    renderWithProviders(<PublicationsView {...mockProps} />);
     
     // リセットボタンをクリック
     fireEvent.click(screen.getByTestId('reset-filters-button'));
@@ -146,12 +179,15 @@ describe('PublicationsView', () => {
   
   test('displays correct labels based on language', () => {
     // 英語の場合
-    render(<PublicationsView {...mockProps} />);
+    renderWithProviders(<PublicationsView {...mockProps} />);
     expect(screen.getByText('By type')).toBeInTheDocument();
     expect(screen.getByText('By year')).toBeInTheDocument();
     
+    // クリーンアップ
+    cleanup();
+    
     // 日本語の場合
-    render(<PublicationsView {...{ ...mockProps, language: 'ja' }} />);
+    renderWithProviders(<PublicationsView {...{ ...mockProps, language: 'ja' }} />);
     expect(screen.getByText('種類別に表示')).toBeInTheDocument();
     expect(screen.getByText('年別に表示')).toBeInTheDocument();
   });

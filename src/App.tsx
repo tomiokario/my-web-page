@@ -15,7 +15,7 @@ import ComputerSystem2025 from "./pages/ComputerSystem2025";
 
 function App() {
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS>
+    <MantineProvider>
       <LanguageProvider>
         <Router>
           {/* Flexboxを使用して、ページ全体を縦方向に配置 */}

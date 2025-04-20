@@ -1,5 +1,6 @@
 import React from "react";
-import { createStyles, MantineTheme } from "@mantine/core";
+import { createStyles } from "@mantine/emotion";
+import { MantineTheme } from "@mantine/core";
 import PublicationGroup from "./PublicationGroup";
 import FilterDropdown from "./FilterDropdown";
 import ActiveFilters from "./ActiveFilters";

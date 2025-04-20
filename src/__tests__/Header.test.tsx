@@ -12,22 +12,29 @@
  */
 
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { screen, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom"; // Jest-DOMのマッチャーを明示的にインポート
 import { BrowserRouter } from "react-router-dom";
 import Header from "../components/Header";
 import { LanguageProvider } from "../contexts/LanguageContext";
 import locales from "../locales";
-import { MantineProvider } from "@mantine/core";
+// カスタムrender関数をインポート
+import { render } from "../test-utils/render";
 
-// テスト用のラッパーコンポーネント
-const TestWrapper = ({ children, initialLanguage = "ja" }) => {
+// テスト用のラッパーコンポーネントの型定義
+interface TestWrapperProps {
+  children: React.ReactNode;
+  initialLanguage?: string;
+}
+
+// テスト用のラッパーコンポーネント（MantineProviderは削除し、カスタムrenderに依存）
+const TestWrapper: React.FC<TestWrapperProps> = ({ children, initialLanguage = "ja" }) => {
   // localStorage のモックを作成
   const localStorageMock = (() => {
-    let store = { language: initialLanguage };
+    let store: Record<string, string> = { language: initialLanguage };
     return {
-      getItem: jest.fn(key => store[key]),
-      setItem: jest.fn((key, value) => {
+      getItem: jest.fn((key: string) => store[key]),
+      setItem: jest.fn((key: string, value: string) => {
         store[key] = value;
       })
     };
@@ -40,34 +47,13 @@ const TestWrapper = ({ children, initialLanguage = "ja" }) => {
   });
 
   return (
-    <MantineProvider>
-      <LanguageProvider>
-        <BrowserRouter>
-          {children}
-        </BrowserRouter>
-      </LanguageProvider>
-    </MantineProvider>
+    <LanguageProvider>
+      <BrowserRouter>
+        {children}
+      </BrowserRouter>
+    </LanguageProvider>
   );
 };
-
-// メディアクエリのモック
-const mockMatchMedia = (matches) => {
-  window.matchMedia = jest.fn().mockImplementation(query => ({
-    matches,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  }));
-};
-
-// デフォルトでデスクトップ表示のモックを設定
-beforeAll(() => {
-  mockMatchMedia(false);
-});
 
 describe("Header component", () => {
   // 基本的なレンダリングテスト
@@ -137,12 +123,36 @@ describe("Header component", () => {
   describe("mobile view", () => {
     beforeEach(() => {
       // モバイル表示のモックを設定
-      mockMatchMedia(true);
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: (query: string) => ({
+          matches: true,
+          media: query,
+          onchange: null,
+          addListener: () => {},
+          removeListener: () => {},
+          addEventListener: () => {},
+          removeEventListener: () => {},
+          dispatchEvent: () => false,
+        }),
+      });
     });
 
     afterEach(() => {
       // テスト後にデスクトップ表示に戻す
-      mockMatchMedia(false);
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: (query: string) => ({
+          matches: false,
+          media: query,
+          onchange: null,
+          addListener: () => {},
+          removeListener: () => {},
+          addEventListener: () => {},
+          removeEventListener: () => {},
+          dispatchEvent: () => false,
+        }),
+      });
     });
 
     test("displays navigation links in mobile view", () => {

@@ -12,13 +12,21 @@
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PublicationGroup from '../components/publications/PublicationGroup';
+import { renderWithProviders } from '../test-utils/test-utils';
+import { Publication } from '../types';
 
 // PublicationItemコンポーネントをモック
 jest.mock('../components/publications/PublicationItem', () => {
-  return function MockPublicationItem({ publication, language }) {
+  return function MockPublicationItem({ 
+    publication, 
+    language 
+  }: { 
+    publication: Publication; 
+    language: string 
+  }) {
     return (
       <div data-testid="publication-item" data-publication-id={publication.id} data-language={language}>
         {publication.name}
@@ -28,31 +36,73 @@ jest.mock('../components/publications/PublicationItem', () => {
 });
 
 // テスト用のモックデータ
-const mockItems = [
+const mockItems: Publication[] = [
   {
     id: 1,
+    hasEmptyFields: false,
     name: "Publication 1",
     japanese: "出版物 1",
-    year: 2021
+    type: "Type A",
+    review: "Reviewed",
+    authorship: "Author A",
+    presentationType: "Oral",
+    doi: "",
+    webLink: "",
+    date: "",
+    startDate: "",
+    endDate: "",
+    sortableDate: "",
+    year: 2021,
+    others: "",
+    site: "",
+    journalConference: "Conf A"
   },
   {
     id: 2,
+    hasEmptyFields: false,
     name: "Publication 2",
     japanese: "出版物 2",
-    year: 2021
+    type: "Type B",
+    review: "Reviewed",
+    authorship: "Author B",
+    presentationType: "Poster",
+    doi: "",
+    webLink: "",
+    date: "",
+    startDate: "",
+    endDate: "",
+    sortableDate: "",
+    year: 2021,
+    others: "",
+    site: "",
+    journalConference: "Conf B"
   },
   {
     id: 3,
+    hasEmptyFields: false,
     name: "Publication 3",
     japanese: "出版物 3",
-    year: 2021
+    type: "Type C",
+    review: "Reviewed",
+    authorship: "Author C",
+    presentationType: "Oral",
+    doi: "",
+    webLink: "",
+    date: "",
+    startDate: "",
+    endDate: "",
+    sortableDate: "",
+    year: 2021,
+    others: "",
+    site: "",
+    journalConference: "Conf C"
   }
 ];
 
 describe('PublicationGroup Component', () => {
   // 基本的なレンダリングテスト
   test('renders publication group correctly', () => {
-    render(
+    renderWithProviders(
       <PublicationGroup
         name="Test Group"
         items={mockItems}
@@ -88,7 +138,7 @@ describe('PublicationGroup Component', () => {
   
   // 言語設定のテスト
   test('passes correct language prop to PublicationItem', () => {
-    render(
+    renderWithProviders(
       <PublicationGroup
         name="Test Group"
         items={mockItems}
@@ -105,7 +155,7 @@ describe('PublicationGroup Component', () => {
   
   // 空のアイテムリストのテスト
   test('renders empty list when no items are provided', () => {
-    render(
+    renderWithProviders(
       <PublicationGroup
         name="Empty Group"
         items={[]}

@@ -12,15 +12,18 @@
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PublicationItem from '../components/publications/PublicationItem';
+import { renderWithProviders } from '../test-utils/test-utils';
+import { Publication } from '../types';
 
 // テスト用のモックデータ
-const mockPublication = {
+const mockPublication: Publication = {
   id: 1,
+  hasEmptyFields: false, // 追加
   name: "Rio Tomioka and Masanori Takabayashi, \"Numerical simulations of neural network hardware based on self-referential holography,\"",
-  japanese: "冨岡莉生, 高林正憲, \"自己参照型ホログラフィに基づくニューラルネットワークハードウェアの数値シミュレーション,\"",
+  japanese: "冨岡莉生, 高林正典, \"自己参照型ホログラフィに基づくニューラルネットワークハードウェアの数値シミュレーション,\"",
   type: "Research paper (international conference)：国際会議",
   review: "Reviewed",
   authorship: "Lead author",
@@ -34,11 +37,11 @@ const mockPublication = {
   year: 2021,
   others: "Best Paper Award",
   site: "online",
-  journal: "ISOM21"
+  journalConference: "ISOM21" // journalから変更
 };
 
 // 配列形式のauthorshipとpresentationTypeを持つモックデータ
-const mockPublicationWithArrays = {
+const mockPublicationWithArrays: Publication = {
   ...mockPublication,
   id: 2,
   authorship: ["Corresponding author", "Lead author"],
@@ -48,7 +51,7 @@ const mockPublicationWithArrays = {
 describe('PublicationItem Component', () => {
   // 基本的なレンダリングテスト
   test('renders publication item correctly', () => {
-    render(<PublicationItem publication={mockPublication} language="en" />);
+    renderWithProviders(<PublicationItem publication={mockPublication} language="en" />);
     
     // タイトルが表示されていることを確認
     expect(screen.getByText(mockPublication.name)).toBeInTheDocument();
@@ -97,7 +100,7 @@ describe('PublicationItem Component', () => {
   
   // 言語設定に応じたテキスト表示のテスト
   test('displays Japanese title when language is set to ja', () => {
-    render(<PublicationItem publication={mockPublication} language="ja" />);
+    renderWithProviders(<PublicationItem publication={mockPublication} language="ja" />);
     
     // 日本語のタイトルが表示されていることを確認
     expect(screen.getByText(mockPublication.japanese)).toBeInTheDocument();
@@ -109,7 +112,7 @@ describe('PublicationItem Component', () => {
   
   // 配列形式のデータ表示のテスト
   test('renders array-type authorship and presentationType correctly', () => {
-    render(<PublicationItem publication={mockPublicationWithArrays} language="en" />);
+    renderWithProviders(<PublicationItem publication={mockPublicationWithArrays} language="en" />);
     
     // 複数のauthorshipタグが表示されていることを確認
     expect(screen.getByText('Corresponding author')).toBeInTheDocument();
@@ -122,7 +125,7 @@ describe('PublicationItem Component', () => {
   
   // 省略可能なフィールドが欠けている場合のテスト
   test('handles missing optional fields gracefully', () => {
-    const publicationWithMissingFields = {
+    const publicationWithMissingFields: Publication = {
       ...mockPublication,
       doi: '',
       webLink: '',
@@ -130,7 +133,7 @@ describe('PublicationItem Component', () => {
       others: ''
     };
     
-    render(<PublicationItem publication={publicationWithMissingFields} language="en" />);
+    renderWithProviders(<PublicationItem publication={publicationWithMissingFields} language="en" />);
     
     // DOIリンクが表示されていないことを確認
     expect(screen.queryByText(/DOI:/)).not.toBeInTheDocument();

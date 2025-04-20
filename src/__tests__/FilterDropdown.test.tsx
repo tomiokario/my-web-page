@@ -1,10 +1,12 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import FilterDropdown from "../components/publications/FilterDropdown";
+import { renderWithProviders } from "../test-utils/test-utils";
+import { SelectedFilters } from "../hooks/useFilters";
 
 describe("FilterDropdown", () => {
   const mockProps = {
-    category: "year",
+    category: "year" as keyof SelectedFilters,
     label: "Year",
     options: ["2020", "2021", "2022"],
     selectedValues: ["2021"],
@@ -15,7 +17,7 @@ describe("FilterDropdown", () => {
   };
 
   test("renders filter button with correct label", () => {
-    render(<FilterDropdown {...mockProps} />);
+    renderWithProviders(<FilterDropdown {...mockProps} />);
     
     const button = screen.getByTestId("year-filter-button");
     expect(button).toBeInTheDocument();
@@ -23,7 +25,7 @@ describe("FilterDropdown", () => {
   });
 
   test("applies different class when filter has selected values", () => {
-    render(<FilterDropdown {...mockProps} />);
+    renderWithProviders(<FilterDropdown {...mockProps} />);
     
     const button = screen.getByTestId("year-filter-button");
     // Mantineのクラス名は動的に生成されるため、正確なクラス名ではなく
@@ -36,7 +38,7 @@ describe("FilterDropdown", () => {
 
   test("applies different class when filter has no selected values", () => {
     const props = { ...mockProps, selectedValues: [] };
-    render(<FilterDropdown {...props} />);
+    renderWithProviders(<FilterDropdown {...props} />);
     
     const button = screen.getByTestId("year-filter-button");
     expect(button).toBeInTheDocument();
@@ -46,7 +48,7 @@ describe("FilterDropdown", () => {
   });
 
   test("calls onToggleDropdown when button is clicked", () => {
-    render(<FilterDropdown {...mockProps} />);
+    renderWithProviders(<FilterDropdown {...mockProps} />);
     
     const button = screen.getByTestId("year-filter-button");
     fireEvent.click(button);
@@ -55,7 +57,7 @@ describe("FilterDropdown", () => {
   });
 
   test("does not render dropdown when isOpen is false", () => {
-    render(<FilterDropdown {...mockProps} />);
+    renderWithProviders(<FilterDropdown {...mockProps} />);
     
     const dropdown = screen.queryByTestId("year-dropdown");
     expect(dropdown).not.toBeInTheDocument();
@@ -63,7 +65,7 @@ describe("FilterDropdown", () => {
 
   test("renders dropdown with options when isOpen is true", () => {
     const props = { ...mockProps, isOpen: true };
-    render(<FilterDropdown {...props} />);
+    renderWithProviders(<FilterDropdown {...props} />);
     
     const dropdown = screen.getByTestId("year-dropdown");
     expect(dropdown).toBeInTheDocument();
@@ -76,7 +78,7 @@ describe("FilterDropdown", () => {
 
   test("calls onToggleFilter when option is clicked", () => {
     const props = { ...mockProps, isOpen: true };
-    render(<FilterDropdown {...props} />);
+    renderWithProviders(<FilterDropdown {...props} />);
     
     // ラベルをクリックすることでチェックボックスをクリックする
     const optionLabel = screen.getByText("2020");
@@ -87,20 +89,15 @@ describe("FilterDropdown", () => {
 
   test("checkbox is checked for selected values", () => {
     const props = { ...mockProps, isOpen: true };
-    render(<FilterDropdown {...props} />);
+    renderWithProviders(<FilterDropdown {...props} />);
     
     // 選択されているオプションのチェックボックスがチェックされていることを確認
-    // ラベルのテキストからチェックボックスを取得
-    const checkboxes = screen.getAllByRole('checkbox');
-    const selectedCheckbox = checkboxes.find(
-      checkbox => checkbox.nextSibling.textContent === "2021"
-    );
+    // aria-labelを使用してチェックボックスを取得
+    const selectedCheckbox = screen.getByRole('checkbox', { name: '2021' });
     expect(selectedCheckbox).toBeChecked();
     
     // 選択されていないオプションのチェックボックスがチェックされていないことを確認
-    const unselectedCheckbox = checkboxes.find(
-      checkbox => checkbox.nextSibling.textContent === "2020"
-    );
+    const unselectedCheckbox = screen.getByRole('checkbox', { name: '2020' });
     expect(unselectedCheckbox).not.toBeChecked();
   });
 });

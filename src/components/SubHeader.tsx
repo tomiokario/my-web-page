@@ -3,7 +3,9 @@ import React from "react";
 import { useLocation, Location } from "react-router-dom";
 import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
 import locales, { Locales } from "../locales";
-import { Box, Title, createStyles, MantineTheme } from "@mantine/core";
+import { Box, Title } from "@mantine/core";
+import { createStyles } from "@mantine/emotion";
+import { MantineTheme } from "@mantine/core";
 
 // スタイルの定義
 const useStyles = createStyles((theme) => ({
@@ -18,7 +20,7 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 600,
     fontSize: theme.fontSizes.xl,
     color: "#1c1c1c",
-    [theme.fn.smallerThan("sm")]: {
+    '@media (max-width: 768px)': {
       fontSize: theme.fontSizes.lg,
     },
   },

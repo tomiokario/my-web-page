@@ -1,5 +1,6 @@
 import React from "react";
-import { createStyles, MantineTheme } from "@mantine/core";
+import { createStyles } from "@mantine/emotion";
+import { MantineTheme } from "@mantine/core";
 import { Publication } from "../../types";
 
 // PublicationItemPropsインターフェースを追加
@@ -24,7 +25,7 @@ const useStyles = createStyles((theme: MantineTheme) => ({
   },
   tag: {
     backgroundColor: theme.colors.gray[1],
-    padding: `${theme.spacing.xs / 2}px ${theme.spacing.xs}px`,
+    padding: `${theme.spacing.xs} ${theme.spacing.xs}`,
     borderRadius: theme.radius.sm,
     fontSize: theme.fontSizes.xs,
   },
@@ -32,15 +33,15 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     marginTop: theme.spacing.xs,
   },
   dateLocation: {
-    marginTop: theme.spacing.xs / 2,
+    marginTop: theme.spacing.xs,
     fontSize: theme.fontSizes.sm,
     color: theme.colors.gray[6],
   },
   separator: {
-    margin: `0 ${theme.spacing.xs}px`,
+    margin: `0 ${theme.spacing.xs}`,
   },
   link: {
-    marginTop: theme.spacing.xs / 2,
+    marginTop: theme.spacing.xs,
   },
   others: {
     marginTop: theme.spacing.xs,
@@ -60,9 +61,9 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
   const { classes } = useStyles();
   
   return (
-    <li className={classes.item}>
+    <li className={classes.item} data-testid="publication-item">
       {/* 一行目: タイトル */}
-      <div className={classes.title}>
+      <div className={classes.title} data-testid="publication-title">
         {language === 'ja' && publication.japanese ? publication.japanese : publication.name}
       </div>
       
