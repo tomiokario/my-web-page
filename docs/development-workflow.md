@@ -152,7 +152,7 @@ npm start
 3. 以下のコマンドを実行して、CSVデータをJSONに変換します：
 
    ```bash
-   ts-node scripts/convertPublications.ts
+   npm run convert-publications
    ```
 
 4. 変換が成功すると、`src/data/publications.json` が更新されます。

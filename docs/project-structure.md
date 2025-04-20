@@ -9,7 +9,6 @@ my-web-page/
 ├── data/                      # 元データ（CSV）
 │   └── publication_data.csv   # 出版物の元データ（CSV形式）
 ├── docs/                      # ドキュメント
-│   └── legacy/                # 旧ドキュメント
 ├── public/                    # 静的ファイル
 │   ├── favicon.ico           # ファビコン
 │   ├── index.html            # HTMLテンプレート

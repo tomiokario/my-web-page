@@ -33,7 +33,7 @@ flowchart LR
 CSVファイル（`data/publication_data.csv`）は以下の列を含む必要があります：
 
 1. 未入力項目有り（Yes/No）
-2. 名前（著者名と論文タイトル）
+2. 名前
 3. Japanese（日本語）（日本語での著者名と論文タイトル）
 4. type（論文の種類）
 5. Review（査読の有無）
