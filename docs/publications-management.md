@@ -20,13 +20,12 @@ flowchart LR
     A[Notion] --> B[CSV Data<br>data/publication_data.csv]
     B --> C[convertPublications.ts]
     C --> D[JSON Data<br>src/data/publications.json]
-    D --> E[usePublications Hook (.ts)]
-    E --> F[Publications Component (.tsx)]
-    F --> G[useFilters Hook (.ts)]
-    G --> H[Filtered Data]
-    H --> I[PublicationsView (.tsx)]
-    I --> J[PublicationGroup (.tsx)]
-    J --> K[PublicationItem (.tsx)]
+    D --> E[usePublications Hook (Initial Sort)]
+    E --> F[useFilters Hook (.ts)]
+    F --> G[usePublications Hook (Grouping)]
+    G --> H[PublicationsView (.tsx)]
+    H --> I[PublicationGroup (.tsx)]
+    I --> J[PublicationItem (.tsx)]
 ```
 
 ## CSVデータ形式
@@ -79,8 +78,6 @@ CSV変換の詳細なロジックは `src/utils/csvToJson.ts` に実装されて
 
 ```bash
 ts-node scripts/convertPublications.ts
-# または、ビルド後のJavaScriptファイルを実行する場合:
-# node dist/scripts/convertPublications.js
 ```
 
 ## JSONデータ構造
@@ -155,14 +152,12 @@ ts-node scripts/convertPublications.ts
 
 出版物データを更新するには、以下の手順に従ってください：
 
-1. Notionから最新の出版物データをCSV形式でエクスポートします。
+1. Notionから最新の出版物データをCSV形式でエクスポートします。（**TODO:** 具体的なエクスポート手順（対象データベース、ビュー、オプション等）をここに追記してください。）
 2. エクスポートしたCSVファイルを `data/publication_data.csv` に配置します。
 3. 以下のコマンドを実行して、CSVデータをJSONに変換します：
 
    ```bash
    ts-node scripts/convertPublications.ts
-   # または、ビルド後のJavaScriptファイルを実行する場合:
-   # node dist/scripts/convertPublications.js
    ```
 
 4. 変換が成功すると、`src/data/publications.json` が更新されます。

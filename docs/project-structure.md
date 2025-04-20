@@ -26,7 +26,7 @@ my-web-page/
 │       └── ja/               # 日本語版マークダウン
 │           ├── home.md       # 日本語版ホームページ
 │           ├── profilecv.md  # 日本語版プロフィール・CV
-│           ├── works.md  # 日本語版仕事ページ
+│           ├── works.md      # 日本語版仕事ページ
 │           └── works/        # 日本語版業務詳細ページ
 │               └── computer-system-2025.md # コンピュータシステム2025（日本語）
 ├── scripts/                   # ユーティリティスクリプト
@@ -64,7 +64,7 @@ my-web-page/
 │       ├── csvToJson.ts      # CSV→JSON変換ユーティリティ
 │       └── markdownLoader.ts  # マークダウン読み込みユーティリティ
 ├── .gitignore                # Gitの除外ファイル設定
-├── jest.config.js            # Jestの設定 (TypeScript用に ts-jest などの設定が必要な場合があります)
+├── jest.config.js            # Jestの設定ファイル
 ├── package.json              # npm設定と依存関係
 └── README.md                 # プロジェクト概要
 ```
@@ -117,13 +117,12 @@ my-web-page/
 flowchart LR
     A[CSV Data<br>data/publication_data.csv] --> B[convertPublications.ts]
     B --> C[JSON Data<br>src/data/publications.json]
-    C --> D[usePublications Hook (.ts)]
-    D --> E[Publications Component (.tsx)]
-    E --> F[useFilters Hook (.ts)]
-    F --> G[Filtered Data]
-    G --> H[PublicationsView (.tsx)]
-    H --> I[PublicationGroup (.tsx)]
-    I --> J[PublicationItem (.tsx)]
+    C --> D[usePublications Hook (Initial Sort)]
+    D --> E[useFilters Hook (.ts)]
+    E --> F[usePublications Hook (Grouping)]
+    F --> G[PublicationsView (.tsx)]
+    G --> H[PublicationGroup (.tsx)]
+    H --> I[PublicationItem (.tsx)]
 ```
 
 ## コンポーネント階層

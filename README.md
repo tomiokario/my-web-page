@@ -27,8 +27,8 @@ CSVファイルから出版物データをJSONに変換するツールを用意�
 1. 最新の出版物データを`data/publication_data.csv`に配置
 2. 以下のコマンドを実行
    ```
-   node scripts/convertPublications.js
+   ts-node scripts/convertPublications.ts
    ```
 3. 変換されたJSONデータが`src/data/publications.json`に保存され、Webサイトで使用可能になります
 
-詳細な使用方法や注意事項は[こちら](docs/csv_to_json_conversion.md)を参照してください。
+詳細な使用方法や注意事項は[こちら](docs/publications-management.md)を参照してください。

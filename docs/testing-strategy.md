@@ -87,39 +87,314 @@ src/__tests__/
 
 コンポーネントテストでは、React Testing Libraryを使用して、ユーザーの視点からコンポーネントの動作をテストします。
 
-(コード例は削除されました)
+```tsx
+// src/__tests__/PublicationsView.test.tsx の例
+import React from 'react';
+import { screen, fireEvent } from '@testing-library/react';
+import PublicationsView from '../components/publications/PublicationsView';
+import { renderWithProviders } from '../test-utils/test-utils'; // カスタムレンダー関数を使用
+
+// モックデータやモックコンポーネントの設定 (省略)
+const mockProps = { /* ...props... */ };
+
+// PublicationGroupコンポーネントをモック
+jest.mock('../components/publications/PublicationGroup', () => {
+  // ...モック実装...
+});
+
+describe('PublicationsView', () => {
+  test('renders correctly and handles sort order change', () => {
+    // Arrange: カスタムレンダー関数でコンポーネントを描画
+    renderWithProviders(<PublicationsView {...mockProps} />);
+
+    // Assert: 初期レンダリングを確認
+    expect(screen.getByTestId('sort-order-select')).toHaveValue('type');
+    expect(screen.getByTestId('publication-group')).toBeInTheDocument();
+
+    // Act: 並び順を変更
+    fireEvent.change(screen.getByTestId('sort-order-select'), { target: { value: 'chronological' } });
+
+    // Assert: コールバックが呼ばれたことを確認
+    expect(mockProps.onSortOrderChange).toHaveBeenCalledWith('chronological');
+  });
+
+  test('displays correct labels based on language', () => {
+    // Arrange: 英語でレンダリング
+    renderWithProviders(<PublicationsView {...mockProps} language="en" />);
+    // Assert: 英語のラベルを確認
+    expect(screen.getByText('By type')).toBeInTheDocument();
+
+    // Arrange: 日本語でレンダリング (カスタムレンダー関数のオプションを使用)
+    renderWithProviders(<PublicationsView {...mockProps} />, { initialLanguage: 'ja' });
+    // Assert: 日本語のラベルを確認
+    expect(screen.getByText('種類別に表示')).toBeInTheDocument();
+  });
+});
+```
+
+コンポーネントテストでは、`src/test-utils/test-utils.tsx` で定義されたカスタムレンダー関数 `renderWithProviders` を使用することが推奨されます。これにより、テストに必要なプロバイダー（Mantine, LanguageContext, Routerなど）が自動的に適用されます。
 
 ### フックテスト
 
 フックテストでは、`@testing-library/react` の `renderHook` 関数を使用して、フックの動作をテストします。`act` を使用して状態更新をラップします。
 
-(コード例は削除されました)
+```typescript
+// src/__tests__/useFilters.test.ts の例
+import { renderHook, act } from '@testing-library/react';
+import useFilters from '../hooks/useFilters';
+
+// モックデータ (省略)
+const mockPublications = [ /* ...publications... */ ];
+
+describe('useFilters', () => {
+  it('should extract filter options correctly', () => {
+    // Arrange: フックをレンダリング
+    const { result } = renderHook(() => useFilters({ publications: mockPublications }));
+
+    // Assert: フィルターオプションが正しく抽出されていることを確認
+    expect(result.current.filterOptions.year).toEqual(['2022', '2021']);
+    // ...他のオプションも同様に確認...
+  });
+
+  it('should filter publications correctly', () => {
+    // Arrange
+    const { result } = renderHook(() => useFilters({ publications: mockPublications }));
+
+    // Assert: 初期状態ではフィルターなし
+    expect(result.current.filteredPublications).toHaveLength(3);
+
+    // Act: 2022年でフィルター (状態更新は act でラップ)
+    act(() => {
+      result.current.toggleFilter('year', '2022');
+    });
+
+    // Assert: フィルター結果を確認
+    expect(result.current.filteredPublications).toHaveLength(2);
+    expect(result.current.filteredPublications[0].year).toBe(2022);
+  });
+
+  it('should toggle dropdown correctly', () => {
+    // Arrange
+    const { result } = renderHook(() => useFilters({ publications: mockPublications }));
+
+    // Assert: 初期状態は null
+    expect(result.current.openDropdown).toBeNull();
+
+    // Act: ドロップダウンを開く
+    act(() => {
+      result.current.toggleDropdown('year');
+    });
+
+    // Assert: 開いたドロップダウンのカテゴリを確認
+    expect(result.current.openDropdown).toBe('year');
+
+    // Act: 同じドロップダウンを再度トグルして閉じる
+    act(() => {
+      result.current.toggleDropdown('year');
+    });
+
+    // Assert: ドロップダウンが閉じていることを確認
+    expect(result.current.openDropdown).toBeNull();
+  });
+});
+```
 
 ### ユーティリティ関数テスト
 
 ユーティリティ関数のテストでは、関数の入力と出力を検証します。Jest のマッチャー (`toBe`, `toThrow` など) を使用してアサーションを行います。
 
-(コード例は削除されました)
+```typescript
+// src/__tests__/csvToJson.test.ts の例
+const fs = require('fs');
+const path = require('path');
+const { csvToJson } = require('../utils/csvToJson'); // テスト対象の関数
+
+// テストデータのパス
+const CSV_FILE_PATH = path.join(__dirname, '../../data/publication_data.csv');
+
+describe('CSV to JSON conversion', () => {
+  test('csvToJson function exists', () => {
+    // Assert: 関数が存在することを確認
+    expect(typeof csvToJson).toBe('function');
+  });
+
+  test('converts CSV to JSON correctly', () => {
+    // Act: 関数を実行
+    const jsonData = csvToJson(CSV_FILE_PATH);
+
+    // Assert: 結果の基本的な形式を確認
+    expect(Array.isArray(jsonData)).toBe(true);
+    expect(jsonData.length).toBeGreaterThan(0);
+
+    // Assert: 最初の要素に必要なプロパティが含まれていることを確認
+    const firstItem = jsonData[0];
+    expect(firstItem).toHaveProperty('name');
+    expect(firstItem).toHaveProperty('type');
+    // ...他のプロパティも同様に確認...
+
+    // Assert: 特定のデータが正しく変換されていることを確認
+    expect(firstItem.name).toContain('Rio Tomioka');
+  });
+
+  test('handles empty or malformed lines correctly', () => {
+    // Arrange: テスト用のCSVデータを作成 (一時ファイルヘルパーを使用)
+    const testCsvData = `...`; // 不正な行を含むCSVデータ
+    const tempFilePath = createTempCsvFile(testCsvData); // ヘルパー関数 (省略)
+
+    try {
+      // Act
+      const jsonData = csvToJson(tempFilePath);
+
+      // Assert: 不正な行がスキップされ、有効なデータのみ変換されることを確認
+      expect(jsonData.length).toBe(1); // 例: 有効な行が1行の場合
+      expect(jsonData[0].name).toBe('Valid Name');
+    } finally {
+      // Cleanup: 一時ファイルを削除
+      removeTempFile(tempFilePath); // ヘルパー関数 (省略)
+    }
+  });
+});
+```
 
 ## モックの使用
 
 テストでは、Jest のモック機能 (`jest.mock`, `jest.fn`) を使用して、外部依存関係（モジュール、コンポーネント、関数）をモックし、テストを分離し、予測可能にします。
 
+テスト対象が依存している外部モジュール、コンポーネント、または関数を制御するためにモックを使用します。
+
 ### モジュールのモック
 
-(コード例は削除されました)
+`jest.mock('module-name')` を使用してモジュール全体をモックします。
+
+```typescript
+// 例: axios モジュールをモック
+import axios from 'axios';
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>; // 型付けされたモック
+
+test('fetches data correctly', async () => {
+  // Arrange: モックされた GET リクエストの戻り値を設定
+  mockedAxios.get.mockResolvedValue({ data: { message: 'Success' } });
+
+  // Act: データ取得関数を実行
+  const data = await fetchData(); // fetchData は内部で axios.get を呼ぶと仮定
+
+  // Assert: モックされたデータが返されることを確認
+  expect(data.message).toBe('Success');
+  expect(mockedAxios.get).toHaveBeenCalledWith('/api/data'); // 呼び出しを検証
+});
+```
 
 ### コンポーネントのモック
 
-(コード例は削除されました)
+子コンポーネントのレンダリングを単純化したり、テスト対象コンポーネントのロジックに集中したりするために、コンポーネントをモックします。
+
+```tsx
+// src/__tests__/PublicationsView.test.tsx より
+// PublicationGroupコンポーネントをモック
+jest.mock('../components/publications/PublicationGroup', () => {
+  // モックコンポーネントを返す関数
+  return function MockPublicationGroup({ name, items, language }: { name: string; items: any[]; language: string }) {
+    // 実際のレンダリングの代わりにシンプルな div を返す
+    return (
+      <div data-testid="publication-group">
+        <div data-testid="group-name">{name}</div>
+        {/* 必要に応じて他の情報を表示 */}
+      </div>
+    );
+  };
+});
+
+// テスト内での使用
+test('renders publication groups', () => {
+  renderWithProviders(<PublicationsView {...mockProps} />);
+  // モックされた PublicationGroup がレンダリングされることを確認
+  expect(screen.getByTestId('publication-group')).toBeInTheDocument();
+  expect(screen.getByTestId('group-name')).toHaveTextContent('Journal paper：原著論文');
+});
+
+```
 
 ### 関数のモック
 
-(コード例は削除されました)
+`jest.fn()` を使用して関数をモックし、その呼び出しや戻り値を制御します。
 
-## テスト例
+```typescript
+// src/__tests__/PublicationsView.test.tsx より
+// モック関数をプロップとして渡す
+const mockOnSortOrderChange = jest.fn();
+const mockProps = {
+  // ...他のプロップ...
+  onSortOrderChange: mockOnSortOrderChange,
+};
 
-(テスト例は削除されました)
+test('calls onSortOrderChange when sort order is changed', () => {
+  renderWithProviders(<PublicationsView {...mockProps} />);
+
+  // Act: イベントを発火
+  fireEvent.change(screen.getByTestId('sort-order-select'), { target: { value: 'chronological' } });
+
+  // Assert: モック関数が期待通りに呼び出されたか検証
+  expect(mockOnSortOrderChange).toHaveBeenCalledTimes(1);
+  expect(mockOnSortOrderChange).toHaveBeenCalledWith('chronological');
+});
+```
+
+## テスト環境のセットアップ
+
+Jestテストを実行するための環境設定は、主に以下のファイルで行われます。
+
+### `jest.config.js`
+
+Jestの基本的な設定ファイルです。テストファイルの検索パターン、テスト環境（`jsdom`）、カバレッジレポートの設定などが定義されています。
+
+### `jest.setup.ts`
+
+各テストファイルが実行される前に一度だけ実行されるセットアップファイルです。ここでは、テスト全体で必要となるグローバルな設定やモックを行います。
+
+-   **`@testing-library/jest-dom`**: `toBeInTheDocument()` のようなDOM要素に対する便利なカスタムマッチャーをJestに追加します。
+-   **`whatwg-fetch`**: テスト環境で `fetch` API を利用可能にするためのポリフィルです。
+-   **ブラウザAPIのモック**: `window.matchMedia` や `window.ResizeObserver` など、テスト環境（Node.js）には存在しないブラウザ固有のAPIをモックします。これにより、これらのAPIを使用するコンポーネント（特にUIライブラリ）がエラーなく動作するようになります。
+
+```typescript
+// jest.setup.ts の内容例
+import '@testing-library/jest-dom';
+import 'whatwg-fetch';
+
+// matchMedia のモック
+Object.defineProperty(window, 'matchMedia', { /* ...モック実装... */ });
+
+// ResizeObserver のモック
+class ResizeObserverMock { /* ...モック実装... */ }
+window.ResizeObserver = ResizeObserverMock;
+```
+
+### `src/test-utils/test-utils.tsx`
+
+テストの記述を簡略化するためのユーティリティを提供します。
+
+-   **`AllProviders` コンポーネント**: アプリケーション全体で使用されるプロバイダー（`MantineProvider`, `LanguageProvider`, `BrowserRouter`/`MemoryRouter` など）をまとめたラッパーコンポーネントです。テスト対象コンポーネントをこれらのプロバイダーで囲むことで、実際のアプリケーションに近い環境でテストを実行できます。`localStorage` のモックもここで行われます。
+-   **`renderWithProviders` 関数**: `@testing-library/react` の `render` 関数をラップしたカスタムレンダー関数です。この関数を使用すると、テスト対象のUI要素を自動的に `AllProviders` でラップしてくれるため、テストコードが簡潔になります。言語設定やルーティングの初期状態をオプションで指定することも可能です。
+
+```tsx
+// src/test-utils/test-utils.tsx の renderWithProviders の使用例
+import { renderWithProviders, screen } from './test-utils'; // test-utils からインポート
+import MyComponent from '../MyComponent';
+
+test('renders MyComponent correctly', () => {
+  // render の代わりに renderWithProviders を使用
+  renderWithProviders(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeInTheDocument();
+});
+
+test('renders MyComponent with specific language', () => {
+  // オプションで初期言語を指定
+  renderWithProviders(<MyComponent />, { initialLanguage: 'en' });
+  expect(screen.getByText('Hello')).toBeInTheDocument(); // 英語のテキストを確認
+});
+```
+
+これらのセットアップファイルとユーティリティにより、テストの記述と実行が効率化されています。
 
 ## テストの実行
 
