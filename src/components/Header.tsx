@@ -9,7 +9,6 @@ import {
   Group,
   Container,
   Button,
-  MantineTheme,
 } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import { useMediaQuery } from "@mantine/hooks";
@@ -57,14 +56,15 @@ const useStyles = createStyles((theme) => ({
       marginLeft: 0,
       justifyContent: "center",
       flex: 1,
-      order: 1,
+      flexWrap: "nowrap", // 折り返しを防止
     },
   },
   languageButtonContainer: {
     marginLeft: theme.spacing.md, // PC版でメニューとボタンの間に空白を追加
     '@media (max-width: 768px)': {
-      order: 2,
-      marginLeft: 0, // スマホ版では余白を削除
+      marginLeft: theme.spacing.xs, // スマホ版では余白を小さく
+      display: 'flex',
+      alignItems: 'center',
     },
   },
   navLink: {
@@ -77,8 +77,13 @@ const useStyles = createStyles((theme) => ({
     fontSize: "0.85rem", // smとxsの中間サイズ
     fontWeight: 400,
     '@media (max-width: 768px)': {
-      padding: `${rem(6)} ${rem(8)}`,
-      fontSize: theme.fontSizes.xs,
+      padding: `${rem(5)} ${rem(5)}`, // 左右のパディングを減らす
+      fontSize: "0.75rem", // さらに小さいフォントサイズ
+      whiteSpace: "nowrap", // テキストの折り返しを防止
+    },
+    '@media (max-width: 480px)': {
+      padding: `${rem(3)} ${rem(3)}`, // さらにパディングを減らす
+      fontSize: "0.7rem", // 超小型画面用のフォントサイズ
     },
     "&:hover": {
       opacity: 0.8,
@@ -109,8 +114,17 @@ const useStyles = createStyles((theme) => ({
     fontSize: theme.fontSizes.sm, // PC版のフォントサイズ
     borderRadius: theme.radius.md,
     '@media (max-width: 768px)': {
-      fontSize: theme.fontSizes.xs, // スマホ版のフォントサイズ（メニューと同じ）
-      padding: `${rem(4)} ${rem(8)}`,
+      fontSize: "0.75rem", // スマホ版のフォントサイズ（メニューと同じ）
+      padding: `${rem(2)} ${rem(4)}`,
+      minHeight: "auto", // 高さを自動に
+      height: rem(22), // 高さを明示的に設定
+      minWidth: "auto", // 最小幅を自動に
+      borderWidth: 1, // ボーダーを細く
+    },
+    '@media (max-width: 480px)': {
+      padding: `${rem(1)} ${rem(3)}`,
+      fontSize: "0.7rem", // 超小型画面用のフォントサイズ
+      height: rem(20), // さらに高さを小さく
     },
   },
 }));
@@ -120,13 +134,23 @@ function Header() {
   const { language, toggleLanguage } = useLanguage() as LanguageContextType;
   const t = locales[language as keyof Locales]; // 現在の言語に応じたリソースを取得
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const isSmallScreen = useMediaQuery("(max-width: 480px)");
+  const isVerySmallScreen = useMediaQuery("(max-width: 375px)");
 
   // メニュー項目の定義
+  // モバイル表示用に短縮されたメニュー項目ラベルを作成
+  const getMenuLabel = (key: string) => {
+    if (isMobile && key === 'profileCV') {
+      return t.header.home === 'ホーム' ? 'プロフィール' : 'Profile';
+    }
+    return t.header[key as keyof typeof t.header];
+  };
+
   const menuItems = [
-    { path: "/", label: t.header.home, exact: true },
-    { path: "/profile-cv", label: t.header.profileCV },
-    { path: "/publications", label: t.header.publications },
-    { path: "/works", label: t.header.works }
+    { path: "/", label: getMenuLabel('home'), exact: true },
+    { path: "/profile-cv", label: getMenuLabel('profileCV') },
+    { path: "/publications", label: getMenuLabel('publications') },
+    { path: "/works", label: getMenuLabel('works') }
   ];
 
   return (
@@ -175,13 +199,25 @@ function Header() {
               label: {
                 fontFamily: "'Noto Sans JP', sans-serif",
                 fontWeight: 400,
+                padding: isMobile ? 0 : undefined, // モバイル表示ではパディングを削除
+                lineHeight: 1, // 行の高さを統一
+                display: 'flex',
+                alignItems: 'center',
               }
             }}
             aria-label={t.languageSwitch.switchTo}
             title={t.languageSwitch.switchTo}
           >
-            <Languages size={16} style={{ marginRight: '6px' }} />
-            {language === 'ja' ? 'EN' : '日本語'}
+            <Languages
+              size={isMobile ? (isVerySmallScreen ? 12 : 14) : 16}
+              style={{ marginRight: isVerySmallScreen ? '2px' : isMobile ? '4px' : '6px' }}
+            />
+            {isVerySmallScreen ?
+              (language === 'ja' ? 'EN' : '日') :
+              isSmallScreen ?
+              (language === 'ja' ? 'EN' : '日本語') :
+              (language === 'ja' ? 'EN' : '日本語')
+            }
           </Button>
         </div>
       </Container>
