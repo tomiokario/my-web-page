@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import publicationsData from "../data/publications.json";
+// import publicationsData from "../data/publications.json"; // 削除: 引数で受け取るように変更
 import { Publication } from "../types"; // Publication型をインポート
 
 // 出版物の種類の順序を定義
@@ -30,9 +30,10 @@ export interface UsePublicationsReturn {
  * @param {Object} options - オプション
  * @param {string} options.sortOrder - 並び順 ('chronological' または 'type')
  * @param {Publication[]} options.filteredPublications - フィルタリング済みの出版物データ
+ * @param {Publication[]} options.publicationsData - 元の出版物データ
  * @returns {UsePublicationsReturn} 処理済みの出版物データと関連関数
  */
-function usePublications({ sortOrder, filteredPublications }: { sortOrder: string; filteredPublications: Publication[] }): UsePublicationsReturn {
+function usePublications({ sortOrder, filteredPublications, publicationsData }: { sortOrder: string; filteredPublications: Publication[]; publicationsData: Publication[] }): UsePublicationsReturn {
   // 日付から年を抽出する関数
   const extractYear = (dateString: string | undefined | null): number | null => {
     if (!dateString) return null;
@@ -44,7 +45,8 @@ function usePublications({ sortOrder, filteredPublications }: { sortOrder: strin
   // 出版物データを整形
   const formattedPublications = useMemo<Publication[]>(() => {
     // publicationsDataの型が不明なため、anyとして扱い、Publication型にマッピング
-    return (publicationsData as any[]).map((pub: any, index: number): Publication => {
+    // 引数で受け取った publicationsData を使用
+    return publicationsData.map((pub: any, index: number): Publication => {
       // 年度を抽出（フィルタリングに必要）
       const year = extractYear(pub.date);
 

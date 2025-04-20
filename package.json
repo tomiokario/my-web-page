@@ -26,7 +26,8 @@
   "scripts": {
     "start": "NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
     "build": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll=false",
+    "test:watch": "react-scripts test",
     "eject": "react-scripts eject",
     "convert-publications": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/convertPublications.ts"
   },
@@ -34,12 +35,6 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts", "!src/index.tsx", "!src/reportWebVitals.ts", "!src/setupTests.ts", "!src/__tests__/**", "!src/test-utils/**"
     ]
   },
   "browserslist": {

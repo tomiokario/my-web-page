@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from "react";
 import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
-import usePublications, { UsePublicationsReturn } from "../hooks/usePublications";
-import useFilters, { UseFiltersReturn } from "../hooks/useFilters";
+import usePublications from "../hooks/usePublications"; // UsePublicationsReturn は不要に
+import useFilters from "../hooks/useFilters"; // UseFiltersReturn は不要に
 import PublicationsView from "../components/publications/PublicationsView";
+import publicationsData from "../data/publications.json"; // 実際のデータをインポート
 
 /**
  * 出版物ページのメインコンポーネント
@@ -15,7 +16,8 @@ function Publications() {
   // 出版物関連のカスタムフック - 最初に呼び出して基本データを取得
   const publicationsResult = usePublications({
     sortOrder,
-    filteredPublications: []
+    filteredPublications: [], // 初期呼び出しではフィルターなし
+    publicationsData // インポートしたデータを渡す
   });
 
   // フィルター関連のカスタムフック
@@ -26,7 +28,8 @@ function Publications() {
   // フィルター適用後の出版物データを取得
   const { groupedPublications } = usePublications({
     sortOrder,
-    filteredPublications: filtersResult.filteredPublications
+    filteredPublications: filtersResult.filteredPublications,
+    publicationsData // インポートしたデータを渡す
   });
 
   // 並び順変更ハンドラー
