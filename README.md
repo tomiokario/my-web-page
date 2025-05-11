@@ -1,7 +1,10 @@
 
 # my web page
-- 仮公開ページ：https://my-web-page-fawn-seven.vercel.app/
-- original：https://www.tomiokario.com/
+- 公開ページ：https://www.tomiokario.com/
+- 仮ページ：https://my-web-page-fawn-seven.vercel.app/
+- DeepWiki：https://deepwiki.com/tomiokario/my-web-page
+  - 本リポジトリについて解説されています（英語）
+  - AI（Devin AI）に質問できます（日本語，英語対応）
 
 ## ローカル環境での使い方
 
