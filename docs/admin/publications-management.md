@@ -2,7 +2,47 @@
 
 このドキュメントでは、my-web-pageプロジェクトにおける出版物データの管理、CSVからJSONへの変換プロセス、およびデータの表示方法について説明します。
 
-## 概要
+## 出版物データの更新ワークフロー
+
+出版物データを更新する際は、以下の一連の手順に従ってください：
+
+### ステップ1: CSVエクスポート
+1. Notionから最新の出版物データをCSV形式でエクスポートします（AIエージェントではなく人間が行います）。
+2. エクスポートしたCSVファイルを `src/data/publication_data.csv` として配置します。
+
+### ステップ2: JSON変換
+3. 以下のコマンドを実行して、CSVデータをJSONに変換します：
+
+   ```bash
+   npm run convert-publications
+   ```
+
+4. 変換が成功すると、`src/data/publications.json` が自動的に更新されます。
+
+### ステップ3: ローカルで確認
+5. ローカル開発サーバーを起動して、データが正しく表示されることを確認します：
+
+   ```bash
+   npm run start
+   ```
+
+6. http://localhost:3000/publications にアクセスして、以下を確認します：
+   - 新しい出版物が表示されている
+   - フィルタリング機能が正常に動作している
+   - 並び替え機能が正常に動作している
+
+### ステップ4: Vercelに反映
+7. 確認が完了したら、変更をGitにコミットします
+8. mainブランチに反映します
+
+9. Vercelが自動的にデプロイを開始し、数分以内に本番環境に反映されます。
+10. デプロイ完了後、本番環境のURLで最終確認を行います。
+
+---
+
+## 詳細情報
+
+### 概要
 
 my-web-pageでは、出版物データを以下のフローで管理しています：
 
@@ -13,7 +53,7 @@ my-web-pageでは、出版物データを以下のフローで管理していま
 
 このアプローチにより、データの管理と表示を分離し、効率的なワークフローを実現しています。
 
-## データフロー
+### データフロー
 
 ```mermaid
 flowchart LR
@@ -28,7 +68,7 @@ flowchart LR
     I --> J[PublicationItem (.tsx)]
 ```
 
-## CSVデータ形式
+### CSVデータ形式
 
 CSVファイル（`src/data/publication_data.csv`）は以下の列を含む必要があります：
 
@@ -46,20 +86,20 @@ CSVファイル（`src/data/publication_data.csv`）は以下の列を含む必�
 12. site（開催場所）
 13. journal / conference（ジャーナル名または会議名）
 
-### CSVファイルの例
+#### CSVファイルの例
 
 ```csv
 未入力項目有り,名前（著者名と論文タイトル）,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
 No,"Tomioka R, et al. Title of the paper","冨岡莉生, 他. 論文のタイトル","Journal paper：原著論文","Peer-reviewed","First author,Corresponding author","Oral","10.1234/abcd.5678","https://example.com/paper","2022年10月1日","Additional information","Tokyo, Japan","Journal of Example Research"
 ```
 
-## CSVからJSONへの変換
+### CSVからJSONへの変換
 
-### 変換スクリプト
+#### 変換スクリプト
 
 変換スクリプト（`scripts/convertPublications.ts`）は、CSVファイルを読み込み、JSONに変換して保存します。
 
-### CSV変換ユーティリティ
+#### CSV変換ユーティリティ
 
 CSV変換の詳細なロジックは `src/utils/csvToJson.ts` に実装されています。主な機能は以下の通りです：
 
@@ -74,13 +114,13 @@ CSV変換の詳細なロジックは `src/utils/csvToJson.ts` に実装されて
 - **配列データの処理**: カンマで区切られた値（著者の役割や発表タイプなど）を配列に変換します。
 - **ソート可能な日付の生成**: 日付を「YYYYMMDD」形式に変換し、ソートを容易にします。
 
-### 変換スクリプトの実行方法
+#### 変換スクリプトの実行方法
 
 ```bash
 npm run convert-publications
 ```
 
-## JSONデータ構造
+### JSONデータ構造
 
 変換後のJSONデータ（`src/data/publications.json`）は以下の構造を持ちます：
 
@@ -107,16 +147,16 @@ npm run convert-publications
 ]
 ```
 
-## 出版物データの表示
+### 出版物データの表示
 
-### データ処理フック
+#### データ処理フック
 
 出版物データの処理には、2つの主要なカスタムフックを使用しています：
 
 1. **usePublications (`src/hooks/usePublications.ts`)**: 出版物データの取得、整形、並び替え、グループ化を行います。
 2. **useFilters (`src/hooks/useFilters.ts`)**: フィルタリング機能を提供します。
 
-#### usePublications.ts
+##### usePublications.ts
 
 `usePublications` フックは以下の機能を提供します：
 
@@ -124,7 +164,7 @@ npm run convert-publications
 - 時系列順または種類順での並び替え
 - 年度別または種類別のグループ化
 
-#### useFilters.ts
+##### useFilters.ts
 
 `useFilters` フックは以下の機能を提供します：
 
@@ -133,7 +173,7 @@ npm run convert-publications
 - フィルタリングロジックの実装
 - ドロップダウンUIの制御
 
-### 出版物ページの構成
+#### 出版物ページの構成
 
 出版物ページは以下のコンポーネントで構成されています：
 
@@ -144,32 +184,17 @@ npm run convert-publications
 5. **FilterDropdown.tsx**: フィルタードロップダウンを表示
 6. **ActiveFilters.tsx**: 現在適用されているフィルターを表示
 
-#### Publications.tsx
+##### Publications.tsx
 
 `Publications.tsx` コンポーネントは、`usePublications` と `useFilters` フックを利用して、出版物データの取得、フィルタリング、並び替えの状態を管理し、`PublicationsView.tsx` に必要なデータを渡します。並び順の変更などのユーザーインタラクションもここで処理されます。
 
-## 出版物データの更新方法
-
-出版物データを更新するには、以下の手順に従ってください：
-
-1. Notionから最新の出版物データをCSV形式でエクスポートします（AIエージェントではなく人間が行います）。
-2. エクスポートしたCSVファイルを `data/publication_data.csv` に配置します。
-3. 以下のコマンドを実行して、CSVデータをJSONに変換します：
-
-   ```bash
-   npm run convert-publications
-   ```
-
-4. 変換が成功すると、`src/data/publications.json` が更新されます。
-5. 変更をコミットしてデプロイします。
-
-## 注意点
+### 注意点
 
 - CSVファイルの形式は厳密に守る必要があります。列の順序や名前を変更すると、変換が失敗する可能性があります。
 - 日付形式は「YYYY年MM月DD日」または「YYYY年MM月DD日 → YYYY年MM月DD日」の形式に従う必要があります。
 - カンマを含む値は引用符（"）で囲む必要があります。
 - CSVファイルは元データであるため直接編集せず、Notionでデータを管理することを推奨します。
 
-## テストとの関係
+### テストとの関係
 
 `scripts/convertPublications.ts` のテストは一時的に `src/data/publications.json` を生成/上書きします。テスト後に削除されますが、テストを中断した場合などは、上記の手順で変換を再実行してください。
