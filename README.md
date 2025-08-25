@@ -7,6 +7,13 @@
   - 本リポジトリについての英語解説
   - AI への質問対応（日本語/英語）
 
+## ドキュメント
+
+プロジェクトの詳細なドキュメントは以下を参照してください：
+
+- **[管理者向けドキュメント](docs/admin/README.md)** - コンテンツ管理・運用ガイド
+- **[技術者向けドキュメント](docs/technical/README.md)** - 開発・技術仕様
+
 ## ローカル環境での使い方
 
 - 依存関係のインストール（初回のみ）
@@ -34,4 +41,4 @@ CSV から出版物データを JSON に変換するユーティリティを提�
    ```
 3. 変換済み JSON が`src/data/publications.json`に保存され、Web サイトで使用されます
 
-詳細は[docs/publications-management.md](docs/publications-management.md)を参照してください。
+詳細は[管理者向けドキュメント - 出版物データ管理](docs/admin/publications-management.md)を参照してください。

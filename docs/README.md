@@ -1,39 +1,57 @@
-# my-web-page プロジェクトドキュメント
+# my-web-page ドキュメント
 
 ## 概要
 
-このドキュメントは、my-web-pageプロジェクトの開発者向け技術ドキュメントです。プロジェクトの構造、主要機能、開発フロー、テスト戦略などについて説明しています。
+my-web-pageプロジェクトのドキュメントです。技術者向けと管理者向けに分かれています。
 
 - 仮公開ページ：https://my-web-page-fawn-seven.vercel.app/
 - 本番サイト：https://www.tomiokario.com/
 
+## ドキュメント構成
+
+### 管理者向けドキュメント
+
+Webサイトのコンテンツ管理や運用を行う方向けのドキュメントです。
+
+**[管理者向けドキュメントへ](./admin/README.md)**
+
+主な内容：
+- コンテンツの更新方法
+- 出版物データの管理
+- デプロイメント手順
+- サイト設定の変更
+
+### 技術者向けドキュメント
+
+開発者やエンジニア向けの技術仕様とアーキテクチャに関するドキュメントです。
+
+**[技術者向けドキュメントへ](./technical/README.md)**
+
+主な内容：
+- システムアーキテクチャ
+- 開発環境のセットアップ
+- テスト戦略
+- 技術的な実装詳細
+
 ## プロジェクト概要
 
-my-web-pageは、個人のウェブサイトを構築するためのReactプロジェクトです。以下の主要機能を提供しています：
+my-web-pageは、個人のウェブサイトを構築するためのReactプロジェクトです。
+
+### 主要機能
 
 - 多言語対応（日本語/英語）
 - マークダウンベースのコンテンツ管理
 - 出版物データの表示と管理
 - レスポンシブデザイン
 
-## 技術スタック
+### 技術スタック
 
 - フロントエンド: React 18.3.1 + TypeScript
-- UI: Mantine 7.17.4（`@mantine/core`, `@mantine/hooks`, `@mantine/emotion`）
+- UI: Mantine 7.17.4
 - ルーティング: React Router 6
 - マークダウン: react-markdown 6
 - テスト: Jest, React Testing Library
-- スタイリング: CSS + Emotion（Mantine Emotion Provider + カスタム cache）
-- アイコン: lucide-react
-
-## 目次
-
-1. [プロジェクト構造](./project-structure.md) - ディレクトリ構造と各ファイルの役割
-2. [多言語対応](./multilingual-support.md) - 言語切り替え機能の実装と使用方法
-3. [マークダウンコンテンツ](./markdown-content.md) - マークダウンファイルの管理と読み込み方法
-4. [出版物データの管理](./publications-management.md) - CSVからJSONへの変換プロセスと表示方法
-5. [テスト戦略](./testing-strategy.md) - テスト方針とテストの書き方
-6. [開発ワークフロー](./development-workflow.md) - 開発環境のセットアップと開発フロー
+- ホスティング: Vercel
 
 ## クイックスタート
 
@@ -61,15 +79,19 @@ npm test
 - `npm run build` - 本番用ビルドを作成
 - `npm run convert-publications` - 出版物データをCSVからJSONに変換
 
-## 開発ルール
+## クイックアクセス
 
-基本的にはドキュメント駆動開発（[DocDD](DocDD.md)）に沿って進行します。現状のコードに沿った実装ルールは以下です：
+### よく使う操作
 
-- React 関数コンポーネント + TypeScript を使用
-- UI は Mantine を中心に構成（`createStyles`, MantineProvider, Emotion Provider）
-- 多言語は `LanguageContext` と `src/locales` の静的リソースで管理
-- 共通ロジックはカスタムフック（`usePublications`, `useFilters`）に分離
-- コンテンツは Markdown（public/markdown）から読み込み
-- 出版物データは CSV→JSON 変換を介して `src/data/publications.json` を利用
+- **コンテンツを更新したい** → [Markdownコンテンツ管理](./admin/markdown-content.md)
+- **出版物リストを更新したい** → [出版物データ管理](./admin/publications-management.md)
+- **サイトをデプロイしたい** → [デプロイメント手順](./admin/deployment-guide.md)
+- **開発環境を構築したい** → [開発ワークフロー](./technical/development-workflow.md)
+- **テストを実行したい** → [テスト戦略](./technical/testing-strategy.md)
 
-補足: ルールを強制する ESLint/Prettier 設定は未導入です（必要に応じて追加検討）。
+## サポート
+
+問題が発生した場合は、関連するドキュメントを参照してください：
+
+- 管理・運用に関する問題 → [管理者向けドキュメント](./admin/README.md)
+- 技術的な問題 → [技術者向けドキュメント](./technical/README.md)
