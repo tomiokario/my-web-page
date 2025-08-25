@@ -13,7 +13,7 @@
 ### リポジトリのクローン
 
 ```bash
-git clone my-web-page>
+git clone <repository-url>
 cd my-web-page
 ```
 
@@ -148,7 +148,7 @@ npm start
 出版物データを更新する場合は、以下の手順に従ってください：
 
 1. Notionから最新の出版物データをCSV形式でエクスポートします。
-2. エクスポートしたCSVファイルを `data/publication_data.csv` に配置します。
+2. エクスポートしたCSVファイルを `src/data/publication_data.csv` に配置します。
 3. 以下のコマンドを実行して、CSVデータをJSONに変換します：
 
    ```bash
@@ -159,7 +159,7 @@ npm start
 5. 変更をコミットします：
 
    ```bash
-   git add data/publication_data.csv src/data/publications.json
+   git add src/data/publication_data.csv src/data/publications.json
    git commit -m "Update publication data"
    ```
 
@@ -210,6 +210,11 @@ npm test -- --coverage
 プロジェクトのコーディング規約は、リポジトリルートにある `.clinerules` ファイルに定義されています。開発を行う際は、このファイルに記載されたルールに従ってください。
 
 主要なルールについては、[docs/README.md](./README.md#開発ルール) も参照してください。
+
+## 備考（実装に関する補足）
+
+- Mantine Emotion Provider とカスタム cache（`src/mantineEmotionCache.ts`）を利用しており、`index.tsx` でプロバイダを構成しています。
+- テストでは `src/test-utils/test-utils.tsx` の `renderWithProviders` を使うと Mantine/Router/LanguageContext をまとめて適用できます。
 
 ### コンポーネント設計
 

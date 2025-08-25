@@ -6,66 +6,67 @@
 
 ```
 my-web-page/
-├── data/                      # 元データ（CSV）
-│   └── publication_data.csv   # 出版物の元データ（CSV形式）
 ├── docs/                      # ドキュメント
 ├── public/                    # 静的ファイル
-│   ├── favicon.ico           # ファビコン
-│   ├── index.html            # HTMLテンプレート
-│   ├── manifest.json         # Webアプリマニフェスト
-│   └── markdown/             # マークダウンコンテンツ
-│       ├── home.md           # ホームページのコンテンツ
-│       ├── profilecv.md      # プロフィール・CVページのコンテンツ
-│       ├── en/               # 英語版マークダウン
-│       │   ├── home.md       # 英語版ホームページ
-│       │   ├── profilecv.md  # 英語版プロフィール・CV
-│       │   ├── works.md      # 英語版仕事ページ
-│       │   └── works/        # 英語版業務詳細ページ
-│       │       └── computer-system-2025.md # コンピュータシステム2025（英語）
-│       └── ja/               # 日本語版マークダウン
-│           ├── home.md       # 日本語版ホームページ
-│           ├── profilecv.md  # 日本語版プロフィール・CV
-│           ├── works.md      # 日本語版仕事ページ
-│           └── works/        # 日本語版業務詳細ページ
-│               └── computer-system-2025.md # コンピュータシステム2025（日本語）
-├── scripts/                   # ユーティリティスクリプト
-│   └── convertPublications.ts # CSVからJSONへの変換スクリプト
-├── src/                       # ソースコード
-│   ├── App.tsx               # アプリケーションのルートコンポーネント
-│   ├── index.tsx             # エントリーポイント
-│   ├── __tests__/            # テストファイル (.test.tsx, .test.ts)
-│   ├── components/           # 再利用可能なコンポーネント (.tsx)
-│   │   ├── Footer.tsx        # フッターコンポーネント
-│   │   ├── Header.tsx        # ヘッダーコンポーネント
-│   │   ├── SubHeader.tsx     # サブヘッダーコンポーネント
-│   │   └── publications/     # 出版物関連のコンポーネント (.tsx)
-│   ├── contexts/             # Reactコンテキスト (.tsx)
-│   │   └── LanguageContext.tsx # 言語コンテキスト
-│   ├── data/                 # 処理済みデータ（JSON）
-│   │   └── publications.json # 変換された出版物データ
-│   ├── hooks/                # カスタムフック (.ts)
-│   │   ├── useFilters.ts     # フィルタリング機能のフック
-│   │   └── usePublications.ts # 出版物データ処理のフック
-│   ├── locales/              # 多言語リソース (.ts)
-│   │   ├── en.ts             # 英語リソース
-│   │   ├── index.ts          # リソースのエクスポート
-│   │   └── ja.ts             # 日本語リソース
-│   ├── pages/                # ページコンポーネント (.tsx)
-│   │   ├── Home.tsx          # ホームページ
-│   │   ├── ProfileCV.tsx     # プロフィール・CVページ
-│   │   ├── Publications.tsx  # 出版物ページ
-│   │   ├── Works.tsx         # 仕事ページ
-│   │   └── ComputerSystem2025.tsx # コンピュータシステム2025ページ
-│   ├── styles/               # スタイルシート
-│   │   ├── styles.css        # グローバルスタイル
-│   │   └── variables.css     # CSSカスタムプロパティ
-│   └── utils/                # ユーティリティ関数 (.ts)
-│       ├── csvToJson.ts      # CSV→JSON変換ユーティリティ
-│       └── markdownLoader.ts  # マークダウン読み込みユーティリティ
-├── .gitignore                # Gitの除外ファイル設定
-├── jest.config.js            # Jestの設定ファイル
-├── package.json              # npm設定と依存関係
-└── README.md                 # プロジェクト概要
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── manifest.json
+│   └── markdown/             # マークダウンコンテンツ（多言語）
+│       ├── home.md
+│       ├── profilecv.md
+│       ├── en/
+│       │   ├── home.md
+│       │   ├── profilecv.md
+│       │   ├── works.md
+│       │   └── works/computer-system-2025.md
+│       └── ja/
+│           ├── home.md
+│           ├── profilecv.md
+│           ├── works.md
+│           └── works/computer-system-2025.md
+├── scripts/
+│   └── convertPublications.ts # CSV→JSON 変換スクリプト
+├── src/
+│   ├── App.tsx               # ルートコンポーネント（Router/レイアウト）
+│   ├── index.tsx             # エントリーポイント（Mantine Emotion Provider 設定）
+│   ├── mantineEmotionCache.ts# Emotion cache 設定
+│   ├── __tests__/            # テスト
+│   ├── components/
+│   │   ├── Header.tsx / Footer.tsx / SubHeader.tsx
+│   │   └── publications/     # 出版物 UI
+│   │       ├── PublicationsView.tsx
+│   │       ├── PublicationGroup.tsx
+│   │       ├── PublicationItem.tsx
+│   │       └── FilterDropdown.tsx / ActiveFilters.tsx
+│   ├── contexts/
+│   │   └── LanguageContext.tsx
+│   ├── data/                 # 入力CSVと出力JSON
+│   │   ├── publication_data.csv
+│   │   └── publications.json
+│   ├── hooks/
+│   │   ├── useFilters.ts
+│   │   └── usePublications.ts
+│   ├── locales/
+│   │   ├── en.ts / ja.ts
+│   │   └── index.ts
+│   ├── pages/
+│   │   ├── Home.tsx / ProfileCV.tsx / Works.tsx
+│   │   ├── Publications.tsx
+│   │   └── ComputerSystem2025.tsx
+│   ├── styles/
+│   │   ├── styles.css
+│   │   └── variables.css
+│   ├── test-utils/           # テスト用ラッパー/ファクトリ
+│   │   ├── test-utils.tsx / render.tsx
+│   │   └── factories/, mocks/
+│   ├── types.ts              # 共通型定義（Publication など）
+│   └── utils/
+│       ├── csvToJson.ts      # CSV→JSON 変換
+│       └── markdownLoader.ts # Markdown ローダ
+├── jest.config.js
+├── jest.setup.ts
+├── package.json
+└── README.md
 ```
 
 ## 主要コンポーネントの説明
@@ -114,7 +115,7 @@ my-web-page/
 
 ```mermaid
 flowchart LR
-    A[CSV Data<br>data/publication_data.csv] --> B[convertPublications.ts]
+    A[CSV Data<br>src/data/publication_data.csv] --> B[convertPublications.ts]
     B --> C[JSON Data<br>src/data/publications.json]
     C --> D[usePublications Hook (Initial Sort)]
     D --> E[useFilters Hook (.ts)]

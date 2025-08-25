@@ -18,12 +18,13 @@ my-web-pageは、個人のウェブサイトを構築するためのReactプロ�
 
 ## 技術スタック
 
-- **フロントエンド**: React 18.3.1
-- **UIライブラリ**: Mantine 7.17.4
-- **ルーティング**: React Router 6.3.0
-- **マークダウン**: React Markdown 6.0.3
-- **テスト**: Jest, React Testing Library
-- **スタイリング**: CSS, Emotion
+- フロントエンド: React 18.3.1 + TypeScript
+- UI: Mantine 7.17.4（`@mantine/core`, `@mantine/hooks`, `@mantine/emotion`）
+- ルーティング: React Router 6
+- マークダウン: react-markdown 6
+- テスト: Jest, React Testing Library
+- スタイリング: CSS + Emotion（Mantine Emotion Provider + カスタム cache）
+- アイコン: lucide-react
 
 ## 目次
 
@@ -62,16 +63,13 @@ npm test
 
 ## 開発ルール
 
-基本的にはドキュメント駆動開発（[DocDD](DocDD.md)）に沿って進行する．
+基本的にはドキュメント駆動開発（[DocDD](DocDD.md)）に沿って進行します。現状のコードに沿った実装ルールは以下です：
 
-プロジェクトの開発ルールは[.clinerules](./../.clinerules)ファイルに定義されています。主なルールは以下の通りです：
+- React 関数コンポーネント + TypeScript を使用
+- UI は Mantine を中心に構成（`createStyles`, MantineProvider, Emotion Provider）
+- 多言語は `LanguageContext` と `src/locales` の静的リソースで管理
+- 共通ロジックはカスタムフック（`usePublications`, `useFilters`）に分離
+- コンテンツは Markdown（public/markdown）から読み込み
+- 出版物データは CSV→JSON 変換を介して `src/data/publications.json` を利用
 
-- ESLint/Prettierの標準的なルールに準拠
-- Reactの関数コンポーネントを使用
-- Mantineコンポーネントライブラリを活用したUI設計
-- 関数やコンポーネントには適切なコメントを含める
-- 言語設定（ja/en）に応じて、適切な言語でコンテンツを表示する
-- コンポーネントは責務を明確に分離する
-- 再利用可能なコードはユーティリティ関数として抽出する
-
-詳細なルールについては、[.clinerules](./../.clinerules)ファイルを参照してください。
+補足: ルールを強制する ESLint/Prettier 設定は未導入です（必要に応じて追加検討）。

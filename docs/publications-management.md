@@ -7,7 +7,7 @@
 my-web-pageでは、出版物データを以下のフローで管理しています：
 
 1. Notionからエクスポートした出版物データをCSV形式で保存
-2. CSVデータをJSONに変換するスクリプトを実行
+2. `src/data/publication_data.csv` に配置し、変換スクリプトを実行
 3. 変換されたJSONデータをReactアプリケーションで表示
 4. フィルタリングと並び替え機能を提供
 
@@ -17,7 +17,7 @@ my-web-pageでは、出版物データを以下のフローで管理していま
 
 ```mermaid
 flowchart LR
-    A[Notion] --> B[CSV Data<br>data/publication_data.csv]
+    A[Notion] --> B[CSV Data<br>src/data/publication_data.csv]
     B --> C[convertPublications.ts]
     C --> D[JSON Data<br>src/data/publications.json]
     D --> E[usePublications Hook (Initial Sort)]
@@ -30,7 +30,7 @@ flowchart LR
 
 ## CSVデータ形式
 
-CSVファイル（`data/publication_data.csv`）は以下の列を含む必要があります：
+CSVファイル（`src/data/publication_data.csv`）は以下の列を含む必要があります：
 
 1. 未入力項目有り（Yes/No）
 2. 名前
@@ -169,3 +169,7 @@ npm run convert-publications
 - 日付形式は「YYYY年MM月DD日」または「YYYY年MM月DD日 → YYYY年MM月DD日」の形式に従う必要があります。
 - カンマを含む値は引用符（"）で囲む必要があります。
 - CSVファイルは元データであるため直接編集せず、Notionでデータを管理することを推奨します。
+
+## テストとの関係
+
+`scripts/convertPublications.ts` のテストは一時的に `src/data/publications.json` を生成/上書きします。テスト後に削除されますが、テストを中断した場合などは、上記の手順で変換を再実行してください。
