@@ -192,7 +192,7 @@
   {
     "id": 11,
     "hasEmptyFields": false,
-    "name": "Rio Tomioka and Masanori Takabayashi, \"Numerical simulations on optoelectronic deep neural network hardware based on self-referential holography\" Optical Review, 30, pp. 387–396, (Apr. 2023).",
+    "name": "Rio Tomioka and Masanori Takabayashi, \"Numerical simulations on optoelectronic deep neural network hardware based on self-referential holography\" Optical Review, vol. 30, pp. 387–396, (Apr. 2023).",
     "japanese": "",
     "type": "Journal paper：原著論文",
     "review": "Reviewed",
@@ -521,7 +521,7 @@
   {
     "id": 31,
     "hasEmptyFields": false,
-    "name": "Rio Tomioka, Taichi Takatsu, and Masanori Takabayashi, \"Numerical Simulation of Output Filter Design for Optoelectronic Deep Neural Network Using Hyperparameter Optimization\",  the 6th International Symposium on Neuromorphic AI Hardware (2025) [accepted]",
+    "name": "Rio Tomioka, Taichi Takatsu, and Masanori Takabayashi, \"Numerical Simulation of Output Filter Design for Optoelectronic Deep Neural Network Using Hyperparameter Optimization\",  Program and Abstracts The 6th International Symposium on Neuromorphic AI Hardware, P1-21, p. 39 (2025)",
     "japanese": "",
     "type": "Research paper (international conference)：国際会議",
     "review": "Reviewed",
@@ -536,5 +536,24 @@
     "others": "",
     "site": "Kitakyushu, Fukuoka, Japan",
     "journalConference": "the 6th International Symposium on Neuromorphic AI Hardware"
+  },
+  {
+    "id": 32,
+    "hasEmptyFields": false,
+    "name": "Yuta Eto, Rio Tomioka, Taichi Takatsu and Masanori Takabayashi, \"Numerical simulations on self-referential holographic data storage with built-in denoising function by self-referential holographic deep neural network,\" Optical Review 32, 534–545 (2025).",
+    "japanese": "",
+    "type": "Journal paper：原著論文",
+    "review": "Reviewed",
+    "authorship": "Co-author",
+    "presentationType": "",
+    "doi": "https://doi.org/10.1007/s10043-025-00978-9",
+    "webLink": "",
+    "date": "2025年6月21日",
+    "startDate": "2025-06-21",
+    "endDate": "2025-06-21",
+    "sortableDate": "2025-06-21",
+    "others": "",
+    "site": "",
+    "journalConference": "Optical Review"
   }
 ]
