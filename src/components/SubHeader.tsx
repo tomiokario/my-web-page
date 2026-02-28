@@ -3,9 +3,9 @@ import React from "react";
 import { useLocation, Location } from "react-router-dom";
 import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
 import locales, { Locales } from "../locales";
-import { Box, Title } from "@mantine/core";
+import { Box } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
-import { MantineTheme } from "@mantine/core";
+
 
 // スタイルの定義
 const useStyles = createStyles((theme) => ({
@@ -35,7 +35,7 @@ function SubHeader() {
   let pageName = "";
   // パスの最初の部分を取得（例：/works/computer-system-2025 → /works）
   const basePath = '/' + location.pathname.split('/')[1];
-  
+
   switch (basePath) {
     case "/":
       pageName = t.subheader.home;

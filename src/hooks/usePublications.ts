@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import publicationsData from "../data/publications.json"; // 正しいパスに修正 (src/hooks -> src/data)
+
 import { Publication } from "../types"; // Publication型をインポート
 
 // 出版物の種類の順序を定義
@@ -79,7 +79,7 @@ function usePublications({ sortOrder, filteredPublications, publicationsData: in
         sortableDate: pub.sortableDate || ''
       };
     });
-  // 依存配列を inputPublicationsData に変更
+    // 依存配列を inputPublicationsData に変更
   }, [inputPublicationsData]);
 
   // 並び順に基づいて出版物を並べ替え
@@ -113,7 +113,7 @@ function usePublications({ sortOrder, filteredPublications, publicationsData: in
         if (a.sortableDate && b.sortableDate) {
           return a.sortableDate > b.sortableDate ? -1 : a.sortableDate < b.sortableDate ? 1 : 0;
         }
-         const yearA = a.year || 0;
+        const yearA = a.year || 0;
         const yearB = b.year || 0;
         return yearB - yearA;
       });

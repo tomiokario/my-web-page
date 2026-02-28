@@ -99,7 +99,6 @@ function FilterDropdown({
                   checked={selectedValues.includes(option)}
                   onChange={() => onToggleFilter(category, option)}
                   className={classes.checkbox}
-                  role="checkbox"
                   aria-checked={selectedValues.includes(option)}
                   aria-label={option}
                 />

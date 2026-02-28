@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
 import usePublications from "../hooks/usePublications"; // UsePublicationsReturn は不要に
 import useFilters from "../hooks/useFilters"; // UseFiltersReturn は不要に
@@ -29,9 +29,9 @@ function Publications() {
   // groupedPublications は usePublications の内部で計算されるため、
   // filtersResult.filteredPublications を usePublications に渡す必要があった以前の実装に戻す
   const { groupedPublications } = usePublications({
-      sortOrder,
-      filteredPublications: filtersResult.filteredPublications, // フィルター結果を渡す
-      publicationsData // publicationsData も渡す
+    sortOrder,
+    filteredPublications: filtersResult.filteredPublications, // フィルター結果を渡す
+    publicationsData // publicationsData も渡す
   });
 
 
