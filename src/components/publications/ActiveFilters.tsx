@@ -1,7 +1,7 @@
 import React from "react";
 import { createStyles } from "@mantine/emotion";
 import { MantineTheme } from "@mantine/core";
-import useFilters, { SelectedFilters } from "../../hooks/useFilters";
+import { SelectedFilters } from "../../hooks/useFilters";
 
 interface ActiveFiltersProps {
   selectedFilters: SelectedFilters;
