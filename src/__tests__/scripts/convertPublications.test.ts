@@ -8,6 +8,7 @@ const TEMP_DIR = path.join(__dirname, 'temp_convert_test');
 const INPUT_CSV_PATH = path.join(TEMP_DIR, 'input.csv');
 // スクリプトによって生成されるJSONファイルの期待されるパス (dataディレクトリがsrc配下に移動したためパスを更新)
 const EXPECTED_OUTPUT_JSON_PATH = path.join(__dirname, '../../data/publications.json');
+const TEMP_OUTPUT_JSON_PATH = path.join(__dirname, '../../data/publications.json.temp');
 
 // テスト用のCSVデータ (13列に合わせる)
 const sampleCsvData = `未入力項目有り,名前（著者名と論文タイトル）,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
@@ -57,6 +58,12 @@ const expectedJsonData = [
 ];
 
 describe('convertPublications Script', () => {
+  beforeEach(() => {
+      if (fs.existsSync(EXPECTED_OUTPUT_JSON_PATH) && !fs.existsSync(TEMP_OUTPUT_JSON_PATH)) {
+          fs.renameSync(EXPECTED_OUTPUT_JSON_PATH, TEMP_OUTPUT_JSON_PATH);
+      }
+  });
+
   // 正常系テスト用の準備
   const setupValidTest = () => {
       if (!fs.existsSync(TEMP_DIR)) {
@@ -77,9 +84,13 @@ describe('convertPublications Script', () => {
       if (fs.existsSync(TEMP_DIR)) {
           fs.rmSync(TEMP_DIR, { recursive: true, force: true });
       }
-      // 生成された出力ファイルも削除
+      // テストで生成された出力ファイルを削除
       if (fs.existsSync(EXPECTED_OUTPUT_JSON_PATH)) {
           fs.unlinkSync(EXPECTED_OUTPUT_JSON_PATH);
+      }
+      // 退避していた元のJSONを戻す
+      if (fs.existsSync(TEMP_OUTPUT_JSON_PATH)) {
+          fs.renameSync(TEMP_OUTPUT_JSON_PATH, EXPECTED_OUTPUT_JSON_PATH);
       }
       // テスト用CSVを削除 (コピーした場合)
       if (fs.existsSync(originalDataPath) && fs.readFileSync(originalDataPath, 'utf-8') === sampleCsvData) {
