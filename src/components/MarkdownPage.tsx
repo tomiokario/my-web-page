@@ -33,7 +33,7 @@ function MarkdownPage({ markdownPath, footer }: MarkdownPageProps) {
   }, [language, markdownPath]);
 
   return (
-    <div style={{ padding: "0rem" }}>
+    <div>
       <ReactMarkdown>{content || t.common.loading}</ReactMarkdown>
       {footer}
     </div>

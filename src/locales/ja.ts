@@ -26,7 +26,7 @@ const ja: LocaleMessages = {
     switchTo: '英語に切り替え'
   },
   common: {
-    loading: 'Loading...',
+    loading: '読み込み中...',
     back: '戻る',
     backToWorks: '← 仕事一覧へ戻る'
   },
