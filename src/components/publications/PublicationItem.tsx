@@ -59,6 +59,8 @@ const useStyles = createStyles((theme: MantineTheme) => ({
  */
 function PublicationItem({ publication, language }: PublicationItemProps) {
   const { classes } = useStyles();
+  const normalizedDoi = publication.doi.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "");
+  const doiHref = normalizedDoi ? `https://doi.org/${normalizedDoi}` : "";
   
   return (
     <li className={classes.item} data-testid="publication-item">
@@ -161,10 +163,10 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
       )}
       
       {/* 五行目以降: DOI、URL、Others */}
-      {publication.doi && (
+      {normalizedDoi && (
         <div className={classes.link}>
-          DOI: <a href={`https://doi.org/${publication.doi}`} target="_blank" rel="noopener noreferrer">
-            {publication.doi}
+          DOI: <a href={doiHref} target="_blank" rel="noopener noreferrer">
+            {normalizedDoi}
           </a>
         </div>
       )}

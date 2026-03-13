@@ -122,6 +122,20 @@ describe('PublicationItem Component', () => {
     expect(screen.getByText('Oral')).toBeInTheDocument();
     expect(screen.getByText('Poster')).toBeInTheDocument();
   });
+
+  test('renders DOI URLs without duplicating the doi.org prefix', () => {
+    const publicationWithDoiUrl = createPublication({
+      ...mockPublication,
+      id: 4,
+      doi: 'https://doi.org/10.5678/example'
+    }, 3);
+
+    renderWithProviders(<PublicationItem publication={publicationWithDoiUrl} language="en" />);
+
+    const doiLink = screen.getByText('10.5678/example');
+    expect(doiLink).toBeInTheDocument();
+    expect(doiLink.closest('a')).toHaveAttribute('href', 'https://doi.org/10.5678/example');
+  });
   
   // 省略可能なフィールドが欠けている場合のテスト
   test('handles missing optional fields gracefully', () => {

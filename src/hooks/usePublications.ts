@@ -58,21 +58,21 @@ function usePublications({ sortOrder, filteredPublications, publicationsData: in
       const reviewValue = pub.review || pub.Review || ''; // 修正: 大文字小文字両方に対応
 
       return {
-        id: index, // idを追加
-        hasEmptyFields: pub.hasEmptyFields || false, // デフォルト値を追加
+        id: pub.id ?? index,
+        hasEmptyFields: pub.hasEmptyFields ?? false, // デフォルト値を追加
         name: pub.name || '',
         japanese: pub.japanese || '',
         year: year || undefined, // yearは数値またはundefined
         journalConference: pub.journalConference || pub['journal / conference'] || '', // 修正: 正しいキー名を参照
         journal: pub.journal || '', // テスト用に追加
         date: pub.date || '',
-        webLink: pub['web link'] || '', // プロパティ名を修正
-        doi: pub.DOI || '', // プロパティ名を修正
+        webLink: pub.webLink || pub['web link'] || '',
+        doi: pub.doi || pub.DOI || '',
         type: pub.type || '',
         review: reviewValue, // 修正: 大文字小文字両方に対応
         authorship: authorshipValue, // 修正: 大文字・小文字両方に対応
         presentationType: presentationTypeValue, // 修正: 大文字・小文字、スペースありに対応
-        others: pub.Others || '', // プロパティ名を修正
+        others: pub.others || pub.Others || '',
         site: pub.site || '', // siteを追加
         startDate: pub.startDate || '',
         endDate: pub.endDate || '',

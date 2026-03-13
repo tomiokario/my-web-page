@@ -34,6 +34,43 @@ describe('usePublications', () => {
       expect(result.current.formattedPublications[3].year).toBe(2022);
       expect(result.current.formattedPublications[4].year).toBe(2022);
     });
+
+    it('camelCase の JSON キーから表示用フィールドを保持する', () => {
+      const publicationsData = [
+        {
+          id: 42,
+          hasEmptyFields: false,
+          name: 'Real JSON entry',
+          japanese: '',
+          type: 'Journal paper：原著論文',
+          review: 'Reviewed',
+          authorship: 'Lead author',
+          presentationType: 'Oral',
+          doi: 'https://doi.org/10.1000/example',
+          webLink: 'https://example.com/paper',
+          date: '2025年6月21日',
+          startDate: '2025-06-21',
+          endDate: '2025-06-21',
+          sortableDate: '2025-06-21',
+          others: 'SharedIt link',
+          site: 'Tokyo',
+          journalConference: 'Optical Review'
+        }
+      ];
+
+      const { result } = renderHook(() => usePublications({
+        sortOrder: 'type',
+        filteredPublications: [],
+        publicationsData
+      }));
+
+      expect(result.current.formattedPublications[0]).toMatchObject({
+        id: 42,
+        doi: 'https://doi.org/10.1000/example',
+        webLink: 'https://example.com/paper',
+        others: 'SharedIt link',
+      });
+    });
   });
 
   describe('sortedPublications', () => {
