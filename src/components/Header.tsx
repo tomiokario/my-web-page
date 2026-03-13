@@ -2,8 +2,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Languages } from "lucide-react";
-import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
-import locales, { Locales } from "../locales";
+import { useLanguage } from "../contexts/LanguageContext";
 import {
   Box,
   Group,
@@ -12,6 +11,8 @@ import {
 } from "@mantine/core";
 import { createStyles } from "@mantine/emotion";
 import { useMediaQuery } from "@mantine/hooks";
+import useLocale from "../hooks/useLocale";
+import { navigationRoutes } from "../routes";
 
 // remヘルパー関数の定義（Mantineのバージョンでremがエクスポートされていない場合）
 const rem = (size: number) => `${size / 16}rem`;
@@ -131,27 +132,22 @@ const useStyles = createStyles((theme) => ({
 
 function Header() {
   const { classes, cx } = useStyles();
-  const { language, toggleLanguage } = useLanguage() as LanguageContextType;
-  const t = locales[language as keyof Locales]; // 現在の言語に応じたリソースを取得
+  const { language, toggleLanguage } = useLanguage();
+  const t = useLocale();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isSmallScreen = useMediaQuery("(max-width: 480px)");
   const isVerySmallScreen = useMediaQuery("(max-width: 375px)");
 
-  // メニュー項目の定義
-  // モバイル表示用に短縮されたメニュー項目ラベルを作成
-  const getMenuLabel = (key: string) => {
-    if (isMobile && key === 'profileCV') {
-      return t.header.home === 'ホーム' ? 'プロフィール' : 'Profile';
-    }
-    return t.header[key as keyof typeof t.header];
-  };
+  const menuItems = navigationRoutes.map((route) => {
+    const labelKey =
+      isMobile && route.mobileNavLabelKey ? route.mobileNavLabelKey : route.navLabelKey;
 
-  const menuItems = [
-    { path: "/", label: getMenuLabel('home'), exact: true },
-    { path: "/profile-cv", label: getMenuLabel('profileCV') },
-    { path: "/publications", label: getMenuLabel('publications') },
-    { path: "/works", label: getMenuLabel('works') }
-  ];
+    return {
+      path: route.path,
+      label: t.header[labelKey],
+      exact: route.path === "/",
+    };
+  });
 
   return (
     <Box className={classes.header} style={{ height: isMobile ? "auto" : 57 }}>

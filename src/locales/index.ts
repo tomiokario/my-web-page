@@ -1,15 +1,13 @@
+import { Language } from "../types";
 import en from './en';
 import ja from './ja';
-
-export interface Locales {
-  en: typeof en;
-  ja: typeof ja;
-}
+import { LocaleMessages } from "./types";
 
 // 言語リソースをまとめたオブジェクト
-const locales: Locales = {
+const locales: Record<Language, LocaleMessages> = {
   en,
   ja
 };
 
+export type { LocaleMessages } from "./types";
 export default locales;

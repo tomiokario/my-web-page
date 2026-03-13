@@ -13,6 +13,7 @@
 
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import { MantineProvider } from "@mantine/core";
 import App from "../App";
 import { MantineEmotionProvider, emotionTransform } from '@mantine/emotion';
 import { mantineCache } from '../mantineEmotionCache';
@@ -31,7 +32,9 @@ jest.mock('../pages/Publications', () => {
 const renderApp = () => {
   return render(
     <MantineEmotionProvider cache={mantineCache}>
-      <App />
+      <MantineProvider stylesTransform={emotionTransform}>
+        <App />
+      </MantineProvider>
     </MantineEmotionProvider>
   );
 };
