@@ -1,8 +1,10 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import { Language } from "../types";
 
 // コンテキストの値の型定義
 export interface LanguageContextType {
-  language: string;
+  language: Language;
+  setLanguage: (language: Language) => void;
   toggleLanguage: () => void;
 }
 
@@ -12,9 +14,9 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 // 言語プロバイダーコンポーネント
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   // ローカルストレージから言語設定を取得するか、デフォルトで日本語を使用
-  const [language, setLanguage] = useState(() => {
+  const [language, setLanguage] = useState<Language>(() => {
     const savedLanguage = localStorage.getItem('language');
-    return savedLanguage || 'ja'; // デフォルトは日本語
+    return savedLanguage === 'en' ? 'en' : 'ja'; // デフォルトは日本語
   });
 
   // 言語が変更されたらローカルストレージに保存
@@ -28,7 +30,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage }}>
+    <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage }}>
       {children}
     </LanguageContext.Provider>
   );

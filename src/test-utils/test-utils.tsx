@@ -7,6 +7,7 @@ import { LanguageProvider } from '../contexts/LanguageContext';
 import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import '@mantine/core/styles.css';
+import { Language } from '../types';
 
 // React Router警告を抑制
 const originalConsoleWarn = console.warn;
@@ -28,7 +29,7 @@ console.warn = (...args: any[]) => {
  */
 interface AllProvidersProps {
   children: React.ReactNode;
-  initialLanguage?: string;
+  initialLanguage?: Language;
   memoryRouterEntries?: string[];
 }
 
@@ -85,7 +86,7 @@ export const AllProviders: React.FC<AllProvidersProps> = ({
  * Testing Libraryのrenderをラップし、すべてのプロバイダーでUIをラップする
  */
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
-  initialLanguage?: string;
+  initialLanguage?: Language;
   memoryRouterEntries?: string[];
 }
 

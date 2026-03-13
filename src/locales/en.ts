@@ -1,31 +1,11 @@
-// 英語のリソースファイル
-interface EnLocale {
-  header: {
-    home: string;
-    profileCV: string;
-    publications: string;
-    works: string;
-  };
-  subheader: {
-    home: string;
-    profileCV: string;
-    publications: string;
-    works: string;
-    computerSystem2025: string;
-  };
-  footer: {
-    copyright: string;
-  };
-  languageSwitch: {
-    switchTo: string;
-  };
-}
+import { LocaleMessages } from "./types";
 
-const en: EnLocale = {
+const en: LocaleMessages = {
   // ヘッダーメニュー
   header: {
     home: 'Home',
     profileCV: 'Profile & CV',
+    profileCVShort: 'Profile',
     publications: 'Publications',
     works: 'Works'
   },
@@ -44,6 +24,21 @@ const en: EnLocale = {
   // 言語切り替えボタン
   languageSwitch: {
     switchTo: 'Switch to Japanese'
+  },
+  common: {
+    loading: 'Loading...',
+    back: 'Back',
+    backToWorks: '← Back to Works'
+  },
+  publications: {
+    year: 'Year',
+    authorship: 'Authorship',
+    type: 'Type',
+    review: 'Review',
+    presentationType: 'Presentation Type',
+    resetFilters: 'Reset Filters',
+    sortByType: 'By type',
+    sortByChronological: 'By year'
   }
 };
 

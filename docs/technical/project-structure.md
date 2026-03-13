@@ -30,9 +30,11 @@ my-web-page/
 │   ├── App.tsx               # ルートコンポーネント（Router/レイアウト）
 │   ├── index.tsx             # エントリーポイント（Mantine Emotion Provider 設定）
 │   ├── mantineEmotionCache.ts# Emotion cache 設定
+│   ├── routes.tsx            # ルート定義とページメタデータ
 │   ├── __tests__/            # テスト
 │   ├── components/
 │   │   ├── Header.tsx / Footer.tsx / SubHeader.tsx
+│   │   ├── MarkdownPage.tsx  # Markdown ページの共通表示
 │   │   └── publications/     # 出版物 UI
 │   │       ├── PublicationsView.tsx
 │   │       ├── PublicationGroup.tsx
@@ -45,10 +47,12 @@ my-web-page/
 │   │   └── publications.json
 │   ├── hooks/
 │   │   ├── useFilters.ts
+│   │   ├── useLocale.ts
 │   │   └── usePublications.ts
 │   ├── locales/
 │   │   ├── en.ts / ja.ts
-│   │   └── index.ts
+│   │   ├── index.ts
+│   │   └── types.ts
 │   ├── pages/
 │   │   ├── Home.tsx / ProfileCV.tsx / Works.tsx
 │   │   ├── Publications.tsx
@@ -73,22 +77,24 @@ my-web-page/
 
 ### アプリケーション構造
 
-- **App.tsx**: アプリケーションのルートコンポーネント。ルーティング設定、レイアウト構造、グローバルプロバイダー（MantineProvider、LanguageProvider）を定義しています。
-- **index.tsx**: Reactアプリケーションのエントリーポイント。
+- **App.tsx**: アプリケーションのルートコンポーネント。レイアウトと `routes.tsx` に定義されたルートの描画を担当します。
+- **routes.tsx**: ルートパス、ナビゲーション表示、サブヘッダー表示に使うメタデータを一元管理します。
+- **index.tsx**: Reactアプリケーションのエントリーポイント。Mantine の provider 構成を担当します。
 
 ### ページコンポーネント
 
-- **Home.tsx**: ホームページ。マークダウンコンテンツを読み込んで表示します。
-- **ProfileCV.tsx**: プロフィールと履歴書のページ。マークダウンコンテンツを読み込んで表示します。
+- **Home.tsx**: ホームページ。`MarkdownPage.tsx` を使ってコンテンツを表示します。
+- **ProfileCV.tsx**: プロフィールと履歴書のページ。`MarkdownPage.tsx` を使ってコンテンツを表示します。
 - **Publications.tsx**: 出版物一覧ページ。出版物データの取得、フィルタリング、並び替えの状態管理を行います。
-- **Works.tsx**: 仕事紹介ページ。マークダウンコンテンツを読み込んで表示します。
-- **ComputerSystem2025.tsx**: コンピュータシステム2025の詳細ページ。マークダウンコンテンツを読み込んで表示します。
+- **Works.tsx**: 仕事紹介ページ。`MarkdownPage.tsx` を使ってコンテンツを表示します。
+- **ComputerSystem2025.tsx**: コンピュータシステム2025の詳細ページ。`MarkdownPage.tsx` を使ってコンテンツを表示し、戻る導線を追加します。
 
 ### 共通コンポーネント
 
 - **Header.tsx**: サイト全体のヘッダー。ナビゲーションメニューと言語切り替えボタンを含みます。
 - **SubHeader.tsx**: 各ページのタイトルを表示するベージュ帯のコンポーネント。
 - **Footer.tsx**: サイト全体のフッター。著作権情報などを表示します。
+- **MarkdownPage.tsx**: 言語ごとの Markdown 読み込みと描画を共通化するコンポーネントです。
 
 ### 出版物関連コンポーネント
 
@@ -101,6 +107,7 @@ my-web-page/
 ### コンテキストとフック
 
 - **LanguageContext.tsx**: 言語設定を管理するコンテキスト。言語の切り替えと保存を担当します。
+- **useLocale.ts**: 現在の言語に対応する locale オブジェクトを取得するカスタムフックです。
 - **usePublications.ts**: 出版物データの取得、整形、並び替え、グループ化を行うカスタムフック。
 - **useFilters.ts**: フィルタリング機能を提供するカスタムフック。
 
@@ -133,20 +140,25 @@ flowchart LR
 graph TD
     A[App (.tsx)] --> B[LanguageProvider (.tsx)]
     B --> C[Router]
-    C --> D[Header (.tsx)]
-    C --> E[SubHeader (.tsx)]
-    C --> F[Main Content]
-    C --> G[Footer (.tsx)]
-    F --> H[Home (.tsx)]
-    F --> I[ProfileCV (.tsx)]
-    F --> J[Publications (.tsx)]
-    F --> P[Works (.tsx)]
-    F --> Q[ComputerSystem2025 (.tsx)]
-    J --> K[PublicationsView (.tsx)]
-    K --> L[FilterDropdown (.tsx)]
-    K --> M[ActiveFilters (.tsx)]
-    K --> N[PublicationGroup (.tsx)]
-    N --> O[PublicationItem (.tsx)]
+    C --> D[routes.tsx]
+    C --> E[Header (.tsx)]
+    C --> F[SubHeader (.tsx)]
+    C --> G[Main Content]
+    C --> H[Footer (.tsx)]
+    G --> I[Home (.tsx)]
+    G --> J[ProfileCV (.tsx)]
+    G --> K[Publications (.tsx)]
+    G --> L[Works (.tsx)]
+    G --> M[ComputerSystem2025 (.tsx)]
+    I --> N[MarkdownPage (.tsx)]
+    J --> N
+    L --> N
+    M --> N
+    K --> O[PublicationsView (.tsx)]
+    O --> P[FilterDropdown (.tsx)]
+    O --> Q[ActiveFilters (.tsx)]
+    O --> R[PublicationGroup (.tsx)]
+    R --> S[PublicationItem (.tsx)]
 ```
 
 ## 多言語対応の構造
@@ -156,10 +168,11 @@ graph TD
 ```mermaid
 flowchart TD
     A[LanguageContext (.tsx)] --> B[useLanguage Hook (.ts)]
-    B --> C[Components (.tsx)]
-    D[locales/ja.ts] --> A
-    E[locales/en.ts] --> A
-    F[localStorage] <--> A
+    B --> C[useLocale Hook (.ts)]
+    C --> D[Components (.tsx)]
+    E[locales/ja.ts] --> C
+    F[locales/en.ts] --> C
+    G[localStorage] <--> A
 ```
 
 詳細な多言語対応の実装については、[多言語対応](./multilingual-support.md)のドキュメントを参照してください。

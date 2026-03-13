@@ -1,41 +1,11 @@
-// 日本語のリソースファイル
-interface JaLocale {
-  header: {
-    home: string;
-    profileCV: string;
-    publications: string;
-    works: string;
-  };
-  subheader: {
-    home: string;
-    profileCV: string;
-    publications: string;
-    works: string;
-    computerSystem2025: string;
-  };
-  footer: {
-    copyright: string;
-  };
-  languageSwitch: {
-    switchTo: string;
-  };
-  publications: {
-    year: string;
-    authorship: string;
-    type: string;
-    review: string;
-    presentationType: string;
-    resetFilters: string;
-    sortByType: string;
-    sortByChronological: string;
-  };
-}
+import { LocaleMessages } from "./types";
 
-const ja: JaLocale = {
+const ja: LocaleMessages = {
   // ヘッダーメニュー
   header: {
     home: 'ホーム',
     profileCV: 'プロフィール・CV',
+    profileCVShort: 'プロフィール',
     publications: '出版物',
     works: '仕事'
   },
@@ -54,6 +24,11 @@ const ja: JaLocale = {
   // 言語切り替えボタン
   languageSwitch: {
     switchTo: '英語に切り替え'
+  },
+  common: {
+    loading: '読み込み中...',
+    back: '戻る',
+    backToWorks: '← 仕事一覧へ戻る'
   },
   // 出版物
   publications: {

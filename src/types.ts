@@ -1,5 +1,7 @@
 // src/types.ts
 
+export type Language = "ja" | "en";
+
 export interface Publication {
   id: number; // idを必須に戻す
   hasEmptyFields: boolean;
