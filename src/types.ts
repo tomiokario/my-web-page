@@ -7,6 +7,7 @@ export interface Publication {
   hasEmptyFields: boolean;
   name: string;
   japanese: string;
+  abstract?: string;
   type: string;
   review: string;
   authorship: string | string[];

@@ -39,7 +39,10 @@ const ja: LocaleMessages = {
     presentationType: '発表タイプ',
     resetFilters: 'フィルターをリセット',
     sortByType: '種類で表示',
-    sortByChronological: '年で表示'
+    sortByChronological: '年で表示',
+    showAbstract: '要旨を表示',
+    hideAbstract: '要旨を隠す',
+    abstractLabel: '要旨'
   }
 };
 

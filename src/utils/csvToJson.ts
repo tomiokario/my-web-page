@@ -3,7 +3,6 @@
  */
 
 import * as fs from 'fs';
-import * as path from 'path';
 import { Publication } from '../types'; // Publication型をインポート
 
 // 日付処理の戻り値の型定義
@@ -44,11 +43,8 @@ export function csvToJson(csvFilePath: string): Publication[] {
       // 行をCSVとして正しく解析（引用符内のカンマを考慮）
       const values: string[] = parseCSVLine(line); // trim() 済みの行を渡す
 
-      // 値の数がヘッダーの数より少ない場合や、必要な列（名前など）がない場合はスキップ
-      if (values.length < headers.length || !values[1] || values[1].trim() === '') continue;
-
-      // 各値をヘッダーと対応させてオブジェクトを作成
-      const obj: any = {}; // 一時的にanyを使用し、後でPublication型にマッピング
+      // 既存の13列CSVは維持しつつ、abstract列を14列目として任意追加できるようにする
+      if (values.length < 13 || !values[1] || values[1].trim() === '') continue;
 
       // カンマで区切られた値を配列に変換する関数
       const processCommaSeparatedValue = (value: string | undefined | null): string | string[] => {
@@ -115,6 +111,10 @@ export function csvToJson(csvFilePath: string): Publication[] {
 
       // 日付処理を実行
       const processedDate = processDate((values[9] || '').trim());
+      const abstractHeaderIndex = headers.findIndex((header) =>
+        ['abstract', 'Abstract', '要旨', '概要'].includes(header)
+      );
+      const abstractValue = abstractHeaderIndex >= 0 ? (values[abstractHeaderIndex] || '').trim() : '';
 
       // 各列の値をマッピング（リファクタリング前の順序を再現し、idを追加）
       // Publication型に合うようにマッピング
@@ -123,6 +123,7 @@ export function csvToJson(csvFilePath: string): Publication[] {
         hasEmptyFields: (values[0] || '').trim() === 'Yes',
         name: (values[1] || '').trim(),
         japanese: (values[2] || '').trim(),
+        abstract: abstractValue,
         type: (values[3] || '').trim(),
         review: (values[4] || '').trim(),
         authorship: processCommaSeparatedValue(values[5]),

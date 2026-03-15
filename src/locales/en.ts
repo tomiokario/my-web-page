@@ -38,7 +38,10 @@ const en: LocaleMessages = {
     presentationType: 'Presentation Type',
     resetFilters: 'Reset Filters',
     sortByType: 'By type',
-    sortByChronological: 'By year'
+    sortByChronological: 'By year',
+    showAbstract: 'Show abstract',
+    hideAbstract: 'Hide abstract',
+    abstractLabel: 'Abstract'
   }
 };
 
