@@ -23,27 +23,31 @@ export function csvToJson(csvFilePath: string): Publication[] {
     // BOMを削除（CSVファイルの先頭に存在する可能性がある）
     .replace(/^\uFEFF/, '');
 
-  // CSVデータを行に分割
-  const lines: string[] = csvData.split('\n');
+  // 引用符内改行を考慮してCSV全体をレコード単位に分解する
+  const rows: string[][] = parseCSVRows(csvData);
+
+  if (rows.length === 0) {
+    return [];
+  }
 
   // ヘッダー行を取得し、余分な空白を削除
-  const headerLine: string = lines[0];
-  const headers: string[] = parseCSVLine(headerLine).map(header => header.trim());
+  const headers: string[] = rows[0].map(header => header.trim());
 
   // 結果を格納する配列
   const result: Publication[] = [];
 
   // 各行を処理（ヘッダー行をスキップ）
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i].trim(); // 行の前後の空白と改行コードを除去
-    // 空行をスキップ
-    if (!line) continue; // trim() した結果が空文字列ならスキップ
-
+  for (let i = 1; i < rows.length; i++) {
     try {
-      // 行をCSVとして正しく解析（引用符内のカンマを考慮）
-      const values: string[] = parseCSVLine(line); // trim() 済みの行を渡す
+      const values: string[] = rows[i].map(value => value.trim());
+      const rawValueCount = values.length;
 
-      if (values.length < headers.length || !values[1] || values[1].trim() === '') continue;
+      while (values.length < headers.length) {
+        values.push('');
+      }
+
+      // abstract 列だけ欠けている行は許容し、それより少ない列数は不正行としてスキップする
+      if (rawValueCount < headers.length - 1 || !values[1] || values[1].trim() === '') continue;
 
       // カンマで区切られた値を配列に変換する関数
       const processCommaSeparatedValue = (value: string | undefined | null): string | string[] => {
@@ -151,41 +155,60 @@ export function csvToJson(csvFilePath: string): Publication[] {
 }
 
 /**
- * CSV行を正しく解析する関数（引用符内のカンマを考慮）
- * @param {string} line - CSV行
- * @returns {string[]} - 解析された値の配列
+ * CSV全文をレコードごとに解析する関数（引用符内の改行とカンマを考慮）
+ * @param {string} csvData - CSV全体の文字列
+ * @returns {string[][]} - レコードごとの値配列
  */
-function parseCSVLine(line: string): string[] {
-  const result: string[] = [];
-  let current = '';
+function parseCSVRows(csvData: string): string[][] {
+  const rows: string[][] = [];
+  let currentField = '';
+  let currentRow: string[] = [];
   let inQuotes = false;
 
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
+  for (let i = 0; i < csvData.length; i++) {
+    const char = csvData[i];
+    const nextChar = csvData[i + 1];
 
     if (char === '"') {
-      // 連続する引用符の場合はエスケープされた引用符として扱う
-      if (i + 1 < line.length && line[i + 1] === '"') {
-        current += '"';
-        i++; // 次の引用符をスキップ
+      if (inQuotes && nextChar === '"') {
+        currentField += '"';
+        i++;
       } else {
-        // 引用符の開始または終了
         inQuotes = !inQuotes;
       }
-    } else if (char === ',' && !inQuotes) {
-      // 引用符の外側のカンマは区切り文字
-      result.push(current.trim()); // フィールドを配列に追加する際にtrimする
-      current = '';
-    } else {
-      // それ以外の文字は現在の値に追加
-      current += char;
+      continue;
+    }
+
+    if (char === ',' && !inQuotes) {
+      currentRow.push(currentField);
+      currentField = '';
+      continue;
+    }
+
+    if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && nextChar === '\n') {
+        i++;
+      }
+      currentRow.push(currentField);
+      if (currentRow.some(value => value.trim() !== '')) {
+        rows.push(currentRow);
+      }
+      currentField = '';
+      currentRow = [];
+      continue;
+    }
+
+    currentField += char;
+  }
+
+  if (currentField.length > 0 || currentRow.length > 0) {
+    currentRow.push(currentField);
+    if (currentRow.some(value => value.trim() !== '')) {
+      rows.push(currentRow);
     }
   }
 
-  // 最後の値を追加
-  result.push(current.trim()); // 最後の値もtrimする
-
-  return result;
+  return rows;
 }
 
 /**

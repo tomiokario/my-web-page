@@ -108,16 +108,21 @@ describe('CSV to JSON conversion', () => {
       expect(firstItem).toHaveProperty(prop);
     });
     
-    // 特定のデータが正しく変換されていることを確認
-    expect(firstItem.name).toContain('Rio Tomioka');
+    // データの並び順に依存しない代表レコードで変換結果を確認
+    const targetItem = jsonData.find((item: any) =>
+      item.name.includes('Numerical simulations of neural network hardware based on self-referential holography')
+    );
+
+    expect(targetItem).toBeDefined();
+    expect(targetItem.name).toContain('Rio Tomioka');
     const expectedType = 'Research paper (international conference)：国際会議';
     // 文字コード配列を比較して、目に見えない文字の問題を回避
-    expect(firstItem.type.trim().split('').map((c: string) => c.charCodeAt(0)))
+    expect(targetItem.type.trim().split('').map((c: string) => c.charCodeAt(0)))
       .toEqual(expectedType.split('').map((c: string) => c.charCodeAt(0)));
 
     // 日付から年が正しく抽出できることを確認（Publications.jsxで使用される機能）
     const dateRegex = /(\d{4})/;
-    const match = firstItem.date.match(dateRegex);
+    const match = targetItem.date.match(dateRegex);
     expect(match).not.toBeNull();
     expect(parseInt(match[1], 10)).toBeGreaterThan(2000); // 2000年以降の日付であることを確認
   });
@@ -150,6 +155,29 @@ No,,,,,,,,,,,,
       expect(jsonData[0].doi).toBe('');
     } finally {
       // クリーンアップ - 一時ファイルを削除
+      removeTempFile(tempFilePath);
+    }
+  });
+
+  test('handles quoted multiline fields correctly', () => {
+    // Arrange - 引用符内改行を含むCSVデータを準備
+    const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference,abstract
+No,"Test Author, ""Multiline Title""","1行目
+2行目",Test Type,Reviewed,Lead author,Oral,,https://example.com,2023年1月1日,,Test Site,Test Journal,"Abstract line 1
+Abstract line 2"
+`;
+
+    const tempFilePath = createTempCsvFile(testCsvData, 'temp_multiline.csv');
+
+    try {
+      // Act - 変換処理を実行
+      const jsonData = csvToJson(tempFilePath);
+
+      // Assert - 改行入りセルが1レコードとして処理されることを確認
+      expect(jsonData.length).toBe(1);
+      expect(jsonData[0].japanese).toBe('1行目\n2行目');
+      expect(jsonData[0].abstract).toBe('Abstract line 1\nAbstract line 2');
+    } finally {
       removeTempFile(tempFilePath);
     }
   });
