@@ -24,7 +24,7 @@ export function csvToJson(csvFilePath: string): Publication[] {
     .replace(/^\uFEFF/, '');
 
   // CSVデータを行に分割
-  const lines: string[] = csvData.split('\n');
+  const lines: string[] = csvData.split(/\r?\n/);
 
   // ヘッダー行を取得し、余分な空白を削除
   const headerLine: string = lines[0];
@@ -35,15 +35,19 @@ export function csvToJson(csvFilePath: string): Publication[] {
 
   // 各行を処理（ヘッダー行をスキップ）
   for (let i = 1; i < lines.length; i++) {
-    const line = lines[i].trim(); // 行の前後の空白と改行コードを除去
-    // 空行をスキップ
-    if (!line) continue; // trim() した結果が空文字列ならスキップ
+    const line = lines[i].trim();
+    if (!line) continue;
 
     try {
-      // 行をCSVとして正しく解析（引用符内のカンマを考慮）
-      const values: string[] = parseCSVLine(line); // trim() 済みの行を渡す
+      const values: string[] = parseCSVLine(line);
+      const rawValueCount = values.length;
 
-      if (values.length < headers.length || !values[1] || values[1].trim() === '') continue;
+      while (values.length < headers.length) {
+        values.push('');
+      }
+
+      // abstract 列だけ欠けている行は許容し、それより少ない列数は不正行としてスキップする
+      if (rawValueCount < headers.length - 1 || !values[1] || values[1].trim() === '') continue;
 
       // カンマで区切られた値を配列に変換する関数
       const processCommaSeparatedValue = (value: string | undefined | null): string | string[] => {
@@ -118,7 +122,7 @@ export function csvToJson(csvFilePath: string): Publication[] {
       // 各列の値をマッピング（リファクタリング前の順序を再現し、idを追加）
       // Publication型に合うようにマッピング
       const publication: Publication = {
-        id: i, // idフィールドを行番号で追加
+        id: i,
         hasEmptyFields: (values[0] || '').trim() === 'Yes',
         name: (values[1] || '').trim(),
         japanese: (values[2] || '').trim(),
@@ -164,26 +168,25 @@ function parseCSVLine(line: string): string[] {
     const char = line[i];
 
     if (char === '"') {
-      // 連続する引用符の場合はエスケープされた引用符として扱う
       if (i + 1 < line.length && line[i + 1] === '"') {
         current += '"';
-        i++; // 次の引用符をスキップ
+        i++;
       } else {
-        // 引用符の開始または終了
         inQuotes = !inQuotes;
       }
-    } else if (char === ',' && !inQuotes) {
-      // 引用符の外側のカンマは区切り文字
-      result.push(current.trim()); // フィールドを配列に追加する際にtrimする
-      current = '';
-    } else {
-      // それ以外の文字は現在の値に追加
-      current += char;
+      continue;
     }
+
+    if (char === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+      continue;
+    }
+
+    current += char;
   }
 
-  // 最後の値を追加
-  result.push(current.trim()); // 最後の値もtrimする
+  result.push(current.trim());
 
   return result;
 }

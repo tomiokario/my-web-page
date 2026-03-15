@@ -45,6 +45,38 @@ function removeTempFile(filePath: string) {
   }
 }
 
+function parseCsvLineForTest(line: string) {
+  const result: string[] = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+
+    if (char === '"') {
+      if (line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (char === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+      continue;
+    }
+
+    current += char;
+  }
+
+  result.push(current.trim());
+
+  return { values: result, inQuotes };
+}
+
 describe('CSV to JSON conversion', () => {
   // 各テストの前に実行される処理
   beforeAll(() => {
@@ -86,6 +118,27 @@ describe('CSV to JSON conversion', () => {
     expect(fs.existsSync(CSV_FILE_PATH)).toBe(true);
   });
 
+  test('publication CSV has valid single-line records', () => {
+    // Arrange - 実データCSVを物理行単位で検証する
+    const csvData = fs.readFileSync(CSV_FILE_PATH, 'utf8').replace(/^\uFEFF/, '');
+    const lines = csvData.split(/\r?\n/).filter((line: string) => line.trim() !== '');
+    const headerCount = parseCsvLineForTest(lines[0]).values.length;
+    const dataLines = lines.slice(1);
+
+    // Act / Assert - 各行が単独で完結したCSVレコードであることを確認
+    dataLines.forEach((line: string, index: number) => {
+      const { values, inQuotes } = parseCsvLineForTest(line);
+
+      expect(inQuotes).toBe(false);
+      expect(values[1]?.trim()).not.toBe('');
+      expect([headerCount, headerCount - 1]).toContain(values.length);
+      expect(values.length).toBeGreaterThanOrEqual(headerCount - 1);
+    });
+
+    // 物理行数と変換後件数が一致することを確認
+    expect(csvToJson(CSV_FILE_PATH)).toHaveLength(dataLines.length);
+  });
+
   test('converts CSV to JSON correctly', () => {
     // テスト内容: CSVデータが正しくJSON形式に変換されることを確認
     const jsonData = csvToJson(CSV_FILE_PATH);
@@ -108,16 +161,21 @@ describe('CSV to JSON conversion', () => {
       expect(firstItem).toHaveProperty(prop);
     });
     
-    // 特定のデータが正しく変換されていることを確認
-    expect(firstItem.name).toContain('Rio Tomioka');
+    // データの並び順に依存しない代表レコードで変換結果を確認
+    const targetItem = jsonData.find((item: any) =>
+      item.name.includes('Numerical simulations of neural network hardware based on self-referential holography')
+    );
+
+    expect(targetItem).toBeDefined();
+    expect(targetItem.name).toContain('Rio Tomioka');
     const expectedType = 'Research paper (international conference)：国際会議';
     // 文字コード配列を比較して、目に見えない文字の問題を回避
-    expect(firstItem.type.trim().split('').map((c: string) => c.charCodeAt(0)))
+    expect(targetItem.type.trim().split('').map((c: string) => c.charCodeAt(0)))
       .toEqual(expectedType.split('').map((c: string) => c.charCodeAt(0)));
 
     // 日付から年が正しく抽出できることを確認（Publications.jsxで使用される機能）
     const dateRegex = /(\d{4})/;
-    const match = firstItem.date.match(dateRegex);
+    const match = targetItem.date.match(dateRegex);
     expect(match).not.toBeNull();
     expect(parseInt(match[1], 10)).toBeGreaterThan(2000); // 2000年以降の日付であることを確認
   });
@@ -153,7 +211,7 @@ No,,,,,,,,,,,,
       removeTempFile(tempFilePath);
     }
   });
-  
+
   test('handles comma-separated authorship correctly', () => {
     // Arrange - テスト用のCSVデータを準備
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
