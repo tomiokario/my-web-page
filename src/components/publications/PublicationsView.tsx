@@ -5,7 +5,7 @@ import PublicationGroup from "./PublicationGroup";
 import FilterDropdown from "./FilterDropdown";
 import ActiveFilters from "./ActiveFilters";
 import { SelectedFilters } from "../../hooks/useFilters";
-import { Publication } from "../../types";
+import { Language, Publication } from "../../types";
 
 // PublicationsViewPropsインターフェースを追加
 interface PublicationsViewProps {
@@ -28,7 +28,7 @@ interface PublicationsViewProps {
   toggleDropdown: (dropdown: string | null) => void;
   toggleFilter: (category: keyof SelectedFilters, value: string) => void;
   resetFilters: () => void;
-  language: string;
+  language: Language;
 }
 
 const useStyles = createStyles((theme: MantineTheme) => ({

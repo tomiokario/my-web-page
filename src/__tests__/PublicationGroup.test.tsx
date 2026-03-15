@@ -16,7 +16,7 @@ import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PublicationGroup from '../components/publications/PublicationGroup';
 import { renderWithProviders } from '../test-utils/test-utils';
-import { Publication } from '../types';
+import { Language, Publication } from '../types';
 import { createPublications } from '../test-utils/factories/publicationFactory'; // ファクトリ関数をインポート
 
 // PublicationItemコンポーネントをモック
@@ -26,7 +26,7 @@ jest.mock('../components/publications/PublicationItem', () => {
     language 
   }: { 
     publication: Publication; 
-    language: string 
+    language: Language
   }) {
     return (
       <div data-testid="publication-item" data-publication-id={publication.id} data-language={language}>

@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { createStyles } from "@mantine/emotion";
-import { MantineTheme } from "@mantine/core";
-import { Publication } from "../../types";
+import { Button, Collapse, MantineTheme } from "@mantine/core";
+import { Language, Publication } from "../../types";
+import locales from "../../locales";
 
 // PublicationItemPropsインターフェースを追加
 interface PublicationItemProps {
   publication: Publication;
-  language: string;
+  language: Language;
 }
 
 // スタイルの定義
@@ -47,6 +48,17 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     marginTop: theme.spacing.xs,
     fontSize: theme.fontSizes.sm,
     color: theme.colors.gray[6],
+  },
+  abstractToggle: {
+    marginTop: theme.spacing.sm,
+  },
+  abstract: {
+    marginTop: theme.spacing.xs,
+    padding: theme.spacing.sm,
+    backgroundColor: theme.colors.gray[0],
+    borderRadius: theme.radius.sm,
+    border: `1px solid ${theme.colors.gray[2]}`,
+    whiteSpace: "pre-wrap",
   }
 }));
 
@@ -59,6 +71,9 @@ const useStyles = createStyles((theme: MantineTheme) => ({
  */
 function PublicationItem({ publication, language }: PublicationItemProps) {
   const { classes } = useStyles();
+  const [isAbstractOpen, setIsAbstractOpen] = useState(false);
+  const messages = locales[language] ?? locales.en;
+  const abstractText = publication.abstract?.trim();
   const normalizedDoi = publication.doi.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "");
   const doiHref = normalizedDoi ? `https://doi.org/${normalizedDoi}` : "";
   
@@ -183,6 +198,33 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
         <div className={classes.others}>
           {publication.others}
         </div>
+      )}
+
+      {abstractText && (
+        <>
+          <Button
+            variant="light"
+            color="gray"
+            size="xs"
+            className={classes.abstractToggle}
+            onClick={() => setIsAbstractOpen((current) => !current)}
+            aria-expanded={isAbstractOpen}
+            data-testid="abstract-toggle"
+          >
+            {isAbstractOpen
+              ? messages.publications.hideAbstract
+              : messages.publications.showAbstract}
+          </Button>
+          <Collapse in={isAbstractOpen} transitionDuration={0}>
+            <div
+              className={classes.abstract}
+              data-testid="abstract-content"
+              aria-label={messages.publications.abstractLabel}
+            >
+              {abstractText}
+            </div>
+          </Collapse>
+        </>
       )}
     </li>
   );

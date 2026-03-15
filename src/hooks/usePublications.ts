@@ -62,6 +62,7 @@ function usePublications({ sortOrder, filteredPublications, publicationsData: in
         hasEmptyFields: pub.hasEmptyFields ?? false, // デフォルト値を追加
         name: pub.name || '',
         japanese: pub.japanese || '',
+        abstract: pub.abstract || '',
         year: year || undefined, // yearは数値またはundefined
         journalConference: pub.journalConference || pub['journal / conference'] || '', // 修正: 正しいキー名を参照
         journal: pub.journal || '', // テスト用に追加

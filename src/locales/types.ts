@@ -33,5 +33,8 @@ export interface LocaleMessages {
     resetFilters: string;
     sortByType: string;
     sortByChronological: string;
+    showAbstract: string;
+    hideAbstract: string;
+    abstractLabel: string;
   };
 }

@@ -15,6 +15,7 @@ jest.mock('../data/publications.json', () => ({
       review: 'Reviewed',
       authorship: 'Lead author',
       presentationType: '',
+      abstract: 'Alpha abstract text',
       doi: 'https://doi.org/10.1000/alpha',
       webLink: 'https://example.com/alpha',
       date: '2024年6月21日',
@@ -129,5 +130,17 @@ describe('Publications Component', () => {
     expect(screen.queryByText('Alpha Journal Paper')).not.toBeInTheDocument();
     expect(screen.getByText('Beta Conference Paper')).toBeInTheDocument();
     expect(screen.getByText('ガンマ発表')).toBeInTheDocument();
+  });
+
+  test('abstract がある publication ではトグルで要旨を表示できる', () => {
+    renderWithProviders(<Publications />, { initialLanguage: 'en' });
+
+    fireEvent.click(screen.getByTestId('abstract-toggle'));
+
+    expect(screen.getByText('Alpha abstract text')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('abstract-toggle'));
+
+    expect(screen.queryByTestId('abstract-content')).not.toBeInTheDocument();
   });
 });

@@ -12,11 +12,10 @@
  */
 
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PublicationItem from '../components/publications/PublicationItem';
 import { renderWithProviders } from '../test-utils/test-utils';
-import { Publication } from '../types';
 import { createPublication } from '../test-utils/factories/publicationFactory'; // ファクトリ関数をインポート
 
 // ファクトリ関数を使用してテストデータを生成
@@ -135,6 +134,36 @@ describe('PublicationItem Component', () => {
     const doiLink = screen.getByText('10.5678/example');
     expect(doiLink).toBeInTheDocument();
     expect(doiLink.closest('a')).toHaveAttribute('href', 'https://doi.org/10.5678/example');
+  });
+
+  test('toggles abstract visibility when abstract exists', () => {
+    const publicationWithAbstract = createPublication({
+      ...mockPublication,
+      id: 5,
+      abstract: 'This paper evaluates the behavior of a self-referential holographic neural network.'
+    }, 4);
+
+    renderWithProviders(<PublicationItem publication={publicationWithAbstract} language="en" />);
+
+    expect(screen.getByTestId('abstract-toggle')).toHaveTextContent('Show abstract');
+    expect(screen.queryByTestId('abstract-content')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('abstract-toggle'));
+
+    expect(screen.getByTestId('abstract-toggle')).toHaveTextContent('Hide abstract');
+    expect(screen.getByTestId('abstract-content')).toBeVisible();
+    expect(screen.getByTestId('abstract-content')).toHaveTextContent(publicationWithAbstract.abstract || '');
+
+    fireEvent.click(screen.getByTestId('abstract-toggle'));
+
+    expect(screen.getByTestId('abstract-toggle')).toHaveTextContent('Show abstract');
+    expect(screen.queryByTestId('abstract-content')).not.toBeInTheDocument();
+  });
+
+  test('does not render abstract toggle when abstract is missing', () => {
+    renderWithProviders(<PublicationItem publication={mockPublication} language="en" />);
+
+    expect(screen.queryByTestId('abstract-toggle')).not.toBeInTheDocument();
   });
   
   // 省略可能なフィールドが欠けている場合のテスト

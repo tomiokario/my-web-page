@@ -5,6 +5,7 @@ const getDefaultPublicationValues = (index: number): Publication => ({
   hasEmptyFields: false,
   name: `Test Publication ${index + 1}`,
   japanese: `テスト出版物 ${index + 1}`,
+  abstract: '',
   type: 'Journal paper：原著論文',
   review: 'Peer-reviewed',
   authorship: ['First author'],
