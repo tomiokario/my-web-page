@@ -10,17 +10,12 @@ const INPUT_CSV_PATH = path.join(TEMP_DIR, 'input.csv');
 const EXPECTED_OUTPUT_JSON_PATH = path.join(__dirname, '../../data/publications.json');
 const TEMP_OUTPUT_JSON_PATH = path.join(__dirname, '../../data/publications.json.temp');
 
-// テスト用のCSVデータ (既存の13列形式)
-const sampleCsvData = `未入力項目有り,名前（著者名と論文タイトル）,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
-No,"Test Paper 1","テスト論文1","Journal paper：原著論文","Peer-reviewed","First author","Oral","10.1234/test.1","https://example.com/1","2023年1月1日","Other info 1","Site 1","Journal A"
-No,"Test Paper 2","テスト論文2","Research paper (international conference)：国際会議","Non-peer-reviewed","Co-author","Poster","10.1234/test.2","https://example.com/2","2022年12月15日","Other info 2","Site 2","Conference B"`;
-
-// テスト用のCSVデータ (abstract列を追加した14列形式)
-const sampleCsvDataWithAbstract = `未入力項目有り,名前（著者名と論文タイトル）,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference,abstract
+// テスト用のCSVデータ (abstract列を含む14列形式)
+const sampleCsvData = `未入力項目有り,名前（著者名と論文タイトル）,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference,abstract
 No,"Test Paper 1","テスト論文1","Journal paper：原著論文","Peer-reviewed","First author","Oral","10.1234/test.1","https://example.com/1","2023年1月1日","Other info 1","Site 1","Journal A","Abstract for paper 1"
 No,"Test Paper 2","テスト論文2","Research paper (international conference)：国際会議","Non-peer-reviewed","Co-author","Poster","10.1234/test.2","https://example.com/2","2022年12月15日","Other info 2","Site 2","Conference B","Abstract for paper 2"`;
 
-const expectedJsonDataWithoutAbstract = [
+const expectedJsonData = [
   {
     id: 1,
     hasEmptyFields: false,
@@ -39,7 +34,7 @@ const expectedJsonDataWithoutAbstract = [
     others: 'Other info 1',
     site: 'Site 1',
     journalConference: 'Journal A',
-    abstract: '',
+    abstract: 'Abstract for paper 1',
   },
   {
     id: 2,
@@ -59,17 +54,6 @@ const expectedJsonDataWithoutAbstract = [
     others: 'Other info 2',
     site: 'Site 2',
     journalConference: 'Conference B',
-    abstract: '',
-  },
-];
-
-const expectedJsonDataWithAbstract = [
-  {
-    ...expectedJsonDataWithoutAbstract[0],
-    abstract: 'Abstract for paper 1',
-  },
-  {
-    ...expectedJsonDataWithoutAbstract[1],
     abstract: 'Abstract for paper 2',
   },
 ];
@@ -82,11 +66,11 @@ describe('convertPublications Script', () => {
   });
 
   // 正常系テスト用の準備
-  const setupValidTest = (csvData: string = sampleCsvData) => {
+  const setupValidTest = () => {
       if (!fs.existsSync(TEMP_DIR)) {
           fs.mkdirSync(TEMP_DIR);
       }
-      fs.writeFileSync(INPUT_CSV_PATH, csvData);
+      fs.writeFileSync(INPUT_CSV_PATH, sampleCsvData);
       // 既存の出力ファイルを削除しておく (もしあれば)
       if (fs.existsSync(EXPECTED_OUTPUT_JSON_PATH)) {
           fs.unlinkSync(EXPECTED_OUTPUT_JSON_PATH);
@@ -112,7 +96,7 @@ describe('convertPublications Script', () => {
       // テスト用CSVを削除 (コピーした場合)
       if (
         fs.existsSync(originalDataPath) &&
-        [sampleCsvData, sampleCsvDataWithAbstract].includes(fs.readFileSync(originalDataPath, 'utf-8'))
+        fs.readFileSync(originalDataPath, 'utf-8') === sampleCsvData
       ) {
            fs.unlinkSync(originalDataPath);
       }
@@ -122,7 +106,7 @@ describe('convertPublications Script', () => {
        }
   });
 
-  test('should convert legacy CSV to JSON correctly', () => {
+  test('should convert CSV with abstract column to JSON correctly', () => {
     setupValidTest(); // 正常系テストの準備を実行
     // スクリプトを実行 (ts-nodeのパスやオプションはpackage.jsonに合わせる)
     // 注意: スクリプトが入力パスを引数で受け取るか、固定パスを参照するかで実行コマンドが変わる
@@ -158,7 +142,7 @@ describe('convertPublications Script', () => {
       const outputJson = JSON.parse(outputJsonContent);
 
       // 期待されるデータと完全一致するか確認
-      expect(outputJson).toEqual(expectedJsonDataWithoutAbstract);
+      expect(outputJson).toEqual(expectedJsonData);
 
     } finally {
        // テスト用CSVを削除
@@ -169,36 +153,6 @@ describe('convertPublications Script', () => {
        if (fs.existsSync(tempDataPath)) {
            fs.renameSync(tempDataPath, originalDataPath);
        }
-    }
-  });
-
-  test('should convert CSV with abstract column to JSON correctly', () => {
-    setupValidTest(sampleCsvDataWithAbstract);
-
-    const originalDataPath = path.join(__dirname, '../../data/publication_data.csv');
-    const tempDataPath = path.join(__dirname, '../../data/publication_data.csv.temp');
-
-    if (fs.existsSync(originalDataPath)) {
-      fs.renameSync(originalDataPath, tempDataPath);
-    }
-    fs.copyFileSync(INPUT_CSV_PATH, originalDataPath);
-
-    try {
-      execSync('npm run convert-publications', { stdio: 'pipe' });
-
-      expect(fs.existsSync(EXPECTED_OUTPUT_JSON_PATH)).toBe(true);
-
-      const outputJsonContent = fs.readFileSync(EXPECTED_OUTPUT_JSON_PATH, 'utf-8');
-      const outputJson = JSON.parse(outputJsonContent);
-
-      expect(outputJson).toEqual(expectedJsonDataWithAbstract);
-    } finally {
-      if (fs.existsSync(originalDataPath)) {
-        fs.unlinkSync(originalDataPath);
-      }
-      if (fs.existsSync(tempDataPath)) {
-        fs.renameSync(tempDataPath, originalDataPath);
-      }
     }
   });
 
@@ -233,10 +187,10 @@ describe('convertPublications Script', () => {
   });
 
   test('should handle invalid CSV format gracefully (skipping invalid rows)', () => {
-    // 3行目に不正な形式（引用符の数が合わない）を含むCSVデータ (13列)
-    const invalidCsvData = `未入力項目有り,名前（著者名と論文タイトル）,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
-No,"Valid Paper 1","有効論文1","Type A","Rev A","Auth A","Oral","DOI A","Link A","2023年1月1日","Other A","Site A","Journal A"
-Yes,"Invalid" Paper 2","無効論文2","Type B","Rev B","Auth B","Poster","DOI B","Link B","2022年12月15日","Other B","Site B","Conference B"`; // "Invalid" の後に引用符がない
+    // 3行目に不正な形式（引用符の数が合わない）を含むCSVデータ (14列)
+    const invalidCsvData = `未入力項目有り,名前（著者名と論文タイトル）,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference,abstract
+No,"Valid Paper 1","有効論文1","Type A","Rev A","Auth A","Oral","DOI A","Link A","2023年1月1日","Other A","Site A","Journal A","Abstract A"
+Yes,"Invalid" Paper 2","無効論文2","Type B","Rev B","Auth B","Poster","DOI B","Link B","2022年12月15日","Other B","Site B","Conference B","Abstract B"`; // "Invalid" の後に引用符がない
 
     // 不正なCSVデータで入力ファイルを作成
      if (!fs.existsSync(TEMP_DIR)) {

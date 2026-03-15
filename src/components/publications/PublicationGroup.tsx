@@ -2,13 +2,13 @@ import React from "react";
 import { createStyles } from "@mantine/emotion";
 import { MantineTheme } from "@mantine/core";
 import PublicationItem from "./PublicationItem";
-import { Publication } from "../../types";
+import { Language, Publication } from "../../types";
 
 // PublicationGroupPropsインターフェースを追加
 interface PublicationGroupProps {
   name: string;
   items: Publication[];
-  language: string;
+  language: Language;
 }
 
 // スタイルの定義

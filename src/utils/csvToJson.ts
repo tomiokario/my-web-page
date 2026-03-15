@@ -43,8 +43,7 @@ export function csvToJson(csvFilePath: string): Publication[] {
       // 行をCSVとして正しく解析（引用符内のカンマを考慮）
       const values: string[] = parseCSVLine(line); // trim() 済みの行を渡す
 
-      // 既存の13列CSVは維持しつつ、abstract列を14列目として任意追加できるようにする
-      if (values.length < 13 || !values[1] || values[1].trim() === '') continue;
+      if (values.length < headers.length || !values[1] || values[1].trim() === '') continue;
 
       // カンマで区切られた値を配列に変換する関数
       const processCommaSeparatedValue = (value: string | undefined | null): string | string[] => {

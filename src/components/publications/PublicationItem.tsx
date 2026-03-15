@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { createStyles } from "@mantine/emotion";
 import { Button, Collapse, MantineTheme } from "@mantine/core";
-import { Publication } from "../../types";
+import { Language, Publication } from "../../types";
 import locales from "../../locales";
 
 // PublicationItemPropsインターフェースを追加
 interface PublicationItemProps {
   publication: Publication;
-  language: string;
+  language: Language;
 }
 
 // スタイルの定義
@@ -72,7 +72,7 @@ const useStyles = createStyles((theme: MantineTheme) => ({
 function PublicationItem({ publication, language }: PublicationItemProps) {
   const { classes } = useStyles();
   const [isAbstractOpen, setIsAbstractOpen] = useState(false);
-  const messages = locales[language as "ja" | "en"] ?? locales.en;
+  const messages = locales[language] ?? locales.en;
   const abstractText = publication.abstract?.trim();
   const normalizedDoi = publication.doi.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "");
   const doiHref = normalizedDoi ? `https://doi.org/${normalizedDoi}` : "";

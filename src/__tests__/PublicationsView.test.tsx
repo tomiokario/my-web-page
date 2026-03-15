@@ -2,7 +2,7 @@ import React from 'react';
 import { screen, fireEvent, cleanup } from '@testing-library/react';
 import PublicationsView from '../components/publications/PublicationsView';
 import { renderWithProviders } from '../test-utils/test-utils';
-import { Publication } from '../types';
+import { Language, Publication } from '../types';
 import { SelectedFilters } from '../hooks/useFilters';
 import { createPublication } from '../test-utils/factories/publicationFactory'; // ファクトリ関数をインポート
 
@@ -44,7 +44,7 @@ const mockProps = {
   toggleDropdown: jest.fn(),
   toggleFilter: jest.fn(),
   resetFilters: jest.fn(),
-  language: 'en'
+  language: 'en' as Language
 };
 
 // PublicationGroupコンポーネントをモック
@@ -56,7 +56,7 @@ jest.mock('../components/publications/PublicationGroup', () => {
   }: { 
     name: string; 
     items: Publication[]; 
-    language: string 
+    language: Language
   }) {
     return (
       <div data-testid="publication-group">
