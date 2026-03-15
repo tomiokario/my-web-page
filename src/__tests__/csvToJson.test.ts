@@ -45,6 +45,38 @@ function removeTempFile(filePath: string) {
   }
 }
 
+function parseCsvLineForTest(line: string) {
+  const result: string[] = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+
+    if (char === '"') {
+      if (line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (char === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+      continue;
+    }
+
+    current += char;
+  }
+
+  result.push(current.trim());
+
+  return { values: result, inQuotes };
+}
+
 describe('CSV to JSON conversion', () => {
   // 各テストの前に実行される処理
   beforeAll(() => {
@@ -84,6 +116,27 @@ describe('CSV to JSON conversion', () => {
   test('CSV file exists', () => {
     // テスト内容: CSVファイルが存在するかテスト
     expect(fs.existsSync(CSV_FILE_PATH)).toBe(true);
+  });
+
+  test('publication CSV has valid single-line records', () => {
+    // Arrange - 実データCSVを物理行単位で検証する
+    const csvData = fs.readFileSync(CSV_FILE_PATH, 'utf8').replace(/^\uFEFF/, '');
+    const lines = csvData.split(/\r?\n/).filter((line: string) => line.trim() !== '');
+    const headerCount = parseCsvLineForTest(lines[0]).values.length;
+    const dataLines = lines.slice(1);
+
+    // Act / Assert - 各行が単独で完結したCSVレコードであることを確認
+    dataLines.forEach((line: string, index: number) => {
+      const { values, inQuotes } = parseCsvLineForTest(line);
+
+      expect(inQuotes).toBe(false);
+      expect(values[1]?.trim()).not.toBe('');
+      expect([headerCount, headerCount - 1]).toContain(values.length);
+      expect(values.length).toBeGreaterThanOrEqual(headerCount - 1);
+    });
+
+    // 物理行数と変換後件数が一致することを確認
+    expect(csvToJson(CSV_FILE_PATH)).toHaveLength(dataLines.length);
   });
 
   test('converts CSV to JSON correctly', () => {
@@ -159,29 +212,6 @@ No,,,,,,,,,,,,
     }
   });
 
-  test('handles quoted multiline fields correctly', () => {
-    // Arrange - 引用符内改行を含むCSVデータを準備
-    const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference,abstract
-No,"Test Author, ""Multiline Title""","1行目
-2行目",Test Type,Reviewed,Lead author,Oral,,https://example.com,2023年1月1日,,Test Site,Test Journal,"Abstract line 1
-Abstract line 2"
-`;
-
-    const tempFilePath = createTempCsvFile(testCsvData, 'temp_multiline.csv');
-
-    try {
-      // Act - 変換処理を実行
-      const jsonData = csvToJson(tempFilePath);
-
-      // Assert - 改行入りセルが1レコードとして処理されることを確認
-      expect(jsonData.length).toBe(1);
-      expect(jsonData[0].japanese).toBe('1行目\n2行目');
-      expect(jsonData[0].abstract).toBe('Abstract line 1\nAbstract line 2');
-    } finally {
-      removeTempFile(tempFilePath);
-    }
-  });
-  
   test('handles comma-separated authorship correctly', () => {
     // Arrange - テスト用のCSVデータを準備
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference

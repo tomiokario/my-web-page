@@ -23,23 +23,23 @@ export function csvToJson(csvFilePath: string): Publication[] {
     // BOMを削除（CSVファイルの先頭に存在する可能性がある）
     .replace(/^\uFEFF/, '');
 
-  // 引用符内改行を考慮してCSV全体をレコード単位に分解する
-  const rows: string[][] = parseCSVRows(csvData);
-
-  if (rows.length === 0) {
-    return [];
-  }
+  // CSVデータを行に分割
+  const lines: string[] = csvData.split(/\r?\n/);
 
   // ヘッダー行を取得し、余分な空白を削除
-  const headers: string[] = rows[0].map(header => header.trim());
+  const headerLine: string = lines[0];
+  const headers: string[] = parseCSVLine(headerLine).map(header => header.trim());
 
   // 結果を格納する配列
   const result: Publication[] = [];
 
   // 各行を処理（ヘッダー行をスキップ）
-  for (let i = 1; i < rows.length; i++) {
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+
     try {
-      const values: string[] = rows[i].map(value => value.trim());
+      const values: string[] = parseCSVLine(line);
       const rawValueCount = values.length;
 
       while (values.length < headers.length) {
@@ -122,7 +122,7 @@ export function csvToJson(csvFilePath: string): Publication[] {
       // 各列の値をマッピング（リファクタリング前の順序を再現し、idを追加）
       // Publication型に合うようにマッピング
       const publication: Publication = {
-        id: i, // idフィールドを行番号で追加
+        id: i,
         hasEmptyFields: (values[0] || '').trim() === 'Yes',
         name: (values[1] || '').trim(),
         japanese: (values[2] || '').trim(),
@@ -155,23 +155,21 @@ export function csvToJson(csvFilePath: string): Publication[] {
 }
 
 /**
- * CSV全文をレコードごとに解析する関数（引用符内の改行とカンマを考慮）
- * @param {string} csvData - CSV全体の文字列
- * @returns {string[][]} - レコードごとの値配列
+ * CSV行を正しく解析する関数（引用符内のカンマを考慮）
+ * @param {string} line - CSV行
+ * @returns {string[]} - 解析された値の配列
  */
-function parseCSVRows(csvData: string): string[][] {
-  const rows: string[][] = [];
-  let currentField = '';
-  let currentRow: string[] = [];
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let current = '';
   let inQuotes = false;
 
-  for (let i = 0; i < csvData.length; i++) {
-    const char = csvData[i];
-    const nextChar = csvData[i + 1];
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
 
     if (char === '"') {
-      if (inQuotes && nextChar === '"') {
-        currentField += '"';
+      if (i + 1 < line.length && line[i + 1] === '"') {
+        current += '"';
         i++;
       } else {
         inQuotes = !inQuotes;
@@ -180,35 +178,17 @@ function parseCSVRows(csvData: string): string[][] {
     }
 
     if (char === ',' && !inQuotes) {
-      currentRow.push(currentField);
-      currentField = '';
+      result.push(current.trim());
+      current = '';
       continue;
     }
 
-    if ((char === '\n' || char === '\r') && !inQuotes) {
-      if (char === '\r' && nextChar === '\n') {
-        i++;
-      }
-      currentRow.push(currentField);
-      if (currentRow.some(value => value.trim() !== '')) {
-        rows.push(currentRow);
-      }
-      currentField = '';
-      currentRow = [];
-      continue;
-    }
-
-    currentField += char;
+    current += char;
   }
 
-  if (currentField.length > 0 || currentRow.length > 0) {
-    currentRow.push(currentField);
-    if (currentRow.some(value => value.trim() !== '')) {
-      rows.push(currentRow);
-    }
-  }
+  result.push(current.trim());
 
-  return rows;
+  return result;
 }
 
 /**
