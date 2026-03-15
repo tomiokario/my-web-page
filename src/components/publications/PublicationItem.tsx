@@ -204,6 +204,7 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
         <>
           <Button
             variant="light"
+            color="gray"
             size="xs"
             className={classes.abstractToggle}
             onClick={() => setIsAbstractOpen((current) => !current)}
