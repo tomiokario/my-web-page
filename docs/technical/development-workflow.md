@@ -41,88 +41,127 @@ npm start
 
 新しい機能を開発する場合は、以下の手順に従ってください：
 
-1. 新しいブランチを作成します：
+1. `main` を最新化します：
 
    ```bash
-   git checkout -b feature/feature-name
+   git checkout main
+   git pull --rebase origin main
    ```
 
-2. 必要なコンポーネント、フック、ユーティリティを実装します。
-3. テストを作成し、実行します：
+2. 新しい作業ブランチを作成します：
+
+   ```bash
+   git checkout -b codex/feature-name
+   ```
+
+3. 必要なコンポーネント、フック、ユーティリティを実装します。
+4. テストと必要なドキュメント更新を行います：
 
    ```bash
    npm test
    ```
 
-4. 変更をコミットします：
+5. push 前に差分を確認します：
+
+   ```bash
+   git status
+   ```
+
+6. 変更をコミットします：
 
    ```bash
    git add .
    git commit -m "Add feature: feature-name"
    ```
 
-5. リモートリポジトリにプッシュします：
+7. 作業ブランチをリモートリポジトリにプッシュします：
 
    ```bash
-   git push origin feature/feature-name
+   git push origin codex/feature-name
    ```
 
-6. プルリクエストを作成し、レビューを依頼します。
+8. タイトルと本文を日本語でプルリクエストを作成し、レビューを依頼します。
 
 ### 2. バグ修正
 
 バグを修正する場合は、以下の手順に従ってください：
 
-1. バグ修正用のブランチを作成します：
+1. `main` を最新化します：
 
    ```bash
-   git checkout -b fix/bug-description
+   git checkout main
+   git pull --rebase origin main
    ```
 
-2. バグを再現するテストを作成します。
-3. バグを修正し、テストが通ることを確認します。
-4. 変更をコミットします：
+2. バグ修正用の作業ブランチを作成します：
+
+   ```bash
+   git checkout -b codex/fix-bug-description
+   ```
+
+3. バグを再現するテストを作成します。
+4. バグを修正し、テストが通ることを確認します。
+5. push 前に差分を確認します：
+
+   ```bash
+   git status
+   ```
+
+6. 変更をコミットします：
 
    ```bash
    git add .
    git commit -m "Fix: bug-description"
    ```
 
-5. リモートリポジトリにプッシュします：
+7. 作業ブランチをリモートリポジトリにプッシュします：
 
    ```bash
-   git push origin fix/bug-description
+   git push origin codex/fix-bug-description
    ```
 
-6. プルリクエストを作成し、レビューを依頼します。
+8. タイトルと本文を日本語でプルリクエストを作成し、レビューを依頼します。
 
 ### 3. リファクタリング
 
 コードをリファクタリングする場合は、以下の手順に従ってください：
 
-1. リファクタリング用のブランチを作成します：
+1. `main` を最新化します：
 
    ```bash
-   git checkout -b refactor/description
+   git checkout main
+   git pull --rebase origin main
    ```
 
-2. 既存のテストが通ることを確認します。
-3. コードをリファクタリングします。
-4. すべてのテストが通ることを確認します。
-5. 変更をコミットします：
+2. リファクタリング用の作業ブランチを作成します：
+
+   ```bash
+   git checkout -b codex/refactor-description
+   ```
+
+3. 既存のテストが通ることを確認します。
+4. コードをリファクタリングします。
+5. すべてのテストが通ることを確認します。
+6. push 前に差分を確認します：
+
+   ```bash
+   git status
+   ```
+
+7. 変更をコミットします：
 
    ```bash
    git add .
    git commit -m "Refactor: description"
    ```
 
-6. リモートリポジトリにプッシュします：
+8. 作業ブランチをリモートリポジトリにプッシュします：
 
    ```bash
-   git push origin refactor/description
+   git push origin codex/refactor-description
    ```
 
-7. プルリクエストを作成し、レビューを依頼します。
+9. タイトルと本文を日本語でプルリクエストを作成し、レビューを依頼します。
 
 ## コンテンツ更新ワークフロー
 
@@ -139,7 +178,7 @@ npm start
    git commit -m "Update content: description"
    ```
 
-4. リモートリポジトリにプッシュします。
+4. `git status` で差分を確認してから、作業ブランチをリモートリポジトリにプッシュします。
 
 詳細については、[マークダウンコンテンツ](./markdown-content.md)のドキュメントを参照してください。
 
@@ -163,7 +202,7 @@ npm start
    git commit -m "Update publication data"
    ```
 
-6. リモートリポジトリにプッシュします。
+6. `git status` で差分を確認してから、作業ブランチをリモートリポジトリにプッシュします。
 
 詳細については、[出版物データの管理](./publications-management.md)のドキュメントを参照してください。
 
@@ -198,8 +237,9 @@ npm test -- --coverage
 
 プロジェクトは現在、Vercelにデプロイされています。デプロイは以下の手順で行われます：
 
-1. 変更をpushしてGitHub上でPRを作成してレビュアーにレビューを依頼します。
-2. Vercelが自動的に新しいビルドを作成し、デプロイします。
+1. 作業ブランチをpushしてGitHub上で日本語のPRを作成し、レビュアーにレビューを依頼します。
+2. PR 上では必要に応じて補足コメントを新規投稿します。Issue を閉じたい場合は PR 本文に `close: #番号` を記載します。
+3. PR が `main` にマージされると、Vercel が本番用の新しいビルドを作成し、デプロイします。
 
 手動でデプロイする場合は、Vercelのダッシュボードから行うことができます。
 
@@ -210,6 +250,13 @@ npm test -- --coverage
 プロジェクトのコーディング規約は、リポジトリルートにある `.clinerules` ファイルに定義されています。開発を行う際は、このファイルに記載されたルールに従ってください。
 
 主要なルールについては、[docs/README.md](./README.md#開発ルール) も参照してください。
+
+## マージ後の後始末
+
+1. `main` に戻ります
+2. `git pull --rebase origin main` でローカルを最新化します
+3. マージ済みのローカルブランチを削除します
+4. リモートブランチが残っている場合は削除します
 
 ## 備考（実装に関する補足）
 

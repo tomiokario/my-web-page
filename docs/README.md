@@ -89,6 +89,13 @@ npm test
 - **開発環境を構築したい** → [開発ワークフロー](./technical/development-workflow.md)
 - **テストを実行したい** → [テスト戦略](./technical/testing-strategy.md)
 
+## 運用の基準
+
+- AI エージェント向けの作業ルールはリポジトリ直下の `AGENTS.md` を正本とします
+- Git 運用の詳細は [開発ワークフロー](./technical/development-workflow.md) を参照してください
+- デプロイ運用の詳細は [デプロイメント手順](./admin/deployment-guide.md) を参照してください
+- 運用ルールを変更した場合は、この索引ページと関連手順書の記述も同時に見直してください
+
 ## サポート
 
 問題が発生した場合は、関連するドキュメントを参照してください：
