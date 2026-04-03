@@ -19,7 +19,7 @@ const ja: LocaleMessages = {
   },
   // フッター
   footer: {
-    copyright: '© 2025 冨岡 莉生'
+    copyright: '© 2026 冨岡 莉生'
   },
   // 言語切り替えボタン
   languageSwitch: {

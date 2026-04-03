@@ -38,6 +38,8 @@ public/markdown/
 3. 内容を編集
 4. ファイルを保存
 
+言語別ファイルが存在するページでは、`public/markdown/home.md` や `public/markdown/profilecv.md` のようなルート直下のフォールバック用 Markdown は通常更新しません。これらは後方互換用であり、正本は `ja/` と `en/` 配下です。
+
 ### 2. 新しいページの追加
 
 新しいページを追加する場合：

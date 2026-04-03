@@ -59,7 +59,7 @@ describe("Footer component", () => {
 
   // 日本語のコンテンツが正しく表示されるかテスト
   test("displays Japanese copyright text when language is ja", () => {
-    // テスト内容: 日本語モードで日本語のコピーライト情報「© 2025 冨岡 莉生」が表示されることを確認
+    // テスト内容: 日本語モードで日本語のコピーライト情報「© 2026 冨岡 莉生」が表示されることを確認
     render(
       <TestWrapper initialLanguage="ja">
         <Footer />
@@ -71,7 +71,7 @@ describe("Footer component", () => {
 
   // 英語のコンテンツが正しく表示されるかテスト
   test("displays English copyright text when language is en", () => {
-    // テスト内容: 英語モードで英語のコピーライト情報「© 2025 TOMIOKA Rio」が表示されることを確認
+    // テスト内容: 英語モードで英語のコピーライト情報「© 2026 TOMIOKA Rio」が表示されることを確認
     render(
       <TestWrapper initialLanguage="en">
         <Footer />

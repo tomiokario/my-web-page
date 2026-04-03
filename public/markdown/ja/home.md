@@ -1,14 +1,15 @@
 ### 所属
-- 九州工業大学大学院情報工学府 情報創成工学専攻 博士後期課程
-- [高林研究室](http://ba84.starfree.jp/index.html)
+- [福岡大学](https://www.fukuoka-u.ac.jp/) [工学部](https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/) [電子情報工学科](https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/electronics_computer/) 助教
+- [文仙研究室（フォトニクス研究室）](https://www.cis.fukuoka-u.ac.jp/~bunsen/)
 
 
 ### 連絡先
 
-- Mail: tomioka.rio288（at）mail.kyutech.jp 
 - Mail: tomioka.rio288（at）gmail.com 
 
-※(at)を@に変更してください（Please change the (at) to @）
+(at) を @ に変更してください。  
+tomioka.rio288（at）mail.kyutech.jp は 2026/3/31 で利用できなくなりました。  
+福岡大学のメールアドレスは発行され次第更新します。
 
 ### アカウント
 - GitHub: [@tomiokario](https://github.com/tomiokario)
