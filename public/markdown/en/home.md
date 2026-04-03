@@ -1,14 +1,15 @@
 ### Affiliation
-- Graduate School of Computer Science and Systems Engineering, Kyushu Institute of Technology
-- [Takabayashi Lab.](http://ba84.starfree.jp/index.html)
+- Assistant Professor, [Department of Electronics Engineering and Computer Science](https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/electronics_computer/), [Faculty of Engineering](https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/), [Fukuoka University](https://www.fukuoka-u.ac.jp/)
+- [Bunsen Lab. (Photonics Lab.)](https://www.cis.fukuoka-u.ac.jp/~bunsen/)
 
 
 ### Contact
 
-- Mail: tomioka.rio288（at）mail.kyutech.jp 
 - Mail: tomioka.rio288（at）gmail.com 
 
-※Please change the (at) to @
+Please change the (at) to @.  
+tomioka.rio288（at）mail.kyutech.jp became unavailable on 2026/3/31.  
+I will update my Fukuoka University email address once it is issued.
 
 ### Accounts
 - GitHub: [@tomiokario](https://github.com/tomiokario)

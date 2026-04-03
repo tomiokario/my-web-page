@@ -1,11 +1,12 @@
 ### Education
 - April 2017 – March 2021: School of Computer Science and Systems Engineering, Kyushu Institute of Technology
 - April 2021 – March 2023: Master's Program in Graduate School of Computer Science and Systems Engineering, Graduate School of Kyushu Institute of Technology
-- April 2023 – Present: Doctor's Program in Graduate School of Computer Science and Systems Engineering, Graduate School of Kyushu Institute of Technology
+- April 2023 – March 2026: Doctor's Program in Graduate School of Computer Science and Systems Engineering, Graduate School of Kyushu Institute of Technology
 
 ### Career
 - April 2023 - March 2024: Kyutech Research Fellow (3rd generation)
-- April 2024 - Present: Kyushu Institute Technology SPRING Scholarship Awardee
+- April 2024 - March 2026: Kyushu Institute of Technology SPRING Scholarship Awardee
+- April 2026 - Present: Assistant Professor, Department of Electronics Engineering and Computer Science, Faculty of Engineering, Fukuoka University
 
 ### Awards and honors
 - The Institute of Image Information and Television Engineers [第25回・2022年度](https://www.ite.or.jp/contents/awards/yushukenkyu.html) [優秀研究発表賞](https://www.ite.or.jp/content/awards/)（2022/12/22）

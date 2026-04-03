@@ -19,7 +19,7 @@ const en: LocaleMessages = {
   },
   // フッター
   footer: {
-    copyright: '© 2025 TOMIOKA Rio'
+    copyright: '© 2026 TOMIOKA Rio'
   },
   // 言語切り替えボタン
   languageSwitch: {
