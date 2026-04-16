@@ -82,7 +82,7 @@ describe("Markdown content pages", () => {
         })
       ).toHaveAttribute(
         "href",
-        "https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/electronics_computer/"
+        "https://www.fukuoka-u.ac.jp/english/undergraduate/engineering/electronics_computer/"
       );
     });
 
@@ -90,12 +90,12 @@ describe("Markdown content pages", () => {
       screen.getByRole("link", { name: "Faculty of Engineering" })
     ).toHaveAttribute(
       "href",
-      "https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/"
+      "https://www.fukuoka-u.ac.jp/english/undergraduate/engineering/"
     );
 
     expect(
       screen.getByRole("link", { name: "Fukuoka University" })
-    ).toHaveAttribute("href", "https://www.fukuoka-u.ac.jp/");
+    ).toHaveAttribute("href", "https://www.fukuoka-u.ac.jp/english/");
   });
 
   test("renders Japanese works content with the current and FY2025 sections", async () => {

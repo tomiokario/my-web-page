@@ -85,6 +85,7 @@ npm test
 
 - **コンテンツを更新したい** → [Markdownコンテンツ管理](./admin/markdown-content.md)
 - **出版物リストを更新したい** → [出版物データ管理](./admin/publications-management.md)
+- **researchmap 用の一括登録データを更新したい** → [出版物データ管理](./admin/publications-management.md)
 - **サイトをデプロイしたい** → [デプロイメント手順](./admin/deployment-guide.md)
 - **開発環境を構築したい** → [開発ワークフロー](./technical/development-workflow.md)
 - **テストを実行したい** → [テスト戦略](./technical/testing-strategy.md)
