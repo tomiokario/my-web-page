@@ -29,7 +29,9 @@
     "test": "react-scripts test --watchAll=false --runInBand",
     "test:watch": "react-scripts test --runInBand",
     "eject": "react-scripts eject",
-    "convert-publications": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/convertPublications.ts"
+    "convert-publications": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/convertPublications.ts",
+    "import-publications-csv": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/importPublicationMasterFromCsv.ts",
+    "publications-editor": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/publicationsEditorServer.ts"
   },
   "eslintConfig": {
     "extends": [

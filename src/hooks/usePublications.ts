@@ -1,15 +1,7 @@
 import { useMemo } from "react";
 
 import { Publication } from "../types"; // Publication型をインポート
-
-// 出版物の種類の順序を定義
-const TYPE_ORDER: string[] = [
-  "Journal paper：原著論文",
-  "Invited paper：招待論文",
-  "Research paper (international conference)：国際会議",
-  "Research paper (domestic conference)：国内会議",
-  "Miscellaneous"
-];
+import { PUBLICATION_TYPE_ORDER } from "../utils/publicationLabels";
 
 // 出版物グループの型定義
 interface PublicationGroup {
@@ -59,6 +51,7 @@ function usePublications({ sortOrder, filteredPublications, publicationsData: in
 
       return {
         id: pub.id ?? index,
+        recordId: pub.recordId,
         hasEmptyFields: pub.hasEmptyFields ?? false, // デフォルト値を追加
         name: pub.name || '',
         japanese: pub.japanese || '',
@@ -70,6 +63,8 @@ function usePublications({ sortOrder, filteredPublications, publicationsData: in
         webLink: pub.webLink || pub['web link'] || '',
         doi: pub.doi || pub.DOI || '',
         type: pub.type || '',
+        category: pub.category || '',
+        subtype: pub.subtype || '',
         review: reviewValue, // 修正: 大文字小文字両方に対応
         authorship: authorshipValue, // 修正: 大文字・小文字両方に対応
         presentationType: presentationTypeValue, // 修正: 大文字・小文字、スペースありに対応
@@ -100,8 +95,8 @@ function usePublications({ sortOrder, filteredPublications, publicationsData: in
       // 種類順
       return [...formattedPublications].sort((a, b) => {
         // まず種類で並べ替え
-        const typeIndexA = TYPE_ORDER.indexOf(a.type);
-        const typeIndexB = TYPE_ORDER.indexOf(b.type);
+        const typeIndexA = PUBLICATION_TYPE_ORDER.indexOf(a.type);
+        const typeIndexB = PUBLICATION_TYPE_ORDER.indexOf(b.type);
 
         if (typeIndexA !== typeIndexB) {
           // 見つからない種類は最後に
@@ -160,7 +155,7 @@ function usePublications({ sortOrder, filteredPublications, publicationsData: in
         }));
     } else {
       // 種類の指定順
-      sortedGroups = TYPE_ORDER
+      sortedGroups = PUBLICATION_TYPE_ORDER
         .filter(type => groups[type])
         .map(type => ({
           name: type,
@@ -169,7 +164,7 @@ function usePublications({ sortOrder, filteredPublications, publicationsData: in
 
       // 定義されていない種類があれば追加
       Object.keys(groups)
-        .filter(key => !TYPE_ORDER.includes(key) && key !== 'Unknown')
+        .filter(key => !PUBLICATION_TYPE_ORDER.includes(key) && key !== 'Unknown')
         .sort()
         .forEach(key => {
           sortedGroups.push({

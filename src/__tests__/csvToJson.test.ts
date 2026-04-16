@@ -153,7 +153,7 @@ describe('CSV to JSON conversion', () => {
     const firstItem = jsonData[0];
     const requiredProps = [
       'hasEmptyFields', 'name', 'japanese', 'type', 'review',
-      'authorship', 'presentationType', 'doi', 'webLink',
+      'authorship', 'presentationType', 'doi', 'webLink', 'category', 'subtype',
       'date', 'others', 'site', 'journalConference'
     ];
     
@@ -168,7 +168,7 @@ describe('CSV to JSON conversion', () => {
 
     expect(targetItem).toBeDefined();
     expect(targetItem.name).toContain('Rio Tomioka');
-    const expectedType = 'Research paper (international conference)：国際会議';
+    const expectedType = 'published_papers/international_conference_proceedings';
     // 文字コード配列を比較して、目に見えない文字の問題を回避
     expect(targetItem.type.trim().split('').map((c: string) => c.charCodeAt(0)))
       .toEqual(expectedType.split('').map((c: string) => c.charCodeAt(0)));
@@ -232,11 +232,11 @@ No,"Test Author, ""Single Role""",テスト,Test Type,Reviewed,Lead author,Oral,
       
       // カンマで区切られた著者の役割が配列として処理されていることを確認
       expect(Array.isArray(jsonData[0].authorship)).toBe(true);
-      expect(jsonData[0].authorship).toEqual(['Corresponding author', 'Lead author']);
+      expect(jsonData[0].authorship).toEqual(['corresponding', 'lead']);
       
       // 単一の著者の役割は文字列として処理されていることを確認
       expect(Array.isArray(jsonData[1].authorship)).toBe(false);
-      expect(jsonData[1].authorship).toBe('Lead author');
+      expect(jsonData[1].authorship).toBe('lead');
     } finally {
       // クリーンアップ - 一時ファイルを削除
       removeTempFile(tempFilePath);
@@ -260,13 +260,13 @@ No,"Test Author, ""Single Type""",テスト,Test Type,Reviewed,Lead author,Oral,
       // 2つのデータが正しく変換されていることを確認
       expect(jsonData.length).toBe(2);
       
-      // カンマで区切られた発表タイプが配列として処理されていることを確認
-      expect(Array.isArray(jsonData[0].presentationType)).toBe(true);
-      expect(jsonData[0].presentationType).toEqual(['Oral', 'Poster']);
+      // researchmap の presentation_type は単一値なので、先頭の型へ正規化される
+      expect(Array.isArray(jsonData[0].presentationType)).toBe(false);
+      expect(jsonData[0].presentationType).toBe('oral_presentation');
       
       // 単一の発表タイプは文字列として処理されていることを確認
       expect(Array.isArray(jsonData[1].presentationType)).toBe(false);
-      expect(jsonData[1].presentationType).toBe('Oral');
+      expect(jsonData[1].presentationType).toBe('oral_presentation');
     } finally {
       // クリーンアップ - 一時ファイルを削除
       removeTempFile(tempFilePath);

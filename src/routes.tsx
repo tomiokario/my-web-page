@@ -6,15 +6,13 @@ import ProfileCV from "./pages/ProfileCV";
 import Publications from "./pages/Publications";
 import Works from "./pages/Works";
 import ComputerSystem2025 from "./pages/ComputerSystem2025";
-import PublicationAdmin from "./pages/PublicationAdmin";
 
 export type AppRouteKey =
   | "home"
   | "profileCV"
   | "publications"
   | "works"
-  | "computerSystem2025"
-  | "publicationAdmin";
+  | "computerSystem2025";
 
 export interface AppRouteDefinition {
   key: AppRouteKey;
@@ -62,20 +60,7 @@ const baseRoutes: AppRouteDefinition[] = [
     titleKey: "computerSystem2025",
   },
 ];
-
-const localAdminRoutes: AppRouteDefinition[] =
-  process.env.NODE_ENV === "production"
-    ? []
-    : [
-        {
-          key: "publicationAdmin",
-          path: "/admin/publications",
-          element: <PublicationAdmin />,
-          titleKey: "publicationAdmin",
-        },
-      ];
-
-export const appRoutes: AppRouteDefinition[] = [...baseRoutes, ...localAdminRoutes];
+export const appRoutes: AppRouteDefinition[] = [...baseRoutes];
 
 export const navigationRoutes = appRoutes.filter(
   (route): route is AppRouteDefinition & { navLabelKey: keyof LocaleMessages["header"] } =>

@@ -53,16 +53,10 @@ export interface PublicationMasterResearchmapFields {
   is_international_journal?: boolean;
 }
 
-export interface PublicationMasterLegacyHints {
-  authorship: string[];
-  presentationType: string[];
-}
-
 export interface PublicationMasterLocalMeta {
   hasEmptyFields: boolean;
   rawCitation: LocalizedText;
   notes: string;
-  legacyHints?: PublicationMasterLegacyHints;
 }
 
 export interface PublicationMasterRecord {

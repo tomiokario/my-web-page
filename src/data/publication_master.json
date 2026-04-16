@@ -47,15 +47,7 @@
       "rawCitation": {
         "en": "Rio Tomioka and Masanori Takabayashi, \"Numerical simulations of neural network hardware based on self-referential holography,\" International Symposium on Imaging, Sensing, and Optical Memory (ISOM’21) Technical Digest， We-A-02， pp.123-124 (Oct. 2021)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -118,15 +110,7 @@
         "en": "Rio Tomioka and Masanori Takabayashi, “Improvement of learning process by transmission matrix in self-referential holographic neural network”, ITE Tech. Rep., vol. 46, no. 6, MMS2022-12, pp. 61-66, Feb. 2022.",
         "ja": "冨岡莉生, 高林正典, “自己参照型ホログラフィックニューラルネットワークにおける透過行列を用いた学習過程の改善,” 映情学技報, vol. 46, no. 6, MMS2022-12, pp. 61-66, 2022年2月."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -171,15 +155,7 @@
       "rawCitation": {
         "en": "Masanori Takabayashi, Sae Isayama, and Rio Tomioka, \"Hyperparameter tuning for accurate image classification using self-referential holographic neural network,\" International Workshop on Holography and Related Technologies (IWH 2021) Technical Digest, 11-P08 (Mar. 2022)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -230,15 +206,7 @@
       "rawCitation": {
         "en": "Rio Tomioka and Masanori Takabayashi, \"Self-referential holographic neural network with electronically implemented nonlinear layer,\" the 3rd International Symposium on Neuromorphic AI Hardware abstracts, P-AM8, p. 17 (Mar. 2022)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -290,15 +258,7 @@
       "rawCitation": {
         "en": "Rio Tomioka and Masanori Takabayashi, \"Dependence of activation function on image recognition accuracy in self-referential holographic deep neural network,\" in Proceedings of the 2022 International Symposium on Imaging, Sensing, and Optical Memory (ISOM) and the 13th International Conference on Optics-photonics Design and Fabrication (ODF), Technical Digest Series (Optica Publishing Group, 2022), paper ITuPJ_01, 2pages (Jul. 2022)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -366,15 +326,7 @@
       "rawCitation": {
         "en": "山崎駆, 山口健太, 冨岡莉生, 梶谷柊, 高津太一, 根崎翔, 井上快斗, 岸田隆之, 井上創造, 柴田智広, \"仮想空間アプリケーションを利用した訪問地の事前体験と高齢化社会への適用\", 第25回ASD研究会, 2022-ASD-25-6, 4pages, 2022年12月."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -444,15 +396,7 @@
       "rawCitation": {
         "en": "山崎駆, 山口健太, 冨岡莉生, 梶谷柊, 高津太一, 根崎翔, 井上快斗, 岸田隆之, 井上創造, 柴田智広, \"訪問地事前体験のための仮想空間アプリケーションの開発及び実証実験\", 第7回福祉工学会九州支部大会, P1-3, pp.30-31, 2022年12月."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -503,15 +447,7 @@
       "rawCitation": {
         "en": "Masanori Takabayashi, Rio Tomioka, Kaito Inoue, and Atsushi Shibukawa, \"Numerical Simulations of Optoelectronic AI Hardware using Transmission Matrix of Real Object,\" Program and proceedings the 4th International Symposium on Neuromorphic AI Hardware, S-4, p. 7(Dec. 2022)"
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -562,15 +498,7 @@
       "rawCitation": {
         "en": "Rio Tomioka and Masanori Takabayashi, \"Self-referential holographic neural network with single spatial light modulator\", Program and proceedings the 4th International Symposium on Neuromorphic AI Hardware, P2-2, p. 35 (Dec. 2022)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -616,15 +544,7 @@
       "rawCitation": {
         "en": "冨岡莉生, \"自己参照型ホログラフィの原理に基づく光電子融合型ニューラルネットワークハードウェア\", 第２回光ニューロワークショップ, 2023年3月."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -681,14 +601,7 @@
       "rawCitation": {
         "en": "Rio Tomioka and Masanori Takabayashi, \"Numerical simulations on optoelectronic deep neural network hardware based on self-referential holography\" Optical Review, vol. 30, pp. 387–396, (Apr. 2023)."
       },
-      "notes": "SharedIt link (full text, view only): https://rdcu.be/daZfo",
-      "legacyHints": {
-        "authorship": [
-          "Corresponding author",
-          "Lead author"
-        ],
-        "presentationType": []
-      }
+      "notes": "SharedIt link (full text, view only): https://rdcu.be/daZfo"
     }
   },
   {
@@ -738,15 +651,7 @@
       "rawCitation": {
         "en": "冨岡莉生, 高林正典, \"自己参照型ホログラフィックメモリの光学系を用いたニューラルネットワークハードウェア\", 情報フォトニクス研究討論会2023, 2023年7月."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -796,15 +701,7 @@
       "rawCitation": {
         "en": "冨岡莉生, 高林正典, \"複素振幅分布を入出力とする光電子融合型深層ニューラルネットワークハードウェアにおける複素活性化関数の影響\", 光の極限性能を生かすフォトニックコンピューティング 第三回領域会議, 2023年8月."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -855,15 +752,7 @@
       "rawCitation": {
         "en": "Rio Tomioka and Masanori Takabayashi, “Numerical simulation on phase-to-intensity conversion by self-referential holographic deep neural network,” The 13th Japan-Korea Workshop on Digital Holography and Information Photonics (DHIP2023) proceeding, p. 54 (Dec. 2023)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -911,15 +800,7 @@
       "rawCitation": {
         "en": "Taichi Takatsu, Rio Tomioka, and Masanori Takabayashi, \"Effective training method using transmission matrix for optoelectronic deep neural network\", Program and proceedings the 5th International Symposium on Neuromorphic AI Hardware, P1-12, p. 25  (Mar. 2024)"
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -973,16 +854,7 @@
       "rawCitation": {
         "en": "Rio Tomioka, Taichi Takatsu, and Masanori Takabayashi, \"Numerical simulation on wavefront transformation using self-referential holographic deep neural network\", Program and proceedings the 5th International Symposium on Neuromorphic AI Hardware, O3-04/P1-22, p. 14 (Mar. 2024)"
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Oral",
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1039,13 +911,7 @@
         "en": "Masanori Takabayashi and Rio Tomioka, “Optoelectronic deep neural network hardware using principle of self-referential holography”, Photonics NEWS (Photonics division, The Japan Society of Applied Physics,) 9(3), pp. 147-151 (Mar. 2024)",
         "ja": "髙林 正典, 冨岡 莉生, “自己参照型ホログラフィの原理を用いた光電子深層ニューラルネットワークハードウェア,” フォトニクスニュース 9, No. 3, pp. 147-151 (2024年3月)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": []
-      }
+      "notes": ""
     }
   },
   {
@@ -1104,15 +970,7 @@
       "rawCitation": {
         "en": "Rio Tomioka, Taichi Takatsu, Kaito Inoue, Atsushi Shibukawa, and Masanori Takabayashi, \"Numerical simulations on complex-valued optoelectronic deep neural network\", The First International Symposium on Photonic Computing, A03-2, March 2024."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1160,15 +1018,7 @@
       "rawCitation": {
         "en": "Taichi Takatsu, Rio Tomioka, Masanori Takabayashi, \"Numerical simulations of efficient training method on optoelectronic deep neural network using transmission matrix\", Materials Meet Robots 2024, (2024)"
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1217,15 +1067,7 @@
       "rawCitation": {
         "en": "Taichi Takatsu, Rio Tomioka, and Masanori Takabayashi, \"Numerical analysis on contributions of individual layers in self-referential holographic deep neural network\", 14th International Conference on Optics-Photonics Design and Fabrication, ThP-40, 2pages, (2024)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1280,15 +1122,7 @@
       "rawCitation": {
         "en": "Rio Tomioka, Taichi Takatsu, and Masanori Takabayashi, \"Numerical simulations on image recognition by self-referential holographic deep neural network with electronic output layer\", 14th International Conference on Optics-Photonics Design and Fabrication,ThP-39, 2pages, (2024)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1350,15 +1184,7 @@
         "en": "Rio Tomioka, Taichi Takatsu, and Masanori Takabayashi, “Numerical simulations on optoelectronic deep neural network with trainable electronic processing part”, 第四回領域会議, 2024",
         "ja": "冨岡莉生, 高津太一, 高林正典, “学習可能な電子演算部を有する光電融合深層ニューラルネットワークに関するシミュレーション”, 第四回領域会議, 2024"
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1407,15 +1233,7 @@
       "rawCitation": {
         "en": "Taichi Takatsu, Rio Tomioka and Masanori Takabayashi, \"Numerical Simulations of Optoelectronic Deep Neural Network Using Trainable Activation Function\", International Symposium on Imaging, Sensing, and Optical Memory 2024, Tu-E-44, (2024)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1467,15 +1285,7 @@
       "rawCitation": {
         "en": "Yuta Eto, Rio Tomioka, Taichi Takatsu and Masanori Takabayashi, \"Self-referential holographic data storage with integrated denoising function by deep learning\", International Symposium on Imaging, Sensing, and Optical Memory 2024,Mo-D-01 (2024)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1544,15 +1354,7 @@
         "en": "Yuta Eto, Rio Tomioka, Taichi Takatsu and Masanori Takabayashi, “Self-Referential Holographic Memory with Denoising Functionality by Deep Learning for Reconstructed Datapages --A Study on Dataset Generation Methods for Deep Learning--”, ITE Tech. Rep., vol. 48, no. 41, MMS2024-37, pp. 1-6, Dec. 2024.",
         "ja": "江藤優太，冨岡莉生，高津太一，髙林正典，\"深層学習に基づく再生データページのデノイズ機能を内在する 自己参照型ホログラフィックメモリ ～ 学習用データセットの生成法に関する検討 ～\"， 映情学技報, vol. 48, no. 41, MMS2024-37, pp. 1-6, 2024年12月."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1603,15 +1405,7 @@
       "rawCitation": {
         "en": "Rio Tomioka and Masanori Takabayashi, \"Numerical simulation of deep reinforcement learning using self- referential holographic deep neural network\", International Workshop on Holography and Related Technologies 2024, S5-2, 2pages (Dec. 2024)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1664,15 +1458,7 @@
       "rawCitation": {
         "en": "冨岡莉生，高津太一，高林正典，”空間光変調に基づく複素深層ニューラルネットワーク”, 「光の極限性能を生かすフォトニックコンピューティングの創成」第2回公開シンポジウム：Photonics for Computing & Computing for Photonics，2024年12月."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1753,15 +1539,7 @@
         "en": "Kaito Inoue, Takumi Hashiguchi, Taichi Takatsu, Rio Tomioka, Atsushi Shibukawa, Masanori Takabayashi, “Experiments on image recognition by optelectronic deep neural network with scattering medium insertion”, ITE Tech. Rep., vol. 49, no. 4, MMS2025-33, pp. 161-166, Feb. 2025.",
         "ja": "井上快斗, 橋口拓実, 高津太一, 冨岡莉生, 渋川敦史, 髙林正典, “散乱媒質を挿入した光電子融合型深層ニューラルネットワークを用いた画像識別実験“, 映情学技報, vol. 49, no. 4, MMS2025-33, pp. 161-166, 2025年2月."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1815,15 +1593,7 @@
       "rawCitation": {
         "en": "Rio Tomioka, Taichi Takatsu, and Masanori Takabayashi, \"Numerical Simulation of Output Filter Design for Optoelectronic Deep Neural Network Using Hyperparameter Optimization\",  Program and Abstracts The 6th International Symposium on Neuromorphic AI Hardware, P1-21, p. 39 (2025)"
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1882,13 +1652,7 @@
       "rawCitation": {
         "en": "Yuta Eto, Rio Tomioka, Taichi Takatsu and Masanori Takabayashi, \"Numerical simulations on self-referential holographic data storage with built-in denoising function by self-referential holographic deep neural network,\" Optical Review 32, 534–545 (2025)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": []
-      }
+      "notes": ""
     }
   },
   {
@@ -1938,15 +1702,7 @@
       "rawCitation": {
         "en": "江藤優太, 冨岡莉生, 髙林正典, \"自己参照型ホログラフィック深層ニューラルネットワークを用いた画像デノイズに関する数値シミュレーション\", 光の極限性能を生かすフォトニックコンピューティング 第6回領域会議 (2025年8月)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -1996,15 +1752,7 @@
       "rawCitation": {
         "en": "江藤優太, 冨岡莉生, 髙林正典, \"深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討\", 2025年第86回応用物理学会秋季学術講演会 (2025年9月)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -2056,15 +1804,7 @@
       "rawCitation": {
         "en": "Yusaku Matsumoto, Rio Tomioka, and Masanori Takabayashi, \"Numerical Simulations of Optoelectronic Neural Network Using Off-Axis Binary Holograms on Digital Micromirror Device\", International Symposium on Imaging, Sensing, and Optical Memory 2025 (ISOM'25) (Oct. 2025)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -2116,15 +1856,7 @@
       "rawCitation": {
         "en": "Rio Tomioka and Masanori Takabayashi, \"Numerical Simulation of Autonomous Mask Design for Optoelectronic Deep Neural Network by Hyperparameter Optimization\", International Workshop on Holography and Related Technologies 2025 (IWH2025) (Nov. 2025)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -2176,15 +1908,7 @@
       "rawCitation": {
         "en": "Yuta Eto, Rio Tomioka, and Masanori Takabayashi, \"Numerical simulations on denoising capability of self-referential holographic data storage with built-in denoising function\", International Workshop on Holography and Related Technologies 2025 (IWH2025) (Nov. 2025)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -2239,15 +1963,7 @@
       "rawCitation": {
         "en": "Shoichi Sakai, Rio Tomioka, Yuta Eto, and Masanori Takabayashi, \"Numerical Simulations of Parallel Image Recognition with Self-Referential Holographic Deep Neural Network\", International Workshop on Holography and Related Technologies 2025 (IWH2025) (Nov. 2025)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -2300,15 +2016,7 @@
       "rawCitation": {
         "en": "坂井翔一, 冨岡莉生, 江藤優太, 髙林正典, \"自己参照型ホログラフィック深層ニューラルネットワークによる並列画像識別\", 光の極限性能を生かすフォトニックコンピューティング 第7回領域会議 (2025年12月)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -2376,15 +2084,7 @@
         "en": "Shoichi Sakai, Yuta Eto, Rio Tomioka, and Masanori Takabayashi, \"自己参照型ホログラフィック深層ニューラルネットワークを用いた並列画像デノイジングに関する数値シミュレーション\", 映情学技報, Feb. 2026.",
         "ja": "坂井翔一, 江藤優太, 冨岡莉生, 髙林正典, \"自己参照型ホログラフィック深層ニューラルネットワークを用いた並列画像デノイジングに関する数値シミュレーション\", 映情学技報, 2026年2月."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Oral"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -2433,15 +2133,7 @@
       "rawCitation": {
         "en": "Rio Tomioka and Masanori Takabayashi, \"Numerical Study of Interface Design for Spatial Light Modulation-Based Deep Neural Networks Using Hyperparameter Optimization\", Program and Abstracts The 8th International Symposium on Neuromorphic AI Hardware (Mar. 2026)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Lead author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   },
   {
@@ -2493,15 +2185,7 @@
       "rawCitation": {
         "en": "Takumi Hashiguchi, Rio Tomioka, Taichi Takatsu, and Masanori Takabayashi, \"Fundamental Studies of Optoelectronic Deep Neural Network Using Cluster-wise Simultaneous Perturbation Stochastic Approximation Algorithms\", Program and Abstracts The 8th International Symposium on Neuromorphic AI Hardware (Mar. 2026)."
       },
-      "notes": "",
-      "legacyHints": {
-        "authorship": [
-          "Co-author"
-        ],
-        "presentationType": [
-          "Poster"
-        ]
-      }
+      "notes": ""
     }
   }
 ]

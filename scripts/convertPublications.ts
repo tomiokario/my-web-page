@@ -1,52 +1,45 @@
 /**
- * 出版物データをCSVからJSONに変換するスクリプト
+ * publication_master.json から web 表示用の publications.json を再生成するスクリプト
  *
  * 使用方法:
- * npx ts-node scripts/convertPublications.ts
+ * npm run convert-publications
  *
- * 入力: data/publication_data.csv
+ * 入力: src/data/publication_master.json
  * 出力: src/data/publications.json
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import { convertAndSave } from '../src/utils/csvToJson';
+import * as fs from "fs";
+import * as path from "path";
 
-/**
- * メイン処理：CSVをJSONに変換してファイルに保存する
- */
+import {
+  publicationMasterFileToWebPublications,
+  readPublicationMasterFile,
+  publicationWebDataToJson,
+} from "../src/utils/publicationMasterFile";
+
 function main() {
   try {
-    // ファイルパスを設定 (dataディレクトリがsrc配下に移動したためパスを更新)
-    const csvFilePath = path.join(__dirname, '../src/data/publication_data.csv');
-    const jsonFilePath = path.join(__dirname, '../src/data/publications.json');
-    const masterJsonFilePath = path.join(__dirname, '../src/data/publication_master.json');
+    const masterJsonFilePath = path.join(__dirname, "../src/data/publication_master.json");
+    const webJsonFilePath = path.join(__dirname, "../src/data/publications.json");
 
-    // CSVファイルが存在するか確認
-    if (!fs.existsSync(csvFilePath)) {
-      console.error(`エラー: CSVファイル ${csvFilePath} が見つかりません`);
+    if (!fs.existsSync(masterJsonFilePath)) {
+      console.error(`エラー: master JSON ファイル ${masterJsonFilePath} が見つかりません`);
       process.exit(1);
     }
-    
-    // CSVをJSONに変換して保存
-    const success = convertAndSave(csvFilePath, jsonFilePath, { masterJsonFilePath });
-    
-    if (success) {
-      // 変換されたJSONデータを読み込んで件数を表示
-      const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
-      const masterData = JSON.parse(fs.readFileSync(masterJsonFilePath, 'utf8'));
-      console.log(`変換が完了しました。${masterData.length}件の master data が ${masterJsonFilePath} に保存されました。`);
-      console.log(`変換が完了しました。${jsonData.length}件の web 表示用データが ${jsonFilePath} に保存されました。`);
-      process.exit(0);
-    } else {
-      console.error('変換に失敗しました。');
-      process.exit(1);
-    }
+
+    const masterRecords = readPublicationMasterFile(masterJsonFilePath);
+    const webRecords = publicationMasterFileToWebPublications(masterJsonFilePath);
+
+    fs.writeFileSync(webJsonFilePath, publicationWebDataToJson(webRecords), "utf8");
+
+    console.log(
+      `変換が完了しました。${masterRecords.length}件の master data から ${webRecords.length}件の web 表示用データを ${webJsonFilePath} に保存しました。`
+    );
+    process.exit(0);
   } catch (error) {
-    console.error('エラーが発生しました:', error);
+    console.error("エラーが発生しました:", error);
     process.exit(1);
   }
 }
 
-// スクリプトを実行
 main();

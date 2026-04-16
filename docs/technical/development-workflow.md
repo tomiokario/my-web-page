@@ -195,23 +195,35 @@ npm start
 
 出版物データを更新する場合は、以下の手順に従ってください：
 
-1. Notionから最新の出版物データをCSV形式でエクスポートします。
-2. エクスポートしたCSVファイルを `src/data/publication_data.csv` に配置します。
-3. 以下のコマンドを実行して、CSVデータをJSONに変換します：
+1. 日常更新では `src/data/publication_master.json` を正本として扱います。
+2. ローカル editor を使う場合は以下を実行します：
+
+   ```bash
+   npm run publications-editor
+   ```
+
+3. `publication_master.json` を直接編集した場合は以下を実行して `publications.json` を再生成します：
 
    ```bash
    npm run convert-publications
    ```
 
-4. 変換が成功すると、`src/data/publications.json` が更新されます。
+4. CSV から再取り込みしたい場合だけ、Notion から最新 CSV をエクスポートして `src/data/publication_data.csv` に配置し、以下を実行します：
+
+   ```bash
+   npm run import-publications-csv
+   npm run convert-publications
+   ```
+
 5. 変更をコミットします：
 
    ```bash
-   git add src/data/publication_data.csv src/data/publications.json
+   git add src/data/publication_master.json src/data/publications.json
    git commit -m "Update publication data"
    ```
 
-6. `git status` で差分を確認してから、作業ブランチをリモートリポジトリにプッシュします。
+6. CSV を再取り込みした場合だけ、必要に応じて `src/data/publication_data.csv` も stage します。
+7. `git status` で差分を確認してから、作業ブランチをリモートリポジトリにプッシュします。
 
 詳細については、[出版物データの管理](./publications-management.md)のドキュメントを参照してください。
 

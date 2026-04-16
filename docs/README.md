@@ -77,7 +77,9 @@ npm test
 - `npm start` - 開発サーバーを起動（http://localhost:3000）
 - `npm test` - テストを実行
 - `npm run build` - 本番用ビルドを作成
-- `npm run convert-publications` - 出版物データをCSVからJSONに変換
+- `npm run convert-publications` - `publication_master.json` から `publications.json` を再生成
+- `npm run import-publications-csv` - CSV から `publication_master.json` を再生成
+- `npm run publications-editor` - ローカル bridge 付き出版物 editor を起動
 
 ## クイックアクセス
 

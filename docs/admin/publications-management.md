@@ -1,60 +1,73 @@
 # 出版物データの管理
 
-このドキュメントでは、`my-web-page` における出版物データの正本、再生成フロー、ローカル GUI 編集、researchmap 連携をまとめます。
+このドキュメントでは、`my-web-page` における出版物データの正本、ローカル editor、生成物、researchmap 連携をまとめます。
 
-## いまの正本
+## 正本と生成物
 
 - 正本は `src/data/publication_master.json` です
 - `src/data/publications.json` は Web 表示用の生成物です
 - `src/data/publication_data.csv` は移行・再取り込み用の入力です
 
-日常運用では `publication_master.json` を編集し、その後に `npm run convert-publications` を実行して生成物を同期します。
+日常運用では `publication_master.json` を編集し、`publications.json` はそこから再生成します。CSV を正本として扱わないでください。
 
 ## 更新ワークフロー
+
+### ローカル editor で編集する場合
+
+1. bridge 付き editor を起動します
+
+   ```bash
+   npm run publications-editor
+   ```
+
+2. 表示された `http://127.0.0.1:4318` をブラウザで開きます
+3. 業績を編集して `Save` を実行します
+4. bridge が次をまとめて行います
+   - `publication_master.json` の検証
+   - `publication_master.json` の保存
+   - `publications.json` の再生成
+5. `http://localhost:3000/publications` で表示確認します
+
+editor は公開用 SPA とは別 entrypoint です。公開サイトの route には含めません。
+
+### `publication_master.json` を直接編集する場合
+
+1. `src/data/publication_master.json` を編集します
+2. 以下を実行して Web 表示用 JSON を再生成します
+
+   ```bash
+   npm run convert-publications
+   ```
+
+3. `http://localhost:3000/publications` で表示確認します
 
 ### CSV から初期化・再取り込みする場合
 
 1. 最新の CSV を `src/data/publication_data.csv` に配置します
-2. 以下を実行します
+2. 以下を実行して master data を再生成します
 
    ```bash
+   npm run import-publications-csv
    npm run convert-publications
    ```
 
-3. `src/data/publication_master.json` と `src/data/publications.json` が更新されます
+3. `src/data/publication_master.json` と `src/data/publications.json` の内容を確認します
 
-### ローカル GUI で編集する場合
-
-1. 開発サーバーを起動します
-
-   ```bash
-   npm start
-   ```
-
-2. `http://localhost:3000/admin/publications` を開きます
-3. `master JSON を開く` から `src/data/publication_master.json` を選択します
-4. 編集して `JSON に保存` を実行します
-5. 保存後に以下を実行します
-
-   ```bash
-   npm run convert-publications
-   ```
-
-6. `http://localhost:3000/publications` で表示確認します
-
-GUI はローカル開発時のみ有効です。保存には File System Access API を使うため、対応ブラウザで開いてください。
+CSV は移行・再取り込み専用です。日常更新の入口に戻さないでください。
 
 ## データフロー
 
 ```mermaid
 flowchart LR
-    A[CSV<br/>src/data/publication_data.csv] --> B[convertPublications.ts]
+    A[CSV<br/>src/data/publication_data.csv] --> B[import-publications-csv]
     B --> C[Master Data<br/>src/data/publication_master.json]
-    C --> D[GUI Editor<br/>/admin/publications]
-    D --> C
-    C --> E[Web View Model<br/>src/data/publications.json]
-    E --> F[Publications Page<br/>/publications]
-    C --> G[researchmap Export<br/>tools/researchmap-private]
+    C --> D[convert-publications]
+    D --> E[Web View Model<br/>src/data/publications.json]
+    C --> F[Local bridge editor<br/>npm run publications-editor]
+    F --> C
+    F --> E
+    E --> G[Publications Page<br/>/publications]
+    C --> H[researchmap Export<br/>tools/researchmap-private]
 ```
 
 ## master data の構造
@@ -62,14 +75,11 @@ flowchart LR
 各業績は次の 2 層で保持します。
 
 - `researchmapFields`
-  - researchmap に寄せた型・タイトル・著者・誌名/会議名・日付・DOI・URL・巻号ページ・要旨など
+  - researchmap に寄せた型、タイトル、著者、誌名・会議名、日付、DOI、URL、巻号ページ、要旨など
 - `localMeta`
   - `hasEmptyFields`
   - `rawCitation`
   - `notes`
-  - `legacyHints`
-
-`legacyHints` は現行 Web 表示との互換のために一時的に持っている補助情報です。表示側を完全に researchmap 準拠へ寄せ切るまで、著者役割と発表形式をここで保持します。
 
 例:
 
@@ -79,6 +89,7 @@ flowchart LR
   "researchmapFields": {
     "type": "published_papers",
     "subtype": "scientific_journal",
+    "published_paper_type": "scientific_journal",
     "paper_title": {
       "en": "Numerical simulations on optoelectronic deep neural network hardware based on self-referential holography"
     },
@@ -98,27 +109,39 @@ flowchart LR
     "rawCitation": {
       "en": "Rio Tomioka and Masanori Takabayashi, ..."
     },
-    "notes": "",
-    "legacyHints": {
-      "authorship": ["Lead author", "Corresponding author"],
-      "presentationType": ["Oral"]
-    }
+    "notes": ""
   }
 }
 ```
 
 ## 生成スクリプト
 
-`npm run convert-publications` は次をまとめて行います。
+### `npm run convert-publications`
 
-1. CSV を読み込みます
-2. `publication_master.json` を生成します
-3. master data から `publications.json` を生成します
+- 入力: `src/data/publication_master.json`
+- 出力: `src/data/publications.json`
 
-出力先:
+Web 表示用 JSON だけを再生成します。master data は上書きしません。
 
-- `src/data/publication_master.json`
-- `src/data/publications.json`
+### `npm run import-publications-csv`
+
+- 入力: `src/data/publication_data.csv`
+- 出力: `src/data/publication_master.json`
+
+CSV から master data を再構築する移行用スクリプトです。
+
+## Web 表示モデル
+
+`publications.json` は旧来ラベルに戻さず、researchmap に近い分類コードを持つようにしています。
+
+- `type`: `published_papers/scientific_journal` のような分類キー
+- `category`: `published_papers` / `presentations` / `misc`
+- `subtype`: researchmap の subtype 相当
+- `review`: `peer_reviewed` / `not_peer_reviewed`
+- `authorship`: `lead` `corresponding` `last` `coauthor`
+- `presentationType`: `oral_presentation` など
+
+表示ラベルへの変換は React 側で行います。
 
 ## researchmap への出力
 
@@ -143,15 +166,9 @@ node scripts/exportResearchmapJson.mjs \
   --existing-jsonl ../../tmp/researchmap/rm_researchersYYYYMMDD.jsonl
 ```
 
-確認ポイント:
-
-- `tmp/researchmap/manual-review.json` に想定外の要確認項目がない
-- `tmp/researchmap/merge-review.json` の `typeMismatches` が空
-- `tmp/researchmap/import.jsonl` を投入後、巻号・ページ・URL が意図どおり反映される
-
 ## 表示確認
 
-`npm run convert-publications` のあとに `http://localhost:3000/publications` を開き、以下を確認します。
+`publications.json` を更新したあとに `http://localhost:3000/publications` を開き、以下を確認します。
 
 - 新しい業績が表示されている
 - フィルターが動作する
@@ -160,8 +177,8 @@ node scripts/exportResearchmapJson.mjs \
 
 ## 注意点
 
-- `publication_master.json` を編集したら、必ず `npm run convert-publications` を実行して生成物を同期してください
-- CSV は移行・再取り込み用です。日常運用では `publication_master.json` を優先します
-- `publication_data.csv` を人手で直接メンテナンスする前提には戻さないでください
+- `publication_master.json` が唯一の正本です
+- `publications-editor` はローカル専用です。公開用アプリへ route を足さないでください
+- CSV は移行・再取り込み用です。日常運用で正本に戻さないでください
 - `git status` で意図しない差分が混ざっていないか確認してから commit / push してください
-- `scripts/convertPublications.ts` のテストは `src/data/publication_master.json` と `src/data/publications.json` を一時的に上書きします
+- `scripts/convertPublications.ts` のテストは `src/data/publication_master.json` と `src/data/publications.json` を一時的に退避・復元します

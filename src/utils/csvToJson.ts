@@ -5,9 +5,9 @@ import { PublicationMasterRecord } from "../types/publicationMaster";
 import {
   csvToPublicationMaster,
   publicationMasterToJson,
-  publicationMasterFileToWebPublications,
-  publicationWebDataToJson,
+  writePublicationArtifacts,
 } from "./publicationMasterFile";
+import { publicationMasterToWebPublications } from "./publicationMaster";
 
 /**
  * CSVファイルをJSONに変換する関数
@@ -15,7 +15,7 @@ import {
  * @returns {Publication[]} - 変換されたJSONデータ
  */
 export function csvToJson(csvFilePath: string): Publication[] {
-  return publicationMasterFileToWebPublications(csvFilePath);
+  return publicationMasterToWebPublications(csvToMasterData(csvFilePath));
 }
 
 export function csvToMasterData(csvFilePath: string): PublicationMasterRecord[] {
@@ -28,21 +28,23 @@ export function csvToMasterData(csvFilePath: string): PublicationMasterRecord[] 
  * @param {string} jsonFilePath - 出力するJSONファイルのパス
  * @returns {boolean} - 変換が成功したかどうか
  */
-export function convertAndSave(
+export function importMasterFromCsvAndSave(
   csvFilePath: string,
-  jsonFilePath: string,
-  options?: { masterJsonFilePath?: string }
+  paths: { masterJsonFilePath: string; webJsonFilePath?: string }
 ): boolean {
   try {
     const masterData = csvToMasterData(csvFilePath);
-    const jsonData: Publication[] = csvToJson(csvFilePath);
 
-    if (options?.masterJsonFilePath) {
-      fs.writeFileSync(options.masterJsonFilePath, publicationMasterToJson(masterData), "utf8");
+    if (paths.webJsonFilePath) {
+      writePublicationArtifacts(masterData, {
+        masterJsonFilePath: paths.masterJsonFilePath,
+        webJsonFilePath: paths.webJsonFilePath,
+      });
+    } else {
+      fs.writeFileSync(paths.masterJsonFilePath, publicationMasterToJson(masterData), "utf8");
     }
 
-    fs.writeFileSync(jsonFilePath, publicationWebDataToJson(jsonData), "utf8");
-    console.log(`変換が完了し、${jsonFilePath}に保存されました。`);
+    console.log(`CSV から master data を生成し、${paths.masterJsonFilePath} に保存しました。`);
     return true;
   } catch (error: unknown) {
     if (error instanceof Error) {

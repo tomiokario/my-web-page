@@ -44,7 +44,7 @@ GitHub で作業ブランチの PR が `main` にマージされると、Vercel 
 出版物リストを更新した場合：
 
 ```bash
-# CSVファイルを更新後
+# publication_master.json を直接編集した後
 npm run convert-publications
 ```
 

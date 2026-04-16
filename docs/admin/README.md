@@ -19,7 +19,7 @@
 
 2. **出版物リストを更新したい場合**
    - [出版物データ管理](./publications-management.md)を参照
-   - ローカル GUI 編集は `npm start` 後に `http://localhost:3000/admin/publications`
+   - ローカル GUI 編集は `npm run publications-editor` 後に `http://127.0.0.1:4318`
 
 3. **新しい言語を追加したい場合**
    - [多言語コンテンツ管理](./multilingual-content-management.md)を参照

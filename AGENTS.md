@@ -24,7 +24,7 @@
 - `main` へ直接 push する前提の変更や手順を書かない。作業ブランチと PR を前提にする
 - UI や文言の変更では、日本語と英語の両方で片側だけ更新漏れがないか確認する
 - `public/markdown` の更新では、リンク切れ、画像参照切れ、言語切り替え時の導線崩れがないか確認する
-- 出版物データ変更では、`src/data/publication_data.csv` と生成物 `src/data/publications.json` の整合、および変換手順の反映漏れがないか確認する
+- 出版物データ変更では、正本 `src/data/publication_master.json` と生成物 `src/data/publications.json` の整合、および `convert-publications` / `import-publications-csv` / `publications-editor` の手順反映漏れがないか確認する
 - 実装変更では、ユーザー視点の挙動を守るテストや既存テストの更新が不足していないか確認する
 - ドキュメントや運用ルールの変更では、`AGENTS.md` だけでなく `README` や関連手順書の更新漏れがないか確認する
 
@@ -58,9 +58,12 @@
 - ファイル命名規則: コンポーネントは `PascalCase.jsx`、フックは `useHookName.js`、ユーティリティは `camelCase.js`
 
 ## データ管理
-- 出版物データは CSV から JSON への変換プロセスを通じて管理
-- CSV ファイルは元データであるため直接編集せず、更新は Notion での操作をユーザーに依頼する
-- JSON 変換には `ts-node scripts/convertPublications.ts` を使用
+- 出版物データの唯一の正本は `src/data/publication_master.json` とする
+- `src/data/publications.json` は `publication_master.json` から再生成される Web 表示用の生成物とする
+- `src/data/publication_data.csv` は移行・再取り込み用の入力としてのみ扱い、日常運用の正本に戻さない
+- CSV ファイルを更新する場合は Notion での操作をユーザーに依頼し、必要に応じて `npm run import-publications-csv` で master data を再生成する
+- Web 表示用 JSON の再生成には `npm run convert-publications` を使用する
+- ローカル GUI 編集が必要な場合は `npm run publications-editor` を使用し、公開用 SPA に editor route を追加しない
 
 ## 多言語対応
 - `LanguageContext` と `useLanguage` フックを使用して言語状態を管理
@@ -71,7 +74,7 @@
 - マークダウンコンテンツは `public/markdown` ディレクトリで管理
 - コンテンツ更新後は開発サーバーで表示を確認してからコミット
 - ユーザー確認が必要な更新では、可能な限りローカル開発サーバーを起動した状態で確認を依頼し、確認完了までは push を保留する
-- 出版物データ更新後は `ts-node scripts/convertPublications.ts` を実行して JSON を生成
+- `publication_master.json` を直接編集した場合は `npm run convert-publications` を実行して `publications.json` を再生成する
 
 ## ドキュメント
 - コードの変更に伴い、必要に応じてドキュメントを更新

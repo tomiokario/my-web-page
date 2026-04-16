@@ -6,6 +6,12 @@ import FilterDropdown from "./FilterDropdown";
 import ActiveFilters from "./ActiveFilters";
 import { SelectedFilters } from "../../hooks/useFilters";
 import { Language, Publication } from "../../types";
+import {
+  getPublicationAuthorshipLabel,
+  getPublicationPresentationTypeLabel,
+  getPublicationReviewLabel,
+  getPublicationTypeLabel,
+} from "../../utils/publicationLabels";
 
 // PublicationsViewPropsインターフェースを追加
 interface PublicationsViewProps {
@@ -84,6 +90,25 @@ function PublicationsView({
   const resetLabel = language === 'ja' ? 'フィルターをリセット' : 'Reset Filters';
   const yearBasedLabel = language === 'ja' ? '年別に表示' : 'By year';
   const typeBasedLabel = language === 'ja' ? '種類別に表示' : 'By type';
+  const getFilterValueLabel = (category: keyof SelectedFilters, value: string): string => {
+    if (category === "type") {
+      return getPublicationTypeLabel(value, language);
+    }
+
+    if (category === "review") {
+      return getPublicationReviewLabel(value, language);
+    }
+
+    if (category === "authorship") {
+      return getPublicationAuthorshipLabel(value, language);
+    }
+
+    if (category === "presentationType") {
+      return getPublicationPresentationTypeLabel(value, language);
+    }
+
+    return value;
+  };
 
   return (
     <div className={classes.container}>
@@ -110,6 +135,9 @@ function PublicationsView({
             label={label}
             options={filterOptions[category as keyof typeof filterOptions]}
             selectedValues={selectedFilters[category as keyof SelectedFilters]}
+            getOptionLabel={(option) =>
+              getFilterValueLabel(category as keyof SelectedFilters, option)
+            }
             isOpen={openDropdown === category}
             onToggleDropdown={toggleDropdown}
             onToggleFilter={toggleFilter}
@@ -122,6 +150,7 @@ function PublicationsView({
       <ActiveFilters
         selectedFilters={selectedFilters}
         filterLabels={filterLabels}
+        getValueLabel={getFilterValueLabel}
         onToggleFilter={toggleFilter}
         onResetFilters={resetFilters}
         resetLabel={resetLabel}
@@ -132,7 +161,7 @@ function PublicationsView({
         {groupedPublications.map((group, groupIndex) => (
           <PublicationGroup
             key={groupIndex}
-            name={group.name}
+            name={sortOrder === "type" ? getPublicationTypeLabel(group.name, language) : group.name}
             items={group.items}
             language={language}
           />

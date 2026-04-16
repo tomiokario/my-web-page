@@ -42,18 +42,10 @@ interface TitleAndAuthors {
 interface PublicationClassification {
   type: PublicationMasterResearchmapFields["type"];
   subtype?: string;
-  legacyType: string;
   isInternational?: boolean;
 }
 
 const TITLE_FALLBACK = "Untitled publication";
-const TYPE_ORDER: string[] = [
-  "Journal paper：原著論文",
-  "Invited paper：招待論文",
-  "Research paper (international conference)：国際会議",
-  "Research paper (domestic conference)：国内会議",
-  "Miscellaneous",
-];
 
 const AUTHORSHIP_LABEL_TO_OWNER_ROLE: Record<string, string> = {
   "Lead author": "lead",
@@ -65,26 +57,11 @@ const AUTHORSHIP_LABEL_TO_OWNER_ROLE: Record<string, string> = {
   "Senior author": "last",
 };
 
-const OWNER_ROLE_TO_AUTHORSHIP_LABEL: Record<string, string> = {
-  lead: "Lead author",
-  corresponding: "Corresponding author",
-  last: "Last author",
-};
-
 const PRESENTATION_TYPE_LABEL_TO_CODE: Record<string, string> = {
   Oral: "oral_presentation",
   Poster: "poster_presentation",
   Invited: "invited_oral_presentation",
   Keynote: "keynote_oral_presentation",
-};
-
-const PRESENTATION_TYPE_CODE_TO_LABEL: Record<string, string> = {
-  oral_presentation: "Oral",
-  poster_presentation: "Poster",
-  invited_oral_presentation: "Invited",
-  keynote_oral_presentation: "Keynote",
-  public_symposium: "Public symposium",
-  others: "Other",
 };
 
 export function parseCSVLine(line: string): string[] {
@@ -288,13 +265,6 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
           ja: row.japanese || undefined,
         }),
         notes: row.others,
-        legacyHints:
-          row.authorship.length > 0 || row.presentationType.length > 0
-            ? {
-                authorship: row.authorship,
-                presentationType: row.presentationType,
-              }
-            : undefined,
       }),
     };
   });
@@ -304,16 +274,9 @@ export function publicationMasterToWebPublications(records: PublicationMasterRec
   return records.map((record, index) => {
       const title = getPublicationTitle(record.researchmapFields);
       const rawCitation = record.localMeta.rawCitation;
-      const legacyHints = record.localMeta.legacyHints;
-      const authorshipValues = normalizeArrayOutput(
-        legacyHints?.authorship?.length
-          ? legacyHints.authorship
-          : deriveAuthorshipLabels(record.researchmapFields)
-      );
+      const authorshipValues = normalizeArrayOutput(deriveAuthorshipCodes(record.researchmapFields));
       const presentationTypes = normalizeArrayOutput(
-        legacyHints?.presentationType?.length
-          ? legacyHints.presentationType
-          : derivePresentationTypeLabels(record.researchmapFields)
+        derivePresentationTypeCodes(record.researchmapFields)
       );
       const startDate =
         record.researchmapFields.from_event_date ||
@@ -330,19 +293,22 @@ export function publicationMasterToWebPublications(records: PublicationMasterRec
 
       return {
         id: index + 1,
+        recordId: record.id,
         hasEmptyFields: record.localMeta.hasEmptyFields,
         name: rawCitation.en || title?.en || title?.ja || TITLE_FALLBACK,
         japanese: rawCitation.ja || title?.ja || "",
         abstract:
           getLocalizedTextValue(record.researchmapFields.description, "en") ||
           getLocalizedTextValue(record.researchmapFields.description, "ja"),
-        type: getLegacyTypeLabel(record.researchmapFields),
-        review: deriveReviewLabel(record.researchmapFields.referee),
+        type: buildResearchmapClassificationKey(record.researchmapFields),
+        category: record.researchmapFields.type,
+        subtype: resolveResearchmapSubtype(record.researchmapFields),
+        review: deriveReviewCode(record.researchmapFields.referee),
         authorship: authorshipValues,
         presentationType: presentationTypes,
         doi: record.researchmapFields.identifiers?.doi?.[0] || "",
         webLink: record.researchmapFields.see_also?.[0]?.["@id"] || "",
-        date: buildLegacyDateText(record.researchmapFields),
+        date: buildWebDateText(record.researchmapFields),
         startDate,
         endDate,
         sortableDate: startDate,
@@ -415,7 +381,6 @@ function classifyPublication(row: CsvPublicationRow): PublicationClassification 
     return {
       type: "published_papers",
       subtype: "scientific_journal",
-      legacyType: "Journal paper：原著論文",
       isInternational: true,
     };
   }
@@ -424,7 +389,6 @@ function classifyPublication(row: CsvPublicationRow): PublicationClassification 
     return {
       type: "published_papers",
       subtype: "scientific_journal",
-      legacyType: "Journal paper：原著論文",
       isInternational: inferInternationalFlag(row),
     };
   }
@@ -433,7 +397,6 @@ function classifyPublication(row: CsvPublicationRow): PublicationClassification 
     return {
       type: "misc",
       subtype: "introduction_scientific_journal",
-      legacyType: "Invited paper：招待論文",
       isInternational: inferInternationalFlag(row),
     };
   }
@@ -442,7 +405,6 @@ function classifyPublication(row: CsvPublicationRow): PublicationClassification 
     return {
       type: "published_papers",
       subtype: "international_conference_proceedings",
-      legacyType: "Research paper (international conference)：国際会議",
       isInternational: true,
     };
   }
@@ -451,7 +413,6 @@ function classifyPublication(row: CsvPublicationRow): PublicationClassification 
     return {
       type: "misc",
       subtype: "summary_national_conference",
-      legacyType: "Research paper (domestic conference)：国内会議",
       isInternational: false,
     };
   }
@@ -465,7 +426,6 @@ function classifyPublication(row: CsvPublicationRow): PublicationClassification 
     return {
       type: "presentations",
       subtype: mapPresentationType(row.presentationType) || "oral_presentation",
-      legacyType: "Miscellaneous",
       isInternational: inferInternationalFlag(row),
     };
   }
@@ -474,7 +434,6 @@ function classifyPublication(row: CsvPublicationRow): PublicationClassification 
     return {
       type: "published_papers",
       subtype: "international_conference_proceedings",
-      legacyType: "Research paper (international conference)：国際会議",
       isInternational: true,
     };
   }
@@ -482,7 +441,6 @@ function classifyPublication(row: CsvPublicationRow): PublicationClassification 
   return {
     type: "misc",
     subtype: "others",
-    legacyType: row.type || "Miscellaneous",
     isInternational: inferInternationalFlag(row),
   };
 }
@@ -830,22 +788,22 @@ function uniquifyId(baseId: string, seenIds: Set<string>): string {
   return candidate;
 }
 
-function deriveReviewLabel(referee: boolean | undefined): string {
+function deriveReviewCode(referee: boolean | undefined): string {
   if (referee === true) {
-    return "Reviewed";
+    return "peer_reviewed";
   }
 
   if (referee === false) {
-    return "Not reviewed";
+    return "not_peer_reviewed";
   }
 
   return "";
 }
 
-function deriveAuthorshipLabels(fields: PublicationMasterResearchmapFields): string[] {
+function deriveAuthorshipCodes(fields: PublicationMasterResearchmapFields): string[] {
   const ownerRoles = fields.published_paper_owner_roles || [];
   if (ownerRoles.length > 0) {
-    return ownerRoles.map((role) => OWNER_ROLE_TO_AUTHORSHIP_LABEL[role] || role);
+    return ownerRoles;
   }
 
   const peopleCount =
@@ -855,41 +813,32 @@ function deriveAuthorshipLabels(fields: PublicationMasterResearchmapFields): str
     fields.presenters?.ja?.length ||
     0;
 
-  return peopleCount > 1 ? ["Co-author"] : [];
+  return peopleCount > 1 ? ["coauthor"] : [];
 }
 
-function derivePresentationTypeLabels(fields: PublicationMasterResearchmapFields): string[] {
+function derivePresentationTypeCodes(fields: PublicationMasterResearchmapFields): string[] {
   if (!fields.presentation_type) {
     return [];
   }
 
-  return [PRESENTATION_TYPE_CODE_TO_LABEL[fields.presentation_type] || fields.presentation_type];
+  return [fields.presentation_type];
 }
 
-function getLegacyTypeLabel(fields: PublicationMasterResearchmapFields): string {
-  if (fields.type === "published_papers" && fields.published_paper_type === "scientific_journal") {
-    return "Journal paper：原著論文";
-  }
-
-  if (fields.type === "misc" && fields.misc_type === "introduction_scientific_journal") {
-    return "Invited paper：招待論文";
-  }
-
-  if (
-    fields.type === "published_papers" &&
-    fields.published_paper_type === "international_conference_proceedings"
-  ) {
-    return "Research paper (international conference)：国際会議";
-  }
-
-  if (fields.type === "misc" && fields.misc_type === "summary_national_conference") {
-    return "Research paper (domestic conference)：国内会議";
-  }
-
-  return "Miscellaneous";
+function resolveResearchmapSubtype(fields: PublicationMasterResearchmapFields): string {
+  return (
+    fields.published_paper_type ||
+    fields.presentation_type ||
+    fields.misc_type ||
+    fields.subtype ||
+    "others"
+  );
 }
 
-function buildLegacyDateText(fields: PublicationMasterResearchmapFields): string {
+function buildResearchmapClassificationKey(fields: PublicationMasterResearchmapFields): string {
+  return `${fields.type}/${resolveResearchmapSubtype(fields)}`;
+}
+
+function buildWebDateText(fields: PublicationMasterResearchmapFields): string {
   const start = fields.from_event_date || fields.publication_date || "";
   const end = fields.to_event_date || "";
 
