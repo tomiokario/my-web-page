@@ -10,7 +10,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { csvToJson, convertAndSave } from '../src/utils/csvToJson';
+import { convertAndSave } from '../src/utils/csvToJson';
 
 /**
  * メイン処理：CSVをJSONに変換してファイルに保存する
@@ -20,6 +20,7 @@ function main() {
     // ファイルパスを設定 (dataディレクトリがsrc配下に移動したためパスを更新)
     const csvFilePath = path.join(__dirname, '../src/data/publication_data.csv');
     const jsonFilePath = path.join(__dirname, '../src/data/publications.json');
+    const masterJsonFilePath = path.join(__dirname, '../src/data/publication_master.json');
 
     // CSVファイルが存在するか確認
     if (!fs.existsSync(csvFilePath)) {
@@ -28,12 +29,14 @@ function main() {
     }
     
     // CSVをJSONに変換して保存
-    const success = convertAndSave(csvFilePath, jsonFilePath);
+    const success = convertAndSave(csvFilePath, jsonFilePath, { masterJsonFilePath });
     
     if (success) {
       // 変換されたJSONデータを読み込んで件数を表示
       const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
-      console.log(`変換が完了しました。${jsonData.length}件のデータが ${jsonFilePath} に保存されました。`);
+      const masterData = JSON.parse(fs.readFileSync(masterJsonFilePath, 'utf8'));
+      console.log(`変換が完了しました。${masterData.length}件の master data が ${masterJsonFilePath} に保存されました。`);
+      console.log(`変換が完了しました。${jsonData.length}件の web 表示用データが ${jsonFilePath} に保存されました。`);
       process.exit(0);
     } else {
       console.error('変換に失敗しました。');

@@ -1,0 +1,929 @@
+import { Publication } from "../types";
+import {
+  LocalizedLanguage,
+  LocalizedPeople,
+  LocalizedText,
+  PublicationIdentifiers,
+  PublicationMasterRecord,
+  PublicationMasterResearchmapFields,
+  PublicationSeeAlso,
+} from "../types/publicationMaster";
+
+export interface ProcessedDate {
+  startDate: string;
+  endDate: string;
+  sortableDate: string;
+}
+
+interface CsvPublicationRow {
+  lineNumber: number;
+  hasEmptyFields: boolean;
+  name: string;
+  japanese: string;
+  abstract: string;
+  type: string;
+  review: string;
+  authorship: string[];
+  presentationType: string[];
+  doi: string;
+  webLink: string;
+  date: string;
+  others: string;
+  site: string;
+  journalConference: string;
+  processedDate: ProcessedDate;
+}
+
+interface TitleAndAuthors {
+  title?: string;
+  authors: string[];
+}
+
+interface PublicationClassification {
+  type: PublicationMasterResearchmapFields["type"];
+  subtype?: string;
+  legacyType: string;
+  isInternational?: boolean;
+}
+
+const TITLE_FALLBACK = "Untitled publication";
+const TYPE_ORDER: string[] = [
+  "Journal paper：原著論文",
+  "Invited paper：招待論文",
+  "Research paper (international conference)：国際会議",
+  "Research paper (domestic conference)：国内会議",
+  "Miscellaneous",
+];
+
+const AUTHORSHIP_LABEL_TO_OWNER_ROLE: Record<string, string> = {
+  "Lead author": "lead",
+  "First author": "lead",
+  "筆頭著者": "lead",
+  "Corresponding author": "corresponding",
+  "責任著者": "corresponding",
+  "Last author": "last",
+  "Senior author": "last",
+};
+
+const OWNER_ROLE_TO_AUTHORSHIP_LABEL: Record<string, string> = {
+  lead: "Lead author",
+  corresponding: "Corresponding author",
+  last: "Last author",
+};
+
+const PRESENTATION_TYPE_LABEL_TO_CODE: Record<string, string> = {
+  Oral: "oral_presentation",
+  Poster: "poster_presentation",
+  Invited: "invited_oral_presentation",
+  Keynote: "keynote_oral_presentation",
+};
+
+const PRESENTATION_TYPE_CODE_TO_LABEL: Record<string, string> = {
+  oral_presentation: "Oral",
+  poster_presentation: "Poster",
+  invited_oral_presentation: "Invited",
+  keynote_oral_presentation: "Keynote",
+  public_symposium: "Public symposium",
+  others: "Other",
+};
+
+export function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+
+    if (char === '"') {
+      if (index + 1 < line.length && line[index + 1] === '"') {
+        current += '"';
+        index += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (char === "," && !inQuotes) {
+      result.push(current.trim());
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  result.push(current.trim());
+  return result;
+}
+
+export function processDate(dateString: string | undefined | null): ProcessedDate {
+  if (!dateString) {
+    return { startDate: "", endDate: "", sortableDate: "" };
+  }
+
+  const dateRangeMatch = dateString.match(
+    /(\d{4})年(\d{1,2})月(\d{1,2})日(?:\s*→\s*(\d{4})年(\d{1,2})月(\d{1,2})日)?/
+  );
+
+  if (dateRangeMatch) {
+    const startDate = `${dateRangeMatch[1]}-${dateRangeMatch[2].padStart(2, "0")}-${dateRangeMatch[3].padStart(2, "0")}`;
+    const endDate = dateRangeMatch[4]
+      ? `${dateRangeMatch[4]}-${dateRangeMatch[5].padStart(2, "0")}-${dateRangeMatch[6].padStart(2, "0")}`
+      : startDate;
+
+    return {
+      startDate,
+      endDate,
+      sortableDate: startDate,
+    };
+  }
+
+  const yearMonthMatch = dateString.match(/(\d{4})年(\d{1,2})月/);
+  if (yearMonthMatch) {
+    const date = `${yearMonthMatch[1]}-${yearMonthMatch[2].padStart(2, "0")}-01`;
+    return {
+      startDate: date,
+      endDate: date,
+      sortableDate: date,
+    };
+  }
+
+  return {
+    startDate: dateString,
+    endDate: dateString,
+    sortableDate: dateString,
+  };
+}
+
+export function parseCsvContent(csvData: string): CsvPublicationRow[] {
+  const normalizedCsvData = csvData.replace(/^\uFEFF/, "");
+  const lines = normalizedCsvData.split(/\r?\n/);
+  const headerLine = lines[0];
+  const headers = parseCSVLine(headerLine).map((header) => header.trim());
+  const abstractHeaderIndex = headers.findIndex((header) =>
+    ["abstract", "Abstract", "要旨", "概要"].includes(header)
+  );
+
+  const rows: CsvPublicationRow[] = [];
+
+  for (let lineIndex = 1; lineIndex < lines.length; lineIndex += 1) {
+    const line = lines[lineIndex].trim();
+
+    if (!line) {
+      continue;
+    }
+
+    try {
+      const values = parseCSVLine(line);
+      const rawValueCount = values.length;
+
+      while (values.length < headers.length) {
+        values.push("");
+      }
+
+      if (rawValueCount < headers.length - 1 || !values[1] || values[1].trim() === "") {
+        continue;
+      }
+
+      rows.push({
+        lineNumber: lineIndex + 1,
+        hasEmptyFields: (values[0] || "").trim() === "Yes",
+        name: (values[1] || "").trim(),
+        japanese: (values[2] || "").trim(),
+        abstract: abstractHeaderIndex >= 0 ? (values[abstractHeaderIndex] || "").trim() : "",
+        type: (values[3] || "").trim(),
+        review: (values[4] || "").trim(),
+        authorship: normalizeCommaSeparatedValues(values[5]),
+        presentationType: normalizeCommaSeparatedValues(values[6]),
+        doi: (values[7] || "").trim(),
+        webLink: (values[8] || "").trim(),
+        date: (values[9] || "").trim(),
+        others: (values[10] || "").trim(),
+        site: (values[11] || "").trim(),
+        journalConference: (values[12] || "").trim(),
+        processedDate: processDate((values[9] || "").trim()),
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.warn(
+          `警告: 行 ${lineIndex + 1} の解析中にエラーが発生しました。この行はスキップされます。`,
+          error.message
+        );
+      }
+    }
+  }
+
+  return rows;
+}
+
+export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): PublicationMasterRecord[] {
+  const seenIds = new Set<string>();
+
+  return rows.map((row) => {
+    const classification = classifyPublication(row);
+    const englishDetails = extractTitleAndAuthors(row.name, "en");
+    const japaneseDetails = extractTitleAndAuthors(row.japanese, "ja");
+    const localizedTitle = buildLocalizedTitle(japaneseDetails.title, englishDetails.title);
+    const localizedAuthors = buildLocalizedAuthors(englishDetails.authors, japaneseDetails.authors);
+    const identifier = buildIdentifiers(row.doi);
+    const links = buildSeeAlso(row.webLink);
+    const description = buildDescription(row.abstract);
+    const location = buildLocalizedValue(row.site);
+    const venue = buildLocalizedValue(row.journalConference);
+    const bibliographicInfo = extractBibliographicInfo(row);
+    const ownerRoles = mapOwnerRoles(row.authorship);
+    const normalizedPresentationType = mapPresentationType(row.presentationType);
+    const invited = resolveInvited(row.presentationType, row.type);
+
+    const researchmapFields: PublicationMasterResearchmapFields = compactObject({
+      type: classification.type,
+      subtype: classification.subtype,
+      paper_title: classification.type === "presentations" ? undefined : localizedTitle,
+      presentation_title: classification.type === "presentations" ? localizedTitle : undefined,
+      authors: classification.type === "presentations" ? undefined : localizedAuthors,
+      presenters: classification.type === "presentations" ? localizedAuthors : undefined,
+      publication_name: classification.type === "presentations" ? undefined : venue,
+      event: classification.type === "presentations" ? venue : undefined,
+      publication_date: row.processedDate.startDate || normalizePublicationDate(row.date),
+      from_event_date: row.processedDate.startDate || undefined,
+      to_event_date: row.processedDate.endDate || undefined,
+      identifiers: identifier,
+      see_also: links,
+      location,
+      description,
+      referee: mapReview(row.review),
+      invited,
+      published_paper_owner_roles: ownerRoles,
+      presentation_type: normalizedPresentationType,
+      published_paper_type: classification.type === "published_papers" ? classification.subtype : undefined,
+      misc_type: classification.type === "misc" ? classification.subtype : undefined,
+      is_international_presentation:
+        classification.type === "presentations" ? classification.isInternational : undefined,
+      is_international_journal:
+        classification.type !== "presentations" ? classification.isInternational : undefined,
+      ...bibliographicInfo,
+    });
+
+    const baseId = buildPublicationId({
+      year: row.processedDate.startDate || normalizePublicationDate(row.date),
+      title:
+        localizedTitle?.en ||
+        localizedTitle?.ja ||
+        row.name ||
+        row.japanese ||
+        TITLE_FALLBACK,
+      lineNumber: row.lineNumber,
+    });
+    const id = uniquifyId(baseId, seenIds);
+
+    return {
+      id,
+      researchmapFields,
+      localMeta: compactObject({
+        hasEmptyFields: row.hasEmptyFields,
+        rawCitation: compactObject({
+          en: row.name || undefined,
+          ja: row.japanese || undefined,
+        }),
+        notes: row.others,
+        legacyHints:
+          row.authorship.length > 0 || row.presentationType.length > 0
+            ? {
+                authorship: row.authorship,
+                presentationType: row.presentationType,
+              }
+            : undefined,
+      }),
+    };
+  });
+}
+
+export function publicationMasterToWebPublications(records: PublicationMasterRecord[]): Publication[] {
+  return records.map((record, index) => {
+      const title = getPublicationTitle(record.researchmapFields);
+      const rawCitation = record.localMeta.rawCitation;
+      const legacyHints = record.localMeta.legacyHints;
+      const authorshipValues = normalizeArrayOutput(
+        legacyHints?.authorship?.length
+          ? legacyHints.authorship
+          : deriveAuthorshipLabels(record.researchmapFields)
+      );
+      const presentationTypes = normalizeArrayOutput(
+        legacyHints?.presentationType?.length
+          ? legacyHints.presentationType
+          : derivePresentationTypeLabels(record.researchmapFields)
+      );
+      const startDate =
+        record.researchmapFields.from_event_date ||
+        record.researchmapFields.publication_date ||
+        "";
+      const endDate =
+        record.researchmapFields.to_event_date ||
+        record.researchmapFields.from_event_date ||
+        record.researchmapFields.publication_date ||
+        "";
+      const journalConference = getPublicationVenueText(record.researchmapFields);
+      const site = getLocalizedTextValue(record.researchmapFields.location, "en") ||
+        getLocalizedTextValue(record.researchmapFields.location, "ja");
+
+      return {
+        id: index + 1,
+        hasEmptyFields: record.localMeta.hasEmptyFields,
+        name: rawCitation.en || title?.en || title?.ja || TITLE_FALLBACK,
+        japanese: rawCitation.ja || title?.ja || "",
+        abstract:
+          getLocalizedTextValue(record.researchmapFields.description, "en") ||
+          getLocalizedTextValue(record.researchmapFields.description, "ja"),
+        type: getLegacyTypeLabel(record.researchmapFields),
+        review: deriveReviewLabel(record.researchmapFields.referee),
+        authorship: authorshipValues,
+        presentationType: presentationTypes,
+        doi: record.researchmapFields.identifiers?.doi?.[0] || "",
+        webLink: record.researchmapFields.see_also?.[0]?.["@id"] || "",
+        date: buildLegacyDateText(record.researchmapFields),
+        startDate,
+        endDate,
+        sortableDate: startDate,
+        others: record.localMeta.notes,
+        site,
+        journalConference,
+      };
+    });
+}
+
+export function getPublicationTitle(
+  fields: PublicationMasterResearchmapFields
+): LocalizedText | undefined {
+  return fields.paper_title || fields.presentation_title;
+}
+
+export function getPublicationVenueText(fields: PublicationMasterResearchmapFields): string {
+  return (
+    getLocalizedTextValue(fields.publication_name, "en") ||
+    getLocalizedTextValue(fields.publication_name, "ja") ||
+    getLocalizedTextValue(fields.event, "en") ||
+    getLocalizedTextValue(fields.event, "ja") ||
+    ""
+  );
+}
+
+export function getLocalizedTextValue(
+  value: LocalizedText | undefined,
+  language: LocalizedLanguage
+): string {
+  if (!value) {
+    return "";
+  }
+
+  return value[language] || value[language === "ja" ? "en" : "ja"] || "";
+}
+
+export function stringifyPeople(
+  people: LocalizedPeople | undefined,
+  language: LocalizedLanguage
+): string {
+  if (!people) {
+    return "";
+  }
+
+  const target = people[language] || people[language === "ja" ? "en" : "ja"] || [];
+  return target.map((person) => person.name).join("\n");
+}
+
+function normalizeCommaSeparatedValues(value: string | undefined): string[] {
+  const trimmedValue = (value || "").trim();
+  if (!trimmedValue) {
+    return [];
+  }
+  if (trimmedValue.includes(",")) {
+    return trimmedValue
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return [trimmedValue];
+}
+
+function classifyPublication(row: CsvPublicationRow): PublicationClassification {
+  const sourceType = row.type.toLowerCase();
+  const journalConference = row.journalConference.toLowerCase();
+  const name = row.name.toLowerCase();
+
+  if (journalConference.includes("optical review")) {
+    return {
+      type: "published_papers",
+      subtype: "scientific_journal",
+      legacyType: "Journal paper：原著論文",
+      isInternational: true,
+    };
+  }
+
+  if (sourceType.includes("journal paper")) {
+    return {
+      type: "published_papers",
+      subtype: "scientific_journal",
+      legacyType: "Journal paper：原著論文",
+      isInternational: inferInternationalFlag(row),
+    };
+  }
+
+  if (sourceType.includes("invited paper")) {
+    return {
+      type: "misc",
+      subtype: "introduction_scientific_journal",
+      legacyType: "Invited paper：招待論文",
+      isInternational: inferInternationalFlag(row),
+    };
+  }
+
+  if (sourceType.includes("international conference")) {
+    return {
+      type: "published_papers",
+      subtype: "international_conference_proceedings",
+      legacyType: "Research paper (international conference)：国際会議",
+      isInternational: true,
+    };
+  }
+
+  if (sourceType.includes("domestic conference")) {
+    return {
+      type: "misc",
+      subtype: "summary_national_conference",
+      legacyType: "Research paper (domestic conference)：国内会議",
+      isInternational: false,
+    };
+  }
+
+  if (
+    journalConference.includes("光ニューロワークショップ") ||
+    journalConference.includes("materials meet robots") ||
+    journalConference.includes("photonics for computing") ||
+    journalConference.includes("応用物理学会秋季学術講演会")
+  ) {
+    return {
+      type: "presentations",
+      subtype: mapPresentationType(row.presentationType) || "oral_presentation",
+      legacyType: "Miscellaneous",
+      isInternational: inferInternationalFlag(row),
+    };
+  }
+
+  if (name.includes("technical digest") || name.includes("program and abstracts")) {
+    return {
+      type: "published_papers",
+      subtype: "international_conference_proceedings",
+      legacyType: "Research paper (international conference)：国際会議",
+      isInternational: true,
+    };
+  }
+
+  return {
+    type: "misc",
+    subtype: "others",
+    legacyType: row.type || "Miscellaneous",
+    isInternational: inferInternationalFlag(row),
+  };
+}
+
+function buildLocalizedTitle(jaTitle?: string, enTitle?: string): LocalizedText | undefined {
+  const localized: LocalizedText = {};
+
+  if (jaTitle) {
+    localized.ja = cleanTitle(jaTitle);
+  }
+
+  if (enTitle) {
+    if (containsJapanese(enTitle) && !localized.ja) {
+      localized.ja = cleanTitle(enTitle);
+    } else if (!containsJapanese(enTitle)) {
+      localized.en = cleanTitle(enTitle);
+    }
+  }
+
+  if (localized.ja && !localized.en) {
+    localized.en = localized.ja;
+  }
+
+  return Object.keys(localized).length > 0 ? localized : undefined;
+}
+
+function buildLocalizedAuthors(enAuthors: string[], jaAuthors: string[]): LocalizedPeople | undefined {
+  const localized: LocalizedPeople = {};
+  const japanese = jaAuthors.length > 0 ? jaAuthors : enAuthors.filter((name) => containsJapanese(name));
+  const english = enAuthors.filter((name) => !containsJapanese(name));
+
+  if (japanese.length > 0) {
+    localized.ja = japanese.map((name) => ({ name }));
+  }
+
+  if (english.length > 0) {
+    localized.en = english.map((name) => ({ name }));
+  }
+
+  return Object.keys(localized).length > 0 ? localized : undefined;
+}
+
+function extractTitleAndAuthors(value: string, language: LocalizedLanguage): TitleAndAuthors {
+  const trimmed = normalizeQuotes(value.trim());
+
+  if (!trimmed) {
+    return { title: undefined, authors: [] };
+  }
+
+  const match = extractQuotedTitle(trimmed, language);
+  const authorSegment = match ? trimmed.slice(0, match.index).trim() : "";
+
+  return {
+    title: match?.title,
+    authors: parseAuthors(authorSegment, language),
+  };
+}
+
+function extractQuotedTitle(value: string, language: LocalizedLanguage) {
+  const patterns =
+    language === "ja"
+      ? [/「([^」]+)」/, /"([^"]+)"/]
+      : [/\"([^\"]+)\"/, /“([^”]+)”/, /「([^」]+)」/];
+
+  for (const pattern of patterns) {
+    const match = value.match(pattern);
+    if (match && match.index !== undefined) {
+      return {
+        title: match[1],
+        index: match.index,
+      };
+    }
+  }
+
+  return undefined;
+}
+
+function parseAuthors(authorSegment: string, language: LocalizedLanguage): string[] {
+  const cleaned = authorSegment
+    .replace(/[，,]\s*$/, "")
+    .replace(/et al\./gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!cleaned) {
+    return [];
+  }
+
+  const normalized =
+    language === "en"
+      ? cleaned.replace(/\s+and\s+/gi, ",").replace(/，/g, ",").replace(/、/g, ",")
+      : cleaned.replace(/、/g, ",").replace(/・/g, ",").replace(/，/g, ",");
+
+  return unique(
+    normalized
+      .split(",")
+      .map((part) => part.trim())
+      .filter(Boolean)
+  );
+}
+
+function buildIdentifiers(doi: string): PublicationIdentifiers | undefined {
+  const normalized = normalizeDoi(doi);
+  if (!normalized) {
+    return undefined;
+  }
+
+  return { doi: [normalized] };
+}
+
+function buildSeeAlso(webLink: string): PublicationSeeAlso[] | undefined {
+  const trimmed = webLink.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  return [{ "@id": trimmed, label: "url" }];
+}
+
+function buildDescription(value: string): LocalizedText | undefined {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  return containsJapanese(trimmed) ? { ja: trimmed } : { en: trimmed };
+}
+
+function buildLocalizedValue(value: string): LocalizedText | undefined {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  return containsJapanese(trimmed) ? { ja: trimmed } : { en: trimmed };
+}
+
+function mapReview(review: string): boolean | undefined {
+  const normalized = review.trim().toLowerCase();
+  if (!normalized) {
+    return undefined;
+  }
+
+  if (normalized.includes("not") || normalized.includes("non")) {
+    return false;
+  }
+
+  if (normalized.includes("peer") || normalized.includes("reviewed")) {
+    return true;
+  }
+
+  return undefined;
+}
+
+function resolveInvited(presentationType: string[], sourceType: string): boolean | undefined {
+  if (presentationType.some((value) => value.toLowerCase().includes("invited"))) {
+    return true;
+  }
+
+  if (sourceType.toLowerCase().includes("invited paper")) {
+    return true;
+  }
+
+  return undefined;
+}
+
+function mapOwnerRoles(authorship: string[]): string[] | undefined {
+  const mapped = authorship.flatMap((role) => {
+    const ownerRole = AUTHORSHIP_LABEL_TO_OWNER_ROLE[role];
+    return ownerRole ? [ownerRole] : [];
+  });
+
+  return mapped.length > 0 ? unique(mapped) : undefined;
+}
+
+function mapPresentationType(presentationType: string[]): string | undefined {
+  const normalized = presentationType
+    .map((value) => PRESENTATION_TYPE_LABEL_TO_CODE[value] || value.toLowerCase())
+    .find(Boolean);
+
+  return normalized || undefined;
+}
+
+function inferInternationalFlag(row: CsvPublicationRow): boolean {
+  return [row.type, row.site, row.journalConference, row.name].some((field) =>
+    /international|online|taiwan|hawaii|honolulu|usa/i.test(field)
+  );
+}
+
+function normalizePublicationDate(date: string): string | undefined {
+  const trimmed = date.trim();
+
+  if (!trimmed) {
+    return undefined;
+  }
+
+  const fullDate = trimmed.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if (fullDate) {
+    return `${fullDate[1]}-${fullDate[2].padStart(2, "0")}-${fullDate[3].padStart(2, "0")}`;
+  }
+
+  const yearMonth = trimmed.match(/(\d{4})年(\d{1,2})月/);
+  if (yearMonth) {
+    return `${yearMonth[1]}-${yearMonth[2].padStart(2, "0")}`;
+  }
+
+  const yearOnly = trimmed.match(/(\d{4})年/);
+  if (yearOnly) {
+    return yearOnly[1];
+  }
+
+  return trimmed;
+}
+
+function extractBibliographicInfo(row: CsvPublicationRow) {
+  const candidates = [row.name, row.japanese, row.others].filter(Boolean);
+  const compactCitation = firstMatchedGroups(candidates, [
+    /\b(\d+)\s*,\s*([A-Za-z]?\d+)\s*[-–—]\s*([A-Za-z]?\d+)\s*\(\d{4}\)/,
+  ]);
+  const conferencePaperCode = extractConferencePaperCode(candidates);
+  const volume =
+    firstMatchedValue(candidates, [
+      /\bvol\.?\s*([A-Za-z0-9.-]+)/i,
+      /\b(\d+)\s*\(\s*[A-Za-z0-9.-]{1,10}\s*\)\s*,/,
+    ]) || compactCitation?.[0];
+  const number =
+    firstMatchedValue(candidates, [
+      /\b(?:no|number)\b\.?\s*([A-Za-z0-9.-]+)/i,
+      /\b\d+\s*\(\s*([A-Za-z0-9.-]{1,10})\s*\)\s*,\s*(?:pp?\.?\s*)?[A-Za-z]?\d+/i,
+    ]) || conferencePaperCode;
+  const pageRange = firstMatchedGroups(candidates, [
+    /\bpp?\.\s*([A-Za-z]?\d+)\s*[-–—]\s*([A-Za-z]?\d+)/i,
+    /\bpp?\s+([A-Za-z]?\d+)\s*[-–—]\s*([A-Za-z]?\d+)/i,
+    /\bpages?\s+([A-Za-z]?\d+)\s*[-–—]\s*([A-Za-z]?\d+)/i,
+    /\b\d+\s*,\s*([A-Za-z]?\d+)\s*[-–—]\s*([A-Za-z]?\d+)\s*\(\d{4}\)/,
+  ]);
+  const singlePage = pageRange
+    ? undefined
+    : firstMatchedValue(candidates, [/\bp\.\s*([A-Za-z]?\d+)\b/i, /\bp\s+([A-Za-z]?\d+)\b/i]);
+
+  return compactObject({
+    volume: sanitizeBibliographicToken(volume),
+    number: sanitizeBibliographicToken(number),
+    starting_page: sanitizeBibliographicToken(pageRange?.[0] || singlePage),
+    ending_page: sanitizeBibliographicToken(pageRange?.[1] || singlePage),
+  });
+}
+
+function extractConferencePaperCode(candidates: string[]): string | undefined {
+  return firstMatchedValue(candidates, [
+    /\b([A-Z]{1,4}\d{2,4}-\d{1,3})\b/,
+    /\b([A-Z]{1,4}\d{2,4}-[A-Z]\d{1,3})\b/,
+  ]);
+}
+
+function firstMatchedValue(candidates: string[], patterns: RegExp[]): string | undefined {
+  for (const candidate of candidates) {
+    for (const pattern of patterns) {
+      const match = candidate.match(pattern);
+      if (match?.[1]) {
+        return match[1];
+      }
+    }
+  }
+  return undefined;
+}
+
+function firstMatchedGroups(candidates: string[], patterns: RegExp[]): string[] | undefined {
+  for (const candidate of candidates) {
+    for (const pattern of patterns) {
+      const match = candidate.match(pattern);
+      if (match && match.length > 2) {
+        return match.slice(1);
+      }
+    }
+  }
+  return undefined;
+}
+
+function sanitizeBibliographicToken(value: string | undefined): string | undefined {
+  return value?.trim().replace(/[.,)]*$/u, "") || undefined;
+}
+
+function normalizeDoi(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  return trimmed.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "");
+}
+
+function normalizeQuotes(value: string): string {
+  return value
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/‟/g, '"');
+}
+
+function cleanTitle(value: string): string {
+  return value.trim().replace(/[,\uFF0C\u3001]+$/u, "").trim();
+}
+
+function containsJapanese(value: string): boolean {
+  return /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/u.test(value);
+}
+
+function buildPublicationId({
+  year,
+  title,
+  lineNumber,
+}: {
+  year?: string;
+  title: string;
+  lineNumber: number;
+}): string {
+  const yearPart = year?.slice(0, 4) || "unknown";
+  const slug = slugify(title).slice(0, 48) || `row-${lineNumber}`;
+  return `pub-${yearPart}-${slug}`;
+}
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFKC")
+    .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function uniquifyId(baseId: string, seenIds: Set<string>): string {
+  if (!seenIds.has(baseId)) {
+    seenIds.add(baseId);
+    return baseId;
+  }
+
+  let suffix = 2;
+  let candidate = `${baseId}-${suffix}`;
+
+  while (seenIds.has(candidate)) {
+    suffix += 1;
+    candidate = `${baseId}-${suffix}`;
+  }
+
+  seenIds.add(candidate);
+  return candidate;
+}
+
+function deriveReviewLabel(referee: boolean | undefined): string {
+  if (referee === true) {
+    return "Reviewed";
+  }
+
+  if (referee === false) {
+    return "Not reviewed";
+  }
+
+  return "";
+}
+
+function deriveAuthorshipLabels(fields: PublicationMasterResearchmapFields): string[] {
+  const ownerRoles = fields.published_paper_owner_roles || [];
+  if (ownerRoles.length > 0) {
+    return ownerRoles.map((role) => OWNER_ROLE_TO_AUTHORSHIP_LABEL[role] || role);
+  }
+
+  const peopleCount =
+    fields.authors?.en?.length ||
+    fields.authors?.ja?.length ||
+    fields.presenters?.en?.length ||
+    fields.presenters?.ja?.length ||
+    0;
+
+  return peopleCount > 1 ? ["Co-author"] : [];
+}
+
+function derivePresentationTypeLabels(fields: PublicationMasterResearchmapFields): string[] {
+  if (!fields.presentation_type) {
+    return [];
+  }
+
+  return [PRESENTATION_TYPE_CODE_TO_LABEL[fields.presentation_type] || fields.presentation_type];
+}
+
+function getLegacyTypeLabel(fields: PublicationMasterResearchmapFields): string {
+  if (fields.type === "published_papers" && fields.published_paper_type === "scientific_journal") {
+    return "Journal paper：原著論文";
+  }
+
+  if (fields.type === "misc" && fields.misc_type === "introduction_scientific_journal") {
+    return "Invited paper：招待論文";
+  }
+
+  if (
+    fields.type === "published_papers" &&
+    fields.published_paper_type === "international_conference_proceedings"
+  ) {
+    return "Research paper (international conference)：国際会議";
+  }
+
+  if (fields.type === "misc" && fields.misc_type === "summary_national_conference") {
+    return "Research paper (domestic conference)：国内会議";
+  }
+
+  return "Miscellaneous";
+}
+
+function buildLegacyDateText(fields: PublicationMasterResearchmapFields): string {
+  const start = fields.from_event_date || fields.publication_date || "";
+  const end = fields.to_event_date || "";
+
+  if (!start) {
+    return "";
+  }
+
+  return end && end !== start ? `${start} → ${end}` : start;
+}
+
+function normalizeArrayOutput(values: string[]): string | string[] {
+  if (values.length <= 1) {
+    return values[0] || "";
+  }
+  return values;
+}
+
+function unique<T>(values: T[]): T[] {
+  return [...new Set(values)];
+}
+
+function compactObject<T extends object>(value: T): T {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, entryValue]) => {
+      if (entryValue === undefined || entryValue === null) {
+        return false;
+      }
+      if (Array.isArray(entryValue)) {
+        return entryValue.length > 0;
+      }
+      if (typeof entryValue === "object") {
+        return Object.keys(entryValue).length > 0;
+      }
+      return true;
+    })
+  ) as T;
+}

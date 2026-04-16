@@ -12,6 +12,7 @@ export interface LocaleMessages {
     publications: string;
     works: string;
     computerSystem2025: string;
+    publicationAdmin: string;
   };
   footer: {
     copyright: string;
@@ -36,5 +37,28 @@ export interface LocaleMessages {
     showAbstract: string;
     hideAbstract: string;
     abstractLabel: string;
+  };
+  publicationAdmin: {
+    title: string;
+    description: string;
+    localOnly: string;
+    openFile: string;
+    selectedFile: string;
+    openFileHint: string;
+    unsupported: string;
+    search: string;
+    listTitle: string;
+    editTitle: string;
+    save: string;
+    saveDisabled: string;
+    saveSuccess: string;
+    saveError: string;
+    openSuccess: string;
+    openError: string;
+    regenHint: string;
+    noResults: string;
+    noSelection: string;
+    rawCitation: string;
+    compatibility: string;
   };
 }

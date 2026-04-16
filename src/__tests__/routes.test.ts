@@ -5,6 +5,10 @@ describe("routes", () => {
     expect(findRouteByPath("/works/computer-system-2025")?.key).toBe("computerSystem2025");
   });
 
+  test("returns metadata for the local publication admin route in non-production environments", () => {
+    expect(findRouteByPath("/admin/publications")?.key).toBe("publicationAdmin");
+  });
+
   test("falls back to the nearest parent route for nested paths", () => {
     expect(findRouteByPath("/works/unknown-detail")?.key).toBe("works");
   });

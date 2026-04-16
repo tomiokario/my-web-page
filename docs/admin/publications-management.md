@@ -1,229 +1,167 @@
 # 出版物データの管理
 
-このドキュメントでは、my-web-pageプロジェクトにおける出版物データの管理、CSVからJSONへの変換プロセス、およびデータの表示方法について説明します。
+このドキュメントでは、`my-web-page` における出版物データの正本、再生成フロー、ローカル GUI 編集、researchmap 連携をまとめます。
 
-## 出版物データの更新ワークフロー
+## いまの正本
 
-出版物データを更新する際は、以下の一連の手順に従ってください：
+- 正本は `src/data/publication_master.json` です
+- `src/data/publications.json` は Web 表示用の生成物です
+- `src/data/publication_data.csv` は移行・再取り込み用の入力です
 
-### ステップ1: CSVエクスポート
-1. Notionから最新の出版物データをCSV形式でエクスポートします（AIエージェントではなく人間が行います）。
-2. エクスポートしたCSVファイルを `src/data/publication_data.csv` として配置します。
+日常運用では `publication_master.json` を編集し、その後に `npm run convert-publications` を実行して生成物を同期します。
 
-### ステップ2: JSON変換
-3. 以下のコマンドを実行して、CSVデータをJSONに変換します：
+## 更新ワークフロー
+
+### CSV から初期化・再取り込みする場合
+
+1. 最新の CSV を `src/data/publication_data.csv` に配置します
+2. 以下を実行します
 
    ```bash
    npm run convert-publications
    ```
 
-4. 変換が成功すると、`src/data/publications.json` が自動的に更新されます。
+3. `src/data/publication_master.json` と `src/data/publications.json` が更新されます
 
-### ステップ3: ローカルで確認
-5. ローカル開発サーバーを起動して、データが正しく表示されることを確認します：
+### ローカル GUI で編集する場合
 
-   ```bash
-   npm run start
-   ```
-
-6. http://localhost:3000/publications にアクセスして、以下を確認します：
-   - 新しい出版物が表示されている
-   - フィルタリング機能が正常に動作している
-   - 並び替え機能が正常に動作している
-
-### ステップ4: Vercelに反映
-7. 確認が完了したら、変更をGitにコミットします
-8. `git status` で意図しない差分がないことを確認し、作業ブランチを push します
-9. 日本語の PR を作成し、レビュー後に `main` へマージします
-
-10. Vercelが自動的にデプロイを開始し、数分以内に本番環境に反映されます。
-11. デプロイ完了後、本番環境のURLで最終確認を行います。
-
-### researchmap 向け再生成と安全な再投入
-
-researchmap に一度登録した後で書誌情報を補って再投入したい場合は、既存の researchmap エクスポートを必ずベースにします。新しく生成した `jsonl` をそのまま再アップロードすると、既存業績との突合が曖昧になり、重複や意図しない更新のリスクがあります。
-
-1. researchmap から最新の業績データを `jsonl` でエクスポートします。
-2. エクスポートが zip の場合は展開し、`tmp/researchmap` に `rm_*.jsonl` を置きます。
-3. 以下のコマンドで、CSV からの再生成結果を既存 `jsonl` にマージします。
+1. 開発サーバーを起動します
 
    ```bash
-   cd tools/researchmap-private
-   node scripts/exportResearchmapJson.mjs \
-     --input ../../src/data/publication_data.csv \
-     --output-dir ../../tmp/researchmap \
-     --researchmap-user-id R000000000 \
-     --existing-jsonl ../../tmp/researchmap/rm_researchersYYYYMMDD.jsonl
+   npm start
    ```
 
-4. `tmp/researchmap/merge-review.json` を確認します。
-   - `typeMismatches` が空であること
-   - `unmatchedGenerated` が想定どおりであること
-   - `unmatchedExisting` に消したくない既存業績が残っていないこと
-5. `tmp/researchmap/import.jsonl` を researchmap に再投入します。
-6. 反映後、巻号・開始/終了ページ・既存の手修正が維持されているかを researchmap 上で確認します。
+2. `http://localhost:3000/admin/publications` を開きます
+3. `master JSON を開く` から `src/data/publication_master.json` を選択します
+4. 編集して `JSON に保存` を実行します
+5. 保存後に以下を実行します
 
-このフローでは、既存 `jsonl` に入っていた値を優先し、空欄の書誌情報だけを再生成結果で補完します。researchmap 上で手修正したタイトル、URL、表示設定、その他の項目を不意に上書きしないための運用です。
+   ```bash
+   npm run convert-publications
+   ```
 
----
+6. `http://localhost:3000/publications` で表示確認します
 
-## 詳細情報
+GUI はローカル開発時のみ有効です。保存には File System Access API を使うため、対応ブラウザで開いてください。
 
-### 概要
-
-my-web-pageでは、出版物データを以下のフローで管理しています：
-
-1. Notionからエクスポートした出版物データをCSV形式で保存
-2. `src/data/publication_data.csv` に配置し、変換スクリプトを実行
-3. 変換されたJSONデータをReactアプリケーションで表示
-4. フィルタリングと並び替え機能を提供
-
-このアプローチにより、データの管理と表示を分離し、効率的なワークフローを実現しています。
-
-### データフロー
+## データフロー
 
 ```mermaid
 flowchart LR
-    A[Notion] --> B[CSV Data<br>src/data/publication_data.csv]
-    B --> C[convertPublications.ts]
-    C --> D[JSON Data<br>src/data/publications.json]
-    D --> E[usePublications Hook (Initial Sort)]
-    E --> F[useFilters Hook (.ts)]
-    F --> G[usePublications Hook (Grouping)]
-    G --> H[PublicationsView (.tsx)]
-    H --> I[PublicationGroup (.tsx)]
-    I --> J[PublicationItem (.tsx)]
+    A[CSV<br/>src/data/publication_data.csv] --> B[convertPublications.ts]
+    B --> C[Master Data<br/>src/data/publication_master.json]
+    C --> D[GUI Editor<br/>/admin/publications]
+    D --> C
+    C --> E[Web View Model<br/>src/data/publications.json]
+    E --> F[Publications Page<br/>/publications]
+    C --> G[researchmap Export<br/>tools/researchmap-private]
 ```
 
-### CSVデータ形式
+## master data の構造
 
-CSVファイル（`src/data/publication_data.csv`）は以下の列を含む必要があります：
+各業績は次の 2 層で保持します。
 
-1. 未入力項目有り（Yes/No）
-2. 名前
-3. Japanese（日本語）（日本語での著者名と論文タイトル）
-4. type（論文の種類）
-5. Review（査読の有無）
-6. Authorship（著者の役割）
-7. Presentation type（発表の種類）
-8. DOI（Digital Object Identifier）
-9. web link（ウェブリンク）
-10. Date（日付）
-11. Others（その他の情報）
-12. site（開催場所）
-13. journal / conference（ジャーナル名または会議名）
-14. abstract（要旨、任意）
+- `researchmapFields`
+  - researchmap に寄せた型・タイトル・著者・誌名/会議名・日付・DOI・URL・巻号ページ・要旨など
+- `localMeta`
+  - `hasEmptyFields`
+  - `rawCitation`
+  - `notes`
+  - `legacyHints`
 
-#### CSVファイルの例
+`legacyHints` は現行 Web 表示との互換のために一時的に持っている補助情報です。表示側を完全に researchmap 準拠へ寄せ切るまで、著者役割と発表形式をここで保持します。
 
-```csv
-未入力項目有り,名前（著者名と論文タイトル）,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference,abstract
-No,"Tomioka R, et al. Title of the paper","冨岡莉生, 他. 論文のタイトル","Journal paper：原著論文","Peer-reviewed","First author,Corresponding author","Oral","10.1234/abcd.5678","https://example.com/paper","2022年10月1日","Additional information","Tokyo, Japan","Journal of Example Research","Abstract text of the publication."
-```
-
-### CSVからJSONへの変換
-
-#### 変換スクリプト
-
-変換スクリプト（`scripts/convertPublications.ts`）は、CSVファイルを読み込み、JSONに変換して保存します。
-
-#### CSV変換ユーティリティ
-
-CSV変換の詳細なロジックは `src/utils/csvToJson.ts` に実装されています。主な機能は以下の通りです：
-
-1. CSVファイルの読み込み
-2. CSVデータの解析（引用符内のカンマを考慮）
-3. データの整形と変換
-4. JSONファイルへの保存
-
-特に重要な処理として以下があります：
-
-- **日付の処理**: 「2021年10月3日 → 2021年10月6日」のような日付範囲を解析し、開始日と終了日を抽出します。
-- **配列データの処理**: カンマで区切られた値（著者の役割や発表タイプなど）を配列に変換します。
-- **ソート可能な日付の生成**: 日付を「YYYYMMDD」形式に変換し、ソートを容易にします。
-
-#### 変換スクリプトの実行方法
-
-```bash
-npm run convert-publications
-```
-
-### JSONデータ構造
-
-変換後のJSONデータ（`src/data/publications.json`）は以下の構造を持ちます：
+例:
 
 ```json
-[
-  {
+{
+  "id": "pub-2023-optical-review",
+  "researchmapFields": {
+    "type": "published_papers",
+    "subtype": "scientific_journal",
+    "paper_title": {
+      "en": "Numerical simulations on optoelectronic deep neural network hardware based on self-referential holography"
+    },
+    "authors": {
+      "en": [{ "name": "Rio Tomioka" }]
+    },
+    "publication_name": {
+      "en": "Optical Review"
+    },
+    "publication_date": "2023-04-28",
+    "identifiers": {
+      "doi": ["10.1007/s10043-023-00810-2"]
+    }
+  },
+  "localMeta": {
     "hasEmptyFields": false,
-    "name": "Tomioka R, et al. Title of the paper",
-    "japanese": "冨岡莉生, 他. 論文のタイトル",
-    "type": "Journal paper：原著論文",
-    "review": "Peer-reviewed",
-    "authorship": ["First author", "Corresponding author"],
-    "presentationType": "Oral",
-    "doi": "10.1234/abcd.5678",
-    "webLink": "https://example.com/paper",
-    "date": "2022年10月1日",
-    "startDate": "2022-10-01",
-    "endDate": "2022-10-01",
-    "sortableDate": "2022-10-01",
-    "others": "Additional information",
-    "site": "Tokyo, Japan",
-    "journalConference": "Journal of Example Research",
-    "abstract": "Abstract text of the publication."
+    "rawCitation": {
+      "en": "Rio Tomioka and Masanori Takabayashi, ..."
+    },
+    "notes": "",
+    "legacyHints": {
+      "authorship": ["Lead author", "Corresponding author"],
+      "presentationType": ["Oral"]
+    }
   }
-]
+}
 ```
 
-### 出版物データの表示
+## 生成スクリプト
 
-#### データ処理フック
+`npm run convert-publications` は次をまとめて行います。
 
-出版物データの処理には、2つの主要なカスタムフックを使用しています：
+1. CSV を読み込みます
+2. `publication_master.json` を生成します
+3. master data から `publications.json` を生成します
 
-1. **usePublications (`src/hooks/usePublications.ts`)**: 出版物データの取得、整形、並び替え、グループ化を行います。
-2. **useFilters (`src/hooks/useFilters.ts`)**: フィルタリング機能を提供します。
+出力先:
 
-##### usePublications.ts
+- `src/data/publication_master.json`
+- `src/data/publications.json`
 
-`usePublications` フックは以下の機能を提供します：
+## researchmap への出力
 
-- 出版物データの読み込みと整形
-- 時系列順または種類順での並び替え
-- 年度別または種類別のグループ化
+`tools/researchmap-private` は `publication_master.json` を直接入力にできます。
 
-##### useFilters.ts
+```bash
+cd tools/researchmap-private
+node scripts/exportResearchmapJson.mjs \
+  --input ../../src/data/publication_master.json \
+  --output-dir ../../tmp/researchmap \
+  --researchmap-user-id R000000000
+```
 
-`useFilters` フックは以下の機能を提供します：
+既存の researchmap エクスポートをベースに安全に再投入する場合:
 
-- フィルターオプションの抽出
-- フィルター状態の管理
-- フィルタリングロジックの実装
-- ドロップダウンUIの制御
+```bash
+cd tools/researchmap-private
+node scripts/exportResearchmapJson.mjs \
+  --input ../../src/data/publication_master.json \
+  --output-dir ../../tmp/researchmap \
+  --researchmap-user-id R000000000 \
+  --existing-jsonl ../../tmp/researchmap/rm_researchersYYYYMMDD.jsonl
+```
 
-#### 出版物ページの構成
+確認ポイント:
 
-出版物ページは以下のコンポーネントで構成されています：
+- `tmp/researchmap/manual-review.json` に想定外の要確認項目がない
+- `tmp/researchmap/merge-review.json` の `typeMismatches` が空
+- `tmp/researchmap/import.jsonl` を投入後、巻号・ページ・URL が意図どおり反映される
 
-1. **Publications.tsx**: データ取得と状態管理を担当
-2. **PublicationsView.tsx**: UIレンダリングを担当
-3. **PublicationGroup.tsx**: 出版物グループを表示
-4. **PublicationItem.tsx**: 個々の出版物項目を表示
-5. **FilterDropdown.tsx**: フィルタードロップダウンを表示
-6. **ActiveFilters.tsx**: 現在適用されているフィルターを表示
+## 表示確認
 
-##### Publications.tsx
+`npm run convert-publications` のあとに `http://localhost:3000/publications` を開き、以下を確認します。
 
-`Publications.tsx` コンポーネントは、`usePublications` と `useFilters` フックを利用して、出版物データの取得、フィルタリング、並び替えの状態を管理し、`PublicationsView.tsx` に必要なデータを渡します。並び順の変更などのユーザーインタラクションもここで処理されます。
+- 新しい業績が表示されている
+- フィルターが動作する
+- 時系列順と種類順の切り替えが動作する
+- DOI / URL / 要旨の表示が崩れていない
 
-### 注意点
+## 注意点
 
-- CSVファイルの形式は厳密に守る必要があります。列の順序や名前を変更すると、変換が失敗する可能性があります。
-- 日付形式は「YYYY年MM月DD日」または「YYYY年MM月DD日 → YYYY年MM月DD日」の形式に従う必要があります。
-- カンマを含む値は引用符（"）で囲む必要があります。
-- CSVファイルは元データであるため直接編集せず、Notionでデータを管理することを推奨します。
-
-### テストとの関係
-
-`scripts/convertPublications.ts` のテストは一時的に `src/data/publications.json` を生成/上書きします。テスト後に削除されますが、テストを中断した場合などは、上記の手順で変換を再実行してください。
+- `publication_master.json` を編集したら、必ず `npm run convert-publications` を実行して生成物を同期してください
+- CSV は移行・再取り込み用です。日常運用では `publication_master.json` を優先します
+- `publication_data.csv` を人手で直接メンテナンスする前提には戻さないでください
+- `git status` で意図しない差分が混ざっていないか確認してから commit / push してください
+- `scripts/convertPublications.ts` のテストは `src/data/publication_master.json` と `src/data/publications.json` を一時的に上書きします

@@ -9,6 +9,8 @@ const INPUT_CSV_PATH = path.join(TEMP_DIR, 'input.csv');
 // スクリプトによって生成されるJSONファイルの期待されるパス (dataディレクトリがsrc配下に移動したためパスを更新)
 const EXPECTED_OUTPUT_JSON_PATH = path.join(__dirname, '../../data/publications.json');
 const TEMP_OUTPUT_JSON_PATH = path.join(__dirname, '../../data/publications.json.temp');
+const EXPECTED_OUTPUT_MASTER_JSON_PATH = path.join(__dirname, '../../data/publication_master.json');
+const TEMP_OUTPUT_MASTER_JSON_PATH = path.join(__dirname, '../../data/publication_master.json.temp');
 
 // テスト用のCSVデータ (abstract列を含む14列形式)
 const sampleCsvData = `未入力項目有り,名前（著者名と論文タイトル）,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference,abstract
@@ -22,12 +24,12 @@ const expectedJsonData = [
     name: 'Test Paper 1',
     japanese: 'テスト論文1',
     type: 'Journal paper：原著論文',
-    review: 'Peer-reviewed',
+    review: 'Reviewed',
     authorship: 'First author', // 文字列として処理される
     presentationType: 'Oral', // 文字列として処理される
     doi: '10.1234/test.1',
     webLink: 'https://example.com/1',
-    date: '2023年1月1日',
+    date: '2023-01-01',
     startDate: '2023-01-01',
     endDate: '2023-01-01',
     sortableDate: '2023-01-01',
@@ -42,12 +44,12 @@ const expectedJsonData = [
     name: 'Test Paper 2',
     japanese: 'テスト論文2',
     type: 'Research paper (international conference)：国際会議',
-    review: 'Non-peer-reviewed',
+    review: 'Not reviewed',
     authorship: 'Co-author', // 文字列として処理される
     presentationType: 'Poster', // 文字列として処理される
     doi: '10.1234/test.2',
     webLink: 'https://example.com/2',
-    date: '2022年12月15日',
+    date: '2022-12-15',
     startDate: '2022-12-15',
     endDate: '2022-12-15',
     sortableDate: '2022-12-15',
@@ -63,6 +65,9 @@ describe('convertPublications Script', () => {
       if (fs.existsSync(EXPECTED_OUTPUT_JSON_PATH) && !fs.existsSync(TEMP_OUTPUT_JSON_PATH)) {
           fs.renameSync(EXPECTED_OUTPUT_JSON_PATH, TEMP_OUTPUT_JSON_PATH);
       }
+      if (fs.existsSync(EXPECTED_OUTPUT_MASTER_JSON_PATH) && !fs.existsSync(TEMP_OUTPUT_MASTER_JSON_PATH)) {
+          fs.renameSync(EXPECTED_OUTPUT_MASTER_JSON_PATH, TEMP_OUTPUT_MASTER_JSON_PATH);
+      }
   });
 
   // 正常系テスト用の準備
@@ -74,6 +79,9 @@ describe('convertPublications Script', () => {
       // 既存の出力ファイルを削除しておく (もしあれば)
       if (fs.existsSync(EXPECTED_OUTPUT_JSON_PATH)) {
           fs.unlinkSync(EXPECTED_OUTPUT_JSON_PATH);
+      }
+      if (fs.existsSync(EXPECTED_OUTPUT_MASTER_JSON_PATH)) {
+          fs.unlinkSync(EXPECTED_OUTPUT_MASTER_JSON_PATH);
       }
   };
 
@@ -89,9 +97,15 @@ describe('convertPublications Script', () => {
       if (fs.existsSync(EXPECTED_OUTPUT_JSON_PATH)) {
           fs.unlinkSync(EXPECTED_OUTPUT_JSON_PATH);
       }
+      if (fs.existsSync(EXPECTED_OUTPUT_MASTER_JSON_PATH)) {
+          fs.unlinkSync(EXPECTED_OUTPUT_MASTER_JSON_PATH);
+      }
       // 退避していた元のJSONを戻す
       if (fs.existsSync(TEMP_OUTPUT_JSON_PATH)) {
           fs.renameSync(TEMP_OUTPUT_JSON_PATH, EXPECTED_OUTPUT_JSON_PATH);
+      }
+      if (fs.existsSync(TEMP_OUTPUT_MASTER_JSON_PATH)) {
+          fs.renameSync(TEMP_OUTPUT_MASTER_JSON_PATH, EXPECTED_OUTPUT_MASTER_JSON_PATH);
       }
       // テスト用CSVを削除 (コピーした場合)
       if (
@@ -136,13 +150,30 @@ describe('convertPublications Script', () => {
 
       // 出力されたJSONファイルが存在するか確認
       expect(fs.existsSync(EXPECTED_OUTPUT_JSON_PATH)).toBe(true);
+      expect(fs.existsSync(EXPECTED_OUTPUT_MASTER_JSON_PATH)).toBe(true);
 
       // 出力されたJSONファイルの内容を確認
       const outputJsonContent = fs.readFileSync(EXPECTED_OUTPUT_JSON_PATH, 'utf-8');
       const outputJson = JSON.parse(outputJsonContent);
+      const outputMasterJsonContent = fs.readFileSync(EXPECTED_OUTPUT_MASTER_JSON_PATH, 'utf-8');
+      const outputMasterJson = JSON.parse(outputMasterJsonContent);
 
       // 期待されるデータと完全一致するか確認
       expect(outputJson).toEqual(expectedJsonData);
+      expect(outputMasterJson).toHaveLength(2);
+      expect(outputMasterJson[0]).toMatchObject({
+        id: expect.stringContaining('pub-2023'),
+        researchmapFields: {
+          type: 'published_papers',
+          publication_date: '2023-01-01',
+          published_paper_type: 'scientific_journal',
+        },
+        localMeta: {
+          rawCitation: {
+            en: 'Test Paper 1',
+          },
+        },
+      });
 
     } finally {
        // テスト用CSVを削除
@@ -217,6 +248,7 @@ Yes,"Invalid" Paper 2","無効論文2","Type B","Rev B","Auth B","Poster","DOI B
 
       // 出力されたJSONファイルが存在するか確認
       expect(fs.existsSync(EXPECTED_OUTPUT_JSON_PATH)).toBe(true);
+      expect(fs.existsSync(EXPECTED_OUTPUT_MASTER_JSON_PATH)).toBe(true);
 
       // 出力されたJSONファイルの内容を確認 (有効な行のみ含まれる)
       const outputJsonContent = fs.readFileSync(EXPECTED_OUTPUT_JSON_PATH, 'utf-8');
