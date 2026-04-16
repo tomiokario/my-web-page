@@ -81,6 +81,7 @@ flowchart LR
   - `notes`
   - `notes` は editor / ローカル運用用の補助情報として保持し、必要な場合だけ `publications.json` へ写します
   - citation の完成文字列は正本に保持せず、構造化された `researchmapFields` から用途ごとに生成します
+  - `notes` は researchmap export の判定や書誌情報抽出には使いません
 
 例:
 
