@@ -44,10 +44,6 @@ const sampleMasterData = [
     },
     localMeta: {
       hasEmptyFields: false,
-      rawCitation: {
-        en: "Test Paper 1",
-        ja: "テスト論文1",
-      },
       notes: "Private editor note 1",
     },
   },
@@ -82,10 +78,6 @@ const sampleMasterData = [
     },
     localMeta: {
       hasEmptyFields: true,
-      rawCitation: {
-        en: "Test Paper 2",
-        ja: "テスト論文2",
-      },
       notes: "Private editor note 2",
     },
   },
@@ -128,7 +120,6 @@ describe("convertPublications script", () => {
       {
         id: 1,
         recordId: "pub-2023-test-paper-1",
-        hasEmptyFields: false,
         name: "Test Paper 1",
         japanese: "テスト論文1",
         abstract: "",
@@ -151,7 +142,6 @@ describe("convertPublications script", () => {
       {
         id: 2,
         recordId: "pub-2022-test-paper-2",
-        hasEmptyFields: true,
         name: "Test Paper 2",
         japanese: "テスト論文2",
         abstract: "",

@@ -180,7 +180,6 @@ function validateLocalMeta(
 
   return {
     hasEmptyFields: localMeta.hasEmptyFields,
-    rawCitation: optionalLocalizedText(localMeta.rawCitation, `${sourceLabel}.rawCitation`) || {},
     notes: optionalString(localMeta.notes, `${sourceLabel}.notes`) || "",
   };
 }

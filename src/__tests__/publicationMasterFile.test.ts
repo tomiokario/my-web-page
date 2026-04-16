@@ -44,9 +44,6 @@ describe("publicationMasterFile", () => {
         },
         localMeta: {
           hasEmptyFields: false,
-          rawCitation: {
-            en: "Alpha citation",
-          },
           notes: "Alpha note",
         },
       },

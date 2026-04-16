@@ -264,10 +264,6 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
       researchmapFields,
       localMeta: compactObject({
         hasEmptyFields: row.hasEmptyFields,
-        rawCitation: compactObject({
-          en: row.name || undefined,
-          ja: row.japanese || undefined,
-        }),
         notes: supplementalLinks.remainingNotes || "",
       }),
     };
@@ -299,7 +295,6 @@ export function publicationMasterToWebPublications(records: PublicationMasterRec
       return {
         id: index + 1,
         recordId: record.id,
-        hasEmptyFields: record.localMeta.hasEmptyFields,
         name: title?.en || title?.ja || TITLE_FALLBACK,
         japanese: title?.ja || "",
         abstract:

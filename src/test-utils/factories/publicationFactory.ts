@@ -2,7 +2,6 @@ import { Publication } from '../../types'; // Publication型をインポート
 
 // Publicationのデフォルト値を生成する関数
 const getDefaultPublicationValues = (index: number): Publication => ({
-  hasEmptyFields: false,
   name: `Test Publication ${index + 1}`,
   japanese: `テスト出版物 ${index + 1}`,
   abstract: '',

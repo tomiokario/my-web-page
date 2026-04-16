@@ -39,7 +39,6 @@ describe('usePublications', () => {
       const publicationsData = [
         {
           id: 42,
-          hasEmptyFields: false,
           name: 'Real JSON entry',
           japanese: '',
           type: 'Journal paper：原著論文',

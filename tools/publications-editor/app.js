@@ -34,8 +34,6 @@ const elements = {
   numberInput: document.querySelector("#number-input"),
   startingPageInput: document.querySelector("#starting-page-input"),
   endingPageInput: document.querySelector("#ending-page-input"),
-  rawCitationJaInput: document.querySelector("#raw-citation-ja-input"),
-  rawCitationEnInput: document.querySelector("#raw-citation-en-input"),
   notesInput: document.querySelector("#notes-input"),
   titleJaLabel: document.querySelector("#title-ja-label"),
   titleEnLabel: document.querySelector("#title-en-label"),
@@ -178,8 +176,6 @@ function renderEditor() {
   elements.numberInput.value = fields.number || "";
   elements.startingPageInput.value = fields.starting_page || "";
   elements.endingPageInput.value = fields.ending_page || "";
-  elements.rawCitationJaInput.value = record.localMeta?.rawCitation?.ja || "";
-  elements.rawCitationEnInput.value = record.localMeta?.rawCitation?.en || "";
   elements.notesInput.value = record.localMeta?.notes || "";
 
   syncFieldMode();
@@ -237,10 +233,7 @@ function applyFormToDraft() {
       delete fields.event;
     }
 
-    record.localMeta = record.localMeta || { hasEmptyFields: false, rawCitation: {}, notes: "" };
-    record.localMeta.rawCitation = record.localMeta.rawCitation || {};
-    setLocalizedText(record.localMeta, "rawCitation", "ja", elements.rawCitationJaInput.value);
-    setLocalizedText(record.localMeta, "rawCitation", "en", elements.rawCitationEnInput.value);
+    record.localMeta = record.localMeta || { hasEmptyFields: false, notes: "" };
     record.localMeta.notes = elements.notesInput.value.trim();
   });
 }
@@ -295,8 +288,6 @@ function deriveTitle(record) {
     fields.paper_title?.en ||
     fields.presentation_title?.ja ||
     fields.presentation_title?.en ||
-    record.localMeta?.rawCitation?.ja ||
-    record.localMeta?.rawCitation?.en ||
     record.id
   );
 }

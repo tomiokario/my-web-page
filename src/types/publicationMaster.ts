@@ -55,7 +55,6 @@ export interface PublicationMasterResearchmapFields {
 
 export interface PublicationMasterLocalMeta {
   hasEmptyFields: boolean;
-  rawCitation: LocalizedText;
   notes: string;
 }
 

@@ -52,7 +52,6 @@ function usePublications({ sortOrder, filteredPublications, publicationsData: in
       return {
         id: pub.id ?? index,
         recordId: pub.recordId,
-        hasEmptyFields: pub.hasEmptyFields ?? false, // デフォルト値を追加
         name: pub.name || '',
         japanese: pub.japanese || '',
         abstract: pub.abstract || '',

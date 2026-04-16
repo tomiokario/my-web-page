@@ -152,7 +152,7 @@ describe('CSV to JSON conversion', () => {
     // 最初の要素に必要なプロパティが含まれていることを確認
     const firstItem = jsonData[0];
     const requiredProps = [
-      'hasEmptyFields', 'name', 'japanese', 'type', 'review',
+      'name', 'japanese', 'type', 'review',
       'authorship', 'presentationType', 'doi', 'webLink', 'category', 'subtype',
       'date', 'others', 'site', 'journalConference'
     ];

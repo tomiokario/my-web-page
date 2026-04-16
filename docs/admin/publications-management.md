@@ -78,9 +78,9 @@ flowchart LR
   - researchmap に寄せた型、タイトル、著者、誌名・会議名、日付、DOI、URL、巻号ページ、要旨など
 - `localMeta`
   - `hasEmptyFields`
-  - `rawCitation`
   - `notes`
-  - `rawCitation` と `notes` は editor / ローカル運用用の補助情報として保持し、`publications.json` へはそのまま投影しません
+  - `notes` は editor / ローカル運用用の補助情報として保持し、必要な場合だけ `publications.json` へ写します
+  - citation の完成文字列は正本に保持せず、構造化された `researchmapFields` から用途ごとに生成します
 
 例:
 
@@ -107,9 +107,6 @@ flowchart LR
   },
   "localMeta": {
     "hasEmptyFields": false,
-    "rawCitation": {
-      "en": "Rio Tomioka and Masanori Takabayashi, ..."
-    },
     "notes": ""
   }
 }
@@ -141,7 +138,8 @@ CSV から master data を再構築する移行用スクリプトです。
 - `review`: `peer_reviewed` / `not_peer_reviewed`
 - `authorship`: `lead` `corresponding` `last` `coauthor`
 - `presentationType`: `oral_presentation` など
-- `name` / `japanese` / `webLink` / `others` も `researchmapFields` 側から組み立て、`localMeta.rawCitation` / `localMeta.notes` をそのまま公開用 JSON に流しません
+- `name` / `japanese` / `webLink` / `others` も `researchmapFields` 側から組み立てます
+- `hasEmptyFields` は master のみに保持し、`publications.json` には出しません
 
 表示ラベルへの変換は React 側で行います。
 
