@@ -9,6 +9,7 @@ interface FilterDropdownProps {
   label: string;
   options: string[];
   selectedValues: string[];
+  getOptionLabel?: (option: string) => string;
   isOpen: boolean;
   onToggleDropdown: (dropdown: string | null) => void;
   onToggleFilter: (category: keyof SelectedFilters, value: string) => void;
@@ -63,6 +64,7 @@ function FilterDropdown({
   label,
   options,
   selectedValues,
+  getOptionLabel,
   isOpen,
   onToggleDropdown,
   onToggleFilter,
@@ -100,9 +102,9 @@ function FilterDropdown({
                   onChange={() => onToggleFilter(category, option)}
                   className={classes.checkbox}
                   aria-checked={selectedValues.includes(option)}
-                  aria-label={option}
+                  aria-label={getOptionLabel ? getOptionLabel(option) : option}
                 />
-                {option}
+                {getOptionLabel ? getOptionLabel(option) : option}
               </label>
             </div>
           ))}

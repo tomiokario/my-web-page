@@ -152,8 +152,8 @@ describe('CSV to JSON conversion', () => {
     // 最初の要素に必要なプロパティが含まれていることを確認
     const firstItem = jsonData[0];
     const requiredProps = [
-      'hasEmptyFields', 'name', 'japanese', 'type', 'review',
-      'authorship', 'presentationType', 'doi', 'webLink',
+      'name', 'japanese', 'type', 'review',
+      'authorship', 'presentationType', 'doi', 'webLink', 'category', 'subtype',
       'date', 'others', 'site', 'journalConference'
     ];
     
@@ -167,8 +167,10 @@ describe('CSV to JSON conversion', () => {
     );
 
     expect(targetItem).toBeDefined();
-    expect(targetItem.name).toContain('Rio Tomioka');
-    const expectedType = 'Research paper (international conference)：国際会議';
+    expect(targetItem.name).toContain(
+      'Numerical simulations of neural network hardware based on self-referential holography'
+    );
+    const expectedType = 'published_papers/international_conference_proceedings';
     // 文字コード配列を比較して、目に見えない文字の問題を回避
     expect(targetItem.type.trim().split('').map((c: string) => c.charCodeAt(0)))
       .toEqual(expectedType.split('').map((c: string) => c.charCodeAt(0)));
@@ -199,7 +201,7 @@ No,,,,,,,,,,,,
       // Assert - 結果を検証
       // 空行や不正な行がスキップされ、有効なデータのみが変換されることを確認
       expect(jsonData.length).toBe(1);
-      expect(jsonData[0].name).toBe('Test Author, "Test Title"');
+      expect(jsonData[0].name).toBe('Test Title');
       
       // 日本語の内容が正しく変換されていることを確認
       expect(jsonData[0].japanese).toBe('テスト');
@@ -232,13 +234,31 @@ No,"Test Author, ""Single Role""",テスト,Test Type,Reviewed,Lead author,Oral,
       
       // カンマで区切られた著者の役割が配列として処理されていることを確認
       expect(Array.isArray(jsonData[0].authorship)).toBe(true);
-      expect(jsonData[0].authorship).toEqual(['Corresponding author', 'Lead author']);
+      expect(jsonData[0].authorship).toEqual(['corresponding', 'lead']);
       
       // 単一の著者の役割は文字列として処理されていることを確認
       expect(Array.isArray(jsonData[1].authorship)).toBe(false);
-      expect(jsonData[1].authorship).toBe('Lead author');
+      expect(jsonData[1].authorship).toBe('lead');
     } finally {
       // クリーンアップ - 一時ファイルを削除
+      removeTempFile(tempFilePath);
+    }
+  });
+
+  test('promotes URL-like others into researchmap see_also instead of leaking local notes', () => {
+    const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
+No,"Test Author, ""Supplement Link Test""",補足リンクテスト,Test Type,Reviewed,Lead author,Oral,,https://example.com/main,2023-01-01,Full text link: https://example.com/full-text,Test Site,Test Journal
+`;
+
+    const tempFilePath = createTempCsvFile(testCsvData, 'temp_others_to_see_also.csv');
+
+    try {
+      const jsonData = csvToJson(tempFilePath);
+
+      expect(jsonData).toHaveLength(1);
+      expect(jsonData[0].webLink).toBe('https://example.com/main');
+      expect(jsonData[0].others).toBe('Full text link: https://example.com/full-text');
+    } finally {
       removeTempFile(tempFilePath);
     }
   });
@@ -260,13 +280,13 @@ No,"Test Author, ""Single Type""",テスト,Test Type,Reviewed,Lead author,Oral,
       // 2つのデータが正しく変換されていることを確認
       expect(jsonData.length).toBe(2);
       
-      // カンマで区切られた発表タイプが配列として処理されていることを確認
-      expect(Array.isArray(jsonData[0].presentationType)).toBe(true);
-      expect(jsonData[0].presentationType).toEqual(['Oral', 'Poster']);
+      // researchmap の presentation_type は単一値なので、先頭の型へ正規化される
+      expect(Array.isArray(jsonData[0].presentationType)).toBe(false);
+      expect(jsonData[0].presentationType).toBe('oral_presentation');
       
       // 単一の発表タイプは文字列として処理されていることを確認
       expect(Array.isArray(jsonData[1].presentationType)).toBe(false);
-      expect(jsonData[1].presentationType).toBe('Oral');
+      expect(jsonData[1].presentationType).toBe('oral_presentation');
     } finally {
       // クリーンアップ - 一時ファイルを削除
       removeTempFile(tempFilePath);
@@ -294,19 +314,19 @@ No,"Test Empty Date",テスト,Test Type,Reviewed,Lead author,Oral,,https://exam
       expect(jsonData.length).toBe(4);
       
       // 日付範囲が正しく処理されていることを確認
-      expect(jsonData[0].date).toBe('2021年10月3日 → 2021年10月6日');
+      expect(jsonData[0].date).toBe('2021-10-03 → 2021-10-06');
       expect(jsonData[0].startDate).toBe('2021-10-03');
       expect(jsonData[0].endDate).toBe('2021-10-06');
       expect(jsonData[0].sortableDate).toBe('2021-10-03');
       
       // 単一の日付が正しく処理されていることを確認
-      expect(jsonData[1].date).toBe('2022年5月15日');
+      expect(jsonData[1].date).toBe('2022-05-15');
       expect(jsonData[1].startDate).toBe('2022-05-15');
       expect(jsonData[1].endDate).toBe('2022-05-15');
       expect(jsonData[1].sortableDate).toBe('2022-05-15');
       
       // 年月のみの日付が正しく処理されていることを確認
-      expect(jsonData[2].date).toBe('2023年7月');
+      expect(jsonData[2].date).toBe('2023-07-01');
       expect(jsonData[2].startDate).toBe('2023-07-01');
       expect(jsonData[2].endDate).toBe('2023-07-01');
       expect(jsonData[2].sortableDate).toBe('2023-07-01');

@@ -3,6 +3,12 @@ import { createStyles } from "@mantine/emotion";
 import { Button, Collapse, MantineTheme } from "@mantine/core";
 import { Language, Publication } from "../../types";
 import locales from "../../locales";
+import {
+  getPublicationAuthorshipLabel,
+  getPublicationPresentationTypeLabel,
+  getPublicationReviewLabel,
+  getPublicationTypeLabel,
+} from "../../utils/publicationLabels";
 
 // PublicationItemPropsインターフェースを追加
 interface PublicationItemProps {
@@ -102,13 +108,13 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
                   className={classes.tag}
                   data-testid="tag"
                 >
-                  {role}
+                  {getPublicationAuthorshipLabel(role, language)}
                 </span>
               ))
             ) : (
               // 文字列の場合は単一のタグとして表示
               <span className={classes.tag} data-testid="tag">
-                {publication.authorship}
+                {getPublicationAuthorshipLabel(publication.authorship, language)}
               </span>
             )}
           </>
@@ -116,13 +122,13 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
         
         {publication.type && (
           <span className={classes.tag} data-testid="tag">
-            {publication.type}
+            {getPublicationTypeLabel(publication.type, language)}
           </span>
         )}
         
         {publication.review && (
           <span className={classes.tag} data-testid="tag">
-            {publication.review}
+            {getPublicationReviewLabel(publication.review, language)}
           </span>
         )}
         
@@ -136,13 +142,13 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
                   className={classes.tag}
                   data-testid="tag"
                 >
-                  {type}
+                  {getPublicationPresentationTypeLabel(type, language)}
                 </span>
               ))
             ) : (
               // 文字列の場合は単一のタグとして表示
               <span className={classes.tag} data-testid="tag">
-                {publication.presentationType}
+                {getPublicationPresentationTypeLabel(publication.presentationType, language)}
               </span>
             )}
           </>

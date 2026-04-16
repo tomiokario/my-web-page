@@ -6,6 +6,7 @@ import { SelectedFilters } from "../../hooks/useFilters";
 interface ActiveFiltersProps {
   selectedFilters: SelectedFilters;
   filterLabels: { [key: string]: string };
+  getValueLabel?: (category: keyof SelectedFilters, value: string) => string;
   onToggleFilter: (category: keyof SelectedFilters, value: string) => void;
   onResetFilters: () => void;
   resetLabel: string;
@@ -48,6 +49,7 @@ const useStyles = createStyles((theme: MantineTheme): ActiveFiltersStyles => ({
 function ActiveFilters({
   selectedFilters,
   filterLabels,
+  getValueLabel,
   onToggleFilter,
   onResetFilters,
   resetLabel,
@@ -85,7 +87,7 @@ function ActiveFilters({
                     onClick={() => onToggleFilter(category, value)}
                     data-testid={`filter-tag-${category}-${value}`}
                   >
-                    {value} ✕
+                    {getValueLabel ? getValueLabel(category, value) : value} ✕
                   </span>
                 ))}
               </div>

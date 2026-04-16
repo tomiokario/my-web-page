@@ -4,11 +4,13 @@ export type Language = "ja" | "en";
 
 export interface Publication {
   id: number; // idを必須に戻す
-  hasEmptyFields: boolean;
+  recordId?: string;
   name: string;
   japanese: string;
   abstract?: string;
   type: string;
+  category?: string;
+  subtype?: string;
   review: string;
   authorship: string | string[];
   presentationType: string | string[];

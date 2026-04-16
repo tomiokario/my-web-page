@@ -23,7 +23,7 @@ export interface AppRouteDefinition {
   titleKey?: keyof LocaleMessages["subheader"];
 }
 
-export const appRoutes: AppRouteDefinition[] = [
+const baseRoutes: AppRouteDefinition[] = [
   {
     key: "home",
     path: "/",
@@ -60,6 +60,7 @@ export const appRoutes: AppRouteDefinition[] = [
     titleKey: "computerSystem2025",
   },
 ];
+export const appRoutes: AppRouteDefinition[] = [...baseRoutes];
 
 export const navigationRoutes = appRoutes.filter(
   (route): route is AppRouteDefinition & { navLabelKey: keyof LocaleMessages["header"] } =>

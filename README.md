@@ -22,6 +22,7 @@
 - ユーザーがローカル確認を希望した場合は、`npm start` で確認環境を用意し、確認完了までは push を行いません
 - PR マージ後にユーザーから完了連絡があった場合は、`main` を `git pull --rebase` で最新化し、作業ブランチを削除してローカルを同期状態に戻します
 - 重要な変更では、Codex 本体の確認に加えてサブエージェントによるレビューも併用します
+- Issue 対応では、issue 本文・関連コメント・現在の差分が要求に沿っているかを、文脈を引き継がない新規サブエージェントで必ず確認し、`OK` が出るまで別個体で再レビューを繰り返します
 - 運用ルールを更新する場合は、`AGENTS.md` だけでなく関連する `README` や手順書も合わせて更新します
 
 ## ローカル環境での使い方
@@ -42,14 +43,24 @@
 
 ## 出版物データの更新方法
 
-CSV から出版物データを JSON に変換するユーティリティを提供しています。
+出版物データの正本は `src/data/publication_master.json` です。日常更新では、次のいずれかを使います。
 
-1. 最新の出版物データを`src/data/publication_data.csv`に配置
-2. 以下のコマンドを実行
+1. ローカル editor を使う場合
+   ```
+   npm run publications-editor
+   ```
+   - `http://127.0.0.1:4318` を開いて保存すると、`publication_master.json` の検証と `publications.json` の再生成がまとめて行われます
+2. `publication_master.json` を直接編集した場合
    ```
    npm run convert-publications
    ```
-3. 変換済み JSON が`src/data/publications.json`に保存され、Web サイトで使用されます
+   - `src/data/publications.json` が再生成されます
+3. CSV から再取り込みしたい場合
+   ```
+   npm run import-publications-csv
+   npm run convert-publications
+   ```
+   - `src/data/publication_data.csv` は移行・再取り込み用で、日常運用の正本にはしません
 
 詳細は[管理者向けドキュメント - 出版物データ管理](docs/admin/publications-management.md)を参照してください。
 

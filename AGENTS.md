@@ -10,6 +10,7 @@
 - 今後も有効な repo 固有の運用指示をユーザーから受けた場合は、その場限りの口頭対応で終えず、必要に応じて `AGENTS.md`、`README.md`、`docs/README.md`、関連手順書へ反映して継続運用できる状態にしてください
 - ユーザーから「merge しました」など PR マージ完了の連絡を受けたら、別指示がない限り `main` へ戻って `git pull --rebase` を行い、作業ブランチのローカル・リモート削除まで進めて、ローカルを最新の `main` と同期した状態にしてください
 - 実装や内容変更のレビューでは、必要に応じてサブエージェントにもレビューを依頼し、Codex 本体の確認と合わせて往復しながら品質を上げてください
+- Issue に取り組むときは、実装前後を問わず issue 本文・関連コメント・現在の差分が要求に沿っているかを、文脈を fork しない新規サブエージェントだけで確認してください。指摘を反映したら別の新規サブエージェントに再レビューさせ、`OK` が出るまで繰り返してください
 
 ## セキュリティ
 
@@ -24,7 +25,7 @@
 - `main` へ直接 push する前提の変更や手順を書かない。作業ブランチと PR を前提にする
 - UI や文言の変更では、日本語と英語の両方で片側だけ更新漏れがないか確認する
 - `public/markdown` の更新では、リンク切れ、画像参照切れ、言語切り替え時の導線崩れがないか確認する
-- 出版物データ変更では、`src/data/publication_data.csv` と生成物 `src/data/publications.json` の整合、および変換手順の反映漏れがないか確認する
+- 出版物データ変更では、正本 `src/data/publication_master.json` と生成物 `src/data/publications.json` の整合、および `convert-publications` / `import-publications-csv` / `publications-editor` の手順反映漏れがないか確認する
 - 実装変更では、ユーザー視点の挙動を守るテストや既存テストの更新が不足していないか確認する
 - ドキュメントや運用ルールの変更では、`AGENTS.md` だけでなく `README` や関連手順書の更新漏れがないか確認する
 
@@ -40,6 +41,7 @@
 - Pull Request で対応する Issue をマージ時に閉じたい場合は、本文に `close: #20` のようなクローズ記法を明記する
 - Pull Request 作成後に補足や修正内容を伝える場合、既存コメントや本文を安易に更新せず、新規コメントとして投稿する
 - Issue 対応中に実装前の方針整理や構成案を残す必要がある場合は、repo 内へ方針メモを追加せず、対応 Issue に新規コメントとして残す
+- Issue 対応では、push や PR 更新の前に、issue 本文・関連コメント・差分を入力にした fresh なサブエージェントレビューを必ず実施する。指摘を反映したら別個体で再レビューし、`OK` が出るまで完了扱いにしない
 - Pull Request がマージされた後は、ユーザーから別指示がない限り `main` に戻って `git pull --rebase` し、マージ済みのローカルブランチを削除する。リモートブランチが残っている場合はあわせて削除する
 - 改行コードは `.gitattributes` を正本とし、不要な `CRLF` 差分を持ち込まない
 
@@ -58,9 +60,12 @@
 - ファイル命名規則: コンポーネントは `PascalCase.jsx`、フックは `useHookName.js`、ユーティリティは `camelCase.js`
 
 ## データ管理
-- 出版物データは CSV から JSON への変換プロセスを通じて管理
-- CSV ファイルは元データであるため直接編集せず、更新は Notion での操作をユーザーに依頼する
-- JSON 変換には `ts-node scripts/convertPublications.ts` を使用
+- 出版物データの唯一の正本は `src/data/publication_master.json` とする
+- `src/data/publications.json` は `publication_master.json` から再生成される Web 表示用の生成物とする
+- `src/data/publication_data.csv` は移行・再取り込み用の入力としてのみ扱い、日常運用の正本に戻さない
+- CSV ファイルを更新する場合は Notion での操作をユーザーに依頼し、必要に応じて `npm run import-publications-csv` で master data を再生成する
+- Web 表示用 JSON の再生成には `npm run convert-publications` を使用する
+- ローカル GUI 編集が必要な場合は `npm run publications-editor` を使用し、公開用 SPA に editor route を追加しない
 
 ## 多言語対応
 - `LanguageContext` と `useLanguage` フックを使用して言語状態を管理
@@ -71,7 +76,7 @@
 - マークダウンコンテンツは `public/markdown` ディレクトリで管理
 - コンテンツ更新後は開発サーバーで表示を確認してからコミット
 - ユーザー確認が必要な更新では、可能な限りローカル開発サーバーを起動した状態で確認を依頼し、確認完了までは push を保留する
-- 出版物データ更新後は `ts-node scripts/convertPublications.ts` を実行して JSON を生成
+- `publication_master.json` を直接編集した場合は `npm run convert-publications` を実行して `publications.json` を再生成する
 
 ## ドキュメント
 - コードの変更に伴い、必要に応じてドキュメントを更新

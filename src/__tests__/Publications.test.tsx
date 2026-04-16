@@ -8,7 +8,6 @@ jest.mock('../data/publications.json', () => ({
   default: [
     {
       id: 1,
-      hasEmptyFields: false,
       name: 'Alpha Journal Paper',
       japanese: 'アルファ原著論文',
       type: 'Journal paper：原著論文',
@@ -28,7 +27,6 @@ jest.mock('../data/publications.json', () => ({
     },
     {
       id: 2,
-      hasEmptyFields: false,
       name: 'Beta Conference Paper',
       japanese: '',
       type: 'Research paper (international conference)：国際会議',
@@ -47,7 +45,6 @@ jest.mock('../data/publications.json', () => ({
     },
     {
       id: 3,
-      hasEmptyFields: false,
       name: 'Gamma Misc Talk',
       japanese: 'ガンマ発表',
       type: 'Miscellaneous',

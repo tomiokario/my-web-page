@@ -5,6 +5,10 @@ describe("routes", () => {
     expect(findRouteByPath("/works/computer-system-2025")?.key).toBe("computerSystem2025");
   });
 
+  test("does not expose the publication editor inside the public SPA routes", () => {
+    expect(findRouteByPath("/admin/publications")).toBeUndefined();
+  });
+
   test("falls back to the nearest parent route for nested paths", () => {
     expect(findRouteByPath("/works/unknown-detail")?.key).toBe("works");
   });

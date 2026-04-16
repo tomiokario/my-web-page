@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Publication Master Editor</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Local bridge editor</p>
+        <h1>Publication Master Editor</h1>
+        <p class="description">
+          This tool edits <code>publication_master.json</code> through a local bridge and rewrites
+          <code>publications.json</code> on save.
+        </p>
+      </div>
+      <div class="actions">
+        <button id="reload-button" type="button">Reload</button>
+        <button id="save-button" type="button">Save</button>
+      </div>
+    </header>
+
+    <section class="status-panel">
+      <p id="status-text">Loading publication master data...</p>
+      <p id="path-text"></p>
+    </section>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <label class="field">
+          <span>Search</span>
+          <input id="search-input" type="search" placeholder="ID, title, venue" />
+        </label>
+        <div id="record-list" class="record-list"></div>
+      </aside>
+
+      <section class="editor">
+        <div class="section">
+          <h2>Classification</h2>
+          <div class="grid">
+            <label class="field">
+              <span>Record ID</span>
+              <input id="record-id" type="text" readonly />
+            </label>
+            <label class="field">
+              <span>researchmapFields.type</span>
+              <select id="type-select">
+                <option value="published_papers">published_papers</option>
+                <option value="presentations">presentations</option>
+                <option value="misc">misc</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>researchmapFields.subtype</span>
+              <input id="subtype-input" type="text" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.publication_date</span>
+              <input id="publication-date-input" type="text" placeholder="YYYY-MM-DD" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.from_event_date</span>
+              <input id="from-date-input" type="text" placeholder="YYYY-MM-DD" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.to_event_date</span>
+              <input id="to-date-input" type="text" placeholder="YYYY-MM-DD" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.presentation_type</span>
+              <input id="presentation-type-input" type="text" />
+            </label>
+            <label class="field checkbox-field">
+              <input id="referee-checkbox" type="checkbox" />
+              <span>researchmapFields.referee</span>
+            </label>
+            <label class="field checkbox-field">
+              <input id="invited-checkbox" type="checkbox" />
+              <span>researchmapFields.invited</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Localized fields</h2>
+          <div class="grid">
+            <label class="field">
+              <span id="title-ja-label">Title (ja)</span>
+              <input id="title-ja-input" type="text" />
+            </label>
+            <label class="field">
+              <span id="title-en-label">Title (en)</span>
+              <input id="title-en-input" type="text" />
+            </label>
+            <label class="field">
+              <span id="people-ja-label">People (ja)</span>
+              <textarea id="people-ja-input" rows="4"></textarea>
+            </label>
+            <label class="field">
+              <span id="people-en-label">People (en)</span>
+              <textarea id="people-en-input" rows="4"></textarea>
+            </label>
+            <label class="field">
+              <span id="venue-ja-label">Venue (ja)</span>
+              <input id="venue-ja-input" type="text" />
+            </label>
+            <label class="field">
+              <span id="venue-en-label">Venue (en)</span>
+              <input id="venue-en-input" type="text" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.location.ja</span>
+              <input id="location-ja-input" type="text" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.location.en</span>
+              <input id="location-en-input" type="text" />
+            </label>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Links and notes</h2>
+          <div class="grid">
+            <label class="field">
+              <span>researchmapFields.identifiers.doi[0]</span>
+              <input id="doi-input" type="text" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.see_also[0]["@id"]</span>
+              <input id="web-link-input" type="url" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.volume</span>
+              <input id="volume-input" type="text" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.number</span>
+              <input id="number-input" type="text" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.starting_page</span>
+              <input id="starting-page-input" type="text" />
+            </label>
+            <label class="field">
+              <span>researchmapFields.ending_page</span>
+              <input id="ending-page-input" type="text" />
+            </label>
+            <label class="field full-width">
+              <span>localMeta.notes</span>
+              <textarea id="notes-input" rows="4"></textarea>
+            </label>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
