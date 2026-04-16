@@ -39,6 +39,32 @@
 10. Vercelが自動的にデプロイを開始し、数分以内に本番環境に反映されます。
 11. デプロイ完了後、本番環境のURLで最終確認を行います。
 
+### researchmap 向け再生成と安全な再投入
+
+researchmap に一度登録した後で書誌情報を補って再投入したい場合は、既存の researchmap エクスポートを必ずベースにします。新しく生成した `jsonl` をそのまま再アップロードすると、既存業績との突合が曖昧になり、重複や意図しない更新のリスクがあります。
+
+1. researchmap から最新の業績データを `jsonl` でエクスポートします。
+2. エクスポートが zip の場合は展開し、`tmp/researchmap` に `rm_*.jsonl` を置きます。
+3. 以下のコマンドで、CSV からの再生成結果を既存 `jsonl` にマージします。
+
+   ```bash
+   cd tools/researchmap-private
+   node scripts/exportResearchmapJson.mjs \
+     --input ../../src/data/publication_data.csv \
+     --output-dir ../../tmp/researchmap \
+     --researchmap-user-id R000000000 \
+     --existing-jsonl ../../tmp/researchmap/rm_researchersYYYYMMDD.jsonl
+   ```
+
+4. `tmp/researchmap/merge-review.json` を確認します。
+   - `typeMismatches` が空であること
+   - `unmatchedGenerated` が想定どおりであること
+   - `unmatchedExisting` に消したくない既存業績が残っていないこと
+5. `tmp/researchmap/import.jsonl` を researchmap に再投入します。
+6. 反映後、巻号・開始/終了ページ・既存の手修正が維持されているかを researchmap 上で確認します。
+
+このフローでは、既存 `jsonl` に入っていた値を優先し、空欄の書誌情報だけを再生成結果で補完します。researchmap 上で手修正したタイトル、URL、表示設定、その他の項目を不意に上書きしないための運用です。
+
 ---
 
 ## 詳細情報
