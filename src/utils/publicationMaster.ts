@@ -205,7 +205,11 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
     const localizedTitle = buildLocalizedTitle(japaneseDetails.title, englishDetails.title);
     const localizedAuthors = buildLocalizedAuthors(englishDetails.authors, japaneseDetails.authors);
     const identifier = buildIdentifiers(row.doi);
-    const links = buildSeeAlso(row.webLink);
+    const supplementalLinks = extractSupplementarySeeAlso(row.others);
+    const links = mergeSeeAlsoEntries(
+      buildSeeAlso(row.webLink),
+      supplementalLinks.seeAlso
+    );
     const description = buildDescription(row.abstract);
     const location = buildLocalizedValue(row.site);
     const venue = buildLocalizedValue(row.journalConference);
@@ -264,7 +268,7 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
           en: row.name || undefined,
           ja: row.japanese || undefined,
         }),
-        notes: row.others,
+        notes: supplementalLinks.remainingNotes || "",
       }),
     };
   });
@@ -273,7 +277,8 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
 export function publicationMasterToWebPublications(records: PublicationMasterRecord[]): Publication[] {
   return records.map((record, index) => {
       const title = getPublicationTitle(record.researchmapFields);
-      const rawCitation = record.localMeta.rawCitation;
+      const doi = record.researchmapFields.identifiers?.doi?.[0] || "";
+      const primaryWebLink = selectPrimaryWebLink(record.researchmapFields.see_also, doi);
       const authorshipValues = normalizeArrayOutput(deriveAuthorshipCodes(record.researchmapFields));
       const presentationTypes = normalizeArrayOutput(
         derivePresentationTypeCodes(record.researchmapFields)
@@ -295,8 +300,8 @@ export function publicationMasterToWebPublications(records: PublicationMasterRec
         id: index + 1,
         recordId: record.id,
         hasEmptyFields: record.localMeta.hasEmptyFields,
-        name: rawCitation.en || title?.en || title?.ja || TITLE_FALLBACK,
-        japanese: rawCitation.ja || title?.ja || "",
+        name: title?.en || title?.ja || TITLE_FALLBACK,
+        japanese: title?.ja || "",
         abstract:
           getLocalizedTextValue(record.researchmapFields.description, "en") ||
           getLocalizedTextValue(record.researchmapFields.description, "ja"),
@@ -306,13 +311,17 @@ export function publicationMasterToWebPublications(records: PublicationMasterRec
         review: deriveReviewCode(record.researchmapFields.referee),
         authorship: authorshipValues,
         presentationType: presentationTypes,
-        doi: record.researchmapFields.identifiers?.doi?.[0] || "",
-        webLink: record.researchmapFields.see_also?.[0]?.["@id"] || "",
+        doi,
+        webLink: primaryWebLink?.["@id"] || "",
         date: buildWebDateText(record.researchmapFields),
         startDate,
         endDate,
         sortableDate: startDate,
-        others: record.localMeta.notes,
+        others: formatAdditionalSeeAlsoEntries(
+          record.researchmapFields.see_also,
+          primaryWebLink?.["@id"],
+          doi
+        ),
         site,
         journalConference,
       };
@@ -491,6 +500,13 @@ function extractTitleAndAuthors(value: string, language: LocalizedLanguage): Tit
   }
 
   const match = extractQuotedTitle(trimmed, language);
+  if (!match) {
+    return {
+      title: inferPlainTitle(trimmed),
+      authors: [],
+    };
+  }
+
   const authorSegment = match ? trimmed.slice(0, match.index).trim() : "";
 
   return {
@@ -516,6 +532,23 @@ function extractQuotedTitle(value: string, language: LocalizedLanguage) {
   }
 
   return undefined;
+}
+
+function inferPlainTitle(value: string): string | undefined {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  if (/[,"，]/u.test(trimmed)) {
+    return undefined;
+  }
+
+  if (/\b(vol|pp|no)\b/i.test(trimmed)) {
+    return undefined;
+  }
+
+  return trimmed;
 }
 
 function parseAuthors(authorSegment: string, language: LocalizedLanguage): string[] {
@@ -558,6 +591,111 @@ function buildSeeAlso(webLink: string): PublicationSeeAlso[] | undefined {
   }
 
   return [{ "@id": trimmed, label: "url" }];
+}
+
+function extractSupplementarySeeAlso(value: string): {
+  seeAlso?: PublicationSeeAlso[];
+  remainingNotes?: string;
+} {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return {};
+  }
+
+  const labeledUrlMatch = trimmed.match(/^(.*?):\s*(https?:\/\/\S+)$/i);
+  if (labeledUrlMatch?.[2]) {
+    const label = labeledUrlMatch[1]?.trim() || "supplementary link";
+    return {
+      seeAlso: [{
+        "@id": sanitizeUrl(labeledUrlMatch[2]),
+        label,
+      }],
+    };
+  }
+
+  const urlOnlyMatch = trimmed.match(/^(https?:\/\/\S+)$/i);
+  if (urlOnlyMatch?.[1]) {
+    return {
+      seeAlso: [{
+        "@id": sanitizeUrl(urlOnlyMatch[1]),
+        label: "supplementary link",
+      }],
+    };
+  }
+
+  return { remainingNotes: trimmed };
+}
+
+function mergeSeeAlsoEntries(
+  ...collections: Array<PublicationSeeAlso[] | undefined>
+): PublicationSeeAlso[] | undefined {
+  const merged: PublicationSeeAlso[] = [];
+  const seenIds = new Set<string>();
+
+  collections.forEach((entries) => {
+    entries?.forEach((entry) => {
+      if (!entry["@id"] || seenIds.has(entry["@id"])) {
+        return;
+      }
+
+      seenIds.add(entry["@id"]);
+      merged.push(entry);
+    });
+  });
+
+  return merged.length > 0 ? merged : undefined;
+}
+
+function selectPrimaryWebLink(
+  entries: PublicationSeeAlso[] | undefined,
+  doi: string
+): PublicationSeeAlso | undefined {
+  if (!entries?.length) {
+    return undefined;
+  }
+
+  const doiUrls = buildKnownDoiUrls(doi);
+  return entries.find((entry) => !doiUrls.has(entry["@id"])) || entries[0];
+}
+
+function formatAdditionalSeeAlsoEntries(
+  entries: PublicationSeeAlso[] | undefined,
+  primaryLinkId: string | undefined,
+  doi: string
+): string {
+  if (!entries?.length) {
+    return "";
+  }
+
+  const doiUrls = buildKnownDoiUrls(doi);
+
+  return entries
+    .filter((entry) => entry["@id"] !== primaryLinkId && !doiUrls.has(entry["@id"]))
+    .map((entry) => {
+      const label = entry.label.trim();
+      return label && label.toLowerCase() !== "url"
+        ? `${label}: ${entry["@id"]}`
+        : entry["@id"];
+    })
+    .join("\n");
+}
+
+function buildKnownDoiUrls(doi: string): Set<string> {
+  const normalizedDoi = normalizeDoi(doi);
+  if (!normalizedDoi) {
+    return new Set<string>();
+  }
+
+  return new Set([
+    `https://doi.org/${normalizedDoi}`,
+    `http://doi.org/${normalizedDoi}`,
+    `https://dx.doi.org/${normalizedDoi}`,
+    `http://dx.doi.org/${normalizedDoi}`,
+  ]);
+}
+
+function sanitizeUrl(value: string): string {
+  return value.trim().replace(/[.,;)]*$/u, "");
 }
 
 function buildDescription(value: string): LocalizedText | undefined {

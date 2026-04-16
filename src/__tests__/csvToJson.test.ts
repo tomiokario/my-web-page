@@ -167,7 +167,9 @@ describe('CSV to JSON conversion', () => {
     );
 
     expect(targetItem).toBeDefined();
-    expect(targetItem.name).toContain('Rio Tomioka');
+    expect(targetItem.name).toContain(
+      'Numerical simulations of neural network hardware based on self-referential holography'
+    );
     const expectedType = 'published_papers/international_conference_proceedings';
     // 文字コード配列を比較して、目に見えない文字の問題を回避
     expect(targetItem.type.trim().split('').map((c: string) => c.charCodeAt(0)))
@@ -199,7 +201,7 @@ No,,,,,,,,,,,,
       // Assert - 結果を検証
       // 空行や不正な行がスキップされ、有効なデータのみが変換されることを確認
       expect(jsonData.length).toBe(1);
-      expect(jsonData[0].name).toBe('Test Author, "Test Title"');
+      expect(jsonData[0].name).toBe('Test Title');
       
       // 日本語の内容が正しく変換されていることを確認
       expect(jsonData[0].japanese).toBe('テスト');
@@ -239,6 +241,24 @@ No,"Test Author, ""Single Role""",テスト,Test Type,Reviewed,Lead author,Oral,
       expect(jsonData[1].authorship).toBe('lead');
     } finally {
       // クリーンアップ - 一時ファイルを削除
+      removeTempFile(tempFilePath);
+    }
+  });
+
+  test('promotes URL-like others into researchmap see_also instead of leaking local notes', () => {
+    const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
+No,"Test Author, ""Supplement Link Test""",補足リンクテスト,Test Type,Reviewed,Lead author,Oral,,https://example.com/main,2023-01-01,Full text link: https://example.com/full-text,Test Site,Test Journal
+`;
+
+    const tempFilePath = createTempCsvFile(testCsvData, 'temp_others_to_see_also.csv');
+
+    try {
+      const jsonData = csvToJson(tempFilePath);
+
+      expect(jsonData).toHaveLength(1);
+      expect(jsonData[0].webLink).toBe('https://example.com/main');
+      expect(jsonData[0].others).toBe('Full text link: https://example.com/full-text');
+    } finally {
       removeTempFile(tempFilePath);
     }
   });

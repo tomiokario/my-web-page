@@ -80,6 +80,7 @@ flowchart LR
   - `hasEmptyFields`
   - `rawCitation`
   - `notes`
+  - `rawCitation` と `notes` は editor / ローカル運用用の補助情報として保持し、`publications.json` へはそのまま投影しません
 
 例:
 
@@ -140,6 +141,7 @@ CSV から master data を再構築する移行用スクリプトです。
 - `review`: `peer_reviewed` / `not_peer_reviewed`
 - `authorship`: `lead` `corresponding` `last` `coauthor`
 - `presentationType`: `oral_presentation` など
+- `name` / `japanese` / `webLink` / `others` も `researchmapFields` 側から組み立て、`localMeta.rawCitation` / `localMeta.notes` をそのまま公開用 JSON に流しません
 
 表示ラベルへの変換は React 側で行います。
 
