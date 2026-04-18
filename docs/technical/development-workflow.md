@@ -222,7 +222,7 @@ npm start
    npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl
    ```
 
-   正常終了した JSONL は `archive/` へ移動し、同じ内容の再取り込みは履歴で防止されます。
+   この repo ではタイトル一致の重複を許容しません。既存 master / 入力 JSONL / 取り込み結果のどこかでタイトル重複が見つかった場合は hard error で停止します。正常終了した JSONL は `archive/` へ移動し、同じ内容の再取り込みは履歴で防止されます。
 
 6. 変更をコミットします：
 

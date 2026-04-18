@@ -66,7 +66,9 @@
    npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl --dry-run
    npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl
    ```
+   - この repo ではタイトル一致の重複を許容しません
    - `researchmapFields` は JSONL 側を優先して上書きし、JSONL にない field と `localMeta` は保持します
+   - 既存 master / 入力 JSONL / 取り込み結果のどこかでタイトル重複が見つかった場合は hard error で停止します
    - 正常終了した JSONL は `archive/` へ移動し、同じ内容の再取り込みは履歴で防止します
 
 詳細は[管理者向けドキュメント - 出版物データ管理](docs/admin/publications-management.md)を参照してください。

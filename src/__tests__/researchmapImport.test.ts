@@ -150,6 +150,114 @@ describe("researchmapImport", () => {
     });
   });
 
+  test("タイトル一致なら type や venue が違っても既存業績へマージする", () => {
+    const titleOnlyMasterRecord = {
+      ...existingMasterRecord,
+      researchmapFields: {
+        ...existingMasterRecord.researchmapFields,
+        type: "misc" as const,
+        subtype: "others",
+        published_paper_type: undefined,
+        misc_type: "others",
+        publication_name: {
+          ja: "旧会議名",
+        },
+        identifiers: undefined,
+      },
+    };
+    fs.writeFileSync(
+      masterJsonFilePath,
+      `${JSON.stringify([titleOnlyMasterRecord], null, 2)}\n`,
+      "utf8"
+    );
+    writeJsonl([
+      {
+        insert: { type: "presentations" },
+        merge: {
+          presentation_title: { ja: "Alpha Paper" },
+          event: { ja: "新しい会議名" },
+          publication_date: "2024-01-01",
+          presentation_type: "oral_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.added).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster).toHaveLength(1);
+    expect(updatedMaster[0]).toMatchObject({
+      id: titleOnlyMasterRecord.id,
+      researchmapFields: {
+        type: "presentations",
+        subtype: "oral_presentation",
+        event: { ja: "新しい会議名" },
+      },
+      localMeta: titleOnlyMasterRecord.localMeta,
+    });
+  });
+
+  test("タイトル正規化が一致すれば全角半角やダッシュ差分でも既存業績へマージする", () => {
+    const normalizedTitleMasterRecord = {
+      ...existingMasterRecord,
+      researchmapFields: {
+        ...existingMasterRecord.researchmapFields,
+        type: "misc" as const,
+        subtype: "others",
+        paper_title: {
+          ja: "Ａ−Ｂ",
+        },
+        publication_name: {
+          ja: "旧会議名",
+        },
+        identifiers: undefined,
+      },
+    };
+    fs.writeFileSync(
+      masterJsonFilePath,
+      `${JSON.stringify([normalizedTitleMasterRecord], null, 2)}\n`,
+      "utf8"
+    );
+    writeJsonl([
+      {
+        insert: { type: "presentations" },
+        merge: {
+          presentation_title: { ja: "A-B" },
+          event: { ja: "新しい会議名" },
+          publication_date: "2024-01-01",
+          presentation_type: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.added).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster).toHaveLength(1);
+    expect(updatedMaster[0]).toMatchObject({
+      id: normalizedTitleMasterRecord.id,
+      researchmapFields: {
+        type: "presentations",
+        subtype: "poster_presentation",
+        presentation_title: { ja: "A-B" },
+      },
+    });
+  });
+
   test("非出版物 record を無視できる", () => {
     writeJsonl([
       {
@@ -205,7 +313,7 @@ describe("researchmapImport", () => {
     ).toThrow("既に取り込み済み");
   });
 
-  test("曖昧一致は dry-run レポートへ出して書き込まない", () => {
+  test("master 側に重複タイトルがある場合は import 前に停止する", () => {
     const secondMasterRecord = {
       ...existingMasterRecord,
       id: "pub-2024-alpha-paper-duplicate",
@@ -230,15 +338,79 @@ describe("researchmapImport", () => {
       },
     ]);
 
+    expect(() =>
+      importPublicationMasterFromResearchmap(
+        inputFilePath,
+        { masterJsonFilePath, webJsonFilePath },
+        { archiveDirPath: archiveDir }
+      )
+    ).toThrow("重複タイトルがあります");
+  });
+
+  test("入力 JSONL の時点で重複タイトルがあれば dry-run で invalid に出す", () => {
+    writeJsonl([
+      {
+        insert: { type: "presentations" },
+        merge: {
+          presentation_title: { ja: "重複タイトル" },
+          event: { ja: "研究会A" },
+          publication_date: "2025-02-03",
+        },
+      },
+      {
+        insert: { type: "misc" },
+        merge: {
+          paper_title: { ja: "重複タイトル" },
+          publication_name: { ja: "研究会B" },
+          publication_date: "2025-02-04",
+        },
+      },
+    ]);
+
     const report = importPublicationMasterFromResearchmap(
       inputFilePath,
       { masterJsonFilePath, webJsonFilePath },
       { dryRun: true, archiveDirPath: archiveDir }
     );
 
-    expect(report.summary.ambiguous).toBe(1);
-    expect(report.ambiguousMatches[0].reason).toContain("複数の既存業績");
+    expect(report.summary.invalid).toBe(1);
+    expect(report.invalidRecords[0].reason).toContain("タイトル重複");
     expect(fs.existsSync(webJsonFilePath)).toBe(false);
+  });
+
+  test("入力 JSONL の重複タイトルは非 dry-run でも書き込まず停止する", () => {
+    writeJsonl([
+      {
+        insert: { type: "presentations" },
+        merge: {
+          presentation_title: { ja: "Ａ−Ｂ" },
+          event: { ja: "研究会A" },
+          publication_date: "2025-02-03",
+        },
+      },
+      {
+        insert: { type: "misc" },
+        merge: {
+          paper_title: { ja: "A-B" },
+          publication_name: { ja: "研究会B" },
+          publication_date: "2025-02-04",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.invalid).toBe(1);
+    expect(report.archivedTo).toBeUndefined();
+    expect(fs.existsSync(webJsonFilePath)).toBe(false);
+
+    const masterAfter = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(masterAfter).toEqual([existingMasterRecord]);
+    expect(fs.existsSync(inputFilePath)).toBe(true);
   });
 
   function writeJsonl(records: unknown[]) {

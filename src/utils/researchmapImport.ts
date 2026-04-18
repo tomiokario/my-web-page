@@ -8,6 +8,12 @@ import {
   readPublicationMasterFile,
   writePublicationArtifacts,
 } from "./publicationMasterFile";
+import {
+  extractPrimaryPublicationTitle,
+  findDuplicatePublicationTitleGroups,
+  hasMatchingPublicationTitle,
+  normalizePublicationTitle,
+} from "./publicationTitle";
 
 const PUBLICATION_TYPES = new Set(["published_papers", "presentations", "misc"]);
 const HISTORY_FILE_NAME = ".researchmap-import-history.json";
@@ -24,7 +30,7 @@ interface ResearchmapJsonlRecord {
 
 interface MatchCandidate {
   index: number;
-  strategy: "doi" | "metadata";
+  strategy: "doi" | "title";
 }
 
 export interface ResearchmapImportIssue {
@@ -178,6 +184,9 @@ export function importPublicationMasterFromResearchmap(
     invalidRecords,
   };
 
+  appendDuplicateTitleIssues(report.invalidRecords, nextRecords);
+  report.summary.invalid = report.invalidRecords.length;
+
   if (dryRun || ambiguousMatches.length > 0 || invalidRecords.length > 0) {
     return report;
   }
@@ -324,32 +333,15 @@ function findMatchingCandidates(
   return existingRecords
     .map((record, index) => ({ record, index }))
     .filter(({ index, record }) => {
-      return !usedExistingIndexes.has(index) && isMetadataMatch(record, importedRecord);
+      return !usedExistingIndexes.has(index) && hasMatchingPublicationTitle(record.researchmapFields, importedRecord.researchmapFields);
     })
-    .map(({ index }) => ({ index, strategy: "metadata" as const }));
+    .map(({ index }) => ({ index, strategy: "title" as const }));
 }
 
 function isDoiMatch(left: PublicationMasterRecord, right: PublicationMasterRecord): boolean {
-  if (left.researchmapFields.type !== right.researchmapFields.type) {
-    return false;
-  }
-
   const leftDoi = normalizeDoi(left.researchmapFields.identifiers?.doi?.[0]);
   const rightDoi = normalizeDoi(right.researchmapFields.identifiers?.doi?.[0]);
   return Boolean(leftDoi && rightDoi && leftDoi === rightDoi);
-}
-
-function isMetadataMatch(left: PublicationMasterRecord, right: PublicationMasterRecord): boolean {
-  if (left.researchmapFields.type !== right.researchmapFields.type) {
-    return false;
-  }
-
-  return (
-    normalizeText(extractTitle(left.researchmapFields)) === normalizeText(extractTitle(right.researchmapFields)) &&
-    normalizeText(extractVenue(left.researchmapFields)) === normalizeText(extractVenue(right.researchmapFields)) &&
-    normalizeText(left.researchmapFields.publication_date) ===
-      normalizeText(right.researchmapFields.publication_date)
-  );
 }
 
 function mergeResearchmapFields(
@@ -411,7 +403,7 @@ function cloneValue(value: unknown): unknown {
 
 function buildRecordId(fields: PublicationMasterResearchmapFields, fallbackId: string): string {
   const year = (fields.publication_date || "undated").slice(0, 4);
-  const title = extractTitle(fields);
+  const title = extractPrimaryPublicationTitle(fields);
   const slugBase = slugify(title || extractVenue(fields) || fallbackId);
   return `pub-${year}-${slugBase || fallbackId}`;
 }
@@ -459,7 +451,7 @@ function buildIssue(
     lineNumber,
     reason,
     type: record.researchmapFields.type,
-    title: extractTitle(record.researchmapFields),
+    title: extractPrimaryPublicationTitle(record.researchmapFields),
     date: record.researchmapFields.publication_date || "",
   };
 }
@@ -519,30 +511,12 @@ function normalizePublicationType(value: string | undefined): PublicationType | 
   return undefined;
 }
 
-function extractTitle(fields: PublicationMasterResearchmapFields): string {
-  return (
-    fields.paper_title?.ja ||
-    fields.paper_title?.en ||
-    fields.presentation_title?.ja ||
-    fields.presentation_title?.en ||
-    ""
-  );
+function normalizeDoi(value: string | undefined): string {
+  return (value || "").trim().replace(/^https?:\/\/doi\.org\//i, "").toLowerCase();
 }
 
 function extractVenue(fields: PublicationMasterResearchmapFields): string {
   return fields.publication_name?.ja || fields.publication_name?.en || fields.event?.ja || fields.event?.en || "";
-}
-
-function normalizeText(value: string | undefined): string {
-  return (value || "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .replace(/[‐‑‒–—]/g, "-")
-    .trim();
-}
-
-function normalizeDoi(value: string | undefined): string {
-  return (value || "").trim().replace(/^https?:\/\/doi\.org\//i, "").toLowerCase();
 }
 
 function slugify(value: string): string {
@@ -653,4 +627,19 @@ function optionalSeeAlso(
     .filter((entry) => entry["@id"] && entry.label);
 
   return normalized.length > 0 ? normalized : undefined;
+}
+
+function appendDuplicateTitleIssues(
+  invalidRecords: ResearchmapImportIssue[],
+  records: PublicationMasterRecord[]
+): void {
+  findDuplicatePublicationTitleGroups(records).forEach((group) => {
+    invalidRecords.push({
+      lineNumber: 0,
+      reason: `タイトル重複: ${group.recordIds.join(", ")}`,
+      type: "duplicate_title",
+      title: group.title,
+      date: "",
+    });
+  });
 }

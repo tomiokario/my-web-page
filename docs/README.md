@@ -82,6 +82,8 @@ npm test
 - `npm run import-publications-researchmap -- --input <rm_jsonl>` - researchmap export JSONL を `publication_master.json` へ安全に取り込む
 - `npm run publications-editor` - ローカル bridge 付き出版物 editor を起動
 
+出版物データでは、正規化タイトル一致の重複を許容しません。researchmap import でもタイトル重複が見つかれば停止します。
+
 ## クイックアクセス
 
 ### よく使う操作

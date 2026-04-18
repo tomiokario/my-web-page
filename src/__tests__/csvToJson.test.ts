@@ -17,7 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { csvToJson } = require('../utils/csvToJson');
+const { csvToJson, importMasterFromCsvAndSave } = require('../utils/csvToJson');
 
 // テストデータのパス (dataディレクトリがsrc配下に移動したためパスを更新)
 const CSV_FILE_PATH = path.join(__dirname, '../data/publication_data.csv');
@@ -262,6 +262,32 @@ No,"Test Author, ""Supplement Link Test""",補足リンクテスト,Test Type,Re
       removeTempFile(tempFilePath);
     }
   });
+
+  test('importMasterFromCsvAndSave rejects duplicate titles after normalization', () => {
+    const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
+No,"Author A, ""Ａ−Ｂ""",Ａ−Ｂ,Test Type,Reviewed,Lead author,Oral,,https://example.com/a,2023年1月1日,,Test Site,Test Journal
+No,"Author B, ""A-B""",A-B,Test Type,Reviewed,Lead author,Oral,,https://example.com/b,2023年1月2日,,Test Site,Test Journal
+`;
+    const tempFilePath = createTempCsvFile(testCsvData, 'temp_duplicate_titles.csv');
+    const outputPath = path.join(__dirname, '../../temp/duplicate_titles_master.json');
+
+    try {
+      if (fs.existsSync(outputPath)) {
+        fs.unlinkSync(outputPath);
+      }
+
+      const success = importMasterFromCsvAndSave(tempFilePath, {
+        masterJsonFilePath: outputPath,
+      });
+
+      expect(success).toBe(false);
+      expect(fs.existsSync(outputPath)).toBe(false);
+    } finally {
+      removeTempFile(tempFilePath);
+      removeTempFile(outputPath);
+    }
+  });
+
   test('handles comma-separated presentation types correctly', () => {
     // Arrange - テスト用のCSVデータを準備
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
