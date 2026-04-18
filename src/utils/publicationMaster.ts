@@ -326,10 +326,23 @@ export function publicationMasterToWebPublications(records: PublicationMasterRec
 export function getPublicationTitle(
   fields: PublicationMasterResearchmapFields
 ): LocalizedText | undefined {
+  if (fields.type === "presentations") {
+    return fields.presentation_title || fields.paper_title;
+  }
   return fields.paper_title || fields.presentation_title;
 }
 
 export function getPublicationVenueText(fields: PublicationMasterResearchmapFields): string {
+  if (fields.type === "presentations") {
+    return (
+      getLocalizedTextValue(fields.event, "en") ||
+      getLocalizedTextValue(fields.event, "ja") ||
+      getLocalizedTextValue(fields.publication_name, "en") ||
+      getLocalizedTextValue(fields.publication_name, "ja") ||
+      ""
+    );
+  }
+
   return (
     getLocalizedTextValue(fields.publication_name, "en") ||
     getLocalizedTextValue(fields.publication_name, "ja") ||
@@ -958,13 +971,13 @@ function derivePresentationTypeCodes(fields: PublicationMasterResearchmapFields)
 }
 
 function resolveResearchmapSubtype(fields: PublicationMasterResearchmapFields): string {
-  return (
-    fields.published_paper_type ||
-    fields.presentation_type ||
-    fields.misc_type ||
-    fields.subtype ||
-    "others"
-  );
+  if (fields.type === "published_papers") {
+    return fields.published_paper_type || fields.subtype || "others";
+  }
+  if (fields.type === "presentations") {
+    return fields.presentation_type || fields.subtype || "others";
+  }
+  return fields.misc_type || fields.subtype || "others";
 }
 
 function buildResearchmapClassificationKey(fields: PublicationMasterResearchmapFields): string {

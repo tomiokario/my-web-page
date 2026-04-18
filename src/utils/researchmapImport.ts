@@ -111,17 +111,17 @@ export function importPublicationMasterFromResearchmap(
     .filter(Boolean);
 
   lines.forEach((line, lineIndex) => {
-    const record = parseJsonlLine(line, lineIndex + 1);
-    const type = record.insert?.type || "";
-
-    if (!PUBLICATION_TYPES.has(type)) {
-      skippedNonPublication += 1;
-      return;
-    }
-
-    publicationRecords += 1;
-
     try {
+      const record = parseJsonlLine(line, lineIndex + 1);
+      const type = record.insert?.type || "";
+
+      if (!PUBLICATION_TYPES.has(type)) {
+        skippedNonPublication += 1;
+        return;
+      }
+
+      publicationRecords += 1;
+
       const importedRecord = buildMasterRecordFromResearchmapRecord(
         record,
         buildImportedRecordId(existingRecords, nextRecords, lineIndex)
@@ -158,11 +158,7 @@ export function importPublicationMasterFromResearchmap(
       added += 1;
     } catch (error: unknown) {
       invalidRecords.push(
-        buildIssue(
-          lineIndex + 1,
-          fallbackRecord(type, getPayload(record)),
-          error instanceof Error ? error.message : "不明なエラー"
-        )
+        buildImportErrorIssue(lineIndex + 1, error)
       );
     }
   });
@@ -273,12 +269,15 @@ function sanitizeResearchmapFields(
   return compactObject({
     type,
     subtype,
-    paper_title: optionalLocalizedText(payload.paper_title),
-    presentation_title: optionalLocalizedText(payload.presentation_title),
-    authors: optionalLocalizedPeople(payload.authors),
-    presenters: optionalLocalizedPeople(payload.presenters),
-    publication_name: optionalLocalizedText(payload.publication_name),
-    event: optionalLocalizedText(payload.event),
+    paper_title: type === "presentations" ? undefined : optionalLocalizedText(payload.paper_title),
+    presentation_title:
+      type === "presentations" ? optionalLocalizedText(payload.presentation_title) : undefined,
+    authors: type === "presentations" ? undefined : optionalLocalizedPeople(payload.authors),
+    presenters:
+      type === "presentations" ? optionalLocalizedPeople(payload.presenters) : undefined,
+    publication_name:
+      type === "presentations" ? undefined : optionalLocalizedText(payload.publication_name),
+    event: type === "presentations" ? optionalLocalizedText(payload.event) : undefined,
     publication_date: optionalString(payload.publication_date),
     from_event_date: optionalString(payload.from_event_date),
     to_event_date: optionalString(payload.to_event_date),
@@ -292,12 +291,19 @@ function sanitizeResearchmapFields(
     description: optionalLocalizedText(payload.description),
     referee: optionalBoolean(payload.referee),
     invited: optionalBoolean(payload.invited),
-    published_paper_owner_roles: optionalStringArray(payload.published_paper_owner_roles),
-    presentation_type: optionalString(payload.presentation_type),
-    published_paper_type: optionalString(payload.published_paper_type),
-    misc_type: optionalString(payload.misc_type),
-    is_international_presentation: optionalBoolean(payload.is_international_presentation),
-    is_international_journal: optionalBoolean(payload.is_international_journal),
+    published_paper_owner_roles:
+      type === "presentations" ? undefined : optionalStringArray(payload.published_paper_owner_roles),
+    presentation_type:
+      type === "presentations" ? optionalString(payload.presentation_type) : undefined,
+    published_paper_type:
+      type === "published_papers" ? optionalString(payload.published_paper_type) : undefined,
+    misc_type: type === "misc" ? optionalString(payload.misc_type) : undefined,
+    is_international_presentation:
+      type === "presentations"
+        ? optionalBoolean(payload.is_international_presentation)
+        : undefined,
+    is_international_journal:
+      type === "presentations" ? undefined : optionalBoolean(payload.is_international_journal),
   }) as PublicationMasterResearchmapFields;
 }
 
@@ -348,7 +354,8 @@ function mergeResearchmapFields(
   existingFields: PublicationMasterResearchmapFields,
   importedFields: PublicationMasterResearchmapFields
 ): PublicationMasterResearchmapFields {
-  return deepMergePreferImported(existingFields, importedFields) as PublicationMasterResearchmapFields;
+  const mergedFields = deepMergePreferImported(existingFields, importedFields) as Record<string, unknown>;
+  return sanitizeResearchmapFields(importedFields.type, mergedFields);
 }
 
 function deepMergePreferImported(existingValue: unknown, importedValue: unknown): unknown {
@@ -453,6 +460,19 @@ function buildIssue(
     type: record.researchmapFields.type,
     title: extractPrimaryPublicationTitle(record.researchmapFields),
     date: record.researchmapFields.publication_date || "",
+  };
+}
+
+function buildImportErrorIssue(
+  lineNumber: number,
+  error: unknown
+): ResearchmapImportIssue {
+  return {
+    lineNumber,
+    reason: error instanceof Error ? error.message : "不明なエラー",
+    type: "invalid_jsonl",
+    title: "",
+    date: "",
   };
 }
 

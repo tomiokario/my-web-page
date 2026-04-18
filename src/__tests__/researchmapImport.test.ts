@@ -198,10 +198,19 @@ describe("researchmapImport", () => {
       researchmapFields: {
         type: "presentations",
         subtype: "oral_presentation",
+        presentation_title: { ja: "Alpha Paper" },
         event: { ja: "新しい会議名" },
       },
       localMeta: titleOnlyMasterRecord.localMeta,
     });
+    expect(updatedMaster[0].researchmapFields.paper_title).toBeUndefined();
+    expect(updatedMaster[0].researchmapFields.publication_name).toBeUndefined();
+    expect(updatedMaster[0].researchmapFields.published_paper_type).toBeUndefined();
+    expect(updatedMaster[0].researchmapFields.published_paper_owner_roles).toBeUndefined();
+
+    const updatedWeb = JSON.parse(fs.readFileSync(webJsonFilePath, "utf8"));
+    expect(updatedWeb[0].type).toBe("presentations/oral_presentation");
+    expect(updatedWeb[0].journalConference).toBe("新しい会議名");
   });
 
   test("タイトル正規化が一致すれば全角半角やダッシュ差分でも既存業績へマージする", () => {
@@ -256,6 +265,48 @@ describe("researchmapImport", () => {
         presentation_title: { ja: "A-B" },
       },
     });
+  });
+
+  test("壊れた JSONL 行は dry-run report の invalid として返す", () => {
+    fs.writeFileSync(
+      inputFilePath,
+      '{"insert":{"type":"presentations"},"merge":{"presentation_title":{"ja":"正常"}}}\n{"broken":\n',
+      "utf8"
+    );
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { dryRun: true, archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.publicationRecords).toBe(1);
+    expect(report.summary.invalid).toBe(1);
+    expect(report.invalidRecords[0]).toMatchObject({
+      lineNumber: 2,
+      type: "invalid_jsonl",
+    });
+    expect(report.invalidRecords[0].reason).toContain("JSON 解析");
+    expect(fs.existsSync(webJsonFilePath)).toBe(false);
+  });
+
+  test("壊れた JSONL 行があれば非 dry-run でも書き込まず停止する", () => {
+    fs.writeFileSync(
+      inputFilePath,
+      '{"insert":{"type":"presentations"},"merge":{"presentation_title":{"ja":"正常"}}}\n{"broken":\n',
+      "utf8"
+    );
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.invalid).toBe(1);
+    expect(report.archivedTo).toBeUndefined();
+    expect(fs.existsSync(webJsonFilePath)).toBe(false);
+    expect(JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"))).toEqual([existingMasterRecord]);
   });
 
   test("非出版物 record を無視できる", () => {
