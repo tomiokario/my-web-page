@@ -97,6 +97,9 @@
       },
       "referee": false,
       "invited": false,
+      "published_paper_owner_roles": [
+        "lead"
+      ],
       "misc_type": "technical_report"
     },
     "localMeta": {
@@ -510,6 +513,9 @@
       },
       "referee": false,
       "invited": false,
+      "published_paper_owner_roles": [
+        "lead"
+      ],
       "presentation_type": "oral_presentation",
       "is_international_presentation": false
     },
@@ -609,6 +615,9 @@
       },
       "referee": false,
       "invited": false,
+      "published_paper_owner_roles": [
+        "lead"
+      ],
       "misc_type": "others"
     },
     "localMeta": {
@@ -652,6 +661,9 @@
       },
       "referee": false,
       "invited": false,
+      "published_paper_owner_roles": [
+        "lead"
+      ],
       "misc_type": "others"
     },
     "localMeta": {
@@ -712,6 +724,9 @@
       },
       "referee": false,
       "invited": false,
+      "published_paper_owner_roles": [
+        "lead"
+      ],
       "presentation_type": "poster_presentation",
       "is_international_presentation": true
     },
@@ -941,6 +956,9 @@
       },
       "referee": false,
       "invited": false,
+      "published_paper_owner_roles": [
+        "lead"
+      ],
       "presentation_type": "poster_presentation",
       "is_international_presentation": true
     },
@@ -1142,6 +1160,9 @@
       ],
       "referee": false,
       "invited": false,
+      "published_paper_owner_roles": [
+        "lead"
+      ],
       "misc_type": "others"
     },
     "localMeta": {
@@ -1419,6 +1440,9 @@
       },
       "referee": false,
       "invited": false,
+      "published_paper_owner_roles": [
+        "lead"
+      ],
       "presentation_type": "poster_presentation",
       "is_international_presentation": false
     },

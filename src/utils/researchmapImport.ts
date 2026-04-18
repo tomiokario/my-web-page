@@ -288,8 +288,7 @@ function sanitizeResearchmapFields(
     description: optionalLocalizedText(payload.description),
     referee: optionalBoolean(payload.referee),
     invited: optionalBoolean(payload.invited),
-    published_paper_owner_roles:
-      type === "presentations" ? undefined : optionalStringArray(payload.published_paper_owner_roles),
+    published_paper_owner_roles: optionalStringArray(payload.published_paper_owner_roles),
     presentation_type:
       type === "presentations" ? optionalString(payload.presentation_type) : undefined,
     published_paper_type:
@@ -370,10 +369,7 @@ function normalizeMergedResearchmapFields(
       importedFields.type === "published_papers"
         ? optionalString(mergedFields.published_paper_type)
         : undefined,
-    published_paper_owner_roles:
-      importedFields.type === "published_papers"
-        ? optionalStringArray(mergedFields.published_paper_owner_roles)
-        : undefined,
+    published_paper_owner_roles: optionalStringArray(mergedFields.published_paper_owner_roles),
     is_international_journal:
       importedFields.type === "published_papers"
         ? optionalBoolean(mergedFields.is_international_journal)

@@ -203,15 +203,16 @@ describe("researchmapImport", () => {
         authors: titleOnlyMasterRecord.researchmapFields.authors,
         publication_name: { ja: "旧会議名" },
         event: { ja: "新しい会議名" },
+        published_paper_owner_roles: ["lead"],
       },
       localMeta: titleOnlyMasterRecord.localMeta,
     });
     expect(updatedMaster[0].researchmapFields.published_paper_type).toBeUndefined();
-    expect(updatedMaster[0].researchmapFields.published_paper_owner_roles).toBeUndefined();
 
     const updatedWeb = JSON.parse(fs.readFileSync(webJsonFilePath, "utf8"));
     expect(updatedWeb[0].type).toBe("presentations/oral_presentation");
     expect(updatedWeb[0].journalConference).toBe("新しい会議名");
+    expect(updatedWeb[0].authorship).toBe("lead");
   });
 
   test("type が変わっても JSONL にない既存の著者や誌名は保持する", () => {
@@ -257,8 +258,12 @@ describe("researchmapImport", () => {
     expect(updatedMaster[0].researchmapFields.publication_name).toEqual(
       miscMasterRecord.researchmapFields.publication_name
     );
+    expect(updatedMaster[0].researchmapFields.published_paper_owner_roles).toEqual(["lead"]);
     expect(updatedMaster[0].researchmapFields.event).toEqual({ en: "New Event" });
     expect(updatedMaster[0].researchmapFields.published_paper_type).toBeUndefined();
+
+    const updatedWeb = JSON.parse(fs.readFileSync(webJsonFilePath, "utf8"));
+    expect(updatedWeb[0].authorship).toBe("lead");
   });
 
   test("タイトル正規化が一致すれば全角半角やダッシュ差分でも既存業績へマージする", () => {
