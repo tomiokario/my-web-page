@@ -4,6 +4,7 @@ import { Publication } from "../types";
 import { PublicationMasterRecord } from "../types/publicationMaster";
 import {
   csvToPublicationMaster,
+  parsePublicationMasterJson,
   publicationMasterToJson,
   writePublicationArtifacts,
 } from "./publicationMasterFile";
@@ -34,14 +35,18 @@ export function importMasterFromCsvAndSave(
 ): boolean {
   try {
     const masterData = csvToMasterData(csvFilePath);
+    const validatedMasterData = parsePublicationMasterJson(
+      publicationMasterToJson(masterData),
+      "CSV generated master data"
+    );
 
     if (paths.webJsonFilePath) {
-      writePublicationArtifacts(masterData, {
+      writePublicationArtifacts(validatedMasterData, {
         masterJsonFilePath: paths.masterJsonFilePath,
         webJsonFilePath: paths.webJsonFilePath,
       });
     } else {
-      fs.writeFileSync(paths.masterJsonFilePath, publicationMasterToJson(masterData), "utf8");
+      fs.writeFileSync(paths.masterJsonFilePath, publicationMasterToJson(validatedMasterData), "utf8");
     }
 
     console.log(`CSV から master data を生成し、${paths.masterJsonFilePath} に保存しました。`);

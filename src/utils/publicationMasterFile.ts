@@ -16,6 +16,7 @@ import {
   publicationMasterToWebPublications,
   stringifyPeople,
 } from "./publicationMaster";
+import { findDuplicatePublicationTitleGroups } from "./publicationTitle";
 
 export interface PublicationArtifactPaths {
   masterJsonFilePath: string;
@@ -85,9 +86,21 @@ function validatePublicationMasterRecords(
     throw new Error(`${sourceLabel} は配列である必要があります`);
   }
 
-  return value.map((record, index) =>
+  const validatedRecords = value.map((record, index) =>
     validatePublicationMasterRecord(record, `${sourceLabel}[${index}]`)
   );
+
+  const duplicateTitleGroups = findDuplicatePublicationTitleGroups(validatedRecords);
+  if (duplicateTitleGroups.length > 0) {
+    const duplicateSummary = duplicateTitleGroups
+      .map((group) => `"${group.title}" (${group.recordIds.join(", ")})`)
+      .join("; ");
+    throw new Error(
+      `${sourceLabel} に重複タイトルがあります: ${duplicateSummary}`
+    );
+  }
+
+  return validatedRecords;
 }
 
 function validatePublicationMasterRecord(

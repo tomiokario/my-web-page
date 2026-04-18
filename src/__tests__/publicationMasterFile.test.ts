@@ -71,4 +71,74 @@ describe("publicationMasterFile", () => {
       "配列である必要があります"
     );
   });
+
+  test("rejects duplicate publication titles in master payloads", () => {
+    const records = [
+      {
+        id: "pub-2024-alpha-ja",
+        researchmapFields: {
+          type: "misc",
+          paper_title: {
+            ja: "同じタイトル",
+          },
+        },
+        localMeta: {
+          hasEmptyFields: false,
+          notes: "",
+        },
+      },
+      {
+        id: "pub-2024-alpha-en",
+        researchmapFields: {
+          type: "presentations",
+          presentation_title: {
+            ja: "同じタイトル",
+          },
+        },
+        localMeta: {
+          hasEmptyFields: false,
+          notes: "",
+        },
+      },
+    ];
+
+    expect(() => parsePublicationMasterJson(JSON.stringify(records))).toThrow(
+      "重複タイトルがあります"
+    );
+  });
+
+  test("rejects duplicate titles after NFKC and dash normalization", () => {
+    const records = [
+      {
+        id: "pub-2024-alpha-1",
+        researchmapFields: {
+          type: "misc",
+          paper_title: {
+            ja: "Ａ−Ｂ",
+          },
+        },
+        localMeta: {
+          hasEmptyFields: false,
+          notes: "",
+        },
+      },
+      {
+        id: "pub-2024-alpha-2",
+        researchmapFields: {
+          type: "presentations",
+          presentation_title: {
+            ja: "A-B",
+          },
+        },
+        localMeta: {
+          hasEmptyFields: false,
+          notes: "",
+        },
+      },
+    ];
+
+    expect(() => parsePublicationMasterJson(JSON.stringify(records))).toThrow(
+      "重複タイトルがあります"
+    );
+  });
 });
