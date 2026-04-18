@@ -97,11 +97,7 @@
       },
       "referee": false,
       "invited": false,
-      "published_paper_owner_roles": [
-        "lead"
-      ],
-      "misc_type": "technical_report",
-      "is_international_journal": false
+      "misc_type": "technical_report"
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -309,8 +305,7 @@
       "number": "2022-ASD-25-6",
       "referee": false,
       "invited": false,
-      "misc_type": "summary_national_conference",
-      "is_international_journal": false
+      "misc_type": "summary_national_conference"
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -377,8 +372,7 @@
       "ending_page": "31",
       "referee": false,
       "invited": false,
-      "misc_type": "summary_national_conference",
-      "is_international_journal": false
+      "misc_type": "summary_national_conference"
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -615,11 +609,7 @@
       },
       "referee": false,
       "invited": false,
-      "published_paper_owner_roles": [
-        "lead"
-      ],
-      "misc_type": "others",
-      "is_international_journal": false
+      "misc_type": "others"
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -662,11 +652,7 @@
       },
       "referee": false,
       "invited": false,
-      "published_paper_owner_roles": [
-        "lead"
-      ],
-      "misc_type": "others",
-      "is_international_journal": false
+      "misc_type": "others"
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -678,8 +664,21 @@
     "researchmapFields": {
       "type": "presentations",
       "subtype": "poster_presentation",
+      "paper_title": {
+        "en": "Numerical simulation on phase-to-intensity conversion by self-referential holographic deep neural network"
+      },
       "presentation_title": {
         "en": "Numerical simulation on phase-to-intensity conversion by self-referential holographic deep neural network"
+      },
+      "authors": {
+        "en": [
+          {
+            "name": "Rio Tomioka"
+          },
+          {
+            "name": "Masanori Takabayashi"
+          }
+        ]
       },
       "presenters": {
         "en": [
@@ -690,6 +689,9 @@
             "name": "Masanori Takabayashi"
           }
         ]
+      },
+      "publication_name": {
+        "en": "DHIP2023"
       },
       "event": {
         "en": "The 13th Japan-Korea Workshop on Digital Holography and Information Photonics"
@@ -862,8 +864,7 @@
       "ending_page": "151",
       "referee": true,
       "invited": true,
-      "misc_type": "introduction_scientific_journal",
-      "is_international_journal": false
+      "misc_type": "introduction_scientific_journal"
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -875,8 +876,30 @@
     "researchmapFields": {
       "type": "presentations",
       "subtype": "poster_presentation",
+      "paper_title": {
+        "en": "Numerical simulations on complex-valued optoelectronic deep neural network"
+      },
       "presentation_title": {
         "en": "Numerical simulations on complex-valued optoelectronic deep neural network"
+      },
+      "authors": {
+        "en": [
+          {
+            "name": "Rio Tomioka"
+          },
+          {
+            "name": "Taichi Takatsu"
+          },
+          {
+            "name": "Kaito Inoue"
+          },
+          {
+            "name": "Atsushi Shibukawa"
+          },
+          {
+            "name": "Masanori Takabayashi"
+          }
+        ]
       },
       "presenters": {
         "en": [
@@ -896,6 +919,9 @@
             "name": "Masanori Takabayashi"
           }
         ]
+      },
+      "publication_name": {
+        "en": "The First International Symposium on Photonic Computing"
       },
       "event": {
         "en": "The First International Symposium on Photonic Computing"
@@ -1116,11 +1142,7 @@
       ],
       "referee": false,
       "invited": false,
-      "published_paper_owner_roles": [
-        "lead"
-      ],
-      "misc_type": "others",
-      "is_international_journal": false
+      "misc_type": "others"
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1281,8 +1303,7 @@
       "ending_page": "6",
       "referee": false,
       "invited": false,
-      "misc_type": "technical_report",
-      "is_international_journal": false
+      "misc_type": "technical_report"
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1344,9 +1365,26 @@
     "researchmapFields": {
       "type": "presentations",
       "subtype": "poster_presentation",
+      "paper_title": {
+        "ja": "空間光変調に基づく複素深層ニューラルネットワーク",
+        "en": "空間光変調に基づく複素深層ニューラルネットワーク"
+      },
       "presentation_title": {
         "ja": "空間光変調に基づく複素深層ニューラルネットワーク",
         "en": "空間光変調に基づく複素深層ニューラルネットワーク"
+      },
+      "authors": {
+        "ja": [
+          {
+            "name": "冨岡莉生"
+          },
+          {
+            "name": "高津太一"
+          },
+          {
+            "name": "高林正典"
+          }
+        ]
       },
       "presenters": {
         "ja": [
@@ -1360,6 +1398,9 @@
             "name": "高林正典"
           }
         ]
+      },
+      "publication_name": {
+        "ja": "「光の極限性能を生かすフォトニックコンピューティングの創成」第2回公開シンポジウム"
       },
       "event": {
         "ja": "「光の極限性能を生かすフォトニックコンピューティングの創成」第2回公開シンポジウム"
@@ -1455,8 +1496,7 @@
       "ending_page": "166",
       "referee": false,
       "invited": false,
-      "misc_type": "technical_report",
-      "is_international_journal": false
+      "misc_type": "technical_report"
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1611,8 +1651,7 @@
       },
       "referee": false,
       "invited": false,
-      "misc_type": "others",
-      "is_international_journal": false
+      "misc_type": "others"
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -1624,9 +1663,26 @@
     "researchmapFields": {
       "type": "presentations",
       "subtype": "oral_presentation",
+      "paper_title": {
+        "ja": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討",
+        "en": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討"
+      },
       "presentation_title": {
         "ja": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討",
         "en": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討"
+      },
+      "authors": {
+        "ja": [
+          {
+            "name": "江藤優太"
+          },
+          {
+            "name": "冨岡莉生"
+          },
+          {
+            "name": "髙林正典"
+          }
+        ]
       },
       "presenters": {
         "ja": [
@@ -1640,6 +1696,9 @@
             "name": "髙林正典"
           }
         ]
+      },
+      "publication_name": {
+        "ja": "2025年第86回応用物理学会秋季学術講演会"
       },
       "event": {
         "ja": "2025年第86回応用物理学会秋季学術講演会"
@@ -1907,8 +1966,7 @@
       },
       "referee": false,
       "invited": false,
-      "misc_type": "others",
-      "is_international_journal": false
+      "misc_type": "others"
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -1975,8 +2033,7 @@
       },
       "referee": false,
       "invited": false,
-      "misc_type": "technical_report",
-      "is_international_journal": false
+      "misc_type": "technical_report"
     },
     "localMeta": {
       "hasEmptyFields": true,

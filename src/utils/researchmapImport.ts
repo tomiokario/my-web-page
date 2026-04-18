@@ -269,15 +269,12 @@ function sanitizeResearchmapFields(
   return compactObject({
     type,
     subtype,
-    paper_title: type === "presentations" ? undefined : optionalLocalizedText(payload.paper_title),
-    presentation_title:
-      type === "presentations" ? optionalLocalizedText(payload.presentation_title) : undefined,
-    authors: type === "presentations" ? undefined : optionalLocalizedPeople(payload.authors),
-    presenters:
-      type === "presentations" ? optionalLocalizedPeople(payload.presenters) : undefined,
-    publication_name:
-      type === "presentations" ? undefined : optionalLocalizedText(payload.publication_name),
-    event: type === "presentations" ? optionalLocalizedText(payload.event) : undefined,
+    paper_title: optionalLocalizedText(payload.paper_title),
+    presentation_title: optionalLocalizedText(payload.presentation_title),
+    authors: optionalLocalizedPeople(payload.authors),
+    presenters: optionalLocalizedPeople(payload.presenters),
+    publication_name: optionalLocalizedText(payload.publication_name),
+    event: optionalLocalizedText(payload.event),
     publication_date: optionalString(payload.publication_date),
     from_event_date: optionalString(payload.from_event_date),
     to_event_date: optionalString(payload.to_event_date),
@@ -355,7 +352,44 @@ function mergeResearchmapFields(
   importedFields: PublicationMasterResearchmapFields
 ): PublicationMasterResearchmapFields {
   const mergedFields = deepMergePreferImported(existingFields, importedFields) as Record<string, unknown>;
-  return sanitizeResearchmapFields(importedFields.type, mergedFields);
+  return normalizeMergedResearchmapFields(existingFields, importedFields, mergedFields);
+}
+
+function normalizeMergedResearchmapFields(
+  existingFields: PublicationMasterResearchmapFields,
+  importedFields: PublicationMasterResearchmapFields,
+  mergedFields: Record<string, unknown>
+): PublicationMasterResearchmapFields {
+  const normalizedFields = compactObject({
+    ...mergedFields,
+    type: importedFields.type,
+    subtype:
+      importedFields.subtype ??
+      (existingFields.type === importedFields.type ? existingFields.subtype : undefined),
+    published_paper_type:
+      importedFields.type === "published_papers"
+        ? optionalString(mergedFields.published_paper_type)
+        : undefined,
+    published_paper_owner_roles:
+      importedFields.type === "published_papers"
+        ? optionalStringArray(mergedFields.published_paper_owner_roles)
+        : undefined,
+    is_international_journal:
+      importedFields.type === "published_papers"
+        ? optionalBoolean(mergedFields.is_international_journal)
+        : undefined,
+    presentation_type:
+      importedFields.type === "presentations"
+        ? optionalString(mergedFields.presentation_type)
+        : undefined,
+    is_international_presentation:
+      importedFields.type === "presentations"
+        ? optionalBoolean(mergedFields.is_international_presentation)
+        : undefined,
+    misc_type: importedFields.type === "misc" ? optionalString(mergedFields.misc_type) : undefined,
+  });
+
+  return normalizedFields as PublicationMasterResearchmapFields;
 }
 
 function deepMergePreferImported(existingValue: unknown, importedValue: unknown): unknown {

@@ -150,7 +150,7 @@ describe("researchmapImport", () => {
     });
   });
 
-  test("タイトル一致なら type や venue が違っても既存業績へマージする", () => {
+  test("タイトル一致なら type や venue が違っても既存値を保持しつつ既存業績へマージする", () => {
     const titleOnlyMasterRecord = {
       ...existingMasterRecord,
       researchmapFields: {
@@ -198,19 +198,67 @@ describe("researchmapImport", () => {
       researchmapFields: {
         type: "presentations",
         subtype: "oral_presentation",
+        paper_title: { en: "Alpha Paper" },
         presentation_title: { ja: "Alpha Paper" },
+        authors: titleOnlyMasterRecord.researchmapFields.authors,
+        publication_name: { ja: "旧会議名" },
         event: { ja: "新しい会議名" },
       },
       localMeta: titleOnlyMasterRecord.localMeta,
     });
-    expect(updatedMaster[0].researchmapFields.paper_title).toBeUndefined();
-    expect(updatedMaster[0].researchmapFields.publication_name).toBeUndefined();
     expect(updatedMaster[0].researchmapFields.published_paper_type).toBeUndefined();
     expect(updatedMaster[0].researchmapFields.published_paper_owner_roles).toBeUndefined();
 
     const updatedWeb = JSON.parse(fs.readFileSync(webJsonFilePath, "utf8"));
     expect(updatedWeb[0].type).toBe("presentations/oral_presentation");
     expect(updatedWeb[0].journalConference).toBe("新しい会議名");
+  });
+
+  test("type が変わっても JSONL にない既存の著者や誌名は保持する", () => {
+    const miscMasterRecord = {
+      ...existingMasterRecord,
+      researchmapFields: {
+        ...existingMasterRecord.researchmapFields,
+        type: "misc" as const,
+        subtype: "others",
+        misc_type: "others",
+        published_paper_type: undefined,
+        publication_name: {
+          en: "Proceedings of Alpha",
+        },
+      },
+    };
+    fs.writeFileSync(
+      masterJsonFilePath,
+      `${JSON.stringify([miscMasterRecord], null, 2)}\n`,
+      "utf8"
+    );
+    writeJsonl([
+      {
+        insert: { type: "presentations" },
+        merge: {
+          presentation_title: { en: "Alpha Paper" },
+          event: { en: "New Event" },
+          publication_date: "2024-01-01",
+          presentation_type: "poster_presentation",
+        },
+      },
+    ]);
+
+    importPublicationMasterFromResearchmap(inputFilePath, { masterJsonFilePath, webJsonFilePath }, {
+      archiveDirPath: archiveDir,
+    });
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].researchmapFields.type).toBe("presentations");
+    expect(updatedMaster[0].researchmapFields.authors).toEqual(
+      miscMasterRecord.researchmapFields.authors
+    );
+    expect(updatedMaster[0].researchmapFields.publication_name).toEqual(
+      miscMasterRecord.researchmapFields.publication_name
+    );
+    expect(updatedMaster[0].researchmapFields.event).toEqual({ en: "New Event" });
+    expect(updatedMaster[0].researchmapFields.published_paper_type).toBeUndefined();
   });
 
   test("タイトル正規化が一致すれば全角半角やダッシュ差分でも既存業績へマージする", () => {
