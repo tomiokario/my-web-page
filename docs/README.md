@@ -79,6 +79,7 @@ npm test
 - `npm run build` - 本番用ビルドを作成
 - `npm run convert-publications` - `publication_master.json` から `publications.json` を再生成
 - `npm run import-publications-csv` - CSV から `publication_master.json` を再生成
+- `npm run import-publications-researchmap -- --input <rm_jsonl>` - researchmap export JSONL を `publication_master.json` へ安全に取り込む
 - `npm run publications-editor` - ローカル bridge 付き出版物 editor を起動
 
 ## クイックアクセス

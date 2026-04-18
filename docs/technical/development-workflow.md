@@ -215,15 +215,24 @@ npm start
    npm run convert-publications
    ```
 
-5. 変更をコミットします：
+5. researchmap export (`rm_*.jsonl`) を master に取り込みたい場合は、まず dry-run で件数を確認してから本実行します：
+
+   ```bash
+   npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl --dry-run
+   npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl
+   ```
+
+   正常終了した JSONL は `archive/` へ移動し、同じ内容の再取り込みは履歴で防止されます。
+
+6. 変更をコミットします：
 
    ```bash
    git add src/data/publication_master.json src/data/publications.json
    git commit -m "Update publication data"
    ```
 
-6. CSV を再取り込みした場合だけ、必要に応じて `src/data/publication_data.csv` も stage します。
-7. `git status` で差分を確認してから、作業ブランチをリモートリポジトリにプッシュします。
+7. CSV を再取り込みした場合だけ、必要に応じて `src/data/publication_data.csv` も stage します。
+8. `git status` で差分を確認してから、作業ブランチをリモートリポジトリにプッシュします。
 
 詳細については、[出版物データの管理](./publications-management.md)のドキュメントを参照してください。
 

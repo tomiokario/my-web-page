@@ -29,18 +29,20 @@
           "label": "url"
         }
       ],
+      "number": "We-A-02",
+      "starting_page": "123",
+      "ending_page": "124",
       "location": {
         "en": "online"
       },
       "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
       "presentation_type": "oral_presentation",
       "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true,
-      "starting_page": "123",
-      "ending_page": "124"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -86,6 +88,10 @@
           "label": "url"
         }
       ],
+      "volume": "46",
+      "number": "6",
+      "starting_page": "61",
+      "ending_page": "66",
       "location": {
         "en": "online"
       },
@@ -95,11 +101,7 @@
       ],
       "presentation_type": "oral_presentation",
       "misc_type": "summary_national_conference",
-      "is_international_journal": false,
-      "volume": "46",
-      "number": "6",
-      "starting_page": "61",
-      "ending_page": "66"
+      "is_international_journal": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -139,6 +141,9 @@
           "label": "url"
         }
       ],
+      "number": "11-P08",
+      "referee": true,
+      "invited": false,
       "presentation_type": "oral_presentation",
       "published_paper_type": "international_conference_proceedings",
       "is_international_journal": true
@@ -178,18 +183,20 @@
           "label": "url"
         }
       ],
+      "number": "P-AM8",
+      "starting_page": "17",
+      "ending_page": "17",
       "location": {
         "en": "Premier Hotel Mojiko, Kitakyushu, Fukuoka, Japan"
       },
       "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
       "presentation_type": "poster_presentation",
       "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true,
-      "starting_page": "17",
-      "ending_page": "17"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -226,6 +233,7 @@
           "label": "url"
         }
       ],
+      "number": "ITuPJ_01",
       "location": {
         "en": "Sapporo Convention Center, Sapporo, Hokkaido, Japan"
       },
@@ -233,6 +241,7 @@
         "en": "We numerically investigate the effect of activation function on the accuracy of image recognition tasks in self-referential holographic deep neural networks (SR-HDNNs). We consider two types of activation functions, intensity observation and trainable complex-valued activation. The effect was investigated using numerical simulations on image recognition tasks. Consequently, the trainable activation yielded 1.6% higher accuracy than the intensity observation."
       },
       "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
@@ -300,7 +309,9 @@
           "label": "url"
         }
       ],
+      "number": "2022-ASD-25-6",
       "referee": false,
+      "invited": false,
       "presentation_type": "oral_presentation",
       "misc_type": "summary_national_conference",
       "is_international_journal": false
@@ -365,12 +376,14 @@
           "label": "url"
         }
       ],
+      "number": "P1-3",
+      "starting_page": "30",
+      "ending_page": "31",
       "referee": false,
+      "invited": false,
       "presentation_type": "oral_presentation",
       "misc_type": "summary_national_conference",
-      "is_international_journal": false,
-      "starting_page": "30",
-      "ending_page": "31"
+      "is_international_journal": false
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -413,12 +426,14 @@
           "label": "url"
         }
       ],
+      "number": "S-4",
+      "starting_page": "7",
+      "ending_page": "7",
       "referee": true,
+      "invited": false,
       "presentation_type": "oral_presentation",
       "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true,
-      "starting_page": "7",
-      "ending_page": "7"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -455,18 +470,20 @@
           "label": "url"
         }
       ],
+      "number": "P2-2",
+      "starting_page": "35",
+      "ending_page": "35",
       "location": {
         "en": "ART HOTEL Kokura New Tagawa, Kitakyushu, Fukuoka, Japan"
       },
       "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
       "presentation_type": "poster_presentation",
       "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true,
-      "starting_page": "35",
-      "ending_page": "35"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -505,6 +522,7 @@
         "ja": "九州大学伊都ゲストハウス 多目的ホール, Fukuoka, Japan"
       },
       "referee": false,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
@@ -548,26 +566,23 @@
       "see_also": [
         {
           "@id": "https://doi.org/10.1007/s10043-023-00810-2",
-          "label": "url"
-        },
-        {
-          "@id": "https://rdcu.be/daZfo",
-          "label": "SharedIt link (full text, view only)"
+          "label": "doi"
         }
       ],
+      "volume": "30",
+      "starting_page": "387",
+      "ending_page": "396",
       "description": {
         "en": "We propose a novel optoelectronic deep neural network (OE-DNN) hardware called the self-referential holographic deep neural network (SR-HDNN). The SR-HDNN features a combination of an optical computing part utilizing a volume hologram and an electronic part connecting the optical elements virtually. Since the shape of a volume hologram, which is a 3-dimensional (3D) refractive index distribution in this case, can be changed by its recording conditions, it is expected to realize the flexible design of optical computing functions by coupling between specific nodes. In addition, the electronic part enables the construction of multi-layer networks without extending the optical system and enabling arbitrary signal processing, including nonlinear operations. By integrating flexible optical and electronic parts, the SR-HDNN consisting of both flexible optical and electronic parts has the potential to maximize the performance of OE-DNN. In this study, we numerically simulate image classification tasks to investigate the feasibility and potential of the SR-HDNN."
       },
       "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "corresponding",
         "lead"
       ],
       "published_paper_type": "scientific_journal",
-      "is_international_journal": true,
-      "volume": "30",
-      "starting_page": "387",
-      "ending_page": "396"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -609,6 +624,7 @@
         "ja": "東京工業大学大岡山キャンパス　西9号館1階　コラボレーションルーム, Tokyo, Japan"
       },
       "referee": false,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
@@ -656,6 +672,7 @@
         "ja": "東京大学工学部６号館３階セミナー室A・D・B・C, Tokyo, Japan"
       },
       "referee": false,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
@@ -698,6 +715,8 @@
           "label": "url"
         }
       ],
+      "starting_page": "54",
+      "ending_page": "54",
       "location": {
         "en": "B-con Plaza, Beppu, Oita, Japan"
       },
@@ -707,9 +726,7 @@
       ],
       "presentation_type": "poster_presentation",
       "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true,
-      "starting_page": "54",
-      "ending_page": "54"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -749,12 +766,14 @@
           "label": "url"
         }
       ],
+      "number": "P1-12",
+      "starting_page": "25",
+      "ending_page": "25",
       "referee": true,
+      "invited": false,
       "presentation_type": "poster_presentation",
       "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true,
-      "starting_page": "25",
-      "ending_page": "25"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -794,18 +813,20 @@
           "label": "url"
         }
       ],
+      "number": "O3-04/P1-22",
+      "starting_page": "14",
+      "ending_page": "14",
       "location": {
         "en": "RIHGA Royal Hotel Kokura, Kitakyushu, Fukuoka, Japan"
       },
       "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
       "presentation_type": "oral_presentation",
       "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true,
-      "starting_page": "14",
-      "ending_page": "14"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -851,14 +872,14 @@
           "label": "url"
         }
       ],
-      "referee": true,
-      "invited": true,
-      "misc_type": "introduction_scientific_journal",
-      "is_international_journal": false,
       "volume": "9",
       "number": "3",
       "starting_page": "147",
-      "ending_page": "151"
+      "ending_page": "151",
+      "referee": true,
+      "invited": true,
+      "misc_type": "introduction_scientific_journal",
+      "is_international_journal": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -904,6 +925,7 @@
           "label": "url"
         }
       ],
+      "number": "A03-2",
       "location": {
         "en": "Ito Hall, Ito International Research Center, the University of Tokyo, Tokyo, Japan"
       },
@@ -913,8 +935,7 @@
       ],
       "presentation_type": "poster_presentation",
       "misc_type": "others",
-      "is_international_journal": true,
-      "number": "A03-2"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -958,6 +979,7 @@
         "en": "Conference Center of Kitakyushu Science and Research Park, Kitakyushu, Fukuoka, Japan"
       },
       "referee": false,
+      "invited": false,
       "presentation_type": "poster_presentation",
       "is_international_presentation": false
     },
@@ -999,10 +1021,12 @@
           "label": "url"
         }
       ],
+      "number": "ThP-40",
       "description": {
         "en": "We have investigated the contribution of the training pattern at each layer to the overall result of an image recognition task in a self-referential holographic deep neural network (SR-HDNN)."
       },
       "referee": true,
+      "invited": false,
       "presentation_type": "poster_presentation",
       "published_paper_type": "international_conference_proceedings",
       "is_international_journal": true
@@ -1045,6 +1069,7 @@
           "label": "url"
         }
       ],
+      "number": "ThP-39",
       "location": {
         "en": "University of Arizona, Tucson, Arizona, USA"
       },
@@ -1052,6 +1077,7 @@
         "en": "We numerically demonstrate a 4-class image recognition task using a self-referential holographic deep neural network (SR-HDNN) and verify the effectiveness of the use of electronic processing as the final layer."
       },
       "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
@@ -1155,10 +1181,12 @@
           "label": "url"
         }
       ],
+      "number": "Tu-E-44",
       "description": {
         "en": "We propose to apply a trainable activation function for optoelectronic deep neural networks (OE-DNNs). The numerical simulations on 4-class complex-valued image classification demonstrated a 10% improvement in accuracy, confirming the effectiveness of this approach. This method is expected to enhance learning accuracy in various OE-DNN models."
       },
       "referee": true,
+      "invited": false,
       "presentation_type": "poster_presentation",
       "published_paper_type": "international_conference_proceedings",
       "is_international_journal": true
@@ -1204,10 +1232,12 @@
           "label": "url"
         }
       ],
+      "number": "Mo-D-01",
       "description": {
         "en": "We propose to improve the quality of the reconstructed datapages of self-referential holographic data storage (SR-HDS) using the principle of self-referential holographic deep neural network (SR-HDNN). To verify the feasibility of the proposed method, we perform numerical simulation of the combination system of SR-HDS with SR-HDNN."
       },
       "referee": true,
+      "invited": false,
       "presentation_type": "oral_presentation",
       "published_paper_type": "international_conference_proceedings",
       "is_international_journal": true
@@ -1221,7 +1251,7 @@
     "id": "pub-2024-self-referential-holographic-memory-with-denoisi",
     "researchmapFields": {
       "type": "misc",
-      "subtype": "summary_national_conference",
+      "subtype": "technical_report",
       "paper_title": {
         "ja": "深層学習に基づく再生データページのデノイズ機能を内在する 自己参照型ホログラフィックメモリ ～ 学習用データセットの生成法に関する検討 ～",
         "en": "Self-Referential Holographic Memory with Denoising Functionality by Deep Learning for Reconstructed Datapages --A Study on Dataset Generation Methods for Deep Learning--"
@@ -1268,14 +1298,15 @@
           "label": "url"
         }
       ],
-      "referee": false,
-      "presentation_type": "oral_presentation",
-      "misc_type": "summary_national_conference",
-      "is_international_journal": false,
       "volume": "48",
       "number": "41",
       "starting_page": "1",
-      "ending_page": "6"
+      "ending_page": "6",
+      "referee": false,
+      "invited": false,
+      "presentation_type": "oral_presentation",
+      "misc_type": "technical_report",
+      "is_international_journal": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1312,12 +1343,15 @@
           "label": "url"
         }
       ],
+      "number": "S5-2",
       "location": {
         "en": "Ala Moana Hotel, Honolulu, Hawaii, USA"
       },
       "description": {
         "en": "We propose a method for performing deep reinforcement learning using a self-referential holographic deep neural network (SR-HDNN) and demonstrate its effectiveness through numerical simulations in a cart-pole task, where the pole was successfully balanced for an average of 429.2 seconds over 10 trials."
       },
+      "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
@@ -1384,7 +1418,7 @@
     "id": "pub-2025-experiments-on-image-recognition-by-optelectroni",
     "researchmapFields": {
       "type": "misc",
-      "subtype": "summary_national_conference",
+      "subtype": "technical_report",
       "paper_title": {
         "ja": "散乱媒質を挿入した光電子融合型深層ニューラルネットワークを用いた画像識別実験",
         "en": "Experiments on image recognition by optelectronic deep neural network with scattering medium insertion"
@@ -1443,14 +1477,15 @@
           "label": "url"
         }
       ],
-      "referee": false,
-      "presentation_type": "oral_presentation",
-      "misc_type": "summary_national_conference",
-      "is_international_journal": false,
       "volume": "49",
       "number": "4",
       "starting_page": "161",
-      "ending_page": "166"
+      "ending_page": "166",
+      "referee": false,
+      "invited": false,
+      "presentation_type": "oral_presentation",
+      "misc_type": "technical_report",
+      "is_international_journal": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1490,18 +1525,20 @@
           "label": "url"
         }
       ],
+      "number": "P1-21",
+      "starting_page": "39",
+      "ending_page": "39",
       "location": {
         "en": "Kitakyushu, Fukuoka, Japan"
       },
       "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
       "presentation_type": "poster_presentation",
       "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true,
-      "starting_page": "39",
-      "ending_page": "39"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1546,18 +1583,19 @@
       "see_also": [
         {
           "@id": "https://doi.org/10.1007/s10043-025-00978-9",
-          "label": "url"
+          "label": "doi"
         }
       ],
+      "volume": "32",
+      "starting_page": "534",
+      "ending_page": "545",
       "description": {
         "en": "Self-referential holography (SRH), a holographic technique that enables the recording, reading, and control of two-dimensional (2D) patterns using a one-beam geometry, can be applied to holographic data storage (HDS) and optoelectronic deep neural network (OE-DNN). Since both applications are implemented using the same optical system, they can be integrated into a single system. We propose a self-referential HDS (SR-HDS) with a built-in denoising function using a self-referential holographic deep neural network (SR-HDNN), where the quality of reconstructed datapages in HDS can be enhanced using deep neural networks (DNNs) without requiring costly electronic computers for implementation. Numerical simulations are performed to demonstrate the feasibility of the proposed method."
       },
       "referee": true,
+      "invited": false,
       "published_paper_type": "scientific_journal",
-      "is_international_journal": true,
-      "volume": "32",
-      "starting_page": "534",
-      "ending_page": "545"
+      "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1602,6 +1640,7 @@
         "ja": "JR博多シティ 大会議室A・B・C・D／小会議室I, Fukuoka, Japan"
       },
       "referee": false,
+      "invited": false,
       "presentation_type": "poster_presentation",
       "misc_type": "others",
       "is_international_journal": false
@@ -1698,6 +1737,7 @@
         "en": "We propose an optoelectronic deep neural network architecture using a DMD with binary computer-generated holograms to enable high-speed optical modulation. Simulations comparing DMD and LC-SLM on the MNIST image classification task show that DMD achieves comparable performance to LC-SLM in 2-class classification, demonstrating its utility for simple tasks."
       },
       "referee": true,
+      "invited": false,
       "presentation_type": "poster_presentation",
       "published_paper_type": "international_conference_proceedings",
       "is_international_journal": true
@@ -1744,6 +1784,7 @@
         "en": "We propose a method for designing autonomous binary amplitude masks for optoelectronic deep neural networks (OE-DNNs) using hyperparameter optimization. The effectiveness of this method is numerically demonstrated through image classification simulations."
       },
       "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
@@ -1796,6 +1837,7 @@
         "en": "We evaluated the effectiveness SR-HDNN-based denoising on reconstructed datapages in SR-HDS under random noise conditions. Numerical simulations demonstrated effective denoising up to ±0.35 random noise intensity for both random noise only and composite noise environments."
       },
       "referee": true,
+      "invited": false,
       "presentation_type": "poster_presentation",
       "published_paper_type": "international_conference_proceedings",
       "is_international_journal": true
@@ -1848,6 +1890,7 @@
         "en": "We propose a parallel image recognition method for self-referential holographic deep neural networks (SR-HDNNs). While four-class parallel image recognition simulations demonstrated basic capability with 78.5% total accuracy, recognition failures in certain regions require further investigation."
       },
       "referee": true,
+      "invited": false,
       "presentation_type": "oral_presentation",
       "published_paper_type": "international_conference_proceedings",
       "is_international_journal": true
@@ -1898,6 +1941,7 @@
         "ja": "一橋大学 一橋講堂, Tokyo, Japan"
       },
       "referee": false,
+      "invited": false,
       "presentation_type": "poster_presentation",
       "misc_type": "others",
       "is_international_journal": false
@@ -2005,6 +2049,7 @@
         "en": "Hotel Crown Palais Kokura, Kitakyushu, Fukuoka, Japan"
       },
       "referee": true,
+      "invited": false,
       "published_paper_owner_roles": [
         "lead"
       ],
@@ -2057,12 +2102,421 @@
         "en": "Hotel Crown Palais Kokura, Kitakyushu, Fukuoka, Japan"
       },
       "referee": true,
+      "invited": false,
       "presentation_type": "poster_presentation",
       "published_paper_type": "international_conference_proceedings",
       "is_international_journal": true
     },
     "localMeta": {
       "hasEmptyFields": true,
+      "notes": ""
+    }
+  },
+  {
+    "id": "pub-2026-researchmap-import-37",
+    "researchmapFields": {
+      "type": "misc",
+      "subtype": "technical_report",
+      "paper_title": {
+        "ja": "自己参照型ホログラフィック深層ニューラルネットワークを用いた並列画像デノイジングに関する数値シミュレーション",
+        "en": "Numerical Simulations of Parallel Image Denoising with Self-Referential Holographic Deep Neural Network"
+      },
+      "authors": {
+        "ja": [
+          {
+            "name": "坂井翔一"
+          },
+          {
+            "name": "江藤優太"
+          },
+          {
+            "name": "冨岡莉生"
+          },
+          {
+            "name": "髙林正典"
+          }
+        ],
+        "en": [
+          {
+            "name": "Shoichi Sakai"
+          },
+          {
+            "name": "Yuta Eto"
+          },
+          {
+            "name": "Rio Tomioka"
+          },
+          {
+            "name": "Masanori Takabayashi"
+          }
+        ]
+      },
+      "publication_name": {
+        "ja": "映情学技報"
+      },
+      "publication_date": "2026-02-18",
+      "see_also": [
+        {
+          "@id": "https://www.ite.or.jp/ken/paper/20260219xAog/",
+          "label": "url"
+        }
+      ],
+      "volume": "50",
+      "number": "5",
+      "starting_page": "17",
+      "ending_page": "20",
+      "referee": false,
+      "invited": false,
+      "misc_type": "technical_report",
+      "is_international_journal": false
+    },
+    "localMeta": {
+      "hasEmptyFields": false,
+      "notes": ""
+    }
+  },
+  {
+    "id": "pub-2024-researchmap-import-42",
+    "researchmapFields": {
+      "type": "misc",
+      "subtype": "others",
+      "paper_title": {
+        "ja": "学習可能な電子演算部を有する光電融合深層ニューラルネットワークに関するシミュレーション",
+        "en": "Numerical simulations on optoelectronic deep neural network with trainable electronic processing part"
+      },
+      "authors": {
+        "ja": [
+          {
+            "name": "冨岡莉生"
+          },
+          {
+            "name": "高津太一"
+          },
+          {
+            "name": "高林正典"
+          }
+        ],
+        "en": [
+          {
+            "name": "Rio Tomioka"
+          },
+          {
+            "name": "Taichi Takatsu"
+          },
+          {
+            "name": "Masanori Takabayashi"
+          }
+        ]
+      },
+      "publication_name": {
+        "ja": "光の極限性能を生かすフォトニックコンピューティング 第四回領域会議"
+      },
+      "publication_date": "2024-08-05",
+      "see_also": [
+        {
+          "@id": "https://www.photoniccomputing.jp/activities/2024_08_05_region_meeting_online.php",
+          "label": "url"
+        }
+      ],
+      "referee": false,
+      "invited": false,
+      "published_paper_owner_roles": [
+        "lead"
+      ],
+      "misc_type": "others",
+      "is_international_journal": false
+    },
+    "localMeta": {
+      "hasEmptyFields": false,
+      "notes": ""
+    }
+  },
+  {
+    "id": "pub-2024-researchmap-import-43",
+    "researchmapFields": {
+      "type": "misc",
+      "subtype": "introduction_scientific_journal",
+      "paper_title": {
+        "ja": "自己参照型ホログラフィの原理を用いた光電子深層ニューラルネットワークハードウェア",
+        "en": "Optoelectronic deep neural network hardware using principle of self-referential holography"
+      },
+      "authors": {
+        "ja": [
+          {
+            "name": "髙林 正典"
+          },
+          {
+            "name": "冨岡 莉生"
+          }
+        ],
+        "en": [
+          {
+            "name": "Masanori Takabayashi"
+          },
+          {
+            "name": "Rio Tomioka"
+          }
+        ]
+      },
+      "publication_name": {
+        "ja": "フォトニクスニュース",
+        "en": "Photonics NEWS"
+      },
+      "publication_date": "2024-03-10",
+      "see_also": [
+        {
+          "@id": "https://kyutech.repo.nii.ac.jp/records/2000826",
+          "label": "url"
+        }
+      ],
+      "volume": "9",
+      "number": "3",
+      "starting_page": "147",
+      "ending_page": "151",
+      "referee": true,
+      "invited": true,
+      "misc_type": "introduction_scientific_journal",
+      "is_international_journal": false
+    },
+    "localMeta": {
+      "hasEmptyFields": false,
+      "notes": ""
+    }
+  },
+  {
+    "id": "pub-2022-researchmap-import-48",
+    "researchmapFields": {
+      "type": "misc",
+      "subtype": "technical_report",
+      "paper_title": {
+        "ja": "自己参照型ホログラフィックニューラルネットワークにおける透過行列を用いた学習過程の改善",
+        "en": "Improvement of learning process by transmission matrix in self-referential holographic neural network"
+      },
+      "authors": {
+        "ja": [
+          {
+            "name": "冨岡莉生"
+          },
+          {
+            "name": "高林正典"
+          }
+        ],
+        "en": [
+          {
+            "name": "Rio Tomioka"
+          },
+          {
+            "name": "Masanori Takabayashi"
+          }
+        ]
+      },
+      "publication_name": {
+        "ja": "映像情報メディア学会技術報告",
+        "en": "ITE technical report"
+      },
+      "publication_date": "2022-02-21",
+      "see_also": [
+        {
+          "@id": "https://www.ite.or.jp/ken/paper/202202210A94/",
+          "label": "url"
+        }
+      ],
+      "volume": "46",
+      "number": "6",
+      "starting_page": "61",
+      "ending_page": "66",
+      "referee": false,
+      "invited": false,
+      "published_paper_owner_roles": [
+        "lead"
+      ],
+      "misc_type": "technical_report",
+      "is_international_journal": false
+    },
+    "localMeta": {
+      "hasEmptyFields": false,
+      "notes": ""
+    }
+  },
+  {
+    "id": "pub-2025-researchmap-import-49",
+    "researchmapFields": {
+      "type": "presentations",
+      "subtype": "oral_presentation",
+      "presentation_title": {
+        "ja": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討",
+        "en": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討"
+      },
+      "presenters": {
+        "ja": [
+          {
+            "name": "江藤優太"
+          },
+          {
+            "name": "冨岡莉生"
+          },
+          {
+            "name": "髙林正典"
+          }
+        ]
+      },
+      "event": {
+        "ja": "2025年第86回応用物理学会秋季学術講演会"
+      },
+      "publication_date": "2025-09-07",
+      "from_event_date": "2025-09-07",
+      "to_event_date": "2025-09-10",
+      "see_also": [
+        {
+          "@id": "https://pub.confit.atlas.jp/ja/event/jsap2025a",
+          "label": "url"
+        }
+      ],
+      "location": {
+        "ja": "名城大学 天白キャンパス, Nagoya, Aichi, Japan"
+      },
+      "invited": false,
+      "presentation_type": "oral_presentation",
+      "is_international_presentation": false
+    },
+    "localMeta": {
+      "hasEmptyFields": false,
+      "notes": ""
+    }
+  },
+  {
+    "id": "pub-2024-researchmap-import-50",
+    "researchmapFields": {
+      "type": "presentations",
+      "subtype": "poster_presentation",
+      "presentation_title": {
+        "ja": "空間光変調に基づく複素深層ニューラルネットワーク",
+        "en": "空間光変調に基づく複素深層ニューラルネットワーク"
+      },
+      "presenters": {
+        "ja": [
+          {
+            "name": "冨岡莉生"
+          },
+          {
+            "name": "高津太一"
+          },
+          {
+            "name": "高林正典"
+          }
+        ]
+      },
+      "event": {
+        "ja": "「光の極限性能を生かすフォトニックコンピューティングの創成」第2回公開シンポジウム"
+      },
+      "publication_date": "2024-12-17",
+      "from_event_date": "2024-12-17",
+      "to_event_date": "2024-12-17",
+      "see_also": [
+        {
+          "@id": "https://www.photoniccomputing.jp/activities/2024_12_17_symposium_session.php",
+          "label": "url"
+        }
+      ],
+      "location": {
+        "ja": "国立研究開発法人 情報通信研究機構 本部 ３号館１階 セミナー室前 展示スペース（東京都小金井市）"
+      },
+      "invited": false,
+      "presentation_type": "poster_presentation",
+      "is_international_presentation": false
+    },
+    "localMeta": {
+      "hasEmptyFields": false,
+      "notes": ""
+    }
+  },
+  {
+    "id": "pub-2024-numerical-simulations-on-complex-valued-optoelectronic-deep-neural-network",
+    "researchmapFields": {
+      "type": "presentations",
+      "subtype": "poster_presentation",
+      "presentation_title": {
+        "en": "Numerical simulations on complex-valued optoelectronic deep neural network"
+      },
+      "presenters": {
+        "en": [
+          {
+            "name": "Rio Tomioka"
+          },
+          {
+            "name": "Taichi Takatsu"
+          },
+          {
+            "name": "Kaito Inoue"
+          },
+          {
+            "name": "Atsushi Shibukawa"
+          },
+          {
+            "name": "Masanori Takabayashi"
+          }
+        ]
+      },
+      "event": {
+        "en": "The First International Symposium on Photonic Computing"
+      },
+      "publication_date": "2024-03-11",
+      "from_event_date": "2024-03-11",
+      "to_event_date": "2024-03-12",
+      "see_also": [
+        {
+          "@id": "https://www.photoniccomputing.jp/activities/2024_03_11_symposium_session3.php",
+          "label": "url"
+        }
+      ],
+      "location": {
+        "en": "Ito Hall, Ito International Research Center, the University of Tokyo, Tokyo, Japan"
+      },
+      "invited": false,
+      "presentation_type": "poster_presentation",
+      "is_international_presentation": true
+    },
+    "localMeta": {
+      "hasEmptyFields": false,
+      "notes": ""
+    }
+  },
+  {
+    "id": "pub-2023-numerical-simulation-on-phase-to-intensity-conversion-by-self-referential-hologr",
+    "researchmapFields": {
+      "type": "presentations",
+      "subtype": "poster_presentation",
+      "presentation_title": {
+        "en": "Numerical simulation on phase-to-intensity conversion by self-referential holographic deep neural network"
+      },
+      "presenters": {
+        "en": [
+          {
+            "name": "Rio Tomioka"
+          },
+          {
+            "name": "Masanori Takabayashi"
+          }
+        ]
+      },
+      "event": {
+        "en": "The 13th Japan-Korea Workshop on Digital Holography and Information Photonics"
+      },
+      "publication_date": "2023-12-18",
+      "from_event_date": "2023-12-18",
+      "to_event_date": "2023-12-18",
+      "see_also": [
+        {
+          "@id": "https://www.i-photonics.jp/dhip2023/index.html#",
+          "label": "url"
+        }
+      ],
+      "invited": false,
+      "presentation_type": "poster_presentation",
+      "is_international_presentation": true
+    },
+    "localMeta": {
+      "hasEmptyFields": false,
       "notes": ""
     }
   }

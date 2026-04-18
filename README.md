@@ -61,6 +61,13 @@
    npm run convert-publications
    ```
    - `src/data/publication_data.csv` は移行・再取り込み用で、日常運用の正本にはしません
+4. researchmap export (`rm_*.jsonl`) を master に取り込みたい場合
+   ```
+   npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl --dry-run
+   npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl
+   ```
+   - `researchmapFields` は JSONL 側を優先して上書きし、JSONL にない field と `localMeta` は保持します
+   - 正常終了した JSONL は `archive/` へ移動し、同じ内容の再取り込みは履歴で防止します
 
 詳細は[管理者向けドキュメント - 出版物データ管理](docs/admin/publications-management.md)を参照してください。
 
