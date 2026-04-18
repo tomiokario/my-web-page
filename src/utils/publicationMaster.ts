@@ -1,13 +1,14 @@
 import { Publication } from "../types";
 import {
+  LegacyPublicationMasterResearchmapFields,
   LocalizedLanguage,
   LocalizedPeople,
   LocalizedText,
-  PublicationIdentifiers,
+  PublicationMasterFields,
   PublicationMasterRecord,
-  PublicationMasterResearchmapFields,
   PublicationSeeAlso,
 } from "../types/publicationMaster";
+import { fromLegacyResearchmapFields, toLegacyResearchmapFields } from "./publicationMasterSchema";
 
 export interface ProcessedDate {
   startDate: string;
@@ -40,7 +41,7 @@ interface TitleAndAuthors {
 }
 
 interface PublicationClassification {
-  type: PublicationMasterResearchmapFields["type"];
+  type: PublicationMasterFields["type"];
   subtype?: string;
   isInternational?: boolean;
 }
@@ -218,7 +219,7 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
     const normalizedPresentationType = mapPresentationType(row.presentationType);
     const invited = resolveInvited(row.presentationType, row.type);
 
-    const researchmapFields: PublicationMasterResearchmapFields = compactObject({
+    const researchmapFields: LegacyPublicationMasterResearchmapFields = compactObject({
       type: classification.type,
       subtype: classification.subtype,
       paper_title: classification.type === "presentations" ? undefined : localizedTitle,
@@ -261,10 +262,13 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
 
     return {
       id,
-      researchmapFields,
+      fields: fromLegacyResearchmapFields(researchmapFields),
       localMeta: compactObject({
         hasEmptyFields: row.hasEmptyFields,
         notes: supplementalLinks.remainingNotes || "",
+        legacyHints: compactObject({
+          presentationType: normalizedPresentationType ? [normalizedPresentationType] : undefined,
+        }),
       }),
     };
   });
@@ -272,25 +276,29 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
 
 export function publicationMasterToWebPublications(records: PublicationMasterRecord[]): Publication[] {
   return records.map((record, index) => {
-      const title = getPublicationTitle(record.researchmapFields);
-      const doi = record.researchmapFields.identifiers?.doi?.[0] || "";
-      const primaryWebLink = selectPrimaryWebLink(record.researchmapFields.see_also, doi);
-      const authorshipValues = normalizeArrayOutput(deriveAuthorshipCodes(record.researchmapFields));
-      const presentationTypes = normalizeArrayOutput(
-        derivePresentationTypeCodes(record.researchmapFields)
+      const legacyFields = toLegacyResearchmapFields(record.fields);
+      const title = getPublicationTitle(legacyFields);
+      const doi = legacyFields.identifiers?.doi?.[0] || "";
+      const primaryWebLink = selectPrimaryWebLink(legacyFields.see_also, doi);
+      const authorshipValues = normalizeArrayOutput(deriveAuthorshipCodes(legacyFields));
+      const derivedPresentationTypes = normalizeArrayOutput(
+        derivePresentationTypeCodes(legacyFields)
       );
+      const presentationTypes = derivedPresentationTypes.length
+        ? derivedPresentationTypes
+        : normalizeArrayOutput(record.localMeta.legacyHints?.presentationType || []);
       const startDate =
-        record.researchmapFields.from_event_date ||
-        record.researchmapFields.publication_date ||
+        legacyFields.from_event_date ||
+        legacyFields.publication_date ||
         "";
       const endDate =
-        record.researchmapFields.to_event_date ||
-        record.researchmapFields.from_event_date ||
-        record.researchmapFields.publication_date ||
+        legacyFields.to_event_date ||
+        legacyFields.from_event_date ||
+        legacyFields.publication_date ||
         "";
-      const journalConference = getPublicationVenueText(record.researchmapFields);
-      const site = getLocalizedTextValue(record.researchmapFields.location, "en") ||
-        getLocalizedTextValue(record.researchmapFields.location, "ja");
+      const journalConference = getPublicationVenueText(legacyFields);
+      const site = getLocalizedTextValue(legacyFields.location, "en") ||
+        getLocalizedTextValue(legacyFields.location, "ja");
 
       return {
         id: index + 1,
@@ -298,22 +306,22 @@ export function publicationMasterToWebPublications(records: PublicationMasterRec
         name: title?.en || title?.ja || TITLE_FALLBACK,
         japanese: title?.ja || "",
         abstract:
-          getLocalizedTextValue(record.researchmapFields.description, "en") ||
-          getLocalizedTextValue(record.researchmapFields.description, "ja"),
-        type: buildResearchmapClassificationKey(record.researchmapFields),
-        category: record.researchmapFields.type,
-        subtype: resolveResearchmapSubtype(record.researchmapFields),
-        review: deriveReviewCode(record.researchmapFields.referee),
+          getLocalizedTextValue(legacyFields.description, "en") ||
+          getLocalizedTextValue(legacyFields.description, "ja"),
+        type: buildResearchmapClassificationKey(legacyFields),
+        category: legacyFields.type,
+        subtype: resolveResearchmapSubtype(legacyFields),
+        review: deriveReviewCode(legacyFields.referee),
         authorship: authorshipValues,
         presentationType: presentationTypes,
         doi,
         webLink: primaryWebLink?.["@id"] || "",
-        date: buildWebDateText(record.researchmapFields),
+        date: buildWebDateText(legacyFields),
         startDate,
         endDate,
         sortableDate: startDate,
         others: formatAdditionalSeeAlsoEntries(
-          record.researchmapFields.see_also,
+          legacyFields.see_also,
           primaryWebLink?.["@id"],
           doi
         ),
@@ -324,7 +332,7 @@ export function publicationMasterToWebPublications(records: PublicationMasterRec
 }
 
 export function getPublicationTitle(
-  fields: PublicationMasterResearchmapFields
+  fields: LegacyPublicationMasterResearchmapFields
 ): LocalizedText | undefined {
   if (fields.type === "presentations") {
     return fields.presentation_title || fields.paper_title;
@@ -332,7 +340,7 @@ export function getPublicationTitle(
   return fields.paper_title || fields.presentation_title;
 }
 
-export function getPublicationVenueText(fields: PublicationMasterResearchmapFields): string {
+export function getPublicationVenueText(fields: LegacyPublicationMasterResearchmapFields): string {
   if (fields.type === "presentations") {
     return (
       getLocalizedTextValue(fields.event, "en") ||
@@ -583,7 +591,7 @@ function parseAuthors(authorSegment: string, language: LocalizedLanguage): strin
   );
 }
 
-function buildIdentifiers(doi: string): PublicationIdentifiers | undefined {
+function buildIdentifiers(doi: string): LegacyPublicationMasterResearchmapFields["identifiers"] | undefined {
   const normalized = normalizeDoi(doi);
   if (!normalized) {
     return undefined;
@@ -946,7 +954,7 @@ function deriveReviewCode(referee: boolean | undefined): string {
   return "";
 }
 
-function deriveAuthorshipCodes(fields: PublicationMasterResearchmapFields): string[] {
+function deriveAuthorshipCodes(fields: LegacyPublicationMasterResearchmapFields): string[] {
   const ownerRoles = fields.published_paper_owner_roles || [];
   if (ownerRoles.length > 0) {
     return ownerRoles;
@@ -962,7 +970,7 @@ function deriveAuthorshipCodes(fields: PublicationMasterResearchmapFields): stri
   return peopleCount > 1 ? ["coauthor"] : [];
 }
 
-function derivePresentationTypeCodes(fields: PublicationMasterResearchmapFields): string[] {
+function derivePresentationTypeCodes(fields: LegacyPublicationMasterResearchmapFields): string[] {
   if (!fields.presentation_type) {
     return [];
   }
@@ -970,7 +978,7 @@ function derivePresentationTypeCodes(fields: PublicationMasterResearchmapFields)
   return [fields.presentation_type];
 }
 
-function resolveResearchmapSubtype(fields: PublicationMasterResearchmapFields): string {
+function resolveResearchmapSubtype(fields: LegacyPublicationMasterResearchmapFields): string {
   if (fields.type === "published_papers") {
     return fields.published_paper_type || fields.subtype || "others";
   }
@@ -980,11 +988,11 @@ function resolveResearchmapSubtype(fields: PublicationMasterResearchmapFields): 
   return fields.misc_type || fields.subtype || "others";
 }
 
-function buildResearchmapClassificationKey(fields: PublicationMasterResearchmapFields): string {
+function buildResearchmapClassificationKey(fields: LegacyPublicationMasterResearchmapFields): string {
   return `${fields.type}/${resolveResearchmapSubtype(fields)}`;
 }
 
-function buildWebDateText(fields: PublicationMasterResearchmapFields): string {
+function buildWebDateText(fields: LegacyPublicationMasterResearchmapFields): string {
   const start = fields.from_event_date || fields.publication_date || "";
   const end = fields.to_event_date || "";
 

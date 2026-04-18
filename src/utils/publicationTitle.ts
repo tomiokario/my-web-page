@@ -1,4 +1,4 @@
-import { PublicationMasterRecord, PublicationMasterResearchmapFields } from "../types/publicationMaster";
+import { PublicationMasterFields, PublicationMasterRecord } from "../types/publicationMaster";
 
 export interface DuplicatePublicationTitleGroup {
   normalizedTitle: string;
@@ -7,24 +7,20 @@ export interface DuplicatePublicationTitleGroup {
 }
 
 export function extractPublicationTitles(
-  fields: PublicationMasterResearchmapFields
+  fields: PublicationMasterFields
 ): string[] {
   return uniqueStrings([
-    fields.paper_title?.ja,
-    fields.paper_title?.en,
-    fields.presentation_title?.ja,
-    fields.presentation_title?.en,
+    fields.title?.ja,
+    fields.title?.en,
   ]);
 }
 
 export function extractPrimaryPublicationTitle(
-  fields: PublicationMasterResearchmapFields
+  fields: PublicationMasterFields
 ): string {
   return (
-    fields.paper_title?.ja ||
-    fields.paper_title?.en ||
-    fields.presentation_title?.ja ||
-    fields.presentation_title?.en ||
+    fields.title?.ja ||
+    fields.title?.en ||
     ""
   );
 }
@@ -48,7 +44,7 @@ export function findDuplicatePublicationTitleGroups(
   const groups = new Map<string, DuplicatePublicationTitleGroup>();
 
   records.forEach((record) => {
-    const titles = extractPublicationTitles(record.researchmapFields);
+    const titles = extractPublicationTitles(record.fields);
 
     titles.forEach((title) => {
       const normalizedTitle = normalizePublicationTitle(title);
@@ -74,8 +70,8 @@ export function findDuplicatePublicationTitleGroups(
 }
 
 export function hasMatchingPublicationTitle(
-  left: PublicationMasterResearchmapFields,
-  right: PublicationMasterResearchmapFields
+  left: PublicationMasterFields,
+  right: PublicationMasterFields
 ): boolean {
   const rightTitles = new Set(
     extractPublicationTitles(right).map((title) => normalizePublicationTitle(title)).filter(Boolean)

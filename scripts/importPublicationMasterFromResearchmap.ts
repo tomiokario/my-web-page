@@ -33,7 +33,7 @@ function main() {
 
     console.log(JSON.stringify(report, null, 2));
 
-    if (report.summary.ambiguous > 0 || report.summary.invalid > 0) {
+    if (report.summary.review > 0 || report.summary.invalid > 0) {
       process.exit(2);
     }
 
