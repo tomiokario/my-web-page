@@ -1,1784 +1,2353 @@
 [
   {
     "id": "pub-2021-numerical-simulations-of-neural-network-hardware",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical simulations of neural network hardware based on self-referential holography"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "ISOM21"
-      },
-      "publication_date": "2021-10-03",
-      "from_event_date": "2021-10-03",
-      "to_event_date": "2021-10-06",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.isom.jp/PDF/ISOM21_Advance%20Program.pdf",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "ISOM21"
+        }
+      },
+      "dates": {
+        "published": "2021-10-03",
+        "eventStart": "2021-10-03",
+        "eventEnd": "2021-10-06"
+      },
+      "links": [
+        {
+          "url": "https://www.isom.jp/PDF/ISOM21_Advance%20Program.pdf",
           "label": "url"
         }
       ],
-      "number": "We-A-02",
-      "starting_page": "123",
-      "ending_page": "124",
+      "bibliographic": {
+        "number": "We-A-02",
+        "startPage": "123",
+        "endPage": "124"
+      },
       "location": {
         "en": "online"
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373064",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "442d4680a2c80f7fecf87656b0be8ff6b2ae950ef934c020901ce979d1da0c4d"
+      }
     }
   },
   {
     "id": "pub-2022-improvement-of-learning-process-by-transmission-",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "technical_report",
-      "paper_title": {
+      "title": {
         "ja": "自己参照型ホログラフィックニューラルネットワークにおける透過行列を用いた学習過程の改善",
         "en": "Improvement of learning process by transmission matrix in self-referential holographic neural network"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "高林正典"
-          }
-        ],
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "映像情報メディア学会技術報告",
-        "en": "ITE technical report"
-      },
-      "publication_date": "2022-02-21",
-      "from_event_date": "2022-02-21",
-      "to_event_date": "2022-02-21",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.ite.or.jp/ken/paper/202202210A94/",
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生",
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "高林正典",
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "映像情報メディア学会技術報告",
+          "en": "ITE technical report"
+        }
+      },
+      "dates": {
+        "published": "2022-02-21",
+        "eventStart": "2022-02-21",
+        "eventEnd": "2022-02-21"
+      },
+      "links": [
+        {
+          "url": "https://www.ite.or.jp/ken/paper/202202210A94/",
           "label": "url"
         }
       ],
-      "volume": "46",
-      "number": "6",
-      "starting_page": "61",
-      "ending_page": "66",
+      "bibliographic": {
+        "volume": "46",
+        "number": "6",
+        "startPage": "61",
+        "endPage": "66"
+      },
       "location": {
         "en": "online"
       },
-      "referee": false,
+      "review": false,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
-      ],
-      "misc_type": "technical_report"
+      ]
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373065",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "fdc42ee2ed2ab9cd236fcd79b4b86c93c2b35b501092acfed389168eee967a82"
+      }
     }
   },
   {
     "id": "pub-2022-hyperparameter-tuning-for-accurate-image-classif",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Hyperparameter tuning for accurate image classification using self-referential holographic neural network"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Masanori Takabayashi"
-          },
-          {
-            "name": "Sae Isayama"
-          },
-          {
-            "name": "Rio Tomioka"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "IWH2021"
-      },
-      "publication_date": "2022-03-11",
-      "from_event_date": "2022-03-11",
-      "to_event_date": "2022-03-12",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.i-w-holography.org/archives/iwh2021-top/iwh2021-program/",
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Sae Isayama"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "IWH2021"
+        }
+      },
+      "dates": {
+        "published": "2022-03-11",
+        "eventStart": "2022-03-11",
+        "eventEnd": "2022-03-12"
+      },
+      "links": [
+        {
+          "url": "https://www.i-w-holography.org/archives/iwh2021-top/iwh2021-program/",
           "label": "url"
         }
       ],
-      "number": "11-P08",
-      "referee": true,
+      "bibliographic": {
+        "number": "11-P08"
+      },
+      "review": true,
       "invited": false,
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373066",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "5a1d1c760cff18b5c26ed976c0633d490d21820e6e8b3f9e421c146697b520fa"
+      }
     }
   },
   {
     "id": "pub-2022-self-referential-holographic-neural-network-with",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Self-referential holographic neural network with electronically implemented nonlinear layer"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "the 3rd International Symposium on Neuromorphic AI Hardware"
-      },
-      "publication_date": "2022-03-18",
-      "from_event_date": "2022-03-18",
-      "to_event_date": "2022-03-19",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.brain.kyutech.ac.jp/~neuro/2021/12/08/3rdsympo/?lang=en",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "the 3rd International Symposium on Neuromorphic AI Hardware"
+        }
+      },
+      "dates": {
+        "published": "2022-03-18",
+        "eventStart": "2022-03-18",
+        "eventEnd": "2022-03-19"
+      },
+      "links": [
+        {
+          "url": "https://www.brain.kyutech.ac.jp/~neuro/2021/12/08/3rdsympo/?lang=en",
           "label": "url"
         }
       ],
-      "number": "P-AM8",
-      "starting_page": "17",
-      "ending_page": "17",
+      "bibliographic": {
+        "number": "P-AM8",
+        "startPage": "17",
+        "endPage": "17"
+      },
       "location": {
         "en": "Premier Hotel Mojiko, Kitakyushu, Fukuoka, Japan"
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373067",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "26301756379b4f4ae3e5f5206fb322db35b5599644dc93a3083aca9cbee04a8f"
+      }
     }
   },
   {
     "id": "pub-2022-dependence-of-activation-function-on-image-recog",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Dependence of activation function on image recognition accuracy in self-referential holographic deep neural network"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "ISOM2022"
-      },
-      "publication_date": "2022-07-31",
-      "from_event_date": "2022-07-31",
-      "to_event_date": "2022-08-03",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://opg.optica.org/abstract.cfm?uri=ISISOM-2022-ITuPJ_01",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "ISOM2022"
+        }
+      },
+      "dates": {
+        "published": "2022-07-31",
+        "eventStart": "2022-07-31",
+        "eventEnd": "2022-08-03"
+      },
+      "links": [
+        {
+          "url": "https://opg.optica.org/abstract.cfm?uri=ISISOM-2022-ITuPJ_01",
           "label": "url"
         }
       ],
-      "number": "ITuPJ_01",
+      "bibliographic": {
+        "number": "ITuPJ_01"
+      },
       "location": {
         "en": "Sapporo Convention Center, Sapporo, Hokkaido, Japan"
       },
       "description": {
         "en": "We numerically investigate the effect of activation function on the accuracy of image recognition tasks in self-referential holographic deep neural networks (SR-HDNNs). We consider two types of activation functions, intensity observation and trainable complex-valued activation. The effect was investigated using numerical simulations on image recognition tasks. Consequently, the trainable activation yielded 1.6% higher accuracy than the intensity observation."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373068",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "37dee4bd2f82ba3c1c56a749eb510421e5f5fb45b6401c1b70e17d464ed925f3"
+      }
     }
   },
   {
     "id": "pub-2022-仮想空間アプリケーションを利用した訪問地の事前体験と高齢化社会への適用",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "summary_national_conference",
-      "paper_title": {
+      "title": {
         "ja": "仮想空間アプリケーションを利用した訪問地の事前体験と高齢化社会への適用",
         "en": "仮想空間アプリケーションを利用した訪問地の事前体験と高齢化社会への適用"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "山崎駆"
-          },
-          {
-            "name": "山口健太"
-          },
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "梶谷柊"
-          },
-          {
-            "name": "高津太一"
-          },
-          {
-            "name": "根崎翔"
-          },
-          {
-            "name": "井上快斗"
-          },
-          {
-            "name": "岸田隆之"
-          },
-          {
-            "name": "井上創造"
-          },
-          {
-            "name": "柴田智広"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "第25回ASD研究会"
-      },
-      "publication_date": "2022-12-02",
-      "from_event_date": "2022-12-02",
-      "to_event_date": "2022-12-02",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "http://sigasd.ipsj.or.jp/?p=1574",
+          "role": "author",
+          "name": {
+            "ja": "山崎駆"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "山口健太"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "梶谷柊"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "高津太一"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "根崎翔"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "井上快斗"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "岸田隆之"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "井上創造"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "柴田智広"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "第25回ASD研究会"
+        }
+      },
+      "dates": {
+        "published": "2022-12-02",
+        "eventStart": "2022-12-02",
+        "eventEnd": "2022-12-02"
+      },
+      "links": [
+        {
+          "url": "http://sigasd.ipsj.or.jp/?p=1574",
           "label": "url"
         }
       ],
-      "number": "2022-ASD-25-6",
-      "referee": false,
-      "invited": false,
-      "misc_type": "summary_national_conference"
+      "bibliographic": {
+        "number": "2022-ASD-25-6"
+      },
+      "review": false,
+      "invited": false
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373069",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "085416b6b73ba53683748945f7d386a1e0375036933770ad800f672784157dc1"
+      }
     }
   },
   {
     "id": "pub-2022-訪問地事前体験のための仮想空間アプリケーションの開発及び実証実験",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "summary_national_conference",
-      "paper_title": {
+      "title": {
         "ja": "訪問地事前体験のための仮想空間アプリケーションの開発及び実証実験",
         "en": "訪問地事前体験のための仮想空間アプリケーションの開発及び実証実験"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "山崎駆"
-          },
-          {
-            "name": "山口健太"
-          },
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "梶谷柊"
-          },
-          {
-            "name": "高津太一"
-          },
-          {
-            "name": "根崎翔"
-          },
-          {
-            "name": "井上快斗"
-          },
-          {
-            "name": "岸田隆之"
-          },
-          {
-            "name": "井上創造"
-          },
-          {
-            "name": "柴田智広"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "第7回福祉工学会九州支部大会"
-      },
-      "publication_date": "2022-12-10",
-      "from_event_date": "2022-12-10",
-      "to_event_date": "2022-12-10",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "http://www.jswe.jp/division/kyushu/2022/entry.html",
+          "role": "author",
+          "name": {
+            "ja": "山崎駆"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "山口健太"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "梶谷柊"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "高津太一"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "根崎翔"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "井上快斗"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "岸田隆之"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "井上創造"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "柴田智広"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "第7回福祉工学会九州支部大会"
+        }
+      },
+      "dates": {
+        "published": "2022-12-10",
+        "eventStart": "2022-12-10",
+        "eventEnd": "2022-12-10"
+      },
+      "links": [
+        {
+          "url": "http://www.jswe.jp/division/kyushu/2022/entry.html",
           "label": "url"
         }
       ],
-      "number": "P1-3",
-      "starting_page": "30",
-      "ending_page": "31",
-      "referee": false,
-      "invited": false,
-      "misc_type": "summary_national_conference"
+      "bibliographic": {
+        "number": "P1-3",
+        "startPage": "30",
+        "endPage": "31"
+      },
+      "review": false,
+      "invited": false
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373070",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "e044bf41876941c4f2ce4c23f64dfa19b6cd83e63ae274d5eb33d5f6f66f25cb"
+      }
     }
   },
   {
     "id": "pub-2022-numerical-simulations-of-optoelectronic-ai-hardw",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical Simulations of Optoelectronic AI Hardware using Transmission Matrix of Real Object"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Masanori Takabayashi"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Kaito Inoue"
-          },
-          {
-            "name": "Atsushi Shibukawa"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "the 4th International Symposium on Neuromorphic AI Hardware"
-      },
-      "publication_date": "2022-12-13",
-      "from_event_date": "2022-12-13",
-      "to_event_date": "2022-12-15",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://kyutech.repo.nii.ac.jp/records/2000113",
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Kaito Inoue"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Atsushi Shibukawa"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "the 4th International Symposium on Neuromorphic AI Hardware"
+        }
+      },
+      "dates": {
+        "published": "2022-12-13",
+        "eventStart": "2022-12-13",
+        "eventEnd": "2022-12-15"
+      },
+      "links": [
+        {
+          "url": "https://kyutech.repo.nii.ac.jp/records/2000113",
           "label": "url"
         }
       ],
-      "number": "S-4",
-      "starting_page": "7",
-      "ending_page": "7",
-      "referee": true,
+      "bibliographic": {
+        "number": "S-4",
+        "startPage": "7",
+        "endPage": "7"
+      },
+      "review": true,
       "invited": false,
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373071",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "d881371e5c7cf07e3656caf73e3d71d0c85a2e97cfba88abd827ea6d3e0e8124"
+      }
     }
   },
   {
     "id": "pub-2022-self-referential-holographic-neural-network-with-2",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Self-referential holographic neural network with single spatial light modulator"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "the 4th International Symposium on Neuromorphic AI Hardware"
-      },
-      "publication_date": "2022-12-13",
-      "from_event_date": "2022-12-13",
-      "to_event_date": "2022-12-15",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://kyutech.repo.nii.ac.jp/records/2000111",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "the 4th International Symposium on Neuromorphic AI Hardware"
+        }
+      },
+      "dates": {
+        "published": "2022-12-13",
+        "eventStart": "2022-12-13",
+        "eventEnd": "2022-12-15"
+      },
+      "links": [
+        {
+          "url": "https://kyutech.repo.nii.ac.jp/records/2000111",
           "label": "url"
         }
       ],
-      "number": "P2-2",
-      "starting_page": "35",
-      "ending_page": "35",
+      "bibliographic": {
+        "number": "P2-2",
+        "startPage": "35",
+        "endPage": "35"
+      },
       "location": {
         "en": "ART HOTEL Kokura New Tagawa, Kitakyushu, Fukuoka, Japan"
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373072",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "5ff35b7bb9ebf4dcea5c09f9df9f6d52f00f34817f0f6e3041d74bd1dd8f188b"
+      }
     }
   },
   {
     "id": "pub-2023-自己参照型ホログラフィの原理に基づく光電子融合型ニューラルネットワークハードウェア",
-    "researchmapFields": {
+    "fields": {
       "type": "presentations",
       "subtype": "oral_presentation",
-      "presentation_title": {
+      "title": {
         "ja": "自己参照型ホログラフィの原理に基づく光電子融合型ニューラルネットワークハードウェア",
         "en": "自己参照型ホログラフィの原理に基づく光電子融合型ニューラルネットワークハードウェア"
       },
-      "presenters": {
-        "ja": [
-          {
-            "name": "冨岡莉生"
-          }
-        ]
-      },
-      "event": {
-        "ja": "第２回光ニューロワークショップ"
-      },
-      "publication_date": "2023-03-13",
-      "from_event_date": "2023-03-13",
-      "to_event_date": "2023-03-14",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://npip.ed.kyushu-u.ac.jp/pdf/2nd_optneuro_flyer_v3_1.pdf",
+          "role": "presenter",
+          "name": {
+            "ja": "冨岡莉生"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "event",
+        "name": {
+          "ja": "第２回光ニューロワークショップ"
+        }
+      },
+      "dates": {
+        "published": "2023-03-13",
+        "eventStart": "2023-03-13",
+        "eventEnd": "2023-03-14"
+      },
+      "links": [
+        {
+          "url": "https://npip.ed.kyushu-u.ac.jp/pdf/2nd_optneuro_flyer_v3_1.pdf",
           "label": "url"
         }
       ],
       "location": {
         "ja": "九州大学伊都ゲストハウス 多目的ホール, Fukuoka, Japan"
       },
-      "referee": false,
+      "review": false,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "presentation_type": "oral_presentation",
-      "is_international_presentation": false
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373073",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "1bf57cc1b82206d96516c51a7706742c4d2dbb8544d717666ff02ef5e6c42dcf"
+      }
     }
   },
   {
     "id": "pub-2023-numerical-simulations-on-optoelectronic-deep-neu",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "scientific_journal",
-      "paper_title": {
+      "title": {
         "en": "Numerical simulations on optoelectronic deep neural network hardware based on self-referential holography"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "Optical Review"
-      },
-      "publication_date": "2023-04-28",
-      "from_event_date": "2023-04-28",
-      "to_event_date": "2023-04-28",
-      "identifiers": {
-        "doi": [
-          "10.1007/s10043-023-00810-2"
-        ]
-      },
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://doi.org/10.1007/s10043-023-00810-2",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "Optical Review"
+        }
+      },
+      "dates": {
+        "published": "2023-04-28",
+        "eventStart": "2023-04-28",
+        "eventEnd": "2023-04-28"
+      },
+      "identifiers": {
+        "doi": "10.1007/s10043-023-00810-2"
+      },
+      "links": [
+        {
+          "url": "https://doi.org/10.1007/s10043-023-00810-2",
           "label": "doi"
         }
       ],
-      "volume": "30",
-      "starting_page": "387",
-      "ending_page": "396",
+      "bibliographic": {
+        "volume": "30",
+        "startPage": "387",
+        "endPage": "396"
+      },
       "description": {
         "en": "We propose a novel optoelectronic deep neural network (OE-DNN) hardware called the self-referential holographic deep neural network (SR-HDNN). The SR-HDNN features a combination of an optical computing part utilizing a volume hologram and an electronic part connecting the optical elements virtually. Since the shape of a volume hologram, which is a 3-dimensional (3D) refractive index distribution in this case, can be changed by its recording conditions, it is expected to realize the flexible design of optical computing functions by coupling between specific nodes. In addition, the electronic part enables the construction of multi-layer networks without extending the optical system and enabling arbitrary signal processing, including nonlinear operations. By integrating flexible optical and electronic parts, the SR-HDNN consisting of both flexible optical and electronic parts has the potential to maximize the performance of OE-DNN. In this study, we numerically simulate image classification tasks to investigate the feasibility and potential of the SR-HDNN."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "corresponding",
         "lead"
       ],
-      "published_paper_type": "scientific_journal",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373074",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "b3ec4db5791c2834410d4de9be8ed3395b6fa247d0c027cdaab479ea334b4db4"
+      }
     }
   },
   {
     "id": "pub-2023-自己参照型ホログラフィックメモリの光学系を用いたニューラルネットワークハードウェア",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "others",
-      "paper_title": {
+      "title": {
         "ja": "自己参照型ホログラフィックメモリの光学系を用いたニューラルネットワークハードウェア",
         "en": "自己参照型ホログラフィックメモリの光学系を用いたニューラルネットワークハードウェア"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "高林正典"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "情報フォトニクス研究討論会2023"
-      },
-      "publication_date": "2023-07-21",
-      "from_event_date": "2023-07-21",
-      "to_event_date": "2023-07-21",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.i-photonics.jp/meetings/meetings2023.html#20230721SGSIPG",
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "高林正典"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "情報フォトニクス研究討論会2023"
+        }
+      },
+      "dates": {
+        "published": "2023-07-21",
+        "eventStart": "2023-07-21",
+        "eventEnd": "2023-07-21"
+      },
+      "links": [
+        {
+          "url": "https://www.i-photonics.jp/meetings/meetings2023.html#20230721SGSIPG",
           "label": "url"
         }
       ],
       "location": {
         "ja": "東京工業大学大岡山キャンパス　西9号館1階　コラボレーションルーム, Tokyo, Japan"
       },
-      "referee": false,
+      "review": false,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
-      ],
-      "misc_type": "others"
+      ]
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373075",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "5552fc7f6e2e4b5534fb4a5e9e7fad4eb7f875298c768b73ed1b656125dcc410"
+      }
     }
   },
   {
     "id": "pub-2023-複素振幅分布を入出力とする光電子融合型深層ニューラルネットワークハードウェアにおける複素活性化関",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "others",
-      "paper_title": {
+      "title": {
         "ja": "複素振幅分布を入出力とする光電子融合型深層ニューラルネットワークハードウェアにおける複素活性化関数の影響",
         "en": "複素振幅分布を入出力とする光電子融合型深層ニューラルネットワークハードウェアにおける複素活性化関数の影響"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "高林正典"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "光の極限性能を生かすフォトニックコンピューティング 第三回領域会議"
-      },
-      "publication_date": "2023-08-07",
-      "from_event_date": "2023-08-07",
-      "to_event_date": "2023-08-08",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.photoniccomputing.jp/activities/2023_08_07_region_meeting_online.php",
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "高林正典"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "光の極限性能を生かすフォトニックコンピューティング 第三回領域会議"
+        }
+      },
+      "dates": {
+        "published": "2023-08-07",
+        "eventStart": "2023-08-07",
+        "eventEnd": "2023-08-08"
+      },
+      "links": [
+        {
+          "url": "https://www.photoniccomputing.jp/activities/2023_08_07_region_meeting_online.php",
           "label": "url"
         }
       ],
       "location": {
         "ja": "東京大学工学部６号館３階セミナー室A・D・B・C, Tokyo, Japan"
       },
-      "referee": false,
+      "review": false,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
-      ],
-      "misc_type": "others"
+      ]
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373076",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "49ac89428604014fbb5049af34f11a83ef5b5798fb7f7fbd5551233de2b89d7a"
+      }
     }
   },
   {
     "id": "pub-2023-numerical-simulation-on-phase-to-intensity-conve",
-    "researchmapFields": {
+    "fields": {
       "type": "presentations",
       "subtype": "poster_presentation",
-      "paper_title": {
+      "title": {
         "en": "Numerical simulation on phase-to-intensity conversion by self-referential holographic deep neural network"
       },
-      "presentation_title": {
-        "en": "Numerical simulation on phase-to-intensity conversion by self-referential holographic deep neural network"
-      },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "presenters": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "DHIP2023"
-      },
-      "event": {
-        "en": "The 13th Japan-Korea Workshop on Digital Holography and Information Photonics"
-      },
-      "publication_date": "2023-12-18",
-      "from_event_date": "2023-12-18",
-      "to_event_date": "2023-12-18",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.i-photonics.jp/dhip2023/index.html#",
+          "role": "presenter",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "event",
+        "name": {
+          "en": "The 13th Japan-Korea Workshop on Digital Holography and Information Photonics"
+        }
+      },
+      "dates": {
+        "published": "2023-12-18",
+        "eventStart": "2023-12-18",
+        "eventEnd": "2023-12-18"
+      },
+      "links": [
+        {
+          "url": "https://www.i-photonics.jp/dhip2023/index.html#",
           "label": "url"
         }
       ],
-      "starting_page": "54",
-      "ending_page": "54",
+      "bibliographic": {
+        "startPage": "54",
+        "endPage": "54"
+      },
       "location": {
         "en": "B-con Plaza, Beppu, Oita, Japan"
       },
-      "referee": false,
+      "review": false,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "presentation_type": "poster_presentation",
-      "is_international_presentation": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373077",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "81b5b3b627e593f911cfd2bef12f9c1ae61a30624c1270709f5e3868d50857b8"
+      }
     }
   },
   {
     "id": "pub-2024-effective-training-method-using-transmission-mat",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Effective training method using transmission matrix for optoelectronic deep neural network"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "the 5th International Symposium on Neuromorphic AI Hardware"
-      },
-      "publication_date": "2024-03-01",
-      "from_event_date": "2024-03-01",
-      "to_event_date": "2024-03-02",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://kyutech.repo.nii.ac.jp/records/2000785",
+          "role": "author",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "the 5th International Symposium on Neuromorphic AI Hardware"
+        }
+      },
+      "dates": {
+        "published": "2024-03-01",
+        "eventStart": "2024-03-01",
+        "eventEnd": "2024-03-02"
+      },
+      "links": [
+        {
+          "url": "https://kyutech.repo.nii.ac.jp/records/2000785",
           "label": "url"
         }
       ],
-      "number": "P1-12",
-      "starting_page": "25",
-      "ending_page": "25",
-      "referee": true,
+      "bibliographic": {
+        "number": "P1-12",
+        "startPage": "25",
+        "endPage": "25"
+      },
+      "review": true,
       "invited": false,
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373078",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "c9c21067d4100f6eb7995933454d3222c8563b9c8ec335f8ab23ff42d200311d"
+      }
     }
   },
   {
     "id": "pub-2024-numerical-simulation-on-wavefront-transformation",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical simulation on wavefront transformation using self-referential holographic deep neural network"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "the 5th International Symposium on Neuromorphic AI Hardware"
-      },
-      "publication_date": "2024-03-01",
-      "from_event_date": "2024-03-01",
-      "to_event_date": "2024-03-02",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://kyutech.repo.nii.ac.jp/records/2000786",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "the 5th International Symposium on Neuromorphic AI Hardware"
+        }
+      },
+      "dates": {
+        "published": "2024-03-01",
+        "eventStart": "2024-03-01",
+        "eventEnd": "2024-03-02"
+      },
+      "links": [
+        {
+          "url": "https://kyutech.repo.nii.ac.jp/records/2000786",
           "label": "url"
         }
       ],
-      "number": "O3-04/P1-22",
-      "starting_page": "14",
-      "ending_page": "14",
+      "bibliographic": {
+        "number": "O3-04/P1-22",
+        "startPage": "14",
+        "endPage": "14"
+      },
       "location": {
         "en": "RIHGA Royal Hotel Kokura, Kitakyushu, Fukuoka, Japan"
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373079",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "b0a4ef507916d716e4b90968bd5d3d553d0df573b649e412209da802f5cf9fb2"
+      }
     }
   },
   {
     "id": "pub-2024-optoelectronic-deep-neural-network-hardware-usin",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "introduction_scientific_journal",
-      "paper_title": {
+      "title": {
         "ja": "自己参照型ホログラフィの原理を用いた光電子深層ニューラルネットワークハードウェア",
         "en": "Optoelectronic deep neural network hardware using principle of self-referential holography"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "髙林 正典"
-          },
-          {
-            "name": "冨岡 莉生"
-          }
-        ],
-        "en": [
-          {
-            "name": "Masanori Takabayashi"
-          },
-          {
-            "name": "Rio Tomioka"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "フォトニクスニュース",
-        "en": "Photonics NEWS"
-      },
-      "publication_date": "2024-03-10",
-      "from_event_date": "2024-03-10",
-      "to_event_date": "2024-03-10",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://kyutech.repo.nii.ac.jp/records/2000826",
+          "role": "author",
+          "name": {
+            "ja": "髙林 正典",
+            "en": "Masanori Takabayashi"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "冨岡 莉生",
+            "en": "Rio Tomioka"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "フォトニクスニュース",
+          "en": "Photonics NEWS"
+        }
+      },
+      "dates": {
+        "published": "2024-03-10",
+        "eventStart": "2024-03-10",
+        "eventEnd": "2024-03-10"
+      },
+      "links": [
+        {
+          "url": "https://kyutech.repo.nii.ac.jp/records/2000826",
           "label": "url"
         }
       ],
-      "volume": "9",
-      "number": "3",
-      "starting_page": "147",
-      "ending_page": "151",
-      "referee": true,
-      "invited": true,
-      "misc_type": "introduction_scientific_journal"
+      "bibliographic": {
+        "volume": "9",
+        "number": "3",
+        "startPage": "147",
+        "endPage": "151"
+      },
+      "review": true,
+      "invited": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373080",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "97b5f25498ac557f1ebf63ac13fe79230cd386ebeff022b020fbedde31cd99d0"
+      }
     }
   },
   {
     "id": "pub-2024-numerical-simulations-on-complex-valued-optoelec",
-    "researchmapFields": {
+    "fields": {
       "type": "presentations",
       "subtype": "poster_presentation",
-      "paper_title": {
+      "title": {
         "en": "Numerical simulations on complex-valued optoelectronic deep neural network"
       },
-      "presentation_title": {
-        "en": "Numerical simulations on complex-valued optoelectronic deep neural network"
-      },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Kaito Inoue"
-          },
-          {
-            "name": "Atsushi Shibukawa"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "presenters": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Kaito Inoue"
-          },
-          {
-            "name": "Atsushi Shibukawa"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "The First International Symposium on Photonic Computing"
-      },
-      "event": {
-        "en": "The First International Symposium on Photonic Computing"
-      },
-      "publication_date": "2024-03-11",
-      "from_event_date": "2024-03-11",
-      "to_event_date": "2024-03-12",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.photoniccomputing.jp/activities/2024_03_11_symposium_session3.php",
+          "role": "presenter",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "en": "Kaito Inoue"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "en": "Atsushi Shibukawa"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "event",
+        "name": {
+          "en": "The First International Symposium on Photonic Computing"
+        }
+      },
+      "dates": {
+        "published": "2024-03-11",
+        "eventStart": "2024-03-11",
+        "eventEnd": "2024-03-12"
+      },
+      "links": [
+        {
+          "url": "https://www.photoniccomputing.jp/activities/2024_03_11_symposium_session3.php",
           "label": "url"
         }
       ],
-      "number": "A03-2",
+      "bibliographic": {
+        "number": "A03-2"
+      },
       "location": {
         "en": "Ito Hall, Ito International Research Center, the University of Tokyo, Tokyo, Japan"
       },
-      "referee": false,
+      "review": false,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "presentation_type": "poster_presentation",
-      "is_international_presentation": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373081",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "f8d0d3b0bae49df6980748f7ee599c9d10c7b7198acb32698420b43a961275f3"
+      }
     }
   },
   {
     "id": "pub-2024-numerical-simulations-of-efficient-training-meth",
-    "researchmapFields": {
+    "fields": {
       "type": "presentations",
       "subtype": "poster_presentation",
-      "presentation_title": {
+      "title": {
         "en": "Numerical simulations of efficient training method on optoelectronic deep neural network using transmission matrix"
       },
-      "presenters": {
-        "en": [
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "event": {
-        "en": "Materials Meet Robots 2024"
-      },
-      "publication_date": "2024-05-07",
-      "from_event_date": "2024-05-07",
-      "to_event_date": "2024-05-08",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.brain.kyutech.ac.jp/~neuro/2024/03/30/materials-meet-robots-2024/?lang=en",
+          "role": "presenter",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "event",
+        "name": {
+          "en": "Materials Meet Robots 2024"
+        }
+      },
+      "dates": {
+        "published": "2024-05-07",
+        "eventStart": "2024-05-07",
+        "eventEnd": "2024-05-08"
+      },
+      "links": [
+        {
+          "url": "https://www.brain.kyutech.ac.jp/~neuro/2024/03/30/materials-meet-robots-2024/?lang=en",
           "label": "url"
         }
       ],
       "location": {
         "en": "Conference Center of Kitakyushu Science and Research Park, Kitakyushu, Fukuoka, Japan"
       },
-      "referee": false,
+      "review": false,
       "invited": false,
-      "presentation_type": "poster_presentation",
-      "is_international_presentation": false
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373082",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "e58384d866e498c9d6596f85519098a51453bb9af00889a35bd3f0607b360de1"
+      }
     }
   },
   {
     "id": "pub-2024-numerical-analysis-on-contributions-of-individua",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical analysis on contributions of individual layers in self-referential holographic deep neural network"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "ODF2024"
-      },
-      "publication_date": "2024-07-10",
-      "from_event_date": "2024-07-10",
-      "to_event_date": "2024-07-12",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://kyutech.repo.nii.ac.jp/records/2001193",
+          "role": "author",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "ODF2024"
+        }
+      },
+      "dates": {
+        "published": "2024-07-10",
+        "eventStart": "2024-07-10",
+        "eventEnd": "2024-07-12"
+      },
+      "links": [
+        {
+          "url": "https://kyutech.repo.nii.ac.jp/records/2001193",
           "label": "url"
         }
       ],
-      "number": "ThP-40",
+      "bibliographic": {
+        "number": "ThP-40"
+      },
       "description": {
         "en": "We have investigated the contribution of the training pattern at each layer to the overall result of an image recognition task in a self-referential holographic deep neural network (SR-HDNN)."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373083",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "a95b65fbc2b651b23e7ebc5b1f447ba78abcd267a8570d4d98bc108ba2c15231"
+      }
     }
   },
   {
     "id": "pub-2024-numerical-simulations-on-image-recognition-by-se",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical simulations on image recognition by self-referential holographic deep neural network with electronic output layer"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "ODF2024"
-      },
-      "publication_date": "2024-07-10",
-      "from_event_date": "2024-07-10",
-      "to_event_date": "2024-07-12",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://kyutech.repo.nii.ac.jp/records/2001192",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "ODF2024"
+        }
+      },
+      "dates": {
+        "published": "2024-07-10",
+        "eventStart": "2024-07-10",
+        "eventEnd": "2024-07-12"
+      },
+      "links": [
+        {
+          "url": "https://kyutech.repo.nii.ac.jp/records/2001192",
           "label": "url"
         }
       ],
-      "number": "ThP-39",
+      "bibliographic": {
+        "number": "ThP-39"
+      },
       "location": {
         "en": "University of Arizona, Tucson, Arizona, USA"
       },
       "description": {
         "en": "We numerically demonstrate a 4-class image recognition task using a self-referential holographic deep neural network (SR-HDNN) and verify the effectiveness of the use of electronic processing as the final layer."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373084",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "feb19fc8f3c84088130f60a83838fce829c27862db8fe103eed701c0bcfbb5a1"
+      }
     }
   },
   {
     "id": "pub-2024-numerical-simulations-on-optoelectronic-deep-neu",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "others",
-      "paper_title": {
+      "title": {
         "ja": "学習可能な電子演算部を有する光電融合深層ニューラルネットワークに関するシミュレーション",
         "en": "Numerical simulations on optoelectronic deep neural network with trainable electronic processing part"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "高津太一"
-          },
-          {
-            "name": "高林正典"
-          }
-        ],
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "光の極限性能を生かすフォトニックコンピューティング 第四回領域会議"
-      },
-      "publication_date": "2024-08-05",
-      "from_event_date": "2024-08-05",
-      "to_event_date": "2024-08-06",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.photoniccomputing.jp/activities/2024_08_05_region_meeting_online.php",
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生",
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "高津太一",
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "高林正典",
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "光の極限性能を生かすフォトニックコンピューティング 第四回領域会議"
+        }
+      },
+      "dates": {
+        "published": "2024-08-05",
+        "eventStart": "2024-08-05",
+        "eventEnd": "2024-08-06"
+      },
+      "links": [
+        {
+          "url": "https://www.photoniccomputing.jp/activities/2024_08_05_region_meeting_online.php",
           "label": "url"
         }
       ],
-      "referee": false,
+      "review": false,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
-      ],
-      "misc_type": "others"
+      ]
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373085",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "3fce6673fb11b26237718609e3193f32eeabf1d1aaaffe2e7d6a8a6fbfe6c828"
+      }
     }
   },
   {
     "id": "pub-2024-numerical-simulations-of-optoelectronic-deep-neu",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical Simulations of Optoelectronic Deep Neural Network Using Trainable Activation Function"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "ISOM2024"
-      },
-      "publication_date": "2024-10-20",
-      "from_event_date": "2024-10-20",
-      "to_event_date": "2024-10-23",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://isom.jp/tech_pro_tu2024.pdf",
+          "role": "author",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "ISOM2024"
+        }
+      },
+      "dates": {
+        "published": "2024-10-20",
+        "eventStart": "2024-10-20",
+        "eventEnd": "2024-10-23"
+      },
+      "links": [
+        {
+          "url": "https://isom.jp/tech_pro_tu2024.pdf",
           "label": "url"
         }
       ],
-      "number": "Tu-E-44",
+      "bibliographic": {
+        "number": "Tu-E-44"
+      },
       "description": {
         "en": "We propose to apply a trainable activation function for optoelectronic deep neural networks (OE-DNNs). The numerical simulations on 4-class complex-valued image classification demonstrated a 10% improvement in accuracy, confirming the effectiveness of this approach. This method is expected to enhance learning accuracy in various OE-DNN models."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373086",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "6e60b2d82e6db85afb0e4617f1c93423382f36268c52df99092862c0b351f696"
+      }
     }
   },
   {
     "id": "pub-2024-self-referential-holographic-data-storage-with-i",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Self-referential holographic data storage with integrated denoising function by deep learning"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Yuta Eto"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "ISOM2024"
-      },
-      "publication_date": "2024-10-20",
-      "from_event_date": "2024-10-20",
-      "to_event_date": "2024-10-23",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://isom.jp/tech_pro_mon2024.pdf",
+          "role": "author",
+          "name": {
+            "en": "Yuta Eto"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "ISOM2024"
+        }
+      },
+      "dates": {
+        "published": "2024-10-20",
+        "eventStart": "2024-10-20",
+        "eventEnd": "2024-10-23"
+      },
+      "links": [
+        {
+          "url": "https://isom.jp/tech_pro_mon2024.pdf",
           "label": "url"
         }
       ],
-      "number": "Mo-D-01",
+      "bibliographic": {
+        "number": "Mo-D-01"
+      },
       "description": {
         "en": "We propose to improve the quality of the reconstructed datapages of self-referential holographic data storage (SR-HDS) using the principle of self-referential holographic deep neural network (SR-HDNN). To verify the feasibility of the proposed method, we perform numerical simulation of the combination system of SR-HDS with SR-HDNN."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373087",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "b2eff4b8a9816babba7075e001d13a2e5af1a03c4ff474cb2cb41df0088d9da9"
+      }
     }
   },
   {
     "id": "pub-2024-self-referential-holographic-memory-with-denoisi",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "technical_report",
-      "paper_title": {
+      "title": {
         "ja": "深層学習に基づく再生データページのデノイズ機能を内在する 自己参照型ホログラフィックメモリ ～ 学習用データセットの生成法に関する検討 ～",
         "en": "Self-Referential Holographic Memory with Denoising Functionality by Deep Learning for Reconstructed Datapages --A Study on Dataset Generation Methods for Deep Learning--"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "江藤優太"
-          },
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "高津太一"
-          },
-          {
-            "name": "髙林正典"
-          }
-        ],
-        "en": [
-          {
-            "name": "Yuta Eto"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "MMS2024(愛媛)"
-      },
-      "publication_date": "2024-12-05",
-      "from_event_date": "2024-12-05",
-      "to_event_date": "2024-12-05",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.ite.or.jp/ken/paper/20241205vAN8/",
+          "role": "author",
+          "name": {
+            "ja": "江藤優太",
+            "en": "Yuta Eto"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生",
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "高津太一",
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "髙林正典",
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "MMS2024(愛媛)"
+        }
+      },
+      "dates": {
+        "published": "2024-12-05",
+        "eventStart": "2024-12-05",
+        "eventEnd": "2024-12-05"
+      },
+      "links": [
+        {
+          "url": "https://www.ite.or.jp/ken/paper/20241205vAN8/",
           "label": "url"
         }
       ],
-      "volume": "48",
-      "number": "41",
-      "starting_page": "1",
-      "ending_page": "6",
-      "referee": false,
-      "invited": false,
-      "misc_type": "technical_report"
+      "bibliographic": {
+        "volume": "48",
+        "number": "41",
+        "startPage": "1",
+        "endPage": "6"
+      },
+      "review": false,
+      "invited": false
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373088",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "edb5a710789c8414f26aa3f2e4960ffe8e1a93056adf5420127c318ae953ae28"
+      }
     }
   },
   {
     "id": "pub-2024-numerical-simulation-of-deep-reinforcement-learn",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical simulation of deep reinforcement learning using self- referential holographic deep neural network"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "IWH2024"
-      },
-      "publication_date": "2024-12-10",
-      "from_event_date": "2024-12-10",
-      "to_event_date": "2024-12-12",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://kyutech.repo.nii.ac.jp/records/2001766",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "IWH2024"
+        }
+      },
+      "dates": {
+        "published": "2024-12-10",
+        "eventStart": "2024-12-10",
+        "eventEnd": "2024-12-12"
+      },
+      "links": [
+        {
+          "url": "https://kyutech.repo.nii.ac.jp/records/2001766",
           "label": "url"
         }
       ],
-      "number": "S5-2",
+      "bibliographic": {
+        "number": "S5-2"
+      },
       "location": {
         "en": "Ala Moana Hotel, Honolulu, Hawaii, USA"
       },
       "description": {
         "en": "We propose a method for performing deep reinforcement learning using a self-referential holographic deep neural network (SR-HDNN) and demonstrate its effectiveness through numerical simulations in a cart-pole task, where the pole was successfully balanced for an average of 429.2 seconds over 10 trials."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373089",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "e02135314d93de03c502d18da3d04f1ee82a96e94ba621926dcfd77724b75619"
+      }
     }
   },
   {
     "id": "pub-2024-空間光変調に基づく複素深層ニューラルネットワーク",
-    "researchmapFields": {
+    "fields": {
       "type": "presentations",
       "subtype": "poster_presentation",
-      "paper_title": {
+      "title": {
         "ja": "空間光変調に基づく複素深層ニューラルネットワーク",
         "en": "空間光変調に基づく複素深層ニューラルネットワーク"
       },
-      "presentation_title": {
-        "ja": "空間光変調に基づく複素深層ニューラルネットワーク",
-        "en": "空間光変調に基づく複素深層ニューラルネットワーク"
-      },
-      "authors": {
-        "ja": [
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "高津太一"
-          },
-          {
-            "name": "高林正典"
-          }
-        ]
-      },
-      "presenters": {
-        "ja": [
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "高津太一"
-          },
-          {
-            "name": "高林正典"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "「光の極限性能を生かすフォトニックコンピューティングの創成」第2回公開シンポジウム"
-      },
-      "event": {
-        "ja": "「光の極限性能を生かすフォトニックコンピューティングの創成」第2回公開シンポジウム"
-      },
-      "publication_date": "2024-12-17",
-      "from_event_date": "2024-12-17",
-      "to_event_date": "2024-12-17",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.photoniccomputing.jp/activities/2024_12_17_symposium_session.php",
+          "role": "presenter",
+          "name": {
+            "ja": "冨岡莉生"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "ja": "高津太一"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "ja": "高林正典"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "event",
+        "name": {
+          "ja": "「光の極限性能を生かすフォトニックコンピューティングの創成」第2回公開シンポジウム"
+        }
+      },
+      "dates": {
+        "published": "2024-12-17",
+        "eventStart": "2024-12-17",
+        "eventEnd": "2024-12-17"
+      },
+      "links": [
+        {
+          "url": "https://www.photoniccomputing.jp/activities/2024_12_17_symposium_session.php",
           "label": "url"
         }
       ],
       "location": {
         "ja": "国立研究開発法人 情報通信研究機構 本部 ３号館１階 セミナー室前 展示スペース（東京都小金井市）"
       },
-      "referee": false,
+      "review": false,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "presentation_type": "poster_presentation",
-      "is_international_presentation": false
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373090",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "62cd2c61eb28536226530a3f1d40b0ea5b13d6d5bc113534a6ec143c393b2633"
+      }
     }
   },
   {
     "id": "pub-2025-experiments-on-image-recognition-by-optelectroni",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "technical_report",
-      "paper_title": {
+      "title": {
         "ja": "散乱媒質を挿入した光電子融合型深層ニューラルネットワークを用いた画像識別実験",
         "en": "Experiments on image recognition by optelectronic deep neural network with scattering medium insertion"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "井上快斗"
-          },
-          {
-            "name": "橋口拓実"
-          },
-          {
-            "name": "高津太一"
-          },
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "渋川敦史"
-          },
-          {
-            "name": "髙林正典"
-          }
-        ],
-        "en": [
-          {
-            "name": "Kaito Inoue"
-          },
-          {
-            "name": "Takumi Hashiguchi"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Atsushi Shibukawa"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "MMS2024(北海道)"
-      },
-      "publication_date": "2025-02-19",
-      "from_event_date": "2025-02-19",
-      "to_event_date": "2025-02-19",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.ite.or.jp/ken/paper/20250219kANt/",
+          "role": "author",
+          "name": {
+            "ja": "井上快斗",
+            "en": "Kaito Inoue"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "橋口拓実",
+            "en": "Takumi Hashiguchi"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "高津太一",
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生",
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "渋川敦史",
+            "en": "Atsushi Shibukawa"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "髙林正典",
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "MMS2024(北海道)"
+        }
+      },
+      "dates": {
+        "published": "2025-02-19",
+        "eventStart": "2025-02-19",
+        "eventEnd": "2025-02-19"
+      },
+      "links": [
+        {
+          "url": "https://www.ite.or.jp/ken/paper/20250219kANt/",
           "label": "url"
         }
       ],
-      "volume": "49",
-      "number": "4",
-      "starting_page": "161",
-      "ending_page": "166",
-      "referee": false,
-      "invited": false,
-      "misc_type": "technical_report"
+      "bibliographic": {
+        "volume": "49",
+        "number": "4",
+        "startPage": "161",
+        "endPage": "166"
+      },
+      "review": false,
+      "invited": false
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373091",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "434bdb74998720e14a4ed2d28a4f5665f4f47c948b19ba9e416f6908c217721d"
+      }
     }
   },
   {
     "id": "pub-2025-numerical-simulation-of-output-filter-design-for",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical Simulation of Output Filter Design for Optoelectronic Deep Neural Network Using Hyperparameter Optimization"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "the 6th International Symposium on Neuromorphic AI Hardware"
-      },
-      "publication_date": "2025-03-03",
-      "from_event_date": "2025-03-03",
-      "to_event_date": "2025-03-04",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://kyutech.repo.nii.ac.jp/records/2001779",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "the 6th International Symposium on Neuromorphic AI Hardware"
+        }
+      },
+      "dates": {
+        "published": "2025-03-03",
+        "eventStart": "2025-03-03",
+        "eventEnd": "2025-03-04"
+      },
+      "links": [
+        {
+          "url": "https://kyutech.repo.nii.ac.jp/records/2001779",
           "label": "url"
         }
       ],
-      "number": "P1-21",
-      "starting_page": "39",
-      "ending_page": "39",
+      "bibliographic": {
+        "number": "P1-21",
+        "startPage": "39",
+        "endPage": "39"
+      },
       "location": {
         "en": "Kitakyushu, Fukuoka, Japan"
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373092",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "b3d7c07886541cf95bb04e28b27e03711a1e2cac23c2d3f366f662edf5edaa3e"
+      }
     }
   },
   {
     "id": "pub-2025-numerical-simulations-on-self-referential-hologr",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "scientific_journal",
-      "paper_title": {
+      "title": {
         "en": "Numerical simulations on self-referential holographic data storage with built-in denoising function by self-referential holographic deep neural network"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Yuta Eto"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "Optical Review"
-      },
-      "publication_date": "2025-06-21",
-      "from_event_date": "2025-06-21",
-      "to_event_date": "2025-06-21",
-      "identifiers": {
-        "doi": [
-          "10.1007/s10043-025-00978-9"
-        ]
-      },
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://doi.org/10.1007/s10043-025-00978-9",
+          "role": "author",
+          "name": {
+            "en": "Yuta Eto"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "Optical Review"
+        }
+      },
+      "dates": {
+        "published": "2025-06-21",
+        "eventStart": "2025-06-21",
+        "eventEnd": "2025-06-21"
+      },
+      "identifiers": {
+        "doi": "10.1007/s10043-025-00978-9"
+      },
+      "links": [
+        {
+          "url": "https://doi.org/10.1007/s10043-025-00978-9",
           "label": "doi"
         }
       ],
-      "volume": "32",
-      "starting_page": "534",
-      "ending_page": "545",
+      "bibliographic": {
+        "volume": "32",
+        "startPage": "534",
+        "endPage": "545"
+      },
       "description": {
         "en": "Self-referential holography (SRH), a holographic technique that enables the recording, reading, and control of two-dimensional (2D) patterns using a one-beam geometry, can be applied to holographic data storage (HDS) and optoelectronic deep neural network (OE-DNN). Since both applications are implemented using the same optical system, they can be integrated into a single system. We propose a self-referential HDS (SR-HDS) with a built-in denoising function using a self-referential holographic deep neural network (SR-HDNN), where the quality of reconstructed datapages in HDS can be enhanced using deep neural networks (DNNs) without requiring costly electronic computers for implementation. Numerical simulations are performed to demonstrate the feasibility of the proposed method."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_type": "scientific_journal",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": false,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373093",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "adfa1df0d8eb31d2d877d6de389e8e842ccab0413531b0bd92a7d4674b56d0a3"
+      }
     }
   },
   {
     "id": "pub-2025-自己参照型ホログラフィック深層ニューラルネットワークを用いた画像デノイズに関する数値シミュレーシ",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "others",
-      "paper_title": {
+      "title": {
         "ja": "自己参照型ホログラフィック深層ニューラルネットワークを用いた画像デノイズに関する数値シミュレーション",
         "en": "自己参照型ホログラフィック深層ニューラルネットワークを用いた画像デノイズに関する数値シミュレーション"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "江藤優太"
-          },
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "髙林正典"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "光の極限性能を生かすフォトニックコンピューティング 第6回領域会議"
-      },
-      "publication_date": "2025-08-04",
-      "from_event_date": "2025-08-04",
-      "to_event_date": "2025-08-05",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.photoniccomputing.jp/activities/2025_08_05_region_meeting_online.php",
+          "role": "author",
+          "name": {
+            "ja": "江藤優太"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "髙林正典"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "光の極限性能を生かすフォトニックコンピューティング 第6回領域会議"
+        }
+      },
+      "dates": {
+        "published": "2025-08-04",
+        "eventStart": "2025-08-04",
+        "eventEnd": "2025-08-05"
+      },
+      "links": [
+        {
+          "url": "https://www.photoniccomputing.jp/activities/2025_08_05_region_meeting_online.php",
           "label": "url"
         }
       ],
       "location": {
         "ja": "JR博多シティ 大会議室A・B・C・D／小会議室I, Fukuoka, Japan"
       },
-      "referee": false,
-      "invited": false,
-      "misc_type": "others"
+      "review": false,
+      "invited": false
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373094",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "6a1c41bd0de6a75b630e31b9fa2a0f7606e207e6fc6d0582e03055d3da6ceeb7"
+      }
     }
   },
   {
     "id": "pub-2025-深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検",
-    "researchmapFields": {
+    "fields": {
       "type": "presentations",
       "subtype": "oral_presentation",
-      "paper_title": {
+      "title": {
         "ja": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討",
         "en": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討"
       },
-      "presentation_title": {
-        "ja": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討",
-        "en": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討"
-      },
-      "authors": {
-        "ja": [
-          {
-            "name": "江藤優太"
-          },
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "髙林正典"
-          }
-        ]
-      },
-      "presenters": {
-        "ja": [
-          {
-            "name": "江藤優太"
-          },
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "髙林正典"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "2025年第86回応用物理学会秋季学術講演会"
-      },
-      "event": {
-        "ja": "2025年第86回応用物理学会秋季学術講演会"
-      },
-      "publication_date": "2025-09-07",
-      "from_event_date": "2025-09-07",
-      "to_event_date": "2025-09-10",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://pub.confit.atlas.jp/ja/event/jsap2025a",
+          "role": "presenter",
+          "name": {
+            "ja": "江藤優太"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "ja": "冨岡莉生"
+          }
+        },
+        {
+          "role": "presenter",
+          "name": {
+            "ja": "髙林正典"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "event",
+        "name": {
+          "ja": "2025年第86回応用物理学会秋季学術講演会"
+        }
+      },
+      "dates": {
+        "published": "2025-09-07",
+        "eventStart": "2025-09-07",
+        "eventEnd": "2025-09-10"
+      },
+      "links": [
+        {
+          "url": "https://pub.confit.atlas.jp/ja/event/jsap2025a",
           "label": "url"
         }
       ],
       "location": {
         "ja": "名城大学 天白キャンパス, Nagoya, Aichi, Japan"
       },
-      "referee": false,
+      "review": false,
       "invited": false,
-      "presentation_type": "oral_presentation",
-      "is_international_presentation": false
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373095",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "2f81fa574181b574c06deb785fccbe8bf7dd2610c4935091ad4ebc426070913e"
+      }
     }
   },
   {
     "id": "pub-2025-numerical-simulations-of-optoelectronic-neural-n",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical Simulations of Optoelectronic Neural Network Using Off-Axis Binary Holograms on Digital Micromirror Device"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Yusaku Matsumoto"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "ISOM2025"
-      },
-      "publication_date": "2025-10-19",
-      "from_event_date": "2025-10-19",
-      "to_event_date": "2025-10-22",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://isom.jp/tech_pro_tu2025.pdf",
+          "role": "author",
+          "name": {
+            "en": "Yusaku Matsumoto"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "ISOM2025"
+        }
+      },
+      "dates": {
+        "published": "2025-10-19",
+        "eventStart": "2025-10-19",
+        "eventEnd": "2025-10-22"
+      },
+      "links": [
+        {
+          "url": "https://isom.jp/tech_pro_tu2025.pdf",
           "label": "url"
         }
       ],
@@ -1788,43 +2357,59 @@
       "description": {
         "en": "We propose an optoelectronic deep neural network architecture using a DMD with binary computer-generated holograms to enable high-speed optical modulation. Simulations comparing DMD and LC-SLM on the MNIST image classification task show that DMD achieves comparable performance to LC-SLM in 2-class classification, demonstrating its utility for simple tasks."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373096",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "3fdac809ccce76ad6885d57a513f63b1e128c7ff19b5a4a96ca935995f568b15"
+      }
     }
   },
   {
     "id": "pub-2025-numerical-simulation-of-autonomous-mask-design-f",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical Simulation of Autonomous Mask Design for Optoelectronic Deep Neural Network by Hyperparameter Optimization"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "IWH2025"
-      },
-      "publication_date": "2025-11-12",
-      "from_event_date": "2025-11-12",
-      "to_event_date": "2025-11-15",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.iwh2025.org/uploads/1/5/2/6/152641567/_ooo_1027_book_program.pdf",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "IWH2025"
+        }
+      },
+      "dates": {
+        "published": "2025-11-12",
+        "eventStart": "2025-11-12",
+        "eventEnd": "2025-11-15"
+      },
+      "links": [
+        {
+          "url": "https://www.iwh2025.org/uploads/1/5/2/6/152641567/_ooo_1027_book_program.pdf",
           "label": "url"
         }
       ],
@@ -1834,49 +2419,68 @@
       "description": {
         "en": "We propose a method for designing autonomous binary amplitude masks for optoelectronic deep neural networks (OE-DNNs) using hyperparameter optimization. The effectiveness of this method is numerically demonstrated through image classification simulations."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373097",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "b62da289891e8464a8b61039670334af888ac90b5c9eb4ca75f7d6c2d4eaf9df"
+      }
     }
   },
   {
     "id": "pub-2025-numerical-simulations-on-denoising-capability-of",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical simulations on denoising capability of self-referential holographic data storage with built-in denoising function"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Yuta Eto"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "IWH2025"
-      },
-      "publication_date": "2025-11-12",
-      "from_event_date": "2025-11-12",
-      "to_event_date": "2025-11-15",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.iwh2025.org/uploads/1/5/2/6/152641567/_ooo_1027_book_program.pdf",
+          "role": "author",
+          "name": {
+            "en": "Yuta Eto"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "IWH2025"
+        }
+      },
+      "dates": {
+        "published": "2025-11-12",
+        "eventStart": "2025-11-12",
+        "eventEnd": "2025-11-15"
+      },
+      "links": [
+        {
+          "url": "https://www.iwh2025.org/uploads/1/5/2/6/152641567/_ooo_1027_book_program.pdf",
           "label": "url"
         }
       ],
@@ -1886,49 +2490,71 @@
       "description": {
         "en": "We evaluated the effectiveness SR-HDNN-based denoising on reconstructed datapages in SR-HDS under random noise conditions. Numerical simulations demonstrated effective denoising up to ±0.35 random noise intensity for both random noise only and composite noise environments."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373098",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "b42783f5edff2b8e34574cc96f2a6fca34052edb2b882310340f41e39d36fb5e"
+      }
     }
   },
   {
     "id": "pub-2025-numerical-simulations-of-parallel-image-recognit",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical Simulations of Parallel Image Recognition with Self-Referential Holographic Deep Neural Network"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Shoichi Sakai"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Yuta Eto"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "IWH2025"
-      },
-      "publication_date": "2025-11-12",
-      "from_event_date": "2025-11-12",
-      "to_event_date": "2025-11-15",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.iwh2025.org/uploads/1/5/2/6/152641567/_ooo_1027_book_program.pdf",
+          "role": "author",
+          "name": {
+            "en": "Shoichi Sakai"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Yuta Eto"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "IWH2025"
+        }
+      },
+      "dates": {
+        "published": "2025-11-12",
+        "eventStart": "2025-11-12",
+        "eventEnd": "2025-11-15"
+      },
+      "links": [
+        {
+          "url": "https://www.iwh2025.org/uploads/1/5/2/6/152641567/_ooo_1027_book_program.pdf",
           "label": "url"
         }
       ],
@@ -1938,225 +2564,306 @@
       "description": {
         "en": "We propose a parallel image recognition method for self-referential holographic deep neural networks (SR-HDNNs). While four-class parallel image recognition simulations demonstrated basic capability with 78.5% total accuracy, recognition failures in certain regions require further investigation."
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373099",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "d7a84698d32c99e46ea571c739c3dac592eea14e550011a5fdd603099e06d625"
+      }
     }
   },
   {
     "id": "pub-2025-自己参照型ホログラフィック深層ニューラルネットワークによる並列画像識別",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "others",
-      "paper_title": {
+      "title": {
         "ja": "自己参照型ホログラフィック深層ニューラルネットワークによる並列画像識別",
         "en": "自己参照型ホログラフィック深層ニューラルネットワークによる並列画像識別"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "坂井翔一"
-          },
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "江藤優太"
-          },
-          {
-            "name": "髙林正典"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "光の極限性能を生かすフォトニックコンピューティング 第7回領域会議"
-      },
-      "publication_date": "2025-12-15",
-      "from_event_date": "2025-12-15",
-      "to_event_date": "2025-12-16",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.photoniccomputing.jp/activities/2025_12_16_region_meeting_online.php",
+          "role": "author",
+          "name": {
+            "ja": "坂井翔一"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "江藤優太"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "髙林正典"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "光の極限性能を生かすフォトニックコンピューティング 第7回領域会議"
+        }
+      },
+      "dates": {
+        "published": "2025-12-15",
+        "eventStart": "2025-12-15",
+        "eventEnd": "2025-12-16"
+      },
+      "links": [
+        {
+          "url": "https://www.photoniccomputing.jp/activities/2025_12_16_region_meeting_online.php",
           "label": "url"
         }
       ],
       "location": {
         "ja": "一橋大学 一橋講堂, Tokyo, Japan"
       },
-      "referee": false,
-      "invited": false,
-      "misc_type": "others"
+      "review": false,
+      "invited": false
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373100",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "839f78b65e26f516806d18d84fa42010335a9c11b12c6efc6c840400136bc1e7"
+      }
     }
   },
   {
     "id": "pub-2026-自己参照型ホログラフィック深層ニューラルネットワークを用いた並列画像デノイジングに関する数値シミ",
-    "researchmapFields": {
+    "fields": {
       "type": "misc",
       "subtype": "technical_report",
-      "paper_title": {
+      "title": {
         "ja": "自己参照型ホログラフィック深層ニューラルネットワークを用いた並列画像デノイジングに関する数値シミュレーション",
         "en": "Numerical Simulations of Parallel Image Denoising with Self-Referential Holographic Deep Neural Network"
       },
-      "authors": {
-        "ja": [
-          {
-            "name": "坂井翔一"
-          },
-          {
-            "name": "江藤優太"
-          },
-          {
-            "name": "冨岡莉生"
-          },
-          {
-            "name": "髙林正典"
-          }
-        ],
-        "en": [
-          {
-            "name": "Shoichi Sakai"
-          },
-          {
-            "name": "Yuta Eto"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "ja": "映情学技報"
-      },
-      "publication_date": "2026-02-18",
-      "from_event_date": "2026-02-18",
-      "to_event_date": "2026-02-20",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.ite.or.jp/ken/paper/20260219xAog/",
+          "role": "author",
+          "name": {
+            "ja": "坂井翔一",
+            "en": "Shoichi Sakai"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "江藤優太",
+            "en": "Yuta Eto"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生",
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "髙林正典",
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "映情学技報"
+        }
+      },
+      "dates": {
+        "published": "2026-02-18",
+        "eventStart": "2026-02-18",
+        "eventEnd": "2026-02-20"
+      },
+      "links": [
+        {
+          "url": "https://www.ite.or.jp/ken/paper/20260219xAog/",
           "label": "url"
         }
       ],
-      "volume": "50",
-      "number": "5",
-      "starting_page": "17",
-      "ending_page": "20",
+      "bibliographic": {
+        "volume": "50",
+        "number": "5",
+        "startPage": "17",
+        "endPage": "20"
+      },
       "location": {
         "ja": "北海道大学 学術交流会館 第1会議室, Sapporo, Japan"
       },
-      "referee": false,
-      "invited": false,
-      "misc_type": "technical_report"
+      "review": false,
+      "invited": false
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373101",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "60889788257c3f88290d26e96e74e518f35d9cc66a55f72c1ae19286e2c68962"
+      }
     }
   },
   {
     "id": "pub-2026-numerical-study-of-interface-design-for-spatial-",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Numerical Study of Interface Design for Spatial Light Modulation-Based Deep Neural Networks Using Hyperparameter Optimization"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "the 8th International Symposium on Neuromorphic AI Hardware"
-      },
-      "publication_date": "2026-03-06",
-      "from_event_date": "2026-03-06",
-      "to_event_date": "2026-03-07",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.brain.kyutech.ac.jp/~neuro/2025/12/22/the-8th-international-symposium-on-neuromorphic-ai-hardware/",
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "the 8th International Symposium on Neuromorphic AI Hardware"
+        }
+      },
+      "dates": {
+        "published": "2026-03-06",
+        "eventStart": "2026-03-06",
+        "eventEnd": "2026-03-07"
+      },
+      "links": [
+        {
+          "url": "https://www.brain.kyutech.ac.jp/~neuro/2025/12/22/the-8th-international-symposium-on-neuromorphic-ai-hardware/",
           "label": "url"
         }
       ],
       "location": {
         "en": "Hotel Crown Palais Kokura, Kitakyushu, Fukuoka, Japan"
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_owner_roles": [
+      "ownerRoles": [
         "lead"
       ],
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373102",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "ac2d49146fac122f8ed19b9978d19b6fca5ba25b8121833aa58ef47b20b4cb2b"
+      }
     }
   },
   {
     "id": "pub-2026-fundamental-studies-of-optoelectronic-deep-neura",
-    "researchmapFields": {
+    "fields": {
       "type": "published_papers",
       "subtype": "international_conference_proceedings",
-      "paper_title": {
+      "title": {
         "en": "Fundamental Studies of Optoelectronic Deep Neural Network Using Cluster-wise Simultaneous Perturbation Stochastic Approximation Algorithms"
       },
-      "authors": {
-        "en": [
-          {
-            "name": "Takumi Hashiguchi"
-          },
-          {
-            "name": "Rio Tomioka"
-          },
-          {
-            "name": "Taichi Takatsu"
-          },
-          {
-            "name": "Masanori Takabayashi"
-          }
-        ]
-      },
-      "publication_name": {
-        "en": "the 8th International Symposium on Neuromorphic AI Hardware"
-      },
-      "publication_date": "2026-03-06",
-      "from_event_date": "2026-03-06",
-      "to_event_date": "2026-03-07",
-      "see_also": [
+      "contributors": [
         {
-          "@id": "https://www.brain.kyutech.ac.jp/~neuro/2025/12/22/the-8th-international-symposium-on-neuromorphic-ai-hardware/",
+          "role": "author",
+          "name": {
+            "en": "Takumi Hashiguchi"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Taichi Takatsu"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "en": "the 8th International Symposium on Neuromorphic AI Hardware"
+        }
+      },
+      "dates": {
+        "published": "2026-03-06",
+        "eventStart": "2026-03-06",
+        "eventEnd": "2026-03-07"
+      },
+      "links": [
+        {
+          "url": "https://www.brain.kyutech.ac.jp/~neuro/2025/12/22/the-8th-international-symposium-on-neuromorphic-ai-hardware/",
           "label": "url"
         }
       ],
       "location": {
         "en": "Hotel Crown Palais Kokura, Kitakyushu, Fukuoka, Japan"
       },
-      "referee": true,
+      "review": true,
       "invited": false,
-      "published_paper_type": "international_conference_proceedings",
-      "is_international_journal": true
+      "isInternational": true
     },
     "localMeta": {
       "hasEmptyFields": true,
       "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373103",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-18T14:44:17.156Z",
+        "lastPayloadHash": "6a107ccab1ad72f0c78043ce175b61c840d47e08d1eba04c89d927b7848a1851"
+      }
     }
   }
 ]

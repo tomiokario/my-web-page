@@ -45,6 +45,8 @@
 
 出版物データの正本は `src/data/publication_master.json` です。日常更新では、次のいずれかを使います。
 
+- `publication_master.json` は canonical schema の `fields` を正本とし、`sync.researchmap` に researchmap record id / 同期メタデータを保持します
+
 1. ローカル editor を使う場合
    ```
    npm run publications-editor
@@ -67,7 +69,10 @@
    npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl
    ```
    - この repo ではタイトル一致の重複を許容しません
-   - `researchmapFields` は JSONL 側を優先して上書きし、JSONL にない field と `localMeta` は保持します
+   - dry-run では `matched` / `added` に加えて `review` / `invalid` を確認します
+   - 自動 merge は `researchmap record id -> DOI -> canonical fingerprint` の strict match のみです
+   - title だけ近い record や core field 競合は `review` に回り、1 件でも unresolved item があれば master は書き換えません
+   - `localMeta` は import で上書きせず、成功した record だけ `sync.researchmap` を更新します
    - 既存 master / 入力 JSONL / 取り込み結果のどこかでタイトル重複が見つかった場合は hard error で停止します
    - 正常終了した JSONL は `archive/` へ移動し、同じ内容の再取り込みは履歴で防止します
 

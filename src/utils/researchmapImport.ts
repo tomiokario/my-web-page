@@ -2,67 +2,46 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as path from "path";
 
-import { PublicationMasterRecord, PublicationMasterResearchmapFields } from "../types/publicationMaster";
+import {
+  LegacyPublicationMasterResearchmapFields,
+  LocalizedPeople,
+  LocalizedText,
+  PublicationMasterFields,
+  PublicationMasterRecord,
+} from "../types/publicationMaster";
 import {
   PublicationArtifactPaths,
   readPublicationMasterFile,
   writePublicationArtifacts,
 } from "./publicationMasterFile";
+import { findDuplicatePublicationTitleGroups, normalizePublicationTitle } from "./publicationTitle";
 import {
-  extractPrimaryPublicationTitle,
-  findDuplicatePublicationTitleGroups,
-  hasMatchingPublicationTitle,
-  normalizePublicationTitle,
-} from "./publicationTitle";
+  buildCanonicalFingerprint,
+  compactObject,
+  describePublicationRecord,
+  fromLegacyResearchmapFields,
+  getPublicationDate,
+  getPublicationDoi,
+  getPublicationTitleText,
+  getPublicationVenue,
+  getPublicationVenueText,
+  normalizeDoi,
+} from "./publicationMasterSchema";
 
 const PUBLICATION_TYPES = new Set(["published_papers", "presentations", "misc"]);
 const HISTORY_FILE_NAME = ".researchmap-import-history.json";
 
-type PublicationType = PublicationMasterResearchmapFields["type"];
+type PublicationType = PublicationMasterFields["type"];
+type MatchStrategy = "record_id" | "doi" | "fingerprint" | "title";
 
 interface ResearchmapJsonlRecord {
   insert?: {
+    id?: string;
     type?: string;
+    user_id?: string;
   };
   merge?: Record<string, unknown>;
   force?: Record<string, unknown>;
-}
-
-interface MatchCandidate {
-  index: number;
-  strategy: "doi" | "title";
-}
-
-export interface ResearchmapImportIssue {
-  lineNumber: number;
-  reason: string;
-  type: string;
-  title: string;
-  date: string;
-}
-
-export interface ResearchmapImportReport {
-  sourcePath: string;
-  dryRun: boolean;
-  importedAt: string;
-  summary: {
-    totalLines: number;
-    publicationRecords: number;
-    matched: number;
-    added: number;
-    skippedNonPublication: number;
-    ambiguous: number;
-    invalid: number;
-  };
-  ambiguousMatches: ResearchmapImportIssue[];
-  invalidRecords: ResearchmapImportIssue[];
-  archivedTo?: string;
-}
-
-export interface ResearchmapImportOptions {
-  dryRun?: boolean;
-  archiveDirPath?: string;
-  importedAt?: Date;
 }
 
 interface ImportHistoryEntry {
@@ -75,6 +54,69 @@ interface ImportHistoryEntry {
 interface ImportHistoryFile {
   version: 1;
   entries: ImportHistoryEntry[];
+}
+
+interface SourceRecordSummary {
+  type: string;
+  title: string;
+  date: string;
+  recordId?: string;
+}
+
+interface JsonlLineEntry {
+  line: string;
+  lineNumber: number;
+}
+
+interface CandidateRecordSummary extends SourceRecordSummary {
+  id: string;
+  subtype?: string;
+}
+
+interface StrictMatchResult {
+  strategy: Exclude<MatchStrategy, "title">;
+  candidates: PublicationMasterRecord[];
+}
+
+interface PotentialReviewResult {
+  strategy: MatchStrategy;
+  candidates: PublicationMasterRecord[];
+}
+
+export interface ResearchmapImportIssue {
+  lineNumber: number;
+  reason: string;
+  sourceRecord: SourceRecordSummary;
+}
+
+export interface ResearchmapImportReviewItem extends ResearchmapImportIssue {
+  matchStrategy?: MatchStrategy;
+  candidateRecords: CandidateRecordSummary[];
+  conflictingFields: string[];
+}
+
+export interface ResearchmapImportReport {
+  sourcePath: string;
+  dryRun: boolean;
+  importedAt: string;
+  summary: {
+    totalLines: number;
+    publicationRecords: number;
+    matched: number;
+    added: number;
+    skippedNonPublication: number;
+    review: number;
+    invalid: number;
+  };
+  reviewItems: ResearchmapImportReviewItem[];
+  invalidRecords: ResearchmapImportIssue[];
+  archivedTo?: string;
+}
+
+export interface ResearchmapImportOptions {
+  dryRun?: boolean;
+  archiveDirPath?: string;
+  importedAt?: Date;
 }
 
 export function importPublicationMasterFromResearchmap(
@@ -96,9 +138,9 @@ export function importPublicationMasterFromResearchmap(
   }
 
   const existingRecords = readPublicationMasterFile(artifactPaths.masterJsonFilePath);
-  const usedExistingIndexes = new Set<number>();
-  const nextRecords = [...existingRecords];
-  const ambiguousMatches: ResearchmapImportIssue[] = [];
+  const nextRecords = existingRecords.map((record) => cloneRecord(record));
+  const usedTargetIds = new Set<string>();
+  const reviewItems: ResearchmapImportReviewItem[] = [];
   const invalidRecords: ResearchmapImportIssue[] = [];
   let publicationRecords = 0;
   let matched = 0;
@@ -107,12 +149,17 @@ export function importPublicationMasterFromResearchmap(
 
   const lines = inputContent
     .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
+    .map((line, lineIndex) => ({
+      line: line.trim(),
+      lineNumber: lineIndex + 1,
+    }))
+    .filter((entry) => entry.line.length > 0);
 
-  lines.forEach((line, lineIndex) => {
+  lines.forEach((entry, lineIndex) => {
+    const { line, lineNumber } = entry;
+
     try {
-      const record = parseJsonlLine(line, lineIndex + 1);
+      const record = parseJsonlLine(line, lineNumber);
       const type = record.insert?.type || "";
 
       if (!PUBLICATION_TYPES.has(type)) {
@@ -124,44 +171,116 @@ export function importPublicationMasterFromResearchmap(
 
       const importedRecord = buildMasterRecordFromResearchmapRecord(
         record,
-        buildImportedRecordId(existingRecords, nextRecords, lineIndex)
+        buildImportedRecordId(existingRecords, nextRecords, lineIndex),
+        importedAt,
+        hashJsonlLine(line)
       );
-      const candidates = findMatchingCandidates(existingRecords, usedExistingIndexes, importedRecord);
 
-      if (candidates.length > 1) {
-        ambiguousMatches.push(
-          buildIssue(lineIndex + 1, importedRecord, `複数の既存業績が ${candidates[0].strategy} で一致しました`)
+      if (!hasCanonicalTitle(importedRecord.fields)) {
+        reviewItems.push(
+          buildReviewItem(
+            lineNumber,
+            importedRecord,
+            "title が不足しているため自動追加できません",
+            "title",
+            [],
+            ["fields.title"]
+          )
         );
         return;
       }
 
-      if (candidates.length === 1) {
-        const candidate = candidates[0];
-        const existingRecord = existingRecords[candidate.index];
-        usedExistingIndexes.add(candidate.index);
-        nextRecords[candidate.index] = {
-          ...existingRecord,
-          researchmapFields: mergeResearchmapFields(
-            existingRecord.researchmapFields,
-            importedRecord.researchmapFields
-          ),
-          localMeta: existingRecord.localMeta,
-        };
+      const strictMatch = findStrictMatch(nextRecords, importedRecord);
+
+      if (strictMatch.candidates.length > 1) {
+        markUsedTargetIds(usedTargetIds, strictMatch.candidates);
+        reviewItems.push(
+          buildReviewItem(
+            lineNumber,
+            importedRecord,
+            `strict match (${strictMatch.strategy}) が一意に定まりません`,
+            strictMatch.strategy,
+            strictMatch.candidates,
+            collectAmbiguousConflictingFields(strictMatch.candidates, importedRecord)
+          )
+        );
+        return;
+      }
+
+      if (strictMatch.candidates.length === 1) {
+        const candidate = strictMatch.candidates[0];
+        const conflictingFields = collectConflictingFields(candidate, importedRecord);
+
+        if (usedTargetIds.has(candidate.id)) {
+          reviewItems.push(
+            buildReviewItem(
+              lineNumber,
+              importedRecord,
+              "同一 import 内で同じ対象 record に複数行が対応しています",
+              strictMatch.strategy,
+              [candidate],
+              conflictingFields.length > 0 ? conflictingFields : ["id"]
+            )
+          );
+          return;
+        }
+
+        if (conflictingFields.length > 0) {
+          markUsedTargetIds(usedTargetIds, [candidate]);
+          reviewItems.push(
+            buildReviewItem(
+              lineNumber,
+              importedRecord,
+              "strict match は見つかりましたが保護対象 field に差分があります",
+              strictMatch.strategy,
+              [candidate],
+              conflictingFields
+            )
+          );
+          return;
+        }
+
+        usedTargetIds.add(candidate.id);
+        const targetIndex = nextRecords.findIndex((recordItem) => recordItem.id === candidate.id);
+        nextRecords[targetIndex] = mergeMatchedRecord(candidate, importedRecord);
         matched += 1;
         return;
       }
 
-      nextRecords.push({
+      const potentialReview = findPotentialReviewMatch(nextRecords, importedRecord);
+      if (potentialReview.candidates.length > 0) {
+        markUsedTargetIds(usedTargetIds, potentialReview.candidates);
+        const conflictingFields =
+          potentialReview.candidates.length === 1
+            ? collectConflictingFields(potentialReview.candidates[0], importedRecord)
+            : collectAmbiguousConflictingFields(potentialReview.candidates, importedRecord);
+
+        reviewItems.push(
+          buildReviewItem(
+            lineNumber,
+            importedRecord,
+            "strict match に該当しない近接候補があるため review が必要です",
+            potentialReview.strategy,
+            potentialReview.candidates,
+            conflictingFields
+          )
+        );
+        return;
+      }
+
+      const nextRecord = {
         ...importedRecord,
         id: uniquifyRecordId(nextRecords, importedRecord.id),
-      });
+      };
+      nextRecords.push(nextRecord);
+      usedTargetIds.add(nextRecord.id);
       added += 1;
     } catch (error: unknown) {
-      invalidRecords.push(
-        buildImportErrorIssue(lineIndex + 1, error)
-      );
+      invalidRecords.push(buildImportErrorIssue(lineNumber, error));
     }
   });
+
+  appendDuplicateTitleIssues(invalidRecords, nextRecords);
 
   const report: ResearchmapImportReport = {
     sourcePath: inputFilePath,
@@ -173,17 +292,14 @@ export function importPublicationMasterFromResearchmap(
       matched,
       added,
       skippedNonPublication,
-      ambiguous: ambiguousMatches.length,
+      review: reviewItems.length,
       invalid: invalidRecords.length,
     },
-    ambiguousMatches,
+    reviewItems,
     invalidRecords,
   };
 
-  appendDuplicateTitleIssues(report.invalidRecords, nextRecords);
-  report.summary.invalid = report.invalidRecords.length;
-
-  if (dryRun || ambiguousMatches.length > 0 || invalidRecords.length > 0) {
+  if (dryRun || reviewItems.length > 0 || invalidRecords.length > 0) {
     return report;
   }
 
@@ -216,54 +332,44 @@ function parseJsonlLine(line: string, lineNumber: number): ResearchmapJsonlRecor
   }
 }
 
-function fallbackRecord(type: string, payload: Record<string, unknown>): PublicationMasterRecord {
-  const publicationType = normalizePublicationType(type) || "misc";
-
-  return {
-    id: `invalid-${publicationType}`,
-    researchmapFields: compactObject({
-      type: publicationType,
-      paper_title: optionalLocalizedText(payload.paper_title),
-      presentation_title: optionalLocalizedText(payload.presentation_title),
-      publication_name: optionalLocalizedText(payload.publication_name),
-      event: optionalLocalizedText(payload.event),
-      publication_date: optionalString(payload.publication_date),
-    }) as PublicationMasterResearchmapFields,
-    localMeta: {
-      hasEmptyFields: false,
-      notes: "",
-    },
-  };
-}
-
 function buildMasterRecordFromResearchmapRecord(
   record: ResearchmapJsonlRecord,
-  fallbackId: string
+  fallbackId: string,
+  importedAt: string,
+  payloadHash: string
 ): PublicationMasterRecord {
   const type = normalizePublicationType(record.insert?.type);
-
   if (!type) {
     throw new Error("publication type が不正です");
   }
 
   const payload = getPayload(record);
-  const researchmapFields = sanitizeResearchmapFields(type, payload);
-  const recordId = buildRecordId(researchmapFields, fallbackId);
+  const legacyFields = sanitizeResearchmapFields(type, payload);
+  const fields = fromLegacyResearchmapFields(legacyFields);
+  const recordId = buildRecordId(fields, fallbackId);
 
-  return {
+  return compactObject({
     id: recordId,
-    researchmapFields,
+    fields,
     localMeta: {
       hasEmptyFields: false,
       notes: "",
     },
-  };
+    sync: {
+      researchmap: compactObject({
+        recordId: optionalString(record.insert?.id),
+        userId: optionalString(record.insert?.user_id),
+        lastImportedAt: importedAt,
+        lastPayloadHash: payloadHash,
+      }),
+    },
+  }) as PublicationMasterRecord;
 }
 
 function sanitizeResearchmapFields(
   type: PublicationType,
   payload: Record<string, unknown>
-): PublicationMasterResearchmapFields {
+): LegacyPublicationMasterResearchmapFields {
   const subtype = resolveSubtype(type, payload);
 
   return compactObject({
@@ -275,6 +381,8 @@ function sanitizeResearchmapFields(
     presenters: optionalLocalizedPeople(payload.presenters),
     publication_name: optionalLocalizedText(payload.publication_name),
     event: optionalLocalizedText(payload.event),
+    promoter: optionalLocalizedText(payload.promoter),
+    address_country: optionalString(payload.address_country),
     publication_date: optionalString(payload.publication_date),
     from_event_date: optionalString(payload.from_event_date),
     to_event_date: optionalString(payload.to_event_date),
@@ -300,7 +408,449 @@ function sanitizeResearchmapFields(
         : undefined,
     is_international_journal:
       type === "presentations" ? undefined : optionalBoolean(payload.is_international_journal),
-  }) as PublicationMasterResearchmapFields;
+  }) as LegacyPublicationMasterResearchmapFields;
+}
+
+function findStrictMatch(
+  currentRecords: PublicationMasterRecord[],
+  importedRecord: PublicationMasterRecord
+): StrictMatchResult {
+  const importedRecordId = importedRecord.sync?.researchmap?.recordId;
+  if (importedRecordId) {
+    const matches = currentRecords.filter(
+      (record) => record.sync?.researchmap?.recordId === importedRecordId
+    );
+    if (matches.length > 0) {
+      return {
+        strategy: "record_id",
+        candidates: matches,
+      };
+    }
+  }
+
+  const importedDoi = normalizeDoi(getPublicationDoi(importedRecord.fields));
+  if (importedDoi) {
+    const matches = currentRecords.filter(
+      (record) => normalizeDoi(getPublicationDoi(record.fields)) === importedDoi
+    );
+    if (matches.length > 0) {
+      return {
+        strategy: "doi",
+        candidates: matches,
+      };
+    }
+  }
+
+  const fingerprint = buildCanonicalFingerprint(importedRecord.fields);
+  if (!isEmptyFingerprint(fingerprint)) {
+    const matches = currentRecords.filter(
+      (record) => buildCanonicalFingerprint(record.fields) === fingerprint
+    );
+    if (matches.length > 0) {
+      return {
+        strategy: "fingerprint",
+        candidates: matches,
+      };
+    }
+  }
+
+  return {
+    strategy: "fingerprint",
+    candidates: [],
+  };
+}
+
+function findPotentialReviewMatch(
+  currentRecords: PublicationMasterRecord[],
+  importedRecord: PublicationMasterRecord
+): PotentialReviewResult {
+  const importedTitle = normalizePublicationTitle(getPublicationTitleText(importedRecord.fields));
+
+  if (!importedTitle) {
+    return {
+      strategy: "title",
+      candidates: [],
+    };
+  }
+
+  const matches = currentRecords.filter(
+    (record) => normalizePublicationTitle(getPublicationTitleText(record.fields)) === importedTitle
+  );
+
+  return {
+    strategy: "title",
+    candidates: matches,
+  };
+}
+
+function collectConflictingFields(
+  existingRecord: PublicationMasterRecord,
+  importedRecord: PublicationMasterRecord
+): string[] {
+  const conflicts: string[] = [];
+  const existingFields = existingRecord.fields;
+  const importedFields = importedRecord.fields;
+
+  if (existingFields.type !== importedFields.type) {
+    conflicts.push("fields.type");
+  }
+
+  if (
+    existingFields.subtype &&
+    importedFields.subtype &&
+    existingFields.subtype !== importedFields.subtype
+  ) {
+    conflicts.push("fields.subtype");
+  }
+
+  const existingRecordId = existingRecord.sync?.researchmap?.recordId;
+  const importedRecordId = importedRecord.sync?.researchmap?.recordId;
+  if (existingRecordId && importedRecordId && existingRecordId !== importedRecordId) {
+    conflicts.push("sync.researchmap.recordId");
+  }
+
+  const existingDoi = normalizeDoi(getPublicationDoi(existingFields));
+  const importedDoi = normalizeDoi(getPublicationDoi(importedFields));
+  if (existingDoi && importedDoi && existingDoi !== importedDoi) {
+    conflicts.push("fields.identifiers.doi");
+  }
+
+  const existingTitle = normalizePublicationTitle(getPublicationTitleText(existingFields));
+  const importedTitle = normalizePublicationTitle(getPublicationTitleText(importedFields));
+  if (
+    (existingTitle && importedTitle && existingTitle !== importedTitle) ||
+    hasLocalizedTextConflict(existingFields.title, importedFields.title)
+  ) {
+    conflicts.push("fields.title");
+  }
+
+  if (hasContributorConflict(existingFields, importedFields)) {
+    conflicts.push("fields.contributors");
+  }
+
+  const existingVenue = normalizePublicationTitle(getPublicationVenueText(existingFields, "ja") || getPublicationVenueText(existingFields, "en"));
+  const importedVenue = normalizePublicationTitle(getPublicationVenueText(importedFields, "ja") || getPublicationVenueText(importedFields, "en"));
+  if (
+    (existingVenue && importedVenue && existingVenue !== importedVenue) ||
+    hasLocalizedTextConflict(existingFields.venue?.name, importedFields.venue?.name)
+  ) {
+    conflicts.push("fields.venue.name");
+  }
+
+  if (hasLocalizedTextConflict(existingFields.venue?.promoter, importedFields.venue?.promoter)) {
+    conflicts.push("fields.venue.promoter");
+  }
+
+  if (
+    existingFields.venue?.addressCountry &&
+    importedFields.venue?.addressCountry &&
+    existingFields.venue.addressCountry !== importedFields.venue.addressCountry
+  ) {
+    conflicts.push("fields.venue.addressCountry");
+  }
+
+  if (hasDateConflict(existingFields, importedFields)) {
+    conflicts.push("fields.dates");
+  }
+
+  if (
+    existingFields.isInternational !== undefined &&
+    importedFields.isInternational !== undefined &&
+    existingFields.isInternational !== importedFields.isInternational
+  ) {
+    conflicts.push("fields.isInternational");
+  }
+
+  return conflicts;
+}
+
+function mergeMatchedRecord(
+  existingRecord: PublicationMasterRecord,
+  importedRecord: PublicationMasterRecord
+): PublicationMasterRecord {
+  return {
+    ...existingRecord,
+    fields: mergePublicationFields(existingRecord.fields, importedRecord.fields),
+    localMeta: existingRecord.localMeta,
+    sync: compactObject({
+      researchmap: compactObject({
+        ...existingRecord.sync?.researchmap,
+        ...importedRecord.sync?.researchmap,
+      }),
+    }),
+  };
+}
+
+function mergePublicationFields(
+  existingFields: PublicationMasterFields,
+  importedFields: PublicationMasterFields
+): PublicationMasterFields {
+  return compactObject({
+    type: importedFields.type,
+    subtype: importedFields.subtype || existingFields.subtype,
+    title: mergeLocalizedText(existingFields.title, importedFields.title),
+    contributors: importedFields.contributors || existingFields.contributors,
+    venue: mergeVenue(existingFields.venue, importedFields.venue),
+    dates: compactObject({
+      published: importedFields.dates?.published || existingFields.dates?.published,
+      eventStart: importedFields.dates?.eventStart || existingFields.dates?.eventStart,
+      eventEnd: importedFields.dates?.eventEnd || existingFields.dates?.eventEnd,
+    }),
+    identifiers: compactObject({
+      doi: importedFields.identifiers?.doi || existingFields.identifiers?.doi,
+    }),
+    links: importedFields.links || existingFields.links,
+    bibliographic: compactObject({
+      volume: importedFields.bibliographic?.volume || existingFields.bibliographic?.volume,
+      number: importedFields.bibliographic?.number || existingFields.bibliographic?.number,
+      startPage:
+        importedFields.bibliographic?.startPage || existingFields.bibliographic?.startPage,
+      endPage: importedFields.bibliographic?.endPage || existingFields.bibliographic?.endPage,
+    }),
+    location: mergeLocalizedText(existingFields.location, importedFields.location),
+    description: mergeLocalizedText(existingFields.description, importedFields.description),
+    review:
+      importedFields.review !== undefined ? importedFields.review : existingFields.review,
+    invited:
+      importedFields.invited !== undefined ? importedFields.invited : existingFields.invited,
+    ownerRoles: importedFields.ownerRoles || existingFields.ownerRoles,
+    isInternational:
+      importedFields.isInternational !== undefined
+        ? importedFields.isInternational
+        : existingFields.isInternational,
+  }) as PublicationMasterFields;
+}
+
+function mergeVenue(
+  existingVenue: PublicationMasterFields["venue"],
+  importedVenue: PublicationMasterFields["venue"]
+): PublicationMasterFields["venue"] {
+  if (!existingVenue) {
+    return importedVenue;
+  }
+
+  if (!importedVenue) {
+    return existingVenue;
+  }
+
+  return {
+    kind: importedVenue.kind || existingVenue.kind,
+    name: mergeLocalizedText(existingVenue.name, importedVenue.name),
+    promoter: mergeLocalizedText(existingVenue.promoter, importedVenue.promoter),
+    addressCountry: importedVenue.addressCountry || existingVenue.addressCountry,
+  };
+}
+
+function mergeLocalizedText(
+  existingValue: LocalizedText | undefined,
+  importedValue: LocalizedText | undefined
+): LocalizedText | undefined {
+  return compactObject({
+    ja: importedValue?.ja || existingValue?.ja,
+    en: importedValue?.en || existingValue?.en,
+  }) as LocalizedText;
+}
+
+function hasContributorConflict(
+  existingFields: PublicationMasterFields,
+  importedFields: PublicationMasterFields
+): boolean {
+  if (!existingFields.contributors?.length || !importedFields.contributors?.length) {
+    return false;
+  }
+
+  if (existingFields.contributors.length !== importedFields.contributors.length) {
+    return true;
+  }
+
+  return existingFields.contributors.some((contributor, index) => {
+    const importedContributor = importedFields.contributors?.[index];
+    if (!importedContributor) {
+      return true;
+    }
+
+    return (
+      contributor.role !== importedContributor.role ||
+      normalizePublicationTitle(contributor.name.ja || contributor.name.en) !==
+        normalizePublicationTitle(importedContributor.name.ja || importedContributor.name.en) ||
+      hasLocalizedTextConflict(contributor.name, importedContributor.name)
+    );
+  });
+}
+
+function hasDateConflict(
+  existingFields: PublicationMasterFields,
+  importedFields: PublicationMasterFields
+): boolean {
+  const keys: Array<keyof NonNullable<PublicationMasterFields["dates"]>> = [
+    "published",
+    "eventStart",
+    "eventEnd",
+  ];
+
+  return keys.some((key) => {
+    const existingValue = existingFields.dates?.[key];
+    const importedValue = importedFields.dates?.[key];
+    return Boolean(existingValue && importedValue && existingValue !== importedValue);
+  });
+}
+
+function collectAmbiguousConflictingFields(
+  candidateRecords: PublicationMasterRecord[],
+  importedRecord: PublicationMasterRecord
+): string[] {
+  const conflicts = new Set<string>();
+
+  candidateRecords.forEach((candidateRecord) => {
+    collectConflictingFields(candidateRecord, importedRecord).forEach((field) => {
+      conflicts.add(field);
+    });
+  });
+
+  addCandidateVarianceFields(conflicts, candidateRecords);
+
+  if (conflicts.size === 0) {
+    conflicts.add("id");
+  }
+
+  return Array.from(conflicts);
+}
+
+function addCandidateVarianceFields(
+  conflicts: Set<string>,
+  candidateRecords: PublicationMasterRecord[]
+): void {
+  if (hasDistinctValues(candidateRecords.map((record) => record.id))) {
+    conflicts.add("id");
+  }
+
+  if (
+    hasDistinctValues(
+      candidateRecords.map((record) => record.sync?.researchmap?.recordId || "")
+    )
+  ) {
+    conflicts.add("sync.researchmap.recordId");
+  }
+
+  if (hasDistinctValues(candidateRecords.map((record) => record.fields.type))) {
+    conflicts.add("fields.type");
+  }
+
+  if (hasDistinctValues(candidateRecords.map((record) => record.fields.subtype || ""))) {
+    conflicts.add("fields.subtype");
+  }
+
+  if (
+    hasDistinctValues(
+      candidateRecords.map((record) => normalizeDoi(getPublicationDoi(record.fields)))
+    )
+  ) {
+    conflicts.add("fields.identifiers.doi");
+  }
+
+  if (
+    hasDistinctValues(
+      candidateRecords.map((record) =>
+        normalizePublicationTitle(getPublicationTitleText(record.fields))
+      )
+    )
+  ) {
+    conflicts.add("fields.title");
+  }
+
+  if (
+    hasDistinctValues(
+      candidateRecords.map((record) =>
+        normalizePublicationTitle(
+          getPublicationVenueText(record.fields, "ja") ||
+            getPublicationVenueText(record.fields, "en")
+        )
+      )
+    )
+  ) {
+    conflicts.add("fields.venue.name");
+  }
+
+  if (
+    hasDistinctValues(
+      candidateRecords.map((record) => JSON.stringify(record.fields.venue?.promoter || {}))
+    )
+  ) {
+    conflicts.add("fields.venue.promoter");
+  }
+
+  if (
+    hasDistinctValues(
+      candidateRecords.map((record) => record.fields.venue?.addressCountry || "")
+    )
+  ) {
+    conflicts.add("fields.venue.addressCountry");
+  }
+
+  if (
+    hasDistinctValues(
+      candidateRecords.map((record) => JSON.stringify(record.fields.dates || {}))
+    )
+  ) {
+    conflicts.add("fields.dates");
+  }
+
+  if (
+    hasDistinctValues(
+      candidateRecords.map((record) => JSON.stringify(record.fields.contributors || []))
+    )
+  ) {
+    conflicts.add("fields.contributors");
+  }
+
+  if (
+    hasDistinctValues(
+      candidateRecords.map((record) => String(record.fields.isInternational ?? ""))
+    )
+  ) {
+    conflicts.add("fields.isInternational");
+  }
+}
+
+function hasDistinctValues(values: string[]): boolean {
+  return new Set(values).size > 1;
+}
+
+function markUsedTargetIds(
+  usedTargetIds: Set<string>,
+  candidateRecords: PublicationMasterRecord[]
+): void {
+  candidateRecords.forEach((candidateRecord) => {
+    usedTargetIds.add(candidateRecord.id);
+  });
+}
+
+function hasLocalizedTextConflict(
+  existingValue: LocalizedText | undefined,
+  importedValue: LocalizedText | undefined
+): boolean {
+  return (
+    hasLocalizedTextConflictForLocale(existingValue, importedValue, "ja") ||
+    hasLocalizedTextConflictForLocale(existingValue, importedValue, "en")
+  );
+}
+
+function hasLocalizedTextConflictForLocale(
+  existingValue: LocalizedText | undefined,
+  importedValue: LocalizedText | undefined,
+  locale: "ja" | "en"
+): boolean {
+  const existingText = normalizePublicationTitle(existingValue?.[locale] || "");
+  const importedText = normalizePublicationTitle(importedValue?.[locale] || "");
+
+  return Boolean(existingText && importedText && existingText !== importedText);
+}
+
+function hasCanonicalTitle(fields: PublicationMasterFields): boolean {
+  return Boolean(
+    normalizePublicationTitle(fields.title?.ja || "") ||
+      normalizePublicationTitle(fields.title?.en || "")
+  );
 }
 
 function resolveSubtype(
@@ -316,133 +866,21 @@ function resolveSubtype(
   return optionalString(payload.misc_type) || optionalString(payload.subtype);
 }
 
-function findMatchingCandidates(
-  existingRecords: PublicationMasterRecord[],
-  usedExistingIndexes: Set<number>,
-  importedRecord: PublicationMasterRecord
-): MatchCandidate[] {
-  const doiMatches = existingRecords
-    .map((record, index) => ({ record, index }))
-    .filter(({ index, record }) => {
-      return !usedExistingIndexes.has(index) && isDoiMatch(record, importedRecord);
-    })
-    .map(({ index }) => ({ index, strategy: "doi" as const }));
-
-  if (doiMatches.length > 0) {
-    return doiMatches;
-  }
-
-  return existingRecords
-    .map((record, index) => ({ record, index }))
-    .filter(({ index, record }) => {
-      return !usedExistingIndexes.has(index) && hasMatchingPublicationTitle(record.researchmapFields, importedRecord.researchmapFields);
-    })
-    .map(({ index }) => ({ index, strategy: "title" as const }));
-}
-
-function isDoiMatch(left: PublicationMasterRecord, right: PublicationMasterRecord): boolean {
-  const leftDoi = normalizeDoi(left.researchmapFields.identifiers?.doi?.[0]);
-  const rightDoi = normalizeDoi(right.researchmapFields.identifiers?.doi?.[0]);
-  return Boolean(leftDoi && rightDoi && leftDoi === rightDoi);
-}
-
-function mergeResearchmapFields(
-  existingFields: PublicationMasterResearchmapFields,
-  importedFields: PublicationMasterResearchmapFields
-): PublicationMasterResearchmapFields {
-  const mergedFields = deepMergePreferImported(existingFields, importedFields) as Record<string, unknown>;
-  return normalizeMergedResearchmapFields(existingFields, importedFields, mergedFields);
-}
-
-function normalizeMergedResearchmapFields(
-  existingFields: PublicationMasterResearchmapFields,
-  importedFields: PublicationMasterResearchmapFields,
-  mergedFields: Record<string, unknown>
-): PublicationMasterResearchmapFields {
-  const normalizedFields = compactObject({
-    ...mergedFields,
-    type: importedFields.type,
-    subtype:
-      importedFields.subtype ??
-      (existingFields.type === importedFields.type ? existingFields.subtype : undefined),
-    published_paper_type:
-      importedFields.type === "published_papers"
-        ? optionalString(mergedFields.published_paper_type)
-        : undefined,
-    published_paper_owner_roles: optionalStringArray(mergedFields.published_paper_owner_roles),
-    is_international_journal:
-      importedFields.type === "published_papers"
-        ? optionalBoolean(mergedFields.is_international_journal)
-        : undefined,
-    presentation_type:
-      importedFields.type === "presentations"
-        ? optionalString(mergedFields.presentation_type)
-        : undefined,
-    is_international_presentation:
-      importedFields.type === "presentations"
-        ? optionalBoolean(mergedFields.is_international_presentation)
-        : undefined,
-    misc_type: importedFields.type === "misc" ? optionalString(mergedFields.misc_type) : undefined,
+function appendDuplicateTitleIssues(
+  invalidRecords: ResearchmapImportIssue[],
+  records: PublicationMasterRecord[]
+): void {
+  findDuplicatePublicationTitleGroups(records).forEach((group) => {
+    invalidRecords.push({
+      lineNumber: 0,
+      reason: `タイトル重複があります: "${group.title}" (${group.recordIds.join(", ")})`,
+      sourceRecord: {
+        type: "duplicate_title",
+        title: group.title,
+        date: "",
+      },
+    });
   });
-
-  return normalizedFields as PublicationMasterResearchmapFields;
-}
-
-function deepMergePreferImported(existingValue: unknown, importedValue: unknown): unknown {
-  if (importedValue === undefined) {
-    return cloneValue(existingValue);
-  }
-  if (existingValue === undefined || existingValue === null) {
-    return cloneValue(importedValue);
-  }
-  if (Array.isArray(importedValue)) {
-    return cloneValue(importedValue);
-  }
-  if (
-    typeof existingValue !== "object" ||
-    existingValue === null ||
-    typeof importedValue !== "object" ||
-    importedValue === null
-  ) {
-    return cloneValue(importedValue);
-  }
-
-  const mergedEntries = new Map<string, unknown>();
-  const keys = new Set([
-    ...Object.keys(existingValue as Record<string, unknown>),
-    ...Object.keys(importedValue as Record<string, unknown>),
-  ]);
-
-  keys.forEach((key) => {
-    mergedEntries.set(
-      key,
-      deepMergePreferImported(
-        (existingValue as Record<string, unknown>)[key],
-        (importedValue as Record<string, unknown>)[key]
-      )
-    );
-  });
-
-  return compactObject(Object.fromEntries(mergedEntries));
-}
-
-function cloneValue(value: unknown): unknown {
-  if (Array.isArray(value)) {
-    return value.map((item) => cloneValue(item));
-  }
-  if (value && typeof value === "object") {
-    return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>).map(([key, item]) => [key, cloneValue(item)])
-    );
-  }
-  return value;
-}
-
-function buildRecordId(fields: PublicationMasterResearchmapFields, fallbackId: string): string {
-  const year = (fields.publication_date || "undated").slice(0, 4);
-  const title = extractPrimaryPublicationTitle(fields);
-  const slugBase = slugify(title || extractVenue(fields) || fallbackId);
-  return `pub-${year}-${slugBase || fallbackId}`;
 }
 
 function buildImportedRecordId(
@@ -463,6 +901,14 @@ function buildImportedRecordId(
   return candidateId;
 }
 
+function buildRecordId(fields: PublicationMasterFields, fallbackId: string): string {
+  const year = (getPublicationDate(fields) || "undated").slice(0, 4);
+  const title = getPublicationTitleText(fields);
+  const venue = getPublicationVenue(fields);
+  const slugBase = slugify(title || venue?.ja || venue?.en || fallbackId);
+  return `pub-${year}-${slugBase || fallbackId}`;
+}
+
 function uniquifyRecordId(records: PublicationMasterRecord[], baseId: string): string {
   const existingIds = new Set(records.map((record) => record.id));
 
@@ -479,17 +925,23 @@ function uniquifyRecordId(records: PublicationMasterRecord[], baseId: string): s
   return candidateId;
 }
 
-function buildIssue(
+function buildReviewItem(
   lineNumber: number,
-  record: PublicationMasterRecord,
-  reason: string
-): ResearchmapImportIssue {
+  importedRecord: PublicationMasterRecord,
+  reason: string,
+  matchStrategy: MatchStrategy,
+  candidateRecords: PublicationMasterRecord[],
+  conflictingFields: string[]
+): ResearchmapImportReviewItem {
   return {
     lineNumber,
     reason,
-    type: record.researchmapFields.type,
-    title: extractPrimaryPublicationTitle(record.researchmapFields),
-    date: record.researchmapFields.publication_date || "",
+    sourceRecord: summarizeSourceRecord(importedRecord),
+    matchStrategy,
+    candidateRecords: candidateRecords.map((record) => ({
+      ...describePublicationRecord(record),
+    })),
+    conflictingFields,
   };
 }
 
@@ -500,9 +952,20 @@ function buildImportErrorIssue(
   return {
     lineNumber,
     reason: error instanceof Error ? error.message : "不明なエラー",
-    type: "invalid_jsonl",
-    title: "",
-    date: "",
+    sourceRecord: {
+      type: "invalid_jsonl",
+      title: "",
+      date: "",
+    },
+  };
+}
+
+function summarizeSourceRecord(record: PublicationMasterRecord): SourceRecordSummary {
+  return {
+    type: record.fields.type,
+    title: getPublicationTitleText(record.fields),
+    date: getPublicationDate(record.fields),
+    recordId: record.sync?.researchmap?.recordId,
   };
 }
 
@@ -518,12 +981,16 @@ function archiveImportedFile(
   const timestamp = importedAt.replace(/[:.]/g, "-");
   const archivedPath = path.join(
     archiveDirPath,
-    `${sourceBaseName}.${timestamp}.${fileHash.slice(0, 12)}.imported${sourceExt}`
+    `${sourceBaseName}-${timestamp}-${fileHash.slice(0, 8)}${sourceExt}`
   );
 
   try {
     fs.renameSync(sourcePath, archivedPath);
-  } catch {
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "EXDEV") {
+      throw error;
+    }
+
     fs.copyFileSync(sourcePath, archivedPath);
     fs.unlinkSync(sourcePath);
   }
@@ -539,7 +1006,11 @@ function readImportHistory(historyFilePath: string): ImportHistoryFile {
     };
   }
 
-  return JSON.parse(fs.readFileSync(historyFilePath, "utf8")) as ImportHistoryFile;
+  const parsed = JSON.parse(fs.readFileSync(historyFilePath, "utf8")) as ImportHistoryFile;
+  return {
+    version: 1,
+    entries: Array.isArray(parsed.entries) ? parsed.entries : [],
+  };
 }
 
 function writeImportHistory(historyFilePath: string, history: ImportHistoryFile): void {
@@ -548,59 +1019,106 @@ function writeImportHistory(historyFilePath: string, history: ImportHistoryFile)
 }
 
 function getPayload(record: ResearchmapJsonlRecord): Record<string, unknown> {
-  const payload = record.merge || record.force || {};
-  return typeof payload === "object" && payload !== null
-    ? (payload as Record<string, unknown>)
-    : {};
+  const payload = record.merge || record.force;
+
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    throw new Error("merge または force payload が必要です");
+  }
+
+  return payload;
 }
 
-function normalizePublicationType(value: string | undefined): PublicationType | undefined {
-  if (value === "published_papers" || value === "presentations" || value === "misc") {
-    return value;
+function normalizePublicationType(type: string | undefined): PublicationType | undefined {
+  if (type === "published_papers" || type === "presentations" || type === "misc") {
+    return type;
   }
   return undefined;
 }
 
-function normalizeDoi(value: string | undefined): string {
-  return (value || "").trim().replace(/^https?:\/\/doi\.org\//i, "").toLowerCase();
+function optionalLocalizedText(value: unknown): LocalizedText | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return undefined;
+  }
+
+  const localized = value as Record<string, unknown>;
+  return compactObject({
+    ja: optionalString(localized.ja),
+    en: optionalString(localized.en),
+  }) as LocalizedText;
 }
 
-function extractVenue(fields: PublicationMasterResearchmapFields): string {
-  return fields.publication_name?.ja || fields.publication_name?.en || fields.event?.ja || fields.event?.en || "";
+function optionalLocalizedPeople(value: unknown): LocalizedPeople | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return undefined;
+  }
+
+  const localized = value as Record<string, unknown>;
+  return compactObject({
+    ja: optionalPeopleArray(localized.ja),
+    en: optionalPeopleArray(localized.en),
+  }) as LocalizedPeople;
 }
 
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/https?:\/\/\S+/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
-}
+function optionalPeopleArray(value: unknown): LocalizedPeople["ja"] | undefined {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
 
-function compactObject<T extends Record<string, unknown>>(value: T): Partial<T> {
-  return Object.fromEntries(
-    Object.entries(value).filter(([, item]) => {
-      if (item === undefined || item === null) {
-        return false;
+  const people = value
+    .map((person) => {
+      if (!person || typeof person !== "object" || Array.isArray(person)) {
+        return undefined;
       }
-      if (Array.isArray(item)) {
-        return item.length > 0;
-      }
-      if (typeof item === "object") {
-        return Object.keys(item).length > 0;
-      }
-      return true;
+      const name = optionalString((person as Record<string, unknown>).name);
+      return name ? { name } : undefined;
     })
-  ) as Partial<T>;
+    .filter((person): person is { name: string } => Boolean(person));
+
+  return people.length > 0 ? people : undefined;
 }
 
-function optionalString(value: unknown): string | undefined {
-  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+function optionalIdentifiers(
+  value: unknown
+): LegacyPublicationMasterResearchmapFields["identifiers"] | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return undefined;
+  }
+
+  const identifiers = value as Record<string, unknown>;
+  const doi = optionalStringArray(identifiers.doi);
+
+  return doi?.length ? { doi } : undefined;
 }
 
-function optionalBoolean(value: unknown): boolean | undefined {
-  return typeof value === "boolean" ? value : undefined;
+function optionalSeeAlso(
+  value: unknown
+): LegacyPublicationMasterResearchmapFields["see_also"] | undefined {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+
+  const links = value
+    .map((entry) => {
+      if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+        return undefined;
+      }
+      const link = entry as Record<string, unknown>;
+      const id = optionalString(link["@id"]);
+      if (!id) {
+        return undefined;
+      }
+
+      return compactObject({
+        "@id": id,
+        label: optionalString(link.label) || "url",
+        is_downloadable: optionalBoolean(link.is_downloadable),
+      });
+    })
+    .filter(Boolean);
+
+  return links.length > 0
+    ? (links as LegacyPublicationMasterResearchmapFields["see_also"])
+    : undefined;
 }
 
 function optionalStringArray(value: unknown): string[] | undefined {
@@ -608,88 +1126,45 @@ function optionalStringArray(value: unknown): string[] | undefined {
     return undefined;
   }
 
-  const normalized = value.filter((item): item is string => typeof item === "string" && item.trim() !== "");
-  return normalized.length > 0 ? normalized : undefined;
+  const strings = value
+    .map((item) => optionalString(item))
+    .filter((item): item is string => Boolean(item));
+
+  return strings.length > 0 ? strings : undefined;
 }
 
-function optionalLocalizedText(value: unknown): { ja?: string; en?: string } | undefined {
-  if (!value || typeof value !== "object") {
+function optionalString(value: unknown): string | undefined {
+  if (typeof value !== "string") {
     return undefined;
   }
 
-  return compactObject({
-    ja: optionalString((value as Record<string, unknown>).ja),
-    en: optionalString((value as Record<string, unknown>).en),
-  });
+  const trimmed = value.trim();
+  return trimmed || undefined;
 }
 
-function optionalLocalizedPeople(
-  value: unknown
-): { ja?: Array<{ name: string }>; en?: Array<{ name: string }> } | undefined {
-  if (!value || typeof value !== "object") {
-    return undefined;
-  }
-
-  return compactObject({
-    ja: optionalPeopleArray((value as Record<string, unknown>).ja),
-    en: optionalPeopleArray((value as Record<string, unknown>).en),
-  });
+function optionalBoolean(value: unknown): boolean | undefined {
+  return typeof value === "boolean" ? value : undefined;
 }
 
-function optionalPeopleArray(value: unknown): Array<{ name: string }> | undefined {
-  if (!Array.isArray(value)) {
-    return undefined;
-  }
-
-  const normalized = value
-    .filter((person): person is Record<string, unknown> => Boolean(person) && typeof person === "object")
-    .map((person) => ({
-      name: optionalString(person.name) || "",
-    }))
-    .filter((person) => person.name);
-
-  return normalized.length > 0 ? normalized : undefined;
+function hashJsonlLine(line: string): string {
+  return crypto.createHash("sha256").update(line).digest("hex");
 }
 
-function optionalIdentifiers(value: unknown): { doi?: string[] } | undefined {
-  if (!value || typeof value !== "object") {
-    return undefined;
-  }
-
-  return compactObject({
-    doi: optionalStringArray((value as Record<string, unknown>).doi),
-  });
+function isEmptyFingerprint(value: string): boolean {
+  return value
+    .split("|")
+    .slice(2)
+    .every((part) => !part);
 }
 
-function optionalSeeAlso(
-  value: unknown
-): Array<{ "@id": string; label: string }> | undefined {
-  if (!Array.isArray(value)) {
-    return undefined;
-  }
-
-  const normalized = value
-    .filter((entry): entry is Record<string, unknown> => Boolean(entry) && typeof entry === "object")
-    .map((entry) => ({
-      "@id": optionalString(entry["@id"]) || "",
-      label: optionalString(entry.label) || "",
-    }))
-    .filter((entry) => entry["@id"] && entry.label);
-
-  return normalized.length > 0 ? normalized : undefined;
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFKC")
+    .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
-function appendDuplicateTitleIssues(
-  invalidRecords: ResearchmapImportIssue[],
-  records: PublicationMasterRecord[]
-): void {
-  findDuplicatePublicationTitleGroups(records).forEach((group) => {
-    invalidRecords.push({
-      lineNumber: 0,
-      reason: `タイトル重複: ${group.recordIds.join(", ")}`,
-      type: "duplicate_title",
-      title: group.title,
-      date: "",
-    });
-  });
+function cloneRecord(record: PublicationMasterRecord): PublicationMasterRecord {
+  return JSON.parse(JSON.stringify(record)) as PublicationMasterRecord;
 }

@@ -61,11 +61,13 @@
 
 ## データ管理
 - 出版物データの唯一の正本は `src/data/publication_master.json` とする
+- `publication_master.json` は canonical schema の `fields` を正本とし、researchmap 固有の同期メタデータは `sync.researchmap` に保持する
 - `src/data/publications.json` は `publication_master.json` から再生成される Web 表示用の生成物とする
 - `src/data/publication_data.csv` は移行・再取り込み用の入力としてのみ扱い、日常運用の正本に戻さない
 - CSV ファイルを更新する場合は Notion での操作をユーザーに依頼し、必要に応じて `npm run import-publications-csv` で master data を再生成する
-- researchmap export (`rm_*.jsonl`) を取り込む場合は `npm run import-publications-researchmap -- --input <path>` を使用し、最初に `--dry-run` で件数と曖昧一致の有無を確認する
+- researchmap export (`rm_*.jsonl`) を取り込む場合は `npm run import-publications-researchmap -- --input <path>` を使用し、最初に `--dry-run` で `matched` / `added` / `review` / `invalid` を確認する
 - 正規化タイトル一致の重複は許容しない。researchmap import、手編集、CSV 再生成のいずれでも重複タイトルを正本へ入れない
+- researchmap import の自動 merge は `researchmap record id -> DOI -> canonical fingerprint` の strict match のみとし、title 近傍候補や core field 競合は review / quarantine 扱いで書き込みを止める
 - Web 表示用 JSON の再生成には `npm run convert-publications` を使用する
 - ローカル GUI 編集が必要な場合は `npm run publications-editor` を使用し、公開用 SPA に editor route を追加しない
 
