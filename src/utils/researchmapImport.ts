@@ -503,6 +503,12 @@ function collectConflictingFields(
     conflicts.push("fields.subtype");
   }
 
+  const existingRecordId = existingRecord.sync?.researchmap?.recordId;
+  const importedRecordId = importedRecord.sync?.researchmap?.recordId;
+  if (existingRecordId && importedRecordId && existingRecordId !== importedRecordId) {
+    conflicts.push("sync.researchmap.recordId");
+  }
+
   const existingDoi = normalizeDoi(getPublicationDoi(existingFields));
   const importedDoi = normalizeDoi(getPublicationDoi(importedFields));
   if (existingDoi && importedDoi && existingDoi !== importedDoi) {

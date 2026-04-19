@@ -272,12 +272,12 @@ export function compactObject<T extends Record<string, unknown>>(value: T): Part
 
 function resolveLegacySubtype(fields: LegacyPublicationMasterResearchmapFields): string | undefined {
   if (fields.type === "published_papers") {
-    return fields.subtype || fields.published_paper_type;
+    return fields.published_paper_type || fields.subtype;
   }
   if (fields.type === "presentations") {
-    return fields.subtype || fields.presentation_type;
+    return fields.presentation_type || fields.subtype;
   }
-  return fields.subtype || fields.misc_type;
+  return fields.misc_type || fields.subtype;
 }
 
 function localizedPeopleToContributors(

@@ -141,6 +141,33 @@ describe("researchmapImport", () => {
     expect(masterAfter).toEqual([existingMasterRecord]);
   });
 
+  test("DOI 一致でも recordId が食い違えば review に送る", () => {
+    writeJsonl([
+      {
+        insert: { type: "published_papers", id: "53373094", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Paper" },
+          publication_name: { en: "Journal A" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          volume: "2",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(0);
+    expect(report.summary.review).toBe(1);
+    expect(report.reviewItems[0].matchStrategy).toBe("doi");
+    expect(report.reviewItems[0].conflictingFields).toContain("sync.researchmap.recordId");
+    expect(JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"))).toEqual([existingMasterRecord]);
+  });
+
   test("strict match がなく title だけ近い既存 record は review に送る", () => {
     const titleOnlyRecord = {
       ...existingMasterRecord,

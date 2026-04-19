@@ -262,4 +262,28 @@ describe("publicationMasterFile", () => {
       addressCountry: "JP",
     });
   });
+
+  test("legacy subtype は generic より typed field を優先する", () => {
+    const records = [
+      {
+        id: "pub-2024-legacy-subtype-priority",
+        researchmapFields: {
+          type: "published_papers",
+          subtype: "others",
+          published_paper_type: "scientific_journal",
+          paper_title: {
+            en: "Subtype Priority Paper",
+          },
+        },
+        localMeta: {
+          hasEmptyFields: false,
+          notes: "",
+        },
+      },
+    ];
+
+    const parsed = parsePublicationMasterJson(JSON.stringify(records));
+
+    expect(parsed[0].fields.subtype).toBe("scientific_journal");
+  });
 });
