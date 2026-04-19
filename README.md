@@ -13,6 +13,7 @@
 
 - **[管理者向けドキュメント](docs/admin/README.md)** - コンテンツ管理・運用ガイド
 - **[技術者向けドキュメント](docs/technical/README.md)** - 開発・技術仕様
+- **[Issue 検証ループ](docs/technical/issue-validation-loop.md)** - 小さな題材で AI 開発ループを固める実践手順
 
 ## 運用ルール
 
