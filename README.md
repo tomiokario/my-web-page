@@ -50,32 +50,27 @@
 
 ## 出版物データの更新方法
 
-出版物データの正本は `src/data/publication_master.json` です。日常更新は、まずローカル editor か researchmap export JSONL の取り込みを使います。
+出版物データの正本は `src/data/publication_master.json` です。日常更新は researchmap export JSONL の取り込みを使い、`publications.json` はそこから再生成します。
 
-- `publication_master.json` は canonical schema の `fields` を正本とし、`sync.researchmap` に researchmap record id / 同期メタデータを保持します
+- `publication_master.json` は canonical schema の `fields` を正本とし、researchmap から取り込んだ結果と `sync.researchmap` の同期メタデータを保持します
+- `publications.json` は `publication_master.json` から再生成される Web 表示用の生成物です
 
-1. ローカル editor を使う場合
-   ```
-   npm run publications-editor
-   ```
-   - `http://127.0.0.1:4318` を開いて保存すると、`publication_master.json` の検証と `publications.json` の再生成がまとめて行われます
-2. researchmap export (`rm_*.jsonl`) を master に取り込みたい場合
+1. researchmap export (`rm_*.jsonl`) を master に取り込みます
    ```
    npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl --dry-run
    npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl
    ```
-   - この repo ではタイトル一致の重複を許容しません
-   - dry-run では `matched` / `added` に加えて `review` / `invalid` を確認します
+   - dry-run では `matched` / `added` / `review` / `invalid` を確認します
    - 自動 merge は `researchmap record id -> DOI -> canonical fingerprint` の strict match のみです
    - title だけ近い record や core field 競合は `review` に回り、1 件でも unresolved item があれば master は書き換えません
    - `localMeta` は import で上書きせず、成功した record だけ `sync.researchmap` を更新します
    - 既存 master / 入力 JSONL / 取り込み結果のどこかでタイトル重複が見つかった場合は hard error で停止します
    - 正常終了した JSONL は `archive/` へ移動し、同じ内容の再取り込みは履歴で防止します
-3. `publication_master.json` を直接編集した場合
+2. 必要なら `publications.json` を再生成します
    ```
    npm run convert-publications
    ```
-   - `src/data/publications.json` が再生成されます
+   - 通常は import コマンドがまとめて再生成します。`publication_master.json` を別手段で整えたときだけ使います
 
 詳細は[管理者向けドキュメント - 出版物データ管理](docs/admin/publications-management.md)を参照してください。
 

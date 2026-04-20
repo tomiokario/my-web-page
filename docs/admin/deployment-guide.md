@@ -41,12 +41,14 @@ GitHub で作業ブランチの PR が `main` にマージされると、Vercel 
 
 ### 2. 出版物データの更新
 
-出版物リストを更新した場合：
+researchmap export JSONL から出版物データを更新した場合は、import コマンドで `publication_master.json` と `publications.json` を更新します。
 
 ```bash
-# publication_master.json を直接編集した後
-npm run convert-publications
+npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl --dry-run
+npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl
 ```
+
+`publication_master.json` を別手段で整えた場合だけ、必要に応じて `npm run convert-publications` を実行してください。
 
 ### 3. ローカルでの動作確認
 

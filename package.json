@@ -30,8 +30,7 @@
     "test:watch": "react-scripts test --runInBand",
     "eject": "react-scripts eject",
     "convert-publications": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/convertPublications.ts",
-    "import-publications-researchmap": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/importPublicationMasterFromResearchmap.ts",
-    "publications-editor": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/publicationsEditorServer.ts"
+    "import-publications-researchmap": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/importPublicationMasterFromResearchmap.ts"
   },
   "eslintConfig": {
     "extends": [

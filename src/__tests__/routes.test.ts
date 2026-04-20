@@ -5,7 +5,7 @@ describe("routes", () => {
     expect(findRouteByPath("/works/computer-system-2025")?.key).toBe("computerSystem2025");
   });
 
-  test("does not expose the publication editor inside the public SPA routes", () => {
+  test("does not expose admin publication routes inside the public SPA", () => {
     expect(findRouteByPath("/admin/publications")).toBeUndefined();
   });
 

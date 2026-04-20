@@ -6,7 +6,7 @@
 
 - [多言語コンテンツ管理](./multilingual-content-management.md) - サイトの多言語対応とコンテンツ更新方法
 - [Markdownコンテンツ管理](./markdown-content.md) - 各ページのコンテンツ編集方法
-- [出版物データ管理](./publications-management.md) - master data・GUI 編集・researchmap 連携を含む出版物管理
+- [出版物データ管理](./publications-management.md) - master data・researchmap 連携・生成物再生成を含む出版物管理
 - [デプロイメント手順](./deployment-guide.md) - サイトの公開と更新手順
 - [サイト設定ガイド](./site-configuration.md) - サイトの基本設定と構成
 
@@ -19,7 +19,7 @@
 
 2. **出版物リストを更新したい場合**
    - [出版物データ管理](./publications-management.md)を参照
-   - ローカル GUI 編集は `npm run publications-editor` 後に `http://127.0.0.1:4318`
+   - researchmap export JSONL の `dry-run` 確認と import を使う
 
 3. **新しい言語を追加したい場合**
    - [多言語コンテンツ管理](./multilingual-content-management.md)を参照
