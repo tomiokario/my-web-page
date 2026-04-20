@@ -61,8 +61,8 @@
       "researchmap": {
         "recordId": "53373064",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "442d4680a2c80f7fecf87656b0be8ff6b2ae950ef934c020901ce979d1da0c4d"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "b50ba3fe2421bae0b9626a0d3262648e2279ed419c3bf6cbb43a51043607381e"
       }
     }
   },
@@ -106,7 +106,8 @@
       "links": [
         {
           "url": "https://www.ite.or.jp/ken/paper/202202210A94/",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "bibliographic": {
@@ -122,7 +123,8 @@
       "invited": false,
       "ownerRoles": [
         "lead"
-      ]
+      ],
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -132,8 +134,8 @@
       "researchmap": {
         "recordId": "53373065",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "fdc42ee2ed2ab9cd236fcd79b4b86c93c2b35b501092acfed389168eee967a82"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "579317f887e4432ea0cf9adc71b8ff87902d8be52d6740717725f4adff7dbc2e"
       }
     }
   },
@@ -197,8 +199,8 @@
       "researchmap": {
         "recordId": "53373066",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "5a1d1c760cff18b5c26ed976c0633d490d21820e6e8b3f9e421c146697b520fa"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "b5882fcbf444fb345da825bf24db203944df0b1e8cce2776e9e97cb71f281205"
       }
     }
   },
@@ -264,8 +266,8 @@
       "researchmap": {
         "recordId": "53373067",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "26301756379b4f4ae3e5f5206fb322db35b5599644dc93a3083aca9cbee04a8f"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "4e4db9f8d8d0d0b818b7c25ef27dc46d5791d63777f00eebfa1bfd61e40f1987"
       }
     }
   },
@@ -332,8 +334,8 @@
       "researchmap": {
         "recordId": "53373068",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "37dee4bd2f82ba3c1c56a749eb510421e5f5fb45b6401c1b70e17d464ed925f3"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "0b547d1175fafcd0fbb0c9f4c1e78e4b46c36db013385de96c28d9efa7cb6be7"
       }
     }
   },
@@ -429,7 +431,8 @@
         "number": "2022-ASD-25-6"
       },
       "review": false,
-      "invited": false
+      "invited": false,
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -437,10 +440,10 @@
     },
     "sync": {
       "researchmap": {
-        "recordId": "53373069",
+        "recordId": "53375540",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "085416b6b73ba53683748945f7d386a1e0375036933770ad800f672784157dc1"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "bc70e4c3ca0ded6411414ab6607088e89a9538f7006a013a19b0c5b5eba7e1f8"
       }
     }
   },
@@ -538,7 +541,8 @@
         "endPage": "31"
       },
       "review": false,
-      "invited": false
+      "invited": false,
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -546,10 +550,10 @@
     },
     "sync": {
       "researchmap": {
-        "recordId": "53373070",
+        "recordId": "53375541",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "e044bf41876941c4f2ce4c23f64dfa19b6cd83e63ae274d5eb33d5f6f66f25cb"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "c72bfb43ac85a06d4c9d9e23d3c60917b12459bb4cd1e79405945a15af9cf8ac"
       }
     }
   },
@@ -621,8 +625,8 @@
       "researchmap": {
         "recordId": "53373071",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "d881371e5c7cf07e3656caf73e3d71d0c85a2e97cfba88abd827ea6d3e0e8124"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "f614da309430dc9881d09aaff7b1d65bd5b6fa09c54e48f2168f0c271212db8f"
       }
     }
   },
@@ -688,8 +692,8 @@
       "researchmap": {
         "recordId": "53373072",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "5ff35b7bb9ebf4dcea5c09f9df9f6d52f00f34817f0f6e3041d74bd1dd8f188b"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "77488c527b34df4d6f8cf6bbf5582082908e8d7eeba30fa6bddb8ebe3f778a13"
       }
     }
   },
@@ -714,7 +718,8 @@
         "kind": "event",
         "name": {
           "ja": "第２回光ニューロワークショップ"
-        }
+        },
+        "addressCountry": "JPN"
       },
       "dates": {
         "published": "2023-03-13",
@@ -724,7 +729,8 @@
       "links": [
         {
           "url": "https://npip.ed.kyushu-u.ac.jp/pdf/2nd_optneuro_flyer_v3_1.pdf",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "location": {
@@ -745,8 +751,8 @@
       "researchmap": {
         "recordId": "53373073",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "1bf57cc1b82206d96516c51a7706742c4d2dbb8544d717666ff02ef5e6c42dcf"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "eec58b5d9fcb167cecb41bc272db8a1ae7388b037366c5d0e529597822822730"
       }
     }
   },
@@ -789,7 +795,8 @@
       "links": [
         {
           "url": "https://doi.org/10.1007/s10043-023-00810-2",
-          "label": "doi"
+          "label": "doi",
+          "isDownloadable": false
         }
       ],
       "bibliographic": {
@@ -816,8 +823,8 @@
       "researchmap": {
         "recordId": "53373074",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "b3ec4db5791c2834410d4de9be8ed3395b6fa247d0c027cdaab479ea334b4db4"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "43c9ce591f64fb0444591fc512357d23ed5e3d5c7e37041ce3c093ce8e12b9c9"
       }
     }
   },
@@ -858,7 +865,8 @@
       "links": [
         {
           "url": "https://www.i-photonics.jp/meetings/meetings2023.html#20230721SGSIPG",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "location": {
@@ -868,7 +876,8 @@
       "invited": false,
       "ownerRoles": [
         "lead"
-      ]
+      ],
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -878,8 +887,8 @@
       "researchmap": {
         "recordId": "53373075",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "5552fc7f6e2e4b5534fb4a5e9e7fad4eb7f875298c768b73ed1b656125dcc410"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "6172a6d2fc13907bdb993237258c270ba4879f653242d71ae83452cec60b8a57"
       }
     }
   },
@@ -930,7 +939,8 @@
       "invited": false,
       "ownerRoles": [
         "lead"
-      ]
+      ],
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -940,8 +950,8 @@
       "researchmap": {
         "recordId": "53373076",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "49ac89428604014fbb5049af34f11a83ef5b5798fb7f7fbd5551233de2b89d7a"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "617aff95a3f64eb4f5346574a9b87c1ea68a6eabaf847e91c1968ff9bedf129e"
       }
     }
   },
@@ -971,7 +981,8 @@
         "kind": "event",
         "name": {
           "en": "The 13th Japan-Korea Workshop on Digital Holography and Information Photonics"
-        }
+        },
+        "addressCountry": "JPN"
       },
       "dates": {
         "published": "2023-12-18",
@@ -981,7 +992,8 @@
       "links": [
         {
           "url": "https://www.i-photonics.jp/dhip2023/index.html#",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "bibliographic": {
@@ -1006,8 +1018,8 @@
       "researchmap": {
         "recordId": "53373077",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "81b5b3b627e593f911cfd2bef12f9c1ae61a30624c1270709f5e3868d50857b8"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "eb191cec45cb4e817d269b09136fe6cf940a47a2740621ae7c31f4af9d94f76c"
       }
     }
   },
@@ -1073,8 +1085,8 @@
       "researchmap": {
         "recordId": "53373078",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "c9c21067d4100f6eb7995933454d3222c8563b9c8ec335f8ab23ff42d200311d"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "8d4efd112443be5e122d203f6623680ccee0643bc9f6dff305a98d05c56c497f"
       }
     }
   },
@@ -1146,8 +1158,8 @@
       "researchmap": {
         "recordId": "53373079",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "b0a4ef507916d716e4b90968bd5d3d553d0df573b649e412209da802f5cf9fb2"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "21e415d8d3e6b5625357a6e3d3c9e7728bb5e2cbdce3c2fadb4579d3e4e0d7f6"
       }
     }
   },
@@ -1191,7 +1203,8 @@
       "links": [
         {
           "url": "https://kyutech.repo.nii.ac.jp/records/2000826",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "bibliographic": {
@@ -1201,7 +1214,8 @@
         "endPage": "151"
       },
       "review": true,
-      "invited": true
+      "invited": true,
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1211,8 +1225,8 @@
       "researchmap": {
         "recordId": "53373080",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "97b5f25498ac557f1ebf63ac13fe79230cd386ebeff022b020fbedde31cd99d0"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "3e8737e13d74fe381743c68dd384e0d0f40461c6ab28df2f5aaa7b709e57f5fc"
       }
     }
   },
@@ -1260,7 +1274,11 @@
         "kind": "event",
         "name": {
           "en": "The First International Symposium on Photonic Computing"
-        }
+        },
+        "promoter": {
+          "en": "The First International Symposium on Photonic Computing"
+        },
+        "addressCountry": "JPN"
       },
       "dates": {
         "published": "2024-03-11",
@@ -1270,7 +1288,8 @@
       "links": [
         {
           "url": "https://www.photoniccomputing.jp/activities/2024_03_11_symposium_session3.php",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "bibliographic": {
@@ -1294,8 +1313,8 @@
       "researchmap": {
         "recordId": "53373081",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "f8d0d3b0bae49df6980748f7ee599c9d10c7b7198acb32698420b43a961275f3"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "8025fe111b298b5c236b392f4869b0f415da2296b83360594b6de90462496e0c"
       }
     }
   },
@@ -1331,7 +1350,11 @@
         "kind": "event",
         "name": {
           "en": "Materials Meet Robots 2024"
-        }
+        },
+        "promoter": {
+          "en": "Materials Meet Robots 2024"
+        },
+        "addressCountry": "JPN"
       },
       "dates": {
         "published": "2024-05-07",
@@ -1341,7 +1364,8 @@
       "links": [
         {
           "url": "https://www.brain.kyutech.ac.jp/~neuro/2024/03/30/materials-meet-robots-2024/?lang=en",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "location": {
@@ -1359,8 +1383,8 @@
       "researchmap": {
         "recordId": "53373082",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "e58384d866e498c9d6596f85519098a51453bb9af00889a35bd3f0607b360de1"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "bad427fd041b2ed2c5a6fea593a9d1e7f9f5c22f69e743f6b2903021e248a026"
       }
     }
   },
@@ -1427,8 +1451,8 @@
       "researchmap": {
         "recordId": "53373083",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "a95b65fbc2b651b23e7ebc5b1f447ba78abcd267a8570d4d98bc108ba2c15231"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "4b1b6536552914dea3d67b09a7fb3bca0b0c99879b4edebb98b50c997db98e10"
       }
     }
   },
@@ -1501,8 +1525,8 @@
       "researchmap": {
         "recordId": "53373084",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "feb19fc8f3c84088130f60a83838fce829c27862db8fe103eed701c0bcfbb5a1"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "bfce997756897f44a3bc4ac8d2873734ff548b3c469e720617e5624cab3f3d78"
       }
     }
   },
@@ -1552,14 +1576,16 @@
       "links": [
         {
           "url": "https://www.photoniccomputing.jp/activities/2024_08_05_region_meeting_online.php",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "review": false,
       "invited": false,
       "ownerRoles": [
         "lead"
-      ]
+      ],
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1569,8 +1595,8 @@
       "researchmap": {
         "recordId": "53373085",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "3fce6673fb11b26237718609e3193f32eeabf1d1aaaffe2e7d6a8a6fbfe6c828"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "b044558fa6e7c61961db43b3c391c4cd3aceb11352339f126f1199f003234959"
       }
     }
   },
@@ -1637,8 +1663,8 @@
       "researchmap": {
         "recordId": "53373086",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "6e60b2d82e6db85afb0e4617f1c93423382f36268c52df99092862c0b351f696"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "e6c82b6a3940ae222ae5df23ceb882ccf105191da56656d9e85b403479ca6850"
       }
     }
   },
@@ -1711,8 +1737,8 @@
       "researchmap": {
         "recordId": "53373087",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "b2eff4b8a9816babba7075e001d13a2e5af1a03c4ff474cb2cb41df0088d9da9"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "6718710dafdf091a2307dbeca001d4c895a5e4474023b3d0a6edc5b511e8acc3"
       }
     }
   },
@@ -1779,7 +1805,8 @@
         "endPage": "6"
       },
       "review": false,
-      "invited": false
+      "invited": false,
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1789,8 +1816,8 @@
       "researchmap": {
         "recordId": "53373088",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "edb5a710789c8414f26aa3f2e4960ffe8e1a93056adf5420127c318ae953ae28"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "22c3214a6e273eb1168d9df16c817e6cfef86525665813f4f0b7f9aba4114153"
       }
     }
   },
@@ -1857,8 +1884,8 @@
       "researchmap": {
         "recordId": "53373089",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "e02135314d93de03c502d18da3d04f1ee82a96e94ba621926dcfd77724b75619"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "0c05617f31084137d365cacf8f8404290d42bf2378aab5a675c7eb6e133e61db"
       }
     }
   },
@@ -1895,7 +1922,11 @@
         "kind": "event",
         "name": {
           "ja": "「光の極限性能を生かすフォトニックコンピューティングの創成」第2回公開シンポジウム"
-        }
+        },
+        "promoter": {
+          "ja": "「光の極限性能を生かすフォトニックコンピューティングの創成」第2回公開シンポジウム"
+        },
+        "addressCountry": "JPN"
       },
       "dates": {
         "published": "2024-12-17",
@@ -1905,7 +1936,8 @@
       "links": [
         {
           "url": "https://www.photoniccomputing.jp/activities/2024_12_17_symposium_session.php",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "location": {
@@ -1926,8 +1958,8 @@
       "researchmap": {
         "recordId": "53373090",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "62cd2c61eb28536226530a3f1d40b0ea5b13d6d5bc113534a6ec143c393b2633"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "af55986a292f16bec7eeaa6a85dfe47df3777790b3b4af859282947a8cbdf6e5"
       }
     }
   },
@@ -2008,7 +2040,8 @@
         "endPage": "166"
       },
       "review": false,
-      "invited": false
+      "invited": false,
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -2018,8 +2051,8 @@
       "researchmap": {
         "recordId": "53373091",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "434bdb74998720e14a4ed2d28a4f5665f4f47c948b19ba9e416f6908c217721d"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "30ce0ffbbcabf7781d3350337ac67b4f0b1f5562e8f732ab1e847ea2c84e8dac"
       }
     }
   },
@@ -2091,8 +2124,8 @@
       "researchmap": {
         "recordId": "53373092",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "b3d7c07886541cf95bb04e28b27e03711a1e2cac23c2d3f366f662edf5edaa3e"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "e4133e1ad4e3788853f975e1c9ffb24d4665e49795fc6919aed6b4a849c3f5cd"
       }
     }
   },
@@ -2147,7 +2180,8 @@
       "links": [
         {
           "url": "https://doi.org/10.1007/s10043-025-00978-9",
-          "label": "doi"
+          "label": "doi",
+          "isDownloadable": false
         }
       ],
       "bibliographic": {
@@ -2170,8 +2204,8 @@
       "researchmap": {
         "recordId": "53373093",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "adfa1df0d8eb31d2d877d6de389e8e842ccab0413531b0bd92a7d4674b56d0a3"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "e4ed41aaa23b60464686d3541669e3a13b2891ccc16cfdfc5cb8c4e6ee5f8b1c"
       }
     }
   },
@@ -2225,7 +2259,8 @@
         "ja": "JR博多シティ 大会議室A・B・C・D／小会議室I, Fukuoka, Japan"
       },
       "review": false,
-      "invited": false
+      "invited": false,
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -2235,8 +2270,8 @@
       "researchmap": {
         "recordId": "53373094",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "6a1c41bd0de6a75b630e31b9fa2a0f7606e207e6fc6d0582e03055d3da6ceeb7"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "5f2f5045cdf8fe42e324c55f6c195476957d45fa114815dd31ac44ea2211a32d"
       }
     }
   },
@@ -2273,7 +2308,11 @@
         "kind": "event",
         "name": {
           "ja": "2025年第86回応用物理学会秋季学術講演会"
-        }
+        },
+        "promoter": {
+          "ja": "2025年第86回応用物理学会秋季学術講演会"
+        },
+        "addressCountry": "JPN"
       },
       "dates": {
         "published": "2025-09-07",
@@ -2301,8 +2340,8 @@
       "researchmap": {
         "recordId": "53373095",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "2f81fa574181b574c06deb785fccbe8bf7dd2610c4935091ad4ebc426070913e"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "2355c38a6ce6e16e159eef08280fb5905d96d0fdaed7d7c7570d35c920bd3319"
       }
     }
   },
@@ -2369,8 +2408,8 @@
       "researchmap": {
         "recordId": "53373096",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "3fdac809ccce76ad6885d57a513f63b1e128c7ff19b5a4a96ca935995f568b15"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "4ccfab15047dc224585a7384978690a609ca5d8e6715d2cb0659e8bd03e8e470"
       }
     }
   },
@@ -2434,8 +2473,8 @@
       "researchmap": {
         "recordId": "53373097",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "b62da289891e8464a8b61039670334af888ac90b5c9eb4ca75f7d6c2d4eaf9df"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "3b8d16e74a9858b1977402dab9691aaf40018ea8210cbd2f67c558877f4691ea"
       }
     }
   },
@@ -2502,8 +2541,8 @@
       "researchmap": {
         "recordId": "53373098",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "b42783f5edff2b8e34574cc96f2a6fca34052edb2b882310340f41e39d36fb5e"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "409317abf5fc71839ce2462398d7c4902354427ebdaee5edddd4abae78bbb29c"
       }
     }
   },
@@ -2555,7 +2594,8 @@
       "links": [
         {
           "url": "https://www.iwh2025.org/uploads/1/5/2/6/152641567/_ooo_1027_book_program.pdf",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "location": {
@@ -2576,8 +2616,8 @@
       "researchmap": {
         "recordId": "53373099",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "d7a84698d32c99e46ea571c739c3dac592eea14e550011a5fdd603099e06d625"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "3d6d2016b1489074ad5668ce972e1554f60d2749aede7cd0b36d6785acd59c32"
       }
     }
   },
@@ -2637,7 +2677,8 @@
         "ja": "一橋大学 一橋講堂, Tokyo, Japan"
       },
       "review": false,
-      "invited": false
+      "invited": false,
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -2647,8 +2688,8 @@
       "researchmap": {
         "recordId": "53373100",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "839f78b65e26f516806d18d84fa42010335a9c11b12c6efc6c840400136bc1e7"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "7ee17404f85b3b4053ce7f2b7ab3c4bb0fc48baaa08d80fc44d1aa18365172f5"
       }
     }
   },
@@ -2705,7 +2746,8 @@
       "links": [
         {
           "url": "https://www.ite.or.jp/ken/paper/20260219xAog/",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "bibliographic": {
@@ -2718,7 +2760,8 @@
         "ja": "北海道大学 学術交流会館 第1会議室, Sapporo, Japan"
       },
       "review": false,
-      "invited": false
+      "invited": false,
+      "isInternational": false
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -2728,8 +2771,8 @@
       "researchmap": {
         "recordId": "53373101",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "60889788257c3f88290d26e96e74e518f35d9cc66a55f72c1ae19286e2c68962"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "fd066506e56569487c18eab11a2868f7a2bd422dd0a5f747a02c03fd7e2c591e"
       }
     }
   },
@@ -2790,8 +2833,8 @@
       "researchmap": {
         "recordId": "53373102",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "ac2d49146fac122f8ed19b9978d19b6fca5ba25b8121833aa58ef47b20b4cb2b"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "f90ed6e202c70d239c3aac0e02bf88389f4fba604ae8a654ec1646e338fb327e"
       }
     }
   },
@@ -2843,7 +2886,8 @@
       "links": [
         {
           "url": "https://www.brain.kyutech.ac.jp/~neuro/2025/12/22/the-8th-international-symposium-on-neuromorphic-ai-hardware/",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "location": {
@@ -2861,8 +2905,8 @@
       "researchmap": {
         "recordId": "53373103",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-18T14:44:17.156Z",
-        "lastPayloadHash": "6a107ccab1ad72f0c78043ce175b61c840d47e08d1eba04c89d927b7848a1851"
+        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastPayloadHash": "c0b3a6ff1491bee1e5ec06db64793a98afce58fdbbae5de1869fbfb13a8f55a4"
       }
     }
   }
