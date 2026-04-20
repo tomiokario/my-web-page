@@ -18,9 +18,12 @@ instructions = """
 - テストや確認手順の不足
 - 残余リスクの有無
 
+情報境界:
+- 持ってよい情報は、Issue 本文、関連コメント、現在差分だけ
+- 以前の review 結果、一次情報 handoff、実装担当の自己説明は持ち込まない
+
 返答形式:
 - findings
 - open_questions_or_assumptions
 - status
 """
-
