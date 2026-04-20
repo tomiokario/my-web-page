@@ -13,8 +13,8 @@
 
 - **[管理者向けドキュメント](docs/admin/README.md)** - コンテンツ管理・運用ガイド
 - **[技術者向けドキュメント](docs/technical/README.md)** - 開発・技術仕様
-- **[Issue 検証ループ](docs/technical/issue-validation-loop.md)** - 小さな題材で AI 開発ループを固める実践手順
-- **[Repo Local Agent Definitions](.codex/agents/README.md)** - 質問担当・実装担当・fresh review 担当・intent review 担当の再利用用定義
+- **[Issue 検証ループ](docs/technical/issue-validation-loop.md)** - 小さな題材で AI 開発ループを固める実践手順と、role 境界・対外コメントのルール
+- **[Repo Local Agent Definitions](.codex/agents/README.md)** - 質問担当・実装担当・fresh review 担当・intent review 担当の再利用用定義と情報境界
 
 ## 運用ルール
 
@@ -26,6 +26,8 @@
 - 重要な変更では、Codex 本体の確認に加えてサブエージェントによるレビューも併用します
 - Issue 対応では、issue 本文・関連コメント・現在の差分が要求に沿っているかを、文脈を引き継がない新規サブエージェントで必ず確認し、`OK` が出るまで別個体で再レビューを繰り返します
 - Human-on-the-loop に入る前には、fresh review とは別に、一次情報 handoff と現在差分を入力にした intent review で趣旨適合を確認します
+- 親オーケストレータは implementation agent 起動後、仕様・受け入れ条件・review 結果・一次情報 handoff の保持に徹し、実装詳細は必要時に最小 handoff で受け取ります
+- PR / Issue コメントでは、内部 role 名や進行用語をそのまま出さず、何を直したか・何を確認したか・何が残っているかを自然文で共有します
 - Issue や PR への追記は自律的に行わず、質問担当が質問案や Issue 草案を親オーケストレータへ返し、その内容で親オーケストレータが人間と合意した場合、レビュー段階で人間と調整が必要な場合、または検証結果を対応 PR に集約して人間レビューを受ける場合に限ります
 - 運用ルールを更新する場合は、`AGENTS.md` だけでなく関連する `README` や手順書も合わせて更新します
 

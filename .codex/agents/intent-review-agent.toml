@@ -21,6 +21,10 @@ instructions = """
 - Human-on-the-loop に渡す前に補足説明や追加修正が必要か
 - 必須入力（fresh review の `OK`、`handoff_id`、一次情報メモ、参照元つき引用または決定ログ、現在差分）が揃っているか
 
+情報境界:
+- 持ってよい情報は、fresh review の `OK`、一次情報 handoff、決定ログ、現在差分
+- fresh review の代わりになる実装探索や、人間との直接対話は引き取らない
+
 fail-closed:
 - 必須入力のいずれかが欠ける場合は `OK` を返さず、親オーケストレータへ差し戻す
 

@@ -14,6 +14,8 @@
 - ユーザー窓口は親オーケストレータだけが持ちます
 - 各 agent は人間へ直接質問しません
 - Issue / PR への書き込み権限は `AGENTS.md` と `docs/technical/issue-validation-loop.md` の条件に従います
+- 親オーケストレータは implementation agent 起動後、仕様・受け入れ条件・review 結果・一次情報 handoff の保持に徹し、実装詳細は必要時に最小 handoff で受け取ります
+- 人間向けコメントでは、内部 role 名や進行用語をそのまま出さず、変更内容・確認結果・残課題を自然文で共有します
 
 役割ごとの入出力契約:
 
@@ -21,6 +23,31 @@
 - `implementation-agent`: 合意済み仕様、対象ファイル、完了条件を受け取り、差分と検証結果を返す
 - `fresh-review-agent`: Issue 本文、関連コメント、現在差分だけを受け取り、二次情報ベースの findings を返す
 - `intent-review-agent`: fresh review が `OK` になった後に、親オーケストレータが保持する `handoff_id`、一次情報メモ、参照元つき引用または決定ログ、現在差分を受け取り、いずれかが欠ける場合は `OK` を返さず差し戻す
+
+役割ごとの「持ってよい情報 / 持ち込まない情報」:
+
+- `question-agent`
+  - 持ってよい情報: Issue 本文、関連コメント、人間から追加でもらった制約、今回の論点
+  - 持ち込まない情報: 実装都合の詳細、現在差分の細かい読み解き、対外コメントの文責
+- `implementation-agent`
+  - 持ってよい情報: 合意済み仕様、受け入れ条件、対象ファイル、必要なコード文脈、修正すべき findings
+  - 持ち込まない情報: ユーザー窓口、不要に広い会話履歴、親オーケストレータが保持すべき運用 state 全体
+- `fresh-review-agent`
+  - 持ってよい情報: Issue 本文、関連コメント、現在差分
+  - 持ち込まない情報: 以前の review 結果、一次情報 handoff、実装担当の自己説明
+- `intent-review-agent`
+  - 持ってよい情報: fresh review の `OK`、一次情報 handoff、決定ログ、現在差分
+  - 持ち込まない情報: fresh review の代わりになる実装探索、ユーザーとの直接対話、未整理の長い会話ログ
+
+親オーケストレータが常時保持する最小 state:
+
+- 対象 Issue / PR と今回の目的
+- 合意済み仕様と受け入れ条件
+- 最新の review 結果と未解決事項
+- 一次情報 handoff と implementation handoff の参照先
+- 次に依頼する role と停止条件
+
+親オーケストレータは、この最小 state を超えて code-level reasoning を抱え込まないことを原則にします。実装詳細が必要になった場合は、implementation agent に最小 handoff を返させてから参照します。
 
 使い方:
 
