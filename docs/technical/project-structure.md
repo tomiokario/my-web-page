@@ -25,7 +25,9 @@ my-web-page/
 │           ├── works.md
 │           └── works/computer-system-2025.md
 ├── scripts/
-│   └── convertPublications.ts # CSV→JSON 変換スクリプト
+│   ├── convertPublications.ts # publication_master.json→publications.json 変換
+│   ├── importPublicationMasterFromResearchmap.ts # researchmap export JSONL から master へ取り込み
+│   └── publicationsEditorServer.ts # ローカル editor 用 bridge
 ├── src/
 │   ├── App.tsx               # ルートコンポーネント（Router/レイアウト）
 │   ├── index.tsx             # エントリーポイント（Mantine Emotion Provider 設定）
@@ -42,9 +44,9 @@ my-web-page/
 │   │       └── FilterDropdown.tsx / ActiveFilters.tsx
 │   ├── contexts/
 │   │   └── LanguageContext.tsx
-│   ├── data/                 # 入力CSVと出力JSON
-│   │   ├── publication_data.csv
-│   │   └── publications.json
+│   ├── data/                 # master と生成物
+│   │   ├── publication_master.json
+│   │   ├── publications.json
 │   ├── hooks/
 │   │   ├── useFilters.ts
 │   │   ├── useLocale.ts
@@ -65,7 +67,6 @@ my-web-page/
 │   │   └── factories/, mocks/
 │   ├── types.ts              # 共通型定義（Publication など）
 │   └── utils/
-│       ├── csvToJson.ts      # CSV→JSON 変換
 │       └── markdownLoader.ts # Markdown ローダ
 ├── jest.config.js
 ├── jest.setup.ts
@@ -113,7 +114,6 @@ my-web-page/
 
 ### ユーティリティ
 
-- **csvToJson.ts**: CSVファイルをJSONに変換するユーティリティ関数。
 - **markdownLoader.ts**: マークダウンファイルを読み込むユーティリティ関数。
 
 ## データフロー
@@ -122,14 +122,17 @@ my-web-page/
 
 ```mermaid
 flowchart LR
-    A[CSV Data<br>src/data/publication_data.csv] --> B[convertPublications.ts]
-    B --> C[JSON Data<br>src/data/publications.json]
+    A[publication_master.json<br>src/data/publication_master.json] --> B[convertPublications.ts]
+    B --> C[publications.json<br>src/data/publications.json]
     C --> D[usePublications Hook (Initial Sort)]
     D --> E[useFilters Hook (.ts)]
     E --> F[usePublications Hook (Grouping)]
     F --> G[PublicationsView (.tsx)]
     G --> H[PublicationGroup (.tsx)]
     H --> I[PublicationItem (.tsx)]
+    J[Local editor<br>npm run publications-editor] --> A
+    K[researchmap Export JSONL<br>rm_*.jsonl] --> L[importPublicationMasterFromResearchmap.ts]
+    L --> A
 ```
 
 ## コンポーネント階層

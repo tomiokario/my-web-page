@@ -30,7 +30,7 @@
 - `main` へ直接 push する前提の変更や手順を書かない。作業ブランチと PR を前提にする
 - UI や文言の変更では、日本語と英語の両方で片側だけ更新漏れがないか確認する
 - `public/markdown` の更新では、リンク切れ、画像参照切れ、言語切り替え時の導線崩れがないか確認する
-- 出版物データ変更では、正本 `src/data/publication_master.json` と生成物 `src/data/publications.json` の整合、および `convert-publications` / `import-publications-csv` / `import-publications-researchmap` / `publications-editor` の手順反映漏れがないか確認する
+- 出版物データ変更では、正本 `src/data/publication_master.json` と生成物 `src/data/publications.json` の整合、および `convert-publications` / `import-publications-researchmap` / `publications-editor` の手順反映漏れがないか確認する
 - 実装変更では、ユーザー視点の挙動を守るテストや既存テストの更新が不足していないか確認する
 - ドキュメントや運用ルールの変更では、`AGENTS.md` だけでなく `README` や関連手順書の更新漏れがないか確認する
 
@@ -70,7 +70,7 @@
 - `publication_master.json` は canonical schema の `fields` を正本とし、researchmap 固有の同期メタデータは `sync.researchmap` に保持する
 - `src/data/publications.json` は `publication_master.json` から再生成される Web 表示用の生成物とする
 - `src/data/publication_data.csv` は移行・再取り込み用の入力としてのみ扱い、日常運用の正本に戻さない
-- CSV ファイルを更新する場合は Notion での操作をユーザーに依頼し、必要に応じて `npm run import-publications-csv` で master data を再生成する
+- CSV ファイルを更新する場合は Notion での操作をユーザーに依頼し、必要に応じて legacy の移行スクリプトで master data を再生成する
 - researchmap export (`rm_*.jsonl`) を取り込む場合は `npm run import-publications-researchmap -- --input <path>` を使用し、最初に `--dry-run` で `matched` / `added` / `review` / `invalid` を確認する
 - 正規化タイトル一致の重複は許容しない。researchmap import、手編集、CSV 再生成のいずれでも重複タイトルを正本へ入れない
 - researchmap import の自動 merge は `researchmap record id -> DOI -> canonical fingerprint` の strict match のみとし、title 近傍候補や core field 競合は review / quarantine 扱いで書き込みを止める
