@@ -14,7 +14,7 @@
 - ユーザーとの対話窓口は親オーケストレータだけが持ち、質問担当・実装担当・review agent は人間へ直接質問しないでください
 - Issue / PR への追記や更新は自律的に行わず、質問担当が質問案や Issue 草案を親オーケストレータへ返し、その内容で親オーケストレータが人間と合意して新しい Issue を作る場合、レビュー段階で既存 Issue だけでは人間の趣旨を十分に表せず人間と調整したうえで補足が必要な場合、または検証結果を対応 PR に集約して人間レビューを受ける場合に限ってください
 - 合意済みの Issue は Human-out-of-the-loop の実装フェーズとして扱い、仕様の抜けや高リスクな分岐がない限り追加質問なしで実装・検証・fresh review まで進めてください。`intent review` はその後、Human-on-the-loop 前の趣旨適合確認として扱ってください
-- issue 57 で定義した再利用用ロールは `.codex/agents/*.toml` を正本とし、質問担当・実装担当・fresh review 担当・intent review 担当の入出力契約を repo に残してください
+- マルチエージェント Issue 運用で使う再利用用ロールは `.codex/agents/*.toml` を正本とし、質問担当・実装担当・fresh review 担当・intent review 担当の入出力契約を repo に残してください
 - `.codex/agents/*.toml` は repo ローカルの再利用定義として扱い、実際の subagent 起動では親オーケストレータが role / model / instructions / 出力形式を同等設定へ写して使ってください
 
 ## セキュリティ

@@ -1,6 +1,8 @@
 # Repo Local Agent Definitions
 
-このディレクトリには、issue 57 で整理した役割分担を次回以降も再利用できるようにするための repo ローカル定義を置きます。
+このディレクトリには、マルチエージェント Issue 運用で使う役割分担を次回以降も再利用できるようにするための repo ローカル定義を置きます。
+
+この運用は issue 57 で初めて整理しましたが、運用名そのものは issue 番号ではなく内容ベースで扱います。
 
 - [question-agent.toml](./question-agent.toml): 質問担当
 - [implementation-agent.toml](./implementation-agent.toml): 実装担当
