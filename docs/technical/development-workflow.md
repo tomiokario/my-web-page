@@ -195,20 +195,8 @@ npm start
 
 出版物データを更新する場合は、以下の手順に従ってください：
 
-1. 日常更新では `src/data/publication_master.json` を正本として扱います。更新は editor か researchmap import で行います。
-2. ローカル editor を使う場合は以下を実行します：
-
-   ```bash
-   npm run publications-editor
-   ```
-
-3. `publication_master.json` を直接編集した場合は以下を実行して `publications.json` を再生成します：
-
-   ```bash
-   npm run convert-publications
-   ```
-
-4. researchmap export (`rm_*.jsonl`) を master に取り込みたい場合は、まず dry-run で件数を確認してから本実行します：
+1. 日常更新では researchmap 側で編集し、export (`rm_*.jsonl`) を `src/data/publication_master.json` に取り込みます。
+2. researchmap export (`rm_*.jsonl`) を master に取り込みたい場合は、まず dry-run で件数を確認してから本実行します：
 
    ```bash
    npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl --dry-run
@@ -217,14 +205,16 @@ npm start
 
    この repo ではタイトル一致の重複を許容しません。既存 master / 入力 JSONL / 取り込み結果のどこかでタイトル重複が見つかった場合は hard error で停止します。正常終了した JSONL は `archive/` へ移動し、同じ内容の再取り込みは履歴で防止されます。
 
-5. 変更をコミットします：
+3. 通常は import コマンドが `publications.json` までまとめて更新します。`publication_master.json` を別手段で整えた場合だけ、必要に応じて `npm run convert-publications` を実行します。
+
+4. 変更をコミットします：
 
    ```bash
    git add src/data/publication_master.json src/data/publications.json
    git commit -m "Update publication data"
    ```
 
-6. `git status` で差分を確認してから、作業ブランチをリモートリポジトリにプッシュします。
+5. `git status` で差分を確認してから、作業ブランチをリモートリポジトリにプッシュします。
 
 詳細については、[出版物データの管理](./publications-management.md)のドキュメントを参照してください。
 

@@ -35,7 +35,7 @@
 - `main` へ直接 push する前提の変更や手順を書かない。作業ブランチと PR を前提にする
 - UI や文言の変更では、日本語と英語の両方で片側だけ更新漏れがないか確認する
 - `public/markdown` の更新では、リンク切れ、画像参照切れ、言語切り替え時の導線崩れがないか確認する
-- 出版物データ変更では、正本 `src/data/publication_master.json` と生成物 `src/data/publications.json` の整合、および `convert-publications` / `import-publications-researchmap` / `publications-editor` の手順反映漏れがないか確認する
+- 出版物データ変更では、正本 `src/data/publication_master.json` と生成物 `src/data/publications.json` の整合、および `convert-publications` / `import-publications-researchmap` の手順反映漏れがないか確認する
 - 実装変更では、ユーザー視点の挙動を守るテストや既存テストの更新が不足していないか確認する
 - ドキュメントや運用ルールの変更では、`AGENTS.md` だけでなく `README` や関連手順書の更新漏れがないか確認する
 - 人間向けコメントの文面では、`fresh review`、`intent review`、`検証ループを 1 周完了` のような内部運用語を避け、変更内容・確認結果・残課題を自然文で伝える
@@ -83,7 +83,7 @@
 - 正規化タイトル一致の重複は許容しない。researchmap import、手編集、CSV 再生成のいずれでも重複タイトルを正本へ入れない
 - researchmap import の自動 merge は `researchmap record id -> DOI -> canonical fingerprint` の strict match のみとし、title 近傍候補や core field 競合は review / quarantine 扱いで書き込みを止める
 - Web 表示用 JSON の再生成には `npm run convert-publications` を使用する
-- ローカル GUI 編集が必要な場合は `npm run publications-editor` を使用し、公開用 SPA に editor route を追加しない
+- 出版物データは日常運用で GUI 編集せず、researchmap export JSONL から取り込みます。公開用 SPA に editor route を追加しません
 
 ## 多言語対応
 - `LanguageContext` と `useLanguage` フックを使用して言語状態を管理
@@ -94,7 +94,7 @@
 - マークダウンコンテンツは `public/markdown` ディレクトリで管理
 - コンテンツ更新後は開発サーバーで表示を確認してからコミット
 - ユーザー確認が必要な更新では、可能な限りローカル開発サーバーを起動した状態で確認を依頼し、確認完了までは push を保留する
-- `publication_master.json` を直接編集した場合は `npm run convert-publications` を実行して `publications.json` を再生成する
+- `publication_master.json` を別手段で整えた場合は `npm run convert-publications` を実行して `publications.json` を再生成する
 
 ## ドキュメント
 - コードの変更に伴い、必要に応じてドキュメントを更新

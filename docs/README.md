@@ -82,11 +82,11 @@ npm test
 - `npm start` - 開発サーバーを起動（http://localhost:3000）
 - `npm test` - テストを実行
 - `npm run build` - 本番用ビルドを作成
-- `npm run convert-publications` - `publication_master.json` から `publications.json` を再生成
+- `npm run import-publications-researchmap -- --input <rm_jsonl> --dry-run` - researchmap export JSONL の `matched` / `added` / `review` / `invalid` を先に確認する
 - `npm run import-publications-researchmap -- --input <rm_jsonl>` - researchmap export JSONL を `publication_master.json` へ strict match + review 付きで安全に取り込む
-- `npm run publications-editor` - ローカル bridge 付き出版物 editor を起動
+- `npm run convert-publications` - `publication_master.json` から `publications.json` を再生成
 
-出版物データでは、正規化タイトル一致の重複を許容しません。日常運用はローカル editor と researchmap import を主導線にし、`publication_master.json` を正本として扱います。researchmap import でもタイトル重複・review・invalid が 1 件でも見つかれば書き込みを停止します。
+出版物データでは、正規化タイトル一致の重複を許容しません。日常運用は `researchmap export JSONL -> dry-run -> import -> publications.json 再生成` を主導線にし、`publication_master.json` を researchmap 取り込み結果を保持する正本、`publications.json` をそこから再生成される生成物として扱います。researchmap import でもタイトル重複・review・invalid が 1 件でも見つかれば書き込みを停止します。
 
 ## クイックアクセス
 

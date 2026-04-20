@@ -26,8 +26,7 @@ my-web-page/
 │           └── works/computer-system-2025.md
 ├── scripts/
 │   ├── convertPublications.ts # publication_master.json→publications.json 変換
-│   ├── importPublicationMasterFromResearchmap.ts # researchmap export JSONL から master へ取り込み
-│   └── publicationsEditorServer.ts # ローカル editor 用 bridge
+│   └── importPublicationMasterFromResearchmap.ts # researchmap export JSONL から master へ取り込み
 ├── src/
 │   ├── App.tsx               # ルートコンポーネント（Router/レイアウト）
 │   ├── index.tsx             # エントリーポイント（Mantine Emotion Provider 設定）
@@ -130,7 +129,6 @@ flowchart LR
     F --> G[PublicationsView (.tsx)]
     G --> H[PublicationGroup (.tsx)]
     H --> I[PublicationItem (.tsx)]
-    J[Local editor<br>npm run publications-editor] --> A
     K[researchmap Export JSONL<br>rm_*.jsonl] --> L[importPublicationMasterFromResearchmap.ts]
     L --> A
 ```
