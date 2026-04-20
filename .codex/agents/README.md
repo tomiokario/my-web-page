@@ -16,6 +16,7 @@
 - Issue / PR への書き込み権限は `AGENTS.md` と `docs/technical/issue-validation-loop.md` の条件に従います
 - 親オーケストレータは implementation agent 起動後、仕様・受け入れ条件・review 結果・一次情報 handoff の保持に徹し、実装詳細は必要時に最小 handoff で受け取ります
 - 人間向けコメントでは、内部 role 名や進行用語をそのまま出さず、変更内容・確認結果・残課題を自然文で共有します
+- 合意済み Issue を「対応してほしい」と依頼されたときは、原則として question -> implementation -> fresh review -> intent review の流れを一通り回します。一般制約や上位指示で一部の役割実行ができない場合だけ、開始前に衝突内容と不足している許可を人間へ明示します
 
 役割ごとの入出力契約:
 
@@ -23,6 +24,7 @@
 - `implementation-agent`: 合意済み仕様、対象ファイル、完了条件を受け取り、差分と検証結果を返す
 - `fresh-review-agent`: Issue 本文、関連コメント、現在差分だけを受け取り、二次情報ベースの findings を返す
 - `intent-review-agent`: fresh review が `OK` になった後に、親オーケストレータが保持する `handoff_id`、一次情報メモ、参照元つき引用または決定ログ、現在差分を受け取り、いずれかが欠ける場合は `OK` を返さず差し戻す
+- 完了報告では、fresh review と intent review を実施したかを必ず示し、未実施なら理由とブロッカーを添える
 
 役割ごとの「持ってよい情報 / 持ち込まない情報」:
 
