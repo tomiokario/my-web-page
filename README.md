@@ -14,6 +14,7 @@
 - **[管理者向けドキュメント](docs/admin/README.md)** - コンテンツ管理・運用ガイド
 - **[技術者向けドキュメント](docs/technical/README.md)** - 開発・技術仕様
 - **[Issue 検証ループ](docs/technical/issue-validation-loop.md)** - 小さな題材で AI 開発ループを固める実践手順
+- **[Repo Local Agent Definitions](.codex/agents/README.md)** - 質問担当・実装担当・fresh review 担当の再利用用定義
 
 ## 運用ルール
 

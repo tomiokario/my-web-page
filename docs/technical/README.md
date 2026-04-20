@@ -9,6 +9,7 @@
 - [プロジェクト構造](./project-structure.md) - ディレクトリ構成とファイル構造
 - [DocDD](./DocDD.md) - システムアーキテクチャの詳細設計書
 - [Issue 検証ループ](./issue-validation-loop.md) - 小さな題材で AI 開発ループを固める手順
+- [repo ローカル agent 定義](../../.codex/agents/README.md) - 質問担当 / 実装担当 / fresh review 担当の再利用用定義
 - [多言語サポート実装](./multilingual-support.md) - 国際化対応の技術詳細
 
 ### 開発・テスト

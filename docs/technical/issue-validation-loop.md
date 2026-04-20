@@ -31,6 +31,8 @@
 
 ## 役割分担
 
+この repo では、役割分担を文書上の概念だけで終わらせず、再利用用の定義として `.codex/agents/*.toml` に置きます。現時点ではこれらの TOML を自動読込する前提ではなく、親オーケストレータが role / model / instructions / 出力形式を実際の subagent 起動設定へ写し、役割ごとの文脈分離を再現します。
+
 ### 1. 質問担当
 
 - Issue 本文と関連コメントから不足仕様を抽出する
@@ -204,6 +206,7 @@ review agent の返答は、最低限次の 3 つに揃えます。
 ## この repo での使い方
 
 - ルールの正本は `AGENTS.md` とし、この文書はその実践手順を補足します
+- 再利用用の agent 定義は [../../.codex/agents/README.md](../../.codex/agents/README.md) を参照してください
 - Issue 対応の全体フローは [開発ワークフロー](./development-workflow.md) を参照してください
 - DocDD と TDD の前提は [DocDD](./DocDD.md) を参照してください
 - 運用ルールを更新した場合は、この文書だけでなく `README.md`、`docs/README.md`、関連手順書の整合も確認してください
