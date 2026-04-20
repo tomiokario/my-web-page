@@ -47,7 +47,7 @@
 
 ## 出版物データの更新方法
 
-出版物データの正本は `src/data/publication_master.json` です。日常更新では、次のいずれかを使います。
+出版物データの正本は `src/data/publication_master.json` です。日常更新は、まずローカル editor か researchmap export JSONL の取り込みを使います。
 
 - `publication_master.json` は canonical schema の `fields` を正本とし、`sync.researchmap` に researchmap record id / 同期メタデータを保持します
 
@@ -56,18 +56,7 @@
    npm run publications-editor
    ```
    - `http://127.0.0.1:4318` を開いて保存すると、`publication_master.json` の検証と `publications.json` の再生成がまとめて行われます
-2. `publication_master.json` を直接編集した場合
-   ```
-   npm run convert-publications
-   ```
-   - `src/data/publications.json` が再生成されます
-3. CSV から再取り込みしたい場合
-   ```
-   npm run import-publications-csv
-   npm run convert-publications
-   ```
-   - `src/data/publication_data.csv` は移行・再取り込み用で、日常運用の正本にはしません
-4. researchmap export (`rm_*.jsonl`) を master に取り込みたい場合
+2. researchmap export (`rm_*.jsonl`) を master に取り込みたい場合
    ```
    npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl --dry-run
    npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl
@@ -79,6 +68,11 @@
    - `localMeta` は import で上書きせず、成功した record だけ `sync.researchmap` を更新します
    - 既存 master / 入力 JSONL / 取り込み結果のどこかでタイトル重複が見つかった場合は hard error で停止します
    - 正常終了した JSONL は `archive/` へ移動し、同じ内容の再取り込みは履歴で防止します
+3. `publication_master.json` を直接編集した場合
+   ```
+   npm run convert-publications
+   ```
+   - `src/data/publications.json` が再生成されます
 
 詳細は[管理者向けドキュメント - 出版物データ管理](docs/admin/publications-management.md)を参照してください。
 

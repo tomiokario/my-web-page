@@ -6,6 +6,7 @@ import {
   parsePublicationMasterJson,
   writePublicationArtifacts,
 } from "../utils/publicationMasterFile";
+import { publicationMasterToWebPublications } from "../utils/publicationMaster";
 
 describe("publicationMasterFile", () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "publication-master-file-"));
@@ -285,5 +286,45 @@ describe("publicationMasterFile", () => {
     const parsed = parsePublicationMasterJson(JSON.stringify(records));
 
     expect(parsed[0].fields.subtype).toBe("scientific_journal");
+  });
+
+  test("see_also の順序が webLink の主 URL を壊さない", () => {
+    const publications = publicationMasterToWebPublications([
+      {
+        id: "pub-2024-web-link-order",
+        fields: {
+          type: "published_papers",
+          subtype: "scientific_journal",
+          title: {
+            en: "Link Order Paper",
+          },
+          links: [
+            {
+              url: "https://example.com/manual-link",
+              label: "manual",
+            },
+            {
+              url: "https://doi.org/10.1000/example",
+              label: "doi",
+            },
+            {
+              url: "https://example.com/extra-link",
+              label: "supplement",
+            },
+          ],
+          dates: {
+            published: "2024-01-01",
+          },
+        },
+        localMeta: {
+          hasEmptyFields: false,
+          notes: "",
+        },
+      },
+    ]);
+
+    expect(publications[0].webLink).toBe("https://example.com/manual-link");
+    expect(publications[0].others).toContain("https://example.com/extra-link");
+    expect(publications[0].others).not.toContain("https://example.com/manual-link");
   });
 });

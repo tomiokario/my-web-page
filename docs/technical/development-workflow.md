@@ -195,7 +195,7 @@ npm start
 
 出版物データを更新する場合は、以下の手順に従ってください：
 
-1. 日常更新では `src/data/publication_master.json` を正本として扱います。
+1. 日常更新では `src/data/publication_master.json` を正本として扱います。更新は editor か researchmap import で行います。
 2. ローカル editor を使う場合は以下を実行します：
 
    ```bash
@@ -208,14 +208,7 @@ npm start
    npm run convert-publications
    ```
 
-4. CSV から再取り込みしたい場合だけ、Notion から最新 CSV をエクスポートして `src/data/publication_data.csv` に配置し、以下を実行します：
-
-   ```bash
-   npm run import-publications-csv
-   npm run convert-publications
-   ```
-
-5. researchmap export (`rm_*.jsonl`) を master に取り込みたい場合は、まず dry-run で件数を確認してから本実行します：
+4. researchmap export (`rm_*.jsonl`) を master に取り込みたい場合は、まず dry-run で件数を確認してから本実行します：
 
    ```bash
    npm run import-publications-researchmap -- --input tmp/researchmap/rm_researchersYYYYMMDD.jsonl --dry-run
@@ -224,15 +217,14 @@ npm start
 
    この repo ではタイトル一致の重複を許容しません。既存 master / 入力 JSONL / 取り込み結果のどこかでタイトル重複が見つかった場合は hard error で停止します。正常終了した JSONL は `archive/` へ移動し、同じ内容の再取り込みは履歴で防止されます。
 
-6. 変更をコミットします：
+5. 変更をコミットします：
 
    ```bash
    git add src/data/publication_master.json src/data/publications.json
    git commit -m "Update publication data"
    ```
 
-7. CSV を再取り込みした場合だけ、必要に応じて `src/data/publication_data.csv` も stage します。
-8. `git status` で差分を確認してから、作業ブランチをリモートリポジトリにプッシュします。
+6. `git status` で差分を確認してから、作業ブランチをリモートリポジトリにプッシュします。
 
 詳細については、[出版物データの管理](./publications-management.md)のドキュメントを参照してください。
 
