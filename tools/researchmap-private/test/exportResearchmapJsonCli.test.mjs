@@ -66,7 +66,7 @@ test('CLI accepts publication_master.json input with master record schema', () =
             },
             localMeta: {
               hasEmptyFields: false,
-              notes: '',
+              notes: 'cli-sidecar-note',
             },
             sync: {},
           },
@@ -88,6 +88,8 @@ test('CLI accepts publication_master.json input with master record schema', () =
 
     assert.equal(result.status, 0);
     assert.ok(fs.existsSync(path.join(outputDir, 'import.jsonl')));
+    const reversibleExport = JSON.parse(fs.readFileSync(path.join(outputDir, 'reversible-export.json'), 'utf8'));
+    assert.doesNotMatch(reversibleExport.rows[0].rawLine, /"notes":\s*"cli-sidecar-note"/);
   } finally {
     fs.rmSync(tempDir, { recursive: true, force: true });
   }

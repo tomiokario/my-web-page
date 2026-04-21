@@ -19,6 +19,8 @@ description: Convert publication_master.json into researchmap bulk-import JSONL,
 - `Optical Review` は査読付き学術雑誌論文として扱い、招待論文にはしない
 - `Technical Digest` `Program and Abstracts` `Program and Proceedings` などの国際会議予稿集は `論文` に寄せる
 - `ITE Tech. Rep. / 映情学技報 / MMS` 系は `MISC` に寄せる
+- `test/fixtures/current-export.jsonl` は synthetic fixture として扱い、実データの export をそのまま残さない
+- reversible sidecar は再現に必要な情報だけを持ち、`localMeta.notes` は含めない
 
 ## 判定順
 

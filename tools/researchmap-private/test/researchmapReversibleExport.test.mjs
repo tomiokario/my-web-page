@@ -111,7 +111,7 @@ test('reversible sidecar keeps row-to-import correspondence across shuffled impo
   );
 });
 
-test('master source rows keep raw master JSON for reversible sidecar tracing', () => {
+test('master source rows omit localMeta.notes from reversible sidecar tracing', () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'researchmap-reversible-master-'));
   const masterPath = path.join(tempDir, 'publication_master.json');
   const masterRecords = [
@@ -149,10 +149,11 @@ test('master source rows keep raw master JSON for reversible sidecar tracing', (
     const exportResult = generateResearchmapExport(sourceMetadata.records, { researchmapUserId: 'R123456789' });
     const reversibleExport = buildReversibleExport(sourceMetadata.publications, exportResult.importLines, sourceMetadata);
 
+    assert.equal(sourceMetadata.records[0].localMeta.notes, 'sidecar-trace');
     assert.match(sourceMetadata.sourceRows[0].rawLine, /"id":\s*"pub-2025-master-sidecar"/);
     assert.match(sourceMetadata.sourceRows[0].rawLine, /"fields":/);
     assert.equal(reversibleExport.rows[0].rawLine, sourceMetadata.sourceRows[0].rawLine);
-    assert.match(reversibleExport.rows[0].rawLine, /"notes":\s*"sidecar-trace"/);
+    assert.doesNotMatch(reversibleExport.rows[0].rawLine, /"notes":\s*"sidecar-trace"/);
   } finally {
     fs.rmSync(tempDir, { recursive: true, force: true });
   }

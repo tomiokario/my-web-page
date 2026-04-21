@@ -329,13 +329,11 @@ function readNumericId(source: Record<string, unknown>, fallbackIndex: number): 
     return value;
   }
 
-  if (typeof value === "string") {
-    const parsed = Number.parseInt(value, 10);
-    if (Number.isFinite(parsed)) {
-      return parsed;
-    }
+  if (typeof value === "string" && /^\d+$/.test(value.trim())) {
+    return Number.parseInt(value, 10);
   }
 
+  // 部分一致の parseInt は避け、純粋な数値文字列だけを採用する。
   return fallbackIndex;
 }
 

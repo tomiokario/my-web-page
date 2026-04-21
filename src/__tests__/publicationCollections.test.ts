@@ -35,6 +35,20 @@ describe("publicationCollections", () => {
     });
   });
 
+  it("opaque な文字列 ID は部分的に数値化せず fallback index を使う", () => {
+    const publication = normalizePublicationRecord(
+      {
+        id: "pub-7",
+        name: "Opaque ID Example",
+        japanese: "識別子の例",
+        date: "2024年4月1日",
+      },
+      3
+    );
+
+    expect(publication.id).toBe(3);
+  });
+
   it("フィルターオプションを重複なく並び替えて集める", () => {
     const options = collectPublicationFilterOptions([
       createPublication({ year: 2022, authorship: ["Lead author", "Co-author"], review: "B" }, 0),

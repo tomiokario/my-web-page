@@ -32,6 +32,8 @@ node scripts/exportResearchmapJson.mjs \
 
 - `tools/researchmap-private` は repo 内の通常ディレクトリとして扱います
 - `tmp/researchmap/**` と `review` / `quarantine` / `archive` の生成物は local-only で、git に載せません
+- `test/fixtures/current-export.jsonl` は synthetic fixture として扱い、実データの raw export は置きません
+- `reversible-export.json` は再現に必要な master/publication 情報だけを保持し、`localMeta.notes` は含めません
 
 - merge policy の全体像
   - identity field は `researchmap record id -> DOI -> canonical fingerprint` の順で strict match し、既存側の identity が非空なら既存側を優先します

@@ -13,9 +13,26 @@ export function loadMasterPublications(jsonFilePath) {
     sourceRows: rawRecords.map((record, index) => ({
       id: record.id,
       lineNumber: index + 2,
-      rawLine: JSON.stringify(record),
+      rawLine: serializeSourceRow(record),
     })),
   };
+}
+
+function serializeSourceRow(record) {
+  const clonedRecord = {
+    ...record,
+  };
+
+  if (clonedRecord.localMeta && typeof clonedRecord.localMeta === 'object') {
+    const { notes, ...restLocalMeta } = clonedRecord.localMeta;
+    if (Object.keys(restLocalMeta).length > 0) {
+      clonedRecord.localMeta = restLocalMeta;
+    } else {
+      delete clonedRecord.localMeta;
+    }
+  }
+
+  return JSON.stringify(clonedRecord);
 }
 
 function normalizeMasterRecord(record) {

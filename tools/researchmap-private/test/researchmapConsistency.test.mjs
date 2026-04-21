@@ -1,4 +1,5 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import test from 'node:test';
@@ -65,24 +66,112 @@ test('generated researchmap data surfaces current master inconsistencies', () =>
 });
 
 test('current export surfaces alignment gaps against the master data', () => {
-  const masterPath = path.join(repoRoot, 'src/data/publication_master.json');
-  const sourceMetadata = loadMasterPublications(masterPath);
-  const { publications } = sourceMetadata;
-  const importLines = currentExportJsonl.trimEnd().split(/\r?\n/).filter(Boolean);
-  const reversibleExport = buildReversibleExport(publications, importLines, sourceMetadata);
-  const unmatchedRows = reversibleExport.rows.filter((row) => !row.importRecord);
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'researchmap-consistency-'));
+  const masterPath = path.join(tempDir, 'publication_master.json');
+  const masterRecords = [
+    {
+      id: 'pub-2024-synthetic-alpha',
+      fields: {
+        type: 'published_papers',
+        subtype: 'scientific_journal',
+        title: { en: 'Synthetic Alpha Paper' },
+        contributors: [{ role: 'author', name: { en: 'Aki Example' } }],
+        venue: { kind: 'publication', name: { en: 'Journal of Synthetic Studies' } },
+        dates: { published: '2024-01-10' },
+        identifiers: { doi: '10.1234/alpha' },
+        bibliographic: { volume: '12', number: '3', startPage: '1', endPage: '9' },
+        review: true,
+        invited: false,
+        ownerRoles: ['lead'],
+        isInternational: true,
+      },
+      localMeta: {
+        hasEmptyFields: false,
+      },
+      sync: {},
+    },
+    {
+      id: 'pub-2024-synthetic-beta',
+      fields: {
+        type: 'misc',
+        subtype: 'technical_report',
+        title: { ja: '合成ベータ報告' },
+        contributors: [{ role: 'author', name: { ja: '合成 太郎' } }],
+        venue: { kind: 'publication', name: { ja: '合成研究会' } },
+        dates: { published: '2024-02-20' },
+        location: { ja: 'Tokyo, Japan' },
+        review: false,
+        invited: false,
+        isInternational: false,
+      },
+      localMeta: {
+        hasEmptyFields: true,
+      },
+      sync: {},
+    },
+    {
+      id: 'pub-2024-synthetic-gamma',
+      fields: {
+        type: 'presentations',
+        subtype: 'oral_presentation',
+        title: { en: 'Synthetic Gamma Talk' },
+        contributors: [{ role: 'presenter', name: { en: 'Yui Sample' } }],
+        venue: { kind: 'event', name: { en: 'Synthetic Symposium' } },
+        dates: {
+          published: '2024-03-15',
+          eventStart: '2024-03-15',
+          eventEnd: '2024-03-16',
+        },
+        location: { en: 'Online' },
+        review: false,
+        invited: false,
+        isInternational: true,
+      },
+      localMeta: {
+        hasEmptyFields: false,
+      },
+      sync: {},
+    },
+    {
+      id: 'pub-2024-synthetic-delta',
+      fields: {
+        type: 'published_papers',
+        subtype: 'scientific_journal',
+        title: { en: 'Synthetic Delta Paper' },
+        contributors: [{ role: 'author', name: { en: 'Ren Demo' } }],
+        venue: { kind: 'publication', name: { en: 'Journal of Synthetic Studies' } },
+        dates: { published: '2024-04-11' },
+        identifiers: { doi: '10.1234/delta' },
+        bibliographic: { volume: '7', number: '1', startPage: '21', endPage: '24' },
+        review: true,
+        invited: false,
+        ownerRoles: ['lead'],
+        isInternational: true,
+      },
+      localMeta: {
+        hasEmptyFields: false,
+      },
+      sync: {},
+    },
+  ];
 
-  assert.equal(reversibleExport.rows.length, publications.length);
-  assert.equal(reversibleExport.rows.filter((row) => row.importRecord).length, 36);
-  assert.deepEqual(
-    unmatchedRows.map((row) => ({ id: row.id, lineNumber: row.lineNumber, matchStrategy: row.matchStrategy })),
-    [
-      { id: 'pub-2022-improvement-of-learning-process-by-transmission-', lineNumber: 3, matchStrategy: 'unmatched' },
-      { id: 'pub-2023-numerical-simulation-on-phase-to-intensity-conve', lineNumber: 15, matchStrategy: 'unmatched' },
-      { id: 'pub-2024-numerical-simulations-on-optoelectronic-deep-neu', lineNumber: 23, matchStrategy: 'unmatched' },
-      { id: 'pub-2026-自己参照型ホログラフィック深層ニューラルネットワークを用いた並列画像デノイジングに関する数値シミ', lineNumber: 39, matchStrategy: 'unmatched' },
-    ]
-  );
+  try {
+    fs.writeFileSync(masterPath, `${JSON.stringify(masterRecords, null, 2)}\n`, 'utf8');
+    const sourceMetadata = loadMasterPublications(masterPath);
+    const { publications } = sourceMetadata;
+    const importLines = currentExportJsonl.trimEnd().split(/\r?\n/).filter(Boolean);
+    const reversibleExport = buildReversibleExport(publications, importLines, sourceMetadata);
+    const unmatchedRows = reversibleExport.rows.filter((row) => !row.importRecord);
+
+    assert.equal(reversibleExport.rows.length, publications.length);
+    assert.equal(reversibleExport.rows.filter((row) => row.importRecord).length, 3);
+    assert.deepEqual(
+      unmatchedRows.map((row) => ({ id: row.id, lineNumber: row.lineNumber, matchStrategy: row.matchStrategy })),
+      [{ id: 'pub-2024-synthetic-delta', lineNumber: 5, matchStrategy: 'unmatched' }]
+    );
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
 });
 
 test('consistency analysis reports missing import rows instead of throwing', () => {
