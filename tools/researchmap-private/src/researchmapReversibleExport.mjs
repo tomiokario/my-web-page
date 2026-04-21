@@ -35,16 +35,6 @@ export function buildReversibleExport(publications, importLines, csvMetadata) {
   };
 }
 
-export function reconstructCsvFromReversibleExport(reversibleExport) {
-  const bom = reversibleExport.hasBom ? '\uFEFF' : '';
-  const headerLine = reversibleExport.rawHeaderLine || reversibleExport.headers.join(',');
-  const rowLines = [...reversibleExport.rows]
-    .sort((left, right) => (left.lineNumber || 0) - (right.lineNumber || 0))
-    .map((row) => row.rawLine);
-
-  return `${bom}${[headerLine, ...rowLines].join('\n')}\n`;
-}
-
 function findMatchingImportRecord(publication, importRecords, unusedImportIndexes) {
   const comparableFingerprints = new Map(
     [...unusedImportIndexes].map((index) => {

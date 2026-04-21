@@ -398,25 +398,4 @@ describe("publicationMasterFile", () => {
     expect(publications[0].others).not.toContain("https://example.com/manual-link");
   });
 
-  test("legacy researchmapFields の master record は canonical fields がないと拒否する", () => {
-    const records = [
-      {
-        id: "pub-legacy-master",
-        researchmapFields: {
-          type: "misc",
-          paper_title: {
-            ja: "旧形式",
-          },
-        },
-        localMeta: {
-          hasEmptyFields: false,
-          notes: "",
-        },
-      },
-    ];
-
-    expect(() => parsePublicationMasterJson(JSON.stringify(records))).toThrow(
-      "canonical schema の master record である必要があります"
-    );
-  });
 });

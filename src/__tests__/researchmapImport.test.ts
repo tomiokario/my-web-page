@@ -532,6 +532,125 @@ describe("researchmapImport", () => {
     expect(updatedMaster[1].fields.venue.addressCountry).toBe("JP");
   });
 
+  test("presentation は typed field を優先し legacy field を無視する", () => {
+    writeJsonl([
+      {
+        insert: { type: "presentations", user_id: "R000104649" },
+        merge: {
+          presentation_title: { ja: "フォールバック発表" },
+          paper_title: { ja: "legacy 論文タイトル" },
+          presenters: { ja: [{ name: "発表者" }], en: [] },
+          authors: { ja: [{ name: "legacy 著者" }], en: [] },
+          event: { ja: "研究会" },
+          publication_name: { ja: "legacy 会場" },
+          publication_date: "2025-02-03",
+          presentation_type: "invited_oral_presentation",
+          subtype: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.added).toBe(1);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[1].fields).toMatchObject({
+      type: "presentations",
+      subtype: "invited_oral_presentation",
+      title: { ja: "フォールバック発表" },
+      contributors: [
+        {
+          role: "presenter",
+          name: { ja: "発表者" },
+        },
+      ],
+      venue: {
+        kind: "event",
+        name: { ja: "研究会" },
+      },
+      invited: true,
+    });
+  });
+
+  test("generic subtype は typed field が無ければ使われない", () => {
+    writeJsonl([
+      {
+        insert: { type: "published_papers", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "論文タイトル" },
+          authors: { en: [{ name: "Paper Author" }], ja: [] },
+          publication_name: { en: "Journal A" },
+          publication_date: "2025-02-03",
+          subtype: "scientific_journal",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.added).toBe(1);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[1].fields.title).toEqual({ en: "論文タイトル" });
+    expect(updatedMaster[1].fields).not.toHaveProperty("subtype");
+    expect(updatedMaster[1].fields.contributors).toEqual([
+      {
+        role: "author",
+        name: { en: "Paper Author" },
+      },
+    ]);
+  });
+
+  test("published_papers は typed field を優先し presentation 由来の値を無視する", () => {
+    writeJsonl([
+      {
+        insert: { type: "published_papers", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "論文タイトル" },
+          presentation_title: { en: "誤って残った発表タイトル" },
+          authors: { en: [{ name: "Paper Author" }], ja: [] },
+          presenters: { en: [{ name: "Presentation Author" }], ja: [] },
+          publication_name: { en: "Journal A" },
+          event: { en: "legacy event" },
+          publication_date: "2025-02-03",
+          published_paper_type: "scientific_journal",
+          subtype: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.added).toBe(1);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[1].fields.title).toEqual({ en: "論文タイトル" });
+    expect(updatedMaster[1].fields.contributors).toEqual([
+      {
+        role: "author",
+        name: { en: "Paper Author" },
+      },
+    ]);
+    expect(updatedMaster[1].fields.venue).toEqual({
+      kind: "publication",
+      name: { en: "Journal A" },
+    });
+    expect(updatedMaster[1].fields.subtype).toBe("scientific_journal");
+  });
+
   test("review に止まった target は後続行でも自動 merge しない", () => {
     writeJsonl([
       {

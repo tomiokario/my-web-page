@@ -107,68 +107,6 @@ test('master localMeta.notes does not affect researchmap export inference', () =
   }
 });
 
-test('canonical fields take precedence over stale legacyHints in master publications', () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'master-to-publications-hints-'));
-  const masterPath = path.join(tempDir, 'publication_master.json');
-
-  try {
-    fs.writeFileSync(
-      masterPath,
-      JSON.stringify(
-        [
-          {
-            id: 'pub-2024-canonical-priority',
-            fields: {
-              type: 'presentations',
-              subtype: 'poster_presentation',
-              title: {
-                en: 'Canonical Presentation',
-              },
-              contributors: [
-                {
-                  role: 'presenter',
-                  name: {
-                    en: 'Rio Tomioka',
-                  },
-                },
-              ],
-              venue: {
-                kind: 'event',
-                name: {
-                  en: 'Canonical Conference',
-                },
-              },
-              dates: {
-                published: '2024-06-01',
-                eventStart: '2024-06-01',
-                eventEnd: '2024-06-01',
-              },
-            },
-            localMeta: {
-              hasEmptyFields: false,
-              notes: '',
-              legacyHints: {
-                authorship: ['Corresponding author'],
-                presentationType: ['Oral'],
-              },
-            },
-          },
-        ],
-        null,
-        2
-      ),
-      'utf8'
-    );
-
-    const publications = loadMasterPublications(masterPath).publications;
-
-    assert.equal(publications[0].authorship, '');
-    assert.equal(publications[0].presentationType, 'Poster');
-  } finally {
-    fs.rmSync(tempDir, { recursive: true, force: true });
-  }
-});
-
 test('canonical venue metadata preserves promoter and address country in master normalization', () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'master-to-publications-venue-'));
   const masterPath = path.join(tempDir, 'publication_master.json');

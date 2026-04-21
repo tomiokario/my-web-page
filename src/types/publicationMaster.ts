@@ -76,10 +76,6 @@ export interface PublicationMasterFields {
 export interface PublicationMasterLocalMeta {
   hasEmptyFields: boolean;
   notes: string;
-  legacyHints?: {
-    authorship?: string[];
-    presentationType?: string[];
-  };
 }
 
 export interface PublicationMasterSyncResearchmap {
@@ -98,40 +94,4 @@ export interface PublicationMasterRecord {
   fields: PublicationMasterFields;
   localMeta: PublicationMasterLocalMeta;
   sync?: PublicationMasterSync;
-}
-
-// Legacy researchmap-shaped fields remain as an internal adapter type while the
-// canonical repo schema is stored in `PublicationMasterFields`.
-export interface LegacyPublicationMasterResearchmapFields {
-  type: PublicationMasterFields["type"];
-  subtype?: string;
-  paper_title?: LocalizedText;
-  presentation_title?: LocalizedText;
-  authors?: LocalizedPeople;
-  presenters?: LocalizedPeople;
-  publication_name?: LocalizedText;
-  event?: LocalizedText;
-  promoter?: LocalizedText;
-  address_country?: string;
-  publication_date?: string;
-  from_event_date?: string;
-  to_event_date?: string;
-  identifiers?: {
-    doi?: string[];
-  };
-  see_also?: PublicationSeeAlso[];
-  volume?: string;
-  number?: string;
-  starting_page?: string;
-  ending_page?: string;
-  location?: LocalizedText;
-  description?: LocalizedText;
-  referee?: boolean;
-  invited?: boolean;
-  published_paper_owner_roles?: string[];
-  presentation_type?: string;
-  published_paper_type?: string;
-  misc_type?: string;
-  is_international_presentation?: boolean;
-  is_international_journal?: boolean;
 }

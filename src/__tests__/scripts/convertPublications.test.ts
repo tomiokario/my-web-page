@@ -204,48 +204,6 @@ describe("convertPublications script", () => {
     }).toThrow();
   });
 
-  test("canonical subtype がある場合は stale な legacyHints.presentationType より優先する", () => {
-    const canonicalMasterData = [
-      {
-        id: "pub-2024-presentation",
-        fields: {
-          type: "presentations",
-          subtype: "poster_presentation",
-          title: {
-            ja: "テスト発表",
-            en: "Test Presentation",
-          },
-          venue: {
-            kind: "event",
-            name: {
-              en: "Conference C",
-            },
-          },
-          dates: {
-            published: "2024-06-01",
-            eventStart: "2024-06-01",
-            eventEnd: "2024-06-01",
-          },
-        },
-        localMeta: {
-          hasEmptyFields: false,
-          notes: "",
-          legacyHints: {
-            presentationType: ["oral_presentation"],
-          },
-        },
-      },
-    ];
-
-    fs.writeFileSync(MASTER_JSON_PATH, `${JSON.stringify(canonicalMasterData, null, 2)}\n`, "utf8");
-
-    execSync("npm run convert-publications", { stdio: "pipe" });
-
-    const outputJson = JSON.parse(fs.readFileSync(WEB_JSON_PATH, "utf8"));
-    expect(outputJson[0].presentationType).toBe("poster_presentation");
-    expect(outputJson[0].subtype).toBe("poster_presentation");
-  });
-
   test("publications.json には localMeta や sync.researchmap を出力しない", () => {
     fs.writeFileSync(MASTER_JSON_PATH, `${JSON.stringify(sampleMasterData, null, 2)}\n`, "utf8");
 
