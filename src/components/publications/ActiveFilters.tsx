@@ -1,21 +1,20 @@
 import React from "react";
-import { createStyles } from "@mantine/emotion";
 import { MantineTheme } from "@mantine/core";
-import { SelectedFilters } from "../../hooks/useFilters";
+import { createStyles } from "@mantine/emotion";
+
+import { FilterCategory, SelectedFilters } from "../../hooks/useFilters";
+import { PublicationFilterLabels } from "../../utils/publicationCollections";
 
 interface ActiveFiltersProps {
   selectedFilters: SelectedFilters;
-  filterLabels: { [key: string]: string };
-  getValueLabel?: (category: keyof SelectedFilters, value: string) => string;
-  onToggleFilter: (category: keyof SelectedFilters, value: string) => void;
+  filterLabels: PublicationFilterLabels;
+  getValueLabel?: (category: FilterCategory, value: string) => string;
+  onToggleFilter: (category: FilterCategory, value: string) => void;
   onResetFilters: () => void;
   resetLabel: string;
 }
 
-// スタイルの型定義 (MantineのcreateStylesの型)
-type ActiveFiltersStyles = Record<string, any>; // Record<string, CSSProperties | ((theme: MantineTheme) => CSSProperties)>
-
-const useStyles = createStyles((theme: MantineTheme): ActiveFiltersStyles => ({
+const useStyles = createStyles((theme: MantineTheme) => ({
   activeFiltersContainer: {
     marginTop: theme.spacing.xs,
     marginBottom: theme.spacing.md,
@@ -55,8 +54,9 @@ function ActiveFilters({
   resetLabel,
 }: ActiveFiltersProps) {
   const { classes } = useStyles();
-  const hasActiveFilters = Object.values(selectedFilters)
-    .some((filters): filters is string[] => Array.isArray(filters) && filters.length > 0);
+  const hasActiveFilters = Object.values(selectedFilters).some(
+    (filters) => filters.length > 0
+  );
 
   if (!hasActiveFilters) {
     return null;
@@ -73,14 +73,12 @@ function ActiveFilters({
       </button>
 
       <div className={classes.activeFiltersContainer} data-testid="active-filters">
-        {(Object.entries(selectedFilters) as [keyof SelectedFilters, string[]][]).map(
-          ([category, values]: [keyof SelectedFilters, string[]]) =>
+        {(Object.entries(selectedFilters) as [FilterCategory, string[]][]).map(
+          ([category, values]) =>
             values.length > 0 && (
               <div key={category} className={classes.filterCategory}>
-                <span className={classes.categoryLabel}>
-                  {filterLabels[category]}:{" "}
-                </span>
-                {values.map((value: string) => (
+                <span className={classes.categoryLabel}>{filterLabels[category]}: </span>
+                {values.map((value) => (
                   <span
                     key={value}
                     className={classes.filterTag}

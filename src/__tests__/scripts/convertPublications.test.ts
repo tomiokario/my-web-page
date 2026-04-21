@@ -46,6 +46,14 @@ const sampleMasterData = [
       hasEmptyFields: false,
       notes: "Private editor note 1",
     },
+    sync: {
+      researchmap: {
+        recordId: "53373093",
+        userId: "R000000001",
+        lastImportedAt: "2026-04-21T09:00:00.000Z",
+        lastPayloadHash: "hash-1",
+      },
+    },
   },
   {
     id: "pub-2022-test-paper-2",
@@ -79,6 +87,14 @@ const sampleMasterData = [
     localMeta: {
       hasEmptyFields: true,
       notes: "Private editor note 2",
+    },
+    sync: {
+      researchmap: {
+        recordId: "53373094",
+        userId: "R000000001",
+        lastImportedAt: "2026-04-21T09:05:00.000Z",
+        lastPayloadHash: "hash-2",
+      },
     },
   },
 ];
@@ -210,5 +226,17 @@ describe("convertPublications script", () => {
     const outputJson = JSON.parse(fs.readFileSync(WEB_JSON_PATH, "utf8"));
     expect(outputJson[0].presentationType).toBe("poster_presentation");
     expect(outputJson[0].subtype).toBe("poster_presentation");
+  });
+
+  test("publications.json には localMeta や sync.researchmap を出力しない", () => {
+    fs.writeFileSync(MASTER_JSON_PATH, `${JSON.stringify(sampleMasterData, null, 2)}\n`, "utf8");
+
+    execSync("npm run convert-publications", { stdio: "pipe" });
+
+    const outputJson = JSON.parse(fs.readFileSync(WEB_JSON_PATH, "utf8"));
+    expect(outputJson[0].localMeta).toBeUndefined();
+    expect(outputJson[0].sync).toBeUndefined();
+    expect(outputJson[1].localMeta).toBeUndefined();
+    expect(outputJson[1].sync).toBeUndefined();
   });
 });

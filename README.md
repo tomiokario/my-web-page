@@ -24,8 +24,9 @@
 - ユーザーがローカル確認を希望した場合は、`npm start` で確認環境を用意し、確認完了までは push を行いません
 - PR マージ後にユーザーから完了連絡があった場合は、`main` を `git pull --rebase` で最新化し、作業ブランチを削除してローカルを同期状態に戻します
 - 重要な変更では、Codex 本体の確認に加えてサブエージェントによるレビューも併用します
-- Issue 対応では、合意済み Issue については既定の multi-agent フローを原則フルで回し、issue 本文・関連コメント・現在の差分が要求に沿っているかを、文脈を引き継がない新規サブエージェントで必ず確認し、`OK` が出るまで別個体で再レビューを繰り返します
+- Issue 対応では、まず質問フェーズで issue 草案と不足仕様を詰め、そのうえで合意済み Issue の実装差分に対して、issue 本文・関連コメント・現在の差分が要求に沿っているかを文脈を引き継がない新規サブエージェントで必ず確認し、`OK` が出るまで別個体で再レビューを繰り返します
 - Human-on-the-loop に入る前には、fresh review とは別に、一次情報 handoff と現在差分を入力にした intent review で趣旨適合を確認します
+- fresh review の対象は合意済み Issue の実装差分です。issue 草案や質問フェーズは質問担当で詰める前段として扱います
 - 進捗共有では、fresh review と intent review を実施したかを必ず明記し、未実施なら理由とブロッカーも添えます
 - 親オーケストレータは implementation agent 起動後、仕様・受け入れ条件・review 結果・一次情報 handoff の保持に徹し、実装詳細は必要時に最小 handoff で受け取ります
 - PR / Issue コメントでは、内部 role 名や進行用語をそのまま出さず、何を直したか・何を確認したか・何が残っているかを自然文で共有します
@@ -51,6 +52,10 @@
 ## 出版物データの更新方法
 
 出版物データの正本は `src/data/publication_master.json` です。日常更新は researchmap export JSONL の取り込みを使い、`publications.json` はそこから再生成します。
+
+通常運用の本線は `researchmap export JSONL -> publication_master.json -> publications.json` で、公開側の tracked data 更新はここで完結します。
+
+`tools/researchmap-private` は、必要なときだけ `publication_master.json` から researchmap へ安全に戻すための補助ツールです。`tmp/researchmap/**` や review / quarantine / archive の生成物は local-only で、公開リポジトリには含めません。
 
 - `publication_master.json` は canonical schema の `fields` を正本とし、researchmap から取り込んだ結果と `sync.researchmap` の同期メタデータを保持します
 - `publications.json` は `publication_master.json` から再生成される Web 表示用の生成物です

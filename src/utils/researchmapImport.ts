@@ -27,6 +27,7 @@ import {
   getPublicationVenueText,
   normalizeDoi,
 } from "./publicationMasterSchema";
+import { slugify, uniquifyWithNumericSuffix } from "./stringIds";
 
 const PUBLICATION_TYPES = new Set(["published_papers", "presentations", "misc"]);
 const HISTORY_FILE_NAME = ".researchmap-import-history.json";
@@ -61,11 +62,6 @@ interface SourceRecordSummary {
   title: string;
   date: string;
   recordId?: string;
-}
-
-interface JsonlLineEntry {
-  line: string;
-  lineNumber: number;
 }
 
 interface CandidateRecordSummary extends SourceRecordSummary {
@@ -890,15 +886,7 @@ function buildImportedRecordId(
 ): string {
   const existingIds = new Set([...existingRecords, ...nextRecords].map((record) => record.id));
   const baseId = `researchmap-import-${lineIndex + 1}`;
-  let candidateId = baseId;
-  let suffix = 2;
-
-  while (existingIds.has(candidateId)) {
-    candidateId = `${baseId}-${suffix}`;
-    suffix += 1;
-  }
-
-  return candidateId;
+  return uniquifyWithNumericSuffix(baseId, (candidateId) => existingIds.has(candidateId));
 }
 
 function buildRecordId(fields: PublicationMasterFields, fallbackId: string): string {
@@ -911,18 +899,7 @@ function buildRecordId(fields: PublicationMasterFields, fallbackId: string): str
 
 function uniquifyRecordId(records: PublicationMasterRecord[], baseId: string): string {
   const existingIds = new Set(records.map((record) => record.id));
-
-  if (!existingIds.has(baseId)) {
-    return baseId;
-  }
-
-  let suffix = 2;
-  let candidateId = `${baseId}-${suffix}`;
-  while (existingIds.has(candidateId)) {
-    suffix += 1;
-    candidateId = `${baseId}-${suffix}`;
-  }
-  return candidateId;
+  return uniquifyWithNumericSuffix(baseId, (candidateId) => existingIds.has(candidateId));
 }
 
 function buildReviewItem(
@@ -1155,14 +1132,6 @@ function isEmptyFingerprint(value: string): boolean {
     .split("|")
     .slice(2)
     .every((part) => !part);
-}
-
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize("NFKC")
-    .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
-    .replace(/^-+|-+$/g, "");
 }
 
 function cloneRecord(record: PublicationMasterRecord): PublicationMasterRecord {

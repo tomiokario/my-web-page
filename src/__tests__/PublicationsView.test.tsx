@@ -3,7 +3,7 @@ import { screen, fireEvent, cleanup } from '@testing-library/react';
 import PublicationsView from '../components/publications/PublicationsView';
 import { renderWithProviders } from '../test-utils/test-utils';
 import { Language, Publication } from '../types';
-import { SelectedFilters } from '../hooks/useFilters';
+import { FilterCategory, SelectedFilters } from '../hooks/useFilters';
 import { createPublication } from '../test-utils/factories/publicationFactory'; // ファクトリ関数をインポート
 
 // モックデータ
@@ -75,9 +75,9 @@ jest.mock('../components/publications/FilterDropdown', () => {
     label, 
     onToggleDropdown 
   }: { 
-    category: string; 
+    category: FilterCategory; 
     label: string; 
-    onToggleDropdown: (category: string) => void 
+    onToggleDropdown: (category: FilterCategory | null) => void 
   }) {
     return (
       <button 
