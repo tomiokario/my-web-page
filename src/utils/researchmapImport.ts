@@ -1154,7 +1154,7 @@ function localizedPeopleToContributors(
     }) as LocalizedText;
 
     return Object.keys(name).length > 0 ? { role, name } : undefined;
-  }).filter((item): item is PublicationMasterFields["contributors"][number] => Boolean(item));
+  }).filter((item): item is PublicationContributor => Boolean(item));
 
   return contributors.length > 0 ? contributors : undefined;
 }
