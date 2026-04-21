@@ -1,5 +1,5 @@
 /**
- * publication_data.csv から publication_master.json を生成する移行用スクリプト
+ * publication_data.csv から canonical な publication_master.json を生成する移行用スクリプト
  *
  * 使用方法:
  * npm run import-publications-csv

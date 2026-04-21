@@ -3,9 +3,6 @@ import * as path from "path";
 
 import { Publication } from "../types";
 import {
-  LegacyPublicationMasterResearchmapFields,
-  LocalizedLanguage,
-  LocalizedPeople,
   LocalizedText,
   PublicationContributor,
   PublicationLink,
@@ -19,7 +16,6 @@ import {
 } from "./publicationMaster";
 import {
   compactObject,
-  fromLegacyResearchmapFields,
   getLocalizedTextValue,
   getPublicationTitle,
   stringifyContributors,
@@ -173,14 +169,11 @@ function validatePublicationMasterRecord(
     throw new Error(`${sourceLabel}.id は空でない文字列である必要があります`);
   }
 
-  const fields = record.fields
-    ? validateCanonicalFields(record.fields, `${sourceLabel}.fields`)
-    : fromLegacyResearchmapFields(
-        validateLegacyResearchmapFields(
-          record.researchmapFields,
-          `${sourceLabel}.researchmapFields`
-        )
-      );
+  if (!record.fields) {
+    throw new Error(`${sourceLabel}.fields は canonical schema の master record である必要があります`);
+  }
+
+  const fields = validateCanonicalFields(record.fields, `${sourceLabel}.fields`);
   const localMeta = validateLocalMeta(record.localMeta, `${sourceLabel}.localMeta`);
   const sync = optionalSync(record.sync, `${sourceLabel}.sync`);
 
@@ -257,64 +250,6 @@ function assertCanonicalSemantics(
       );
     }
   }
-}
-
-function validateLegacyResearchmapFields(
-  value: unknown,
-  sourceLabel: string
-): LegacyPublicationMasterResearchmapFields {
-  const fields = asObject(value, sourceLabel);
-  const type = validateType(fields.type, `${sourceLabel}.type`);
-
-  return compactObject({
-    type,
-    subtype: optionalString(fields.subtype, `${sourceLabel}.subtype`),
-    paper_title: optionalLocalizedText(fields.paper_title, `${sourceLabel}.paper_title`),
-    presentation_title: optionalLocalizedText(
-      fields.presentation_title,
-      `${sourceLabel}.presentation_title`
-    ),
-    authors: optionalLocalizedPeople(fields.authors, `${sourceLabel}.authors`),
-    presenters: optionalLocalizedPeople(fields.presenters, `${sourceLabel}.presenters`),
-    publication_name: optionalLocalizedText(
-      fields.publication_name,
-      `${sourceLabel}.publication_name`
-    ),
-    event: optionalLocalizedText(fields.event, `${sourceLabel}.event`),
-    promoter: optionalLocalizedText(fields.promoter, `${sourceLabel}.promoter`),
-    address_country: optionalString(fields.address_country, `${sourceLabel}.address_country`),
-    publication_date: optionalString(fields.publication_date, `${sourceLabel}.publication_date`),
-    from_event_date: optionalString(fields.from_event_date, `${sourceLabel}.from_event_date`),
-    to_event_date: optionalString(fields.to_event_date, `${sourceLabel}.to_event_date`),
-    identifiers: optionalLegacyIdentifiers(fields.identifiers, `${sourceLabel}.identifiers`),
-    see_also: optionalLegacySeeAlso(fields.see_also, `${sourceLabel}.see_also`),
-    volume: optionalString(fields.volume, `${sourceLabel}.volume`),
-    number: optionalString(fields.number, `${sourceLabel}.number`),
-    starting_page: optionalString(fields.starting_page, `${sourceLabel}.starting_page`),
-    ending_page: optionalString(fields.ending_page, `${sourceLabel}.ending_page`),
-    location: optionalLocalizedText(fields.location, `${sourceLabel}.location`),
-    description: optionalLocalizedText(fields.description, `${sourceLabel}.description`),
-    referee: optionalBoolean(fields.referee, `${sourceLabel}.referee`),
-    invited: optionalBoolean(fields.invited, `${sourceLabel}.invited`),
-    published_paper_owner_roles: optionalStringArray(
-      fields.published_paper_owner_roles,
-      `${sourceLabel}.published_paper_owner_roles`
-    ),
-    presentation_type: optionalString(fields.presentation_type, `${sourceLabel}.presentation_type`),
-    published_paper_type: optionalString(
-      fields.published_paper_type,
-      `${sourceLabel}.published_paper_type`
-    ),
-    misc_type: optionalString(fields.misc_type, `${sourceLabel}.misc_type`),
-    is_international_presentation: optionalBoolean(
-      fields.is_international_presentation,
-      `${sourceLabel}.is_international_presentation`
-    ),
-    is_international_journal: optionalBoolean(
-      fields.is_international_journal,
-      `${sourceLabel}.is_international_journal`
-    ),
-  }) as LegacyPublicationMasterResearchmapFields;
 }
 
 function validateLocalMeta(
@@ -472,20 +407,6 @@ function optionalIdentifiers(
   });
 }
 
-function optionalLegacyIdentifiers(
-  value: unknown,
-  sourceLabel: string
-): LegacyPublicationMasterResearchmapFields["identifiers"] | undefined {
-  if (value === undefined || value === null) {
-    return undefined;
-  }
-
-  const identifiers = asObject(value, sourceLabel);
-  return compactObject({
-    doi: optionalStringArray(identifiers.doi, `${sourceLabel}.doi`),
-  });
-}
-
 function optionalLinks(value: unknown, sourceLabel: string): PublicationLink[] | undefined {
   if (value === undefined || value === null) {
     return undefined;
@@ -513,37 +434,6 @@ function optionalLinks(value: unknown, sourceLabel: string): PublicationLink[] |
   });
 
   return links.length > 0 ? links : undefined;
-}
-
-function optionalLegacySeeAlso(
-  value: unknown,
-  sourceLabel: string
-): LegacyPublicationMasterResearchmapFields["see_also"] | undefined {
-  if (value === undefined || value === null) {
-    return undefined;
-  }
-  if (!Array.isArray(value)) {
-    throw new Error(`${sourceLabel} は配列である必要があります`);
-  }
-
-  return value.map((entry, index) => {
-    const normalized = asObject(entry, `${sourceLabel}[${index}]`);
-    const id = optionalString(normalized["@id"], `${sourceLabel}[${index}].@id`);
-    const label = optionalString(normalized.label, `${sourceLabel}[${index}].label`);
-
-    if (!id) {
-      throw new Error(`${sourceLabel}[${index}].@id は空でない文字列である必要があります`);
-    }
-
-    return compactObject({
-      "@id": id,
-      label: label || "url",
-      is_downloadable: optionalBoolean(
-        normalized.is_downloadable,
-        `${sourceLabel}[${index}].is_downloadable`
-      ),
-    }) as NonNullable<LegacyPublicationMasterResearchmapFields["see_also"]>[number];
-  });
 }
 
 function optionalBibliographic(
@@ -576,45 +466,6 @@ function optionalLocalizedText(
   const en = optionalString(localized.en, `${sourceLabel}.en`);
 
   return compactObject({ ja, en }) as LocalizedText;
-}
-
-function optionalLocalizedPeople(
-  value: unknown,
-  sourceLabel: string
-): LocalizedPeople | undefined {
-  if (value === undefined || value === null) {
-    return undefined;
-  }
-
-  const localized = asObject(value, sourceLabel);
-
-  return compactObject({
-    ja: optionalPeopleArray(localized.ja, `${sourceLabel}.ja`),
-    en: optionalPeopleArray(localized.en, `${sourceLabel}.en`),
-  }) as LocalizedPeople;
-}
-
-function optionalPeopleArray(
-  value: unknown,
-  sourceLabel: string
-): LocalizedPeople[LocalizedLanguage] | undefined {
-  if (value === undefined || value === null) {
-    return undefined;
-  }
-  if (!Array.isArray(value)) {
-    throw new Error(`${sourceLabel} は配列である必要があります`);
-  }
-
-  return value.map((person, index) => {
-    const normalized = asObject(person, `${sourceLabel}[${index}]`);
-    const name = optionalString(normalized.name, `${sourceLabel}[${index}].name`);
-
-    if (!name) {
-      throw new Error(`${sourceLabel}[${index}].name は空でない文字列である必要があります`);
-    }
-
-    return { name };
-  });
 }
 
 function optionalStringArray(value: unknown, sourceLabel: string): string[] | undefined {

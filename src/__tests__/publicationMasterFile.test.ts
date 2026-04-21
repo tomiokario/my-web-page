@@ -30,18 +30,31 @@ describe("publicationMasterFile", () => {
     const records = [
       {
         id: "pub-2024-alpha",
-        researchmapFields: {
+        fields: {
           type: "published_papers",
-          published_paper_type: "scientific_journal",
-          paper_title: {
+          subtype: "scientific_journal",
+          title: {
             en: "Alpha Paper",
           },
-          publication_name: {
-            en: "Journal A",
+          contributors: [
+            {
+              role: "author",
+              name: {
+                en: "Test Author",
+              },
+            },
+          ],
+          venue: {
+            kind: "publication",
+            name: {
+              en: "Journal A",
+            },
           },
-          publication_date: "2024-01-01",
-          referee: true,
-          published_paper_owner_roles: ["lead"],
+          dates: {
+            published: "2024-01-01",
+          },
+          review: true,
+          ownerRoles: ["lead"],
         },
         localMeta: {
           hasEmptyFields: false,
@@ -77,9 +90,10 @@ describe("publicationMasterFile", () => {
     const records = [
       {
         id: "pub-2024-alpha-ja",
-        researchmapFields: {
+        fields: {
           type: "misc",
-          paper_title: {
+          subtype: "others",
+          title: {
             ja: "同じタイトル",
           },
         },
@@ -90,10 +104,25 @@ describe("publicationMasterFile", () => {
       },
       {
         id: "pub-2024-alpha-en",
-        researchmapFields: {
+        fields: {
           type: "presentations",
-          presentation_title: {
+          subtype: "oral_presentation",
+          title: {
             ja: "同じタイトル",
+          },
+          contributors: [
+            {
+              role: "presenter",
+              name: {
+                ja: "テスト発表者",
+              },
+            },
+          ],
+          venue: {
+            kind: "event",
+            name: {
+              ja: "テスト会議",
+            },
           },
         },
         localMeta: {
@@ -164,9 +193,10 @@ describe("publicationMasterFile", () => {
     const records = [
       {
         id: "pub-2024-alpha-1",
-        researchmapFields: {
+        fields: {
           type: "misc",
-          paper_title: {
+          subtype: "others",
+          title: {
             ja: "Ａ−Ｂ",
           },
         },
@@ -177,10 +207,25 @@ describe("publicationMasterFile", () => {
       },
       {
         id: "pub-2024-alpha-2",
-        researchmapFields: {
+        fields: {
           type: "presentations",
-          presentation_title: {
+          subtype: "oral_presentation",
+          title: {
             ja: "A-B",
+          },
+          contributors: [
+            {
+              role: "presenter",
+              name: {
+                ja: "テスト発表者",
+              },
+            },
+          ],
+          venue: {
+            kind: "event",
+            name: {
+              ja: "テスト会議",
+            },
           },
         },
         localMeta: {
@@ -226,22 +271,34 @@ describe("publicationMasterFile", () => {
     expect(fs.statSync(webJsonFilePath).isDirectory()).toBe(true);
   });
 
-  test("legacy researchmapFields の venue metadata を type に依らず canonical に保持する", () => {
+  test("canonical venue metadata を type に依らず保持する", () => {
     const records = [
       {
-        id: "pub-2024-legacy-venue-metadata",
-        researchmapFields: {
+        id: "pub-2024-canonical-venue-metadata",
+        fields: {
           type: "misc",
-          paper_title: {
+          subtype: "technical_report",
+          title: {
             ja: "会場補助情報付き業績",
           },
-          publication_name: {
-            ja: "研究会資料",
+          contributors: [
+            {
+              role: "author",
+              name: {
+                ja: "テスト著者",
+              },
+            },
+          ],
+          venue: {
+            kind: "publication",
+            name: {
+              ja: "研究会資料",
+            },
+            promoter: {
+              ja: "主催者A",
+            },
+            addressCountry: "JP",
           },
-          promoter: {
-            ja: "主催者A",
-          },
-          address_country: "JP",
         },
         localMeta: {
           hasEmptyFields: false,
@@ -264,16 +321,29 @@ describe("publicationMasterFile", () => {
     });
   });
 
-  test("legacy subtype は generic より typed field を優先する", () => {
+  test("canonical subtype は generic より typed field を優先する", () => {
     const records = [
       {
-        id: "pub-2024-legacy-subtype-priority",
-        researchmapFields: {
+        id: "pub-2024-canonical-subtype-priority",
+        fields: {
           type: "published_papers",
-          subtype: "others",
-          published_paper_type: "scientific_journal",
-          paper_title: {
+          subtype: "scientific_journal",
+          title: {
             en: "Subtype Priority Paper",
+          },
+          contributors: [
+            {
+              role: "author",
+              name: {
+                en: "Test Author",
+              },
+            },
+          ],
+          venue: {
+            kind: "publication",
+            name: {
+              en: "Journal A",
+            },
           },
         },
         localMeta: {
@@ -326,5 +396,27 @@ describe("publicationMasterFile", () => {
     expect(publications[0].webLink).toBe("https://example.com/manual-link");
     expect(publications[0].others).toContain("https://example.com/extra-link");
     expect(publications[0].others).not.toContain("https://example.com/manual-link");
+  });
+
+  test("legacy researchmapFields の master record は canonical fields がないと拒否する", () => {
+    const records = [
+      {
+        id: "pub-legacy-master",
+        researchmapFields: {
+          type: "misc",
+          paper_title: {
+            ja: "旧形式",
+          },
+        },
+        localMeta: {
+          hasEmptyFields: false,
+          notes: "",
+        },
+      },
+    ];
+
+    expect(() => parsePublicationMasterJson(JSON.stringify(records))).toThrow(
+      "canonical schema の master record である必要があります"
+    );
   });
 });

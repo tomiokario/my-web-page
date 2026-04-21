@@ -12,7 +12,8 @@ description: Convert publication_master.json into researchmap bulk-import JSONL,
 - 通常運用の本線は `researchmap -> publication_master.json -> publications.json` で、公開側の tracked data 更新はここで完結します
 - この skill は、必要なときだけ `publication_master.json` から researchmap へ安全に戻すための補助です
 - `researchmapMerge` / `researchmapReversibleExport` / `researchmapConsistency` は、既存 researchmap 側の情報を壊しにくくし、生成結果の由来や整合を追えるようにする補助として扱います
-- `CSV -> master` 移行経路や旧 `researchmapFields` 互換は日常運用の本線ではありません
+- `CSV -> master` 移行経路は残しますが、日常運用の本線ではない移行専用の補助です
+- 旧 `researchmapFields` 形式の master は受け付けません。canonical `fields` を持つ `publication_master.json` を前提にします
 - local-only に残すのは `tmp/researchmap/**`、review / quarantine / archive の生成物、将来のローカル補助メモです
 
 ## 手順
@@ -33,7 +34,7 @@ description: Convert publication_master.json into researchmap bulk-import JSONL,
 ## 判定順
 
 1. まず canonical `fields` を正とし、`publication_master.json` から researchmap payload を直接組み立てる本線を確認する
-2. 既存の Web サイト用データや旧 `Publication` 風データは、互換確認が必要なときだけ参照する
+2. 既存の Web サイト用データや `Publication` 風データは、reversible sidecar や比較確認が必要なときだけ参照する
 3. 共著者本人や所属機関の公開業績を確認する
 4. それでも曖昧なら researchmap マニュアルの定義に寄せる
-5. `src/researchmapClassificationRules.mjs` は、旧来データ互換や個別例外を吸収する手動分類ルールです。分類処理では先に効きますが、位置づけとしては本線の中心ではなく override 用の補助として扱います
+5. `src/researchmapClassificationRules.mjs` は、Publication 由来の補助入力に対する手動分類ルールです。分類処理では先に効きますが、位置づけとしては本線の中心ではなく override 用の補助として扱います

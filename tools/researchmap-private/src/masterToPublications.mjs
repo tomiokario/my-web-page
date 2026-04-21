@@ -36,99 +36,16 @@ function serializeSourceRow(record) {
 }
 
 function normalizeMasterRecord(record) {
-  if (record.fields) {
-    return record;
+  if (!record?.fields) {
+    throw new Error('publication_master.json は canonical fields を持つ record である必要があります');
   }
 
   return {
     id: record.id,
-    fields: fromLegacyResearchmapFields(record.researchmapFields || {}),
+    fields: record.fields,
     localMeta: record.localMeta || {},
     sync: record.sync || {},
   };
-}
-
-function fromLegacyResearchmapFields(fields) {
-  const type = fields.type || 'misc';
-  const title = type === 'presentations'
-    ? fields.presentation_title || fields.paper_title
-    : fields.paper_title || fields.presentation_title;
-  const venueName = type === 'presentations'
-    ? fields.event || fields.publication_name
-    : fields.publication_name || fields.event;
-  const contributors = localizedPeopleToContributors(
-    type === 'presentations' ? fields.presenters || fields.authors : fields.authors || fields.presenters,
-    type === 'presentations' ? 'presenter' : 'author'
-  );
-
-  return compactObject({
-    type,
-    subtype: resolveLegacySubtype(type, fields),
-    title,
-    contributors,
-    venue: venueName
-      ? compactObject({
-          kind: type === 'presentations' ? 'event' : 'publication',
-          name: venueName,
-          promoter: fields.promoter,
-          addressCountry: fields.address_country,
-        })
-      : undefined,
-    dates: compactObject({
-      published: fields.publication_date || fields.from_event_date,
-      eventStart: fields.from_event_date,
-      eventEnd: fields.to_event_date || fields.from_event_date,
-    }),
-    identifiers: fields.identifiers?.doi?.[0] ? { doi: fields.identifiers.doi[0] } : undefined,
-    links: fields.see_also?.map((entry) => ({
-      url: entry['@id'],
-      label: entry.label || 'url',
-      isDownloadable: entry.is_downloadable,
-    })),
-    bibliographic: compactObject({
-      volume: fields.volume,
-      number: fields.number,
-      startPage: fields.starting_page,
-      endPage: fields.ending_page,
-    }),
-    location: fields.location,
-    description: fields.description,
-    review: fields.referee,
-    invited: fields.invited,
-    ownerRoles: fields.published_paper_owner_roles,
-    isInternational:
-      type === 'presentations'
-        ? fields.is_international_presentation
-        : fields.is_international_journal,
-  });
-}
-
-function localizedPeopleToContributors(people, role) {
-  if (!people) return undefined;
-
-  const count = Math.max(people.ja?.length || 0, people.en?.length || 0);
-  const contributors = [];
-
-  for (let index = 0; index < count; index += 1) {
-    const name = compactObject({
-      ja: people.ja?.[index]?.name,
-      en: people.en?.[index]?.name,
-    });
-    if (Object.keys(name).length === 0) continue;
-    contributors.push({ role, name });
-  }
-
-  return contributors.length > 0 ? contributors : undefined;
-}
-
-function resolveLegacySubtype(type, fields) {
-  if (type === 'published_papers') {
-    return fields.published_paper_type || fields.subtype;
-  }
-  if (type === 'presentations') {
-    return fields.presentation_type || fields.subtype;
-  }
-  return fields.misc_type || fields.subtype;
 }
 
 function mapMasterRecordToPublication(record, index) {

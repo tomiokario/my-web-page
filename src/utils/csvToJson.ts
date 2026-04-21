@@ -1,6 +1,5 @@
 import * as fs from "fs";
 
-import { Publication } from "../types";
 import { PublicationMasterRecord } from "../types/publicationMaster";
 import {
   csvToPublicationMaster,
@@ -8,25 +7,20 @@ import {
   publicationMasterToJson,
   writePublicationArtifacts,
 } from "./publicationMasterFile";
-import { publicationMasterToWebPublications } from "./publicationMaster";
 
 /**
- * CSVファイルをJSONに変換する関数
+ * CSVファイルを canonical な publication master に変換する関数
  * @param {string} csvFilePath - CSVファイルのパス
- * @returns {Publication[]} - 変換されたJSONデータ
+ * @returns {PublicationMasterRecord[]} - 変換された master データ
  */
-export function csvToJson(csvFilePath: string): Publication[] {
-  return publicationMasterToWebPublications(csvToMasterData(csvFilePath));
-}
-
 export function csvToMasterData(csvFilePath: string): PublicationMasterRecord[] {
   return csvToPublicationMaster(csvFilePath);
 }
 
 /**
- * CSVをJSONに変換してファイルに保存する関数
+ * CSV を canonical master に変換してファイルに保存する移行用関数
  * @param {string} csvFilePath - CSVファイルのパス
- * @param {string} jsonFilePath - 出力するJSONファイルのパス
+ * @param {string} jsonFilePath - 出力する master JSON のパス
  * @returns {boolean} - 変換が成功したかどうか
  */
 export function importMasterFromCsvAndSave(
