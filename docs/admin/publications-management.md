@@ -76,7 +76,9 @@ flowchart LR
 - 通常運用の本線は `researchmap export JSONL -> publication_master.json -> publications.json` で、公開側の tracked data 更新はここで完結します
 - 逆向きの `publication_master.json -> researchmap` は、researchmap へ安全に再投入したいときだけ使う補助ツールです
 - `researchmapMerge` / `researchmapReversibleExport` / `researchmapConsistency` は、既存 researchmap 側の情報を壊しにくくし、生成結果の由来や整合を確認するための補助です
-- `CSV -> master` の移行経路、`Publication` 風データ互換、旧 `researchmapFields` 互換は legacy / 補助経路であり、日常運用の中心ではありません
+- `CSV -> master` の移行経路は残しますが、日常運用の中心ではない移行専用の補助です
+- `Publication` 風データ互換は reversible sidecar や比較確認の補助に限り、`publication_master.json` の正本は canonical `fields` です
+- 旧 `researchmapFields` 形式の master は受け付けません
 - local-only に残すのは `tmp/researchmap/**`、review / quarantine / archive の生成物、将来のローカル補助メモで、`publication_master.json` 自体は public 側の tracked canonical data として扱います
 
 ## master data の構造

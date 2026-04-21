@@ -11,36 +11,45 @@ const WEB_BACKUP_PATH = path.join(DATA_DIR, "publications.json.test-backup");
 const sampleMasterData = [
   {
     id: "pub-2023-test-paper-1",
-    researchmapFields: {
+    fields: {
       type: "published_papers",
       subtype: "scientific_journal",
-      published_paper_type: "scientific_journal",
-      paper_title: {
+      title: {
         en: "Test Paper 1",
         ja: "テスト論文1",
       },
-      authors: {
-        en: [{ name: "Test Author" }],
-      },
-      publication_name: {
-        en: "Journal A",
-      },
-      publication_date: "2023-01-01",
-      identifiers: {
-        doi: ["10.1234/test.1"],
-      },
-      see_also: [
+      contributors: [
         {
-          "@id": "https://example.com/1",
+          role: "author",
+          name: {
+            en: "Test Author",
+          },
+        },
+      ],
+      venue: {
+        kind: "publication",
+        name: {
+          en: "Journal A",
+        },
+      },
+      dates: {
+        published: "2023-01-01",
+      },
+      identifiers: {
+        doi: "10.1234/test.1",
+      },
+      links: [
+        {
+          url: "https://example.com/1",
           label: "url",
         },
         {
-          "@id": "https://example.com/full-text/1",
+          url: "https://example.com/full-text/1",
           label: "Full text link",
         },
       ],
       referee: true,
-      published_paper_owner_roles: ["lead"],
+      ownerRoles: ["lead"],
     },
     localMeta: {
       hasEmptyFields: false,
@@ -57,29 +66,38 @@ const sampleMasterData = [
   },
   {
     id: "pub-2022-test-paper-2",
-    researchmapFields: {
+    fields: {
       type: "presentations",
       subtype: "poster_presentation",
-      presentation_type: "poster_presentation",
-      presentation_title: {
+      title: {
         en: "Test Paper 2",
         ja: "テスト論文2",
       },
-      presenters: {
-        en: [{ name: "Test Presenter" }],
-      },
-      event: {
-        en: "Conference B",
-      },
-      publication_date: "2022-12-15",
-      from_event_date: "2022-12-15",
-      to_event_date: "2022-12-15",
-      identifiers: {
-        doi: ["10.1234/test.2"],
-      },
-      see_also: [
+      contributors: [
         {
-          "@id": "https://example.com/2",
+          role: "presenter",
+          name: {
+            en: "Test Presenter",
+          },
+        },
+      ],
+      venue: {
+        kind: "event",
+        name: {
+          en: "Conference B",
+        },
+      },
+      dates: {
+        published: "2022-12-15",
+        eventStart: "2022-12-15",
+        eventEnd: "2022-12-15",
+      },
+      identifiers: {
+        doi: "10.1234/test.2",
+      },
+      links: [
+        {
+          url: "https://example.com/2",
           label: "url",
         },
       ],
@@ -142,7 +160,7 @@ describe("convertPublications script", () => {
         type: "published_papers/scientific_journal",
         category: "published_papers",
         subtype: "scientific_journal",
-        review: "peer_reviewed",
+        review: "",
         authorship: "lead",
         presentationType: "",
         doi: "10.1234/test.1",

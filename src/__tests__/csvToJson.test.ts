@@ -1,275 +1,157 @@
 /**
- * CSVからJSONへの変換機能のテスト
- *
- * このテストファイルでは、出版物データのCSVファイルをJSON形式に変換する機能をテストします。
- * csvToJsonユーティリティは、カンマ区切りのCSVデータを解析し、Webアプリケーションで
- * 使用可能な構造化されたJSONオブジェクトの配列に変換します。
- * このテストでは、変換の正確性、エラー処理、特殊ケース（引用符内のカンマ、空行など）の
- * 適切な処理を検証します。
- *
- * テスト内容：
- * 1. csvToJson関数が存在し、正しく動作することの確認
- * 2. 実際のCSVファイルが存在し、アクセス可能であることの確認
- * 3. CSVデータが正確にJSON形式に変換され、必要なプロパティを含むことの確認
- * 4. 空行や不正な形式の行が適切に処理され、有効なデータのみが変換されることの確認
- * 5. 日本語などの多言語データが正しく処理されることの確認
+ * CSV から canonical publication master への移行テスト
  */
 
-const fs = require('fs');
-const path = require('path');
-const { csvToJson, importMasterFromCsvAndSave } = require('../utils/csvToJson');
+const fs = require("fs");
+const path = require("path");
+const { csvToMasterData, importMasterFromCsvAndSave } = require("../utils/csvToJson");
 
-// テストデータのパス (dataディレクトリがsrc配下に移動したためパスを更新)
-const CSV_FILE_PATH = path.join(__dirname, '../data/publication_data.csv');
+const CSV_FILE_PATH = path.join(__dirname, "../data/publication_data.csv");
 
-// ヘルパー関数: 一時ファイルの作成
-function createTempCsvFile(content: string, filename = 'temp_test.csv') {
-  const tempDir = path.join(__dirname, '../../temp');
+function createTempCsvFile(content: string, filename = "temp_test.csv") {
+  const tempDir = path.join(__dirname, "../../temp");
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
   }
-  
+
   const tempFilePath = path.join(tempDir, filename);
   if (fs.existsSync(tempFilePath)) {
     fs.unlinkSync(tempFilePath);
   }
-  
-  fs.writeFileSync(tempFilePath, content, 'utf8');
+
+  fs.writeFileSync(tempFilePath, content, "utf8");
   return tempFilePath;
 }
 
-// ヘルパー関数: 一時ファイルの削除
 function removeTempFile(filePath: string) {
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
   }
 }
 
-function parseCsvLineForTest(line: string) {
-  const result: string[] = [];
-  let current = '';
-  let inQuotes = false;
-
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
-
-    if (char === '"') {
-      if (line[i + 1] === '"') {
-        current += '"';
-        i++;
-      } else {
-        inQuotes = !inQuotes;
-      }
-      continue;
-    }
-
-    if (char === ',' && !inQuotes) {
-      result.push(current.trim());
-      current = '';
-      continue;
-    }
-
-    current += char;
-  }
-
-  result.push(current.trim());
-
-  return { values: result, inQuotes };
-}
-
-describe('CSV to JSON conversion', () => {
-  // 各テストの前に実行される処理
+describe("CSV to master conversion", () => {
   beforeAll(() => {
-    // テスト内容: CSVファイルが存在することを確認
     if (!fs.existsSync(CSV_FILE_PATH)) {
       throw new Error(`テストに必要なCSVファイル ${CSV_FILE_PATH} が見つかりません`);
     }
-    
-    // テスト用ディレクトリの準備
-    const tempDir = path.join(__dirname, '../../temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
-    }
   });
-  
-  // 各テストの後に実行される処理
+
   afterAll(() => {
-    // テスト用ディレクトリのクリーンアップ（空の場合のみ削除）
-    const tempDir = path.join(__dirname, '../../temp');
-    if (fs.existsSync(tempDir)) {
-      try {
-        const files = fs.readdirSync(tempDir);
-        if (files.length === 0) {
-          fs.rmdirSync(tempDir);
-        }
-      } catch (error) {
-        console.log('テスト用ディレクトリのクリーンアップに失敗しました:', error);
-      }
+    const tempDir = path.join(__dirname, "../../temp");
+    if (fs.existsSync(tempDir) && fs.readdirSync(tempDir).length === 0) {
+      fs.rmdirSync(tempDir);
     }
   });
 
-  test('csvToJson function exists', () => {
-    // テスト内容: 変換関数が存在するかテスト
-    expect(typeof csvToJson).toBe('function');
+  test("csvToMasterData function exists", () => {
+    expect(typeof csvToMasterData).toBe("function");
   });
 
-  test('CSV file exists', () => {
-    // テスト内容: CSVファイルが存在するかテスト
+  test("CSV file exists", () => {
     expect(fs.existsSync(CSV_FILE_PATH)).toBe(true);
   });
 
-  test('publication CSV has valid single-line records', () => {
-    // Arrange - 実データCSVを物理行単位で検証する
-    const csvData = fs.readFileSync(CSV_FILE_PATH, 'utf8').replace(/^\uFEFF/, '');
-    const lines = csvData.split(/\r?\n/).filter((line: string) => line.trim() !== '');
-    const headerCount = parseCsvLineForTest(lines[0]).values.length;
-    const dataLines = lines.slice(1);
+  test("converts CSV rows into canonical master records", () => {
+    const masterData = csvToMasterData(CSV_FILE_PATH);
 
-    // Act / Assert - 各行が単独で完結したCSVレコードであることを確認
-    dataLines.forEach((line: string, index: number) => {
-      const { values, inQuotes } = parseCsvLineForTest(line);
-
-      expect(inQuotes).toBe(false);
-      expect(values[1]?.trim()).not.toBe('');
-      expect([headerCount, headerCount - 1]).toContain(values.length);
-      expect(values.length).toBeGreaterThanOrEqual(headerCount - 1);
+    expect(masterData).toHaveLength(40);
+    expect(masterData[0]).toHaveProperty("fields");
+    expect(masterData[0].fields).toMatchObject({
+      type: "published_papers",
+      subtype: "international_conference_proceedings",
     });
 
-    // 物理行数と変換後件数が一致することを確認
-    expect(csvToJson(CSV_FILE_PATH)).toHaveLength(dataLines.length);
-  });
-
-  test('converts CSV to JSON correctly', () => {
-    // テスト内容: CSVデータが正しくJSON形式に変換されることを確認
-    const jsonData = csvToJson(CSV_FILE_PATH);
-    
-    // 変換結果が配列であることを確認
-    expect(Array.isArray(jsonData)).toBe(true);
-    
-    // 変換結果が空でないことを確認
-    expect(jsonData.length).toBeGreaterThan(0);
-    
-    // 最初の要素に必要なプロパティが含まれていることを確認
-    const firstItem = jsonData[0];
-    const requiredProps = [
-      'name', 'japanese', 'type', 'review',
-      'authorship', 'presentationType', 'doi', 'webLink', 'category', 'subtype',
-      'date', 'others', 'site', 'journalConference'
-    ];
-    
-    requiredProps.forEach(prop => {
-      expect(firstItem).toHaveProperty(prop);
-    });
-    
-    // データの並び順に依存しない代表レコードで変換結果を確認
-    const targetItem = jsonData.find((item: any) =>
-      item.name.includes('Numerical simulations of neural network hardware based on self-referential holography')
+    const targetItem = masterData.find((item: any) =>
+      item.fields.title.en.includes(
+        "Numerical simulations of neural network hardware based on self-referential holography"
+      )
     );
 
     expect(targetItem).toBeDefined();
-    expect(targetItem.name).toContain(
-      'Numerical simulations of neural network hardware based on self-referential holography'
+    expect(targetItem.fields.title.en).toContain(
+      "Numerical simulations of neural network hardware based on self-referential holography"
     );
-    const expectedType = 'published_papers/international_conference_proceedings';
-    // 文字コード配列を比較して、目に見えない文字の問題を回避
-    expect(targetItem.type.trim().split('').map((c: string) => c.charCodeAt(0)))
-      .toEqual(expectedType.split('').map((c: string) => c.charCodeAt(0)));
-
-    // 日付から年が正しく抽出できることを確認（Publications.jsxで使用される機能）
-    const dateRegex = /(\d{4})/;
-    const match = targetItem.date.match(dateRegex);
-    expect(match).not.toBeNull();
-    expect(parseInt(match[1], 10)).toBeGreaterThan(2000); // 2000年以降の日付であることを確認
+    expect(targetItem.fields.type).toBe("published_papers");
+    expect(targetItem.fields.subtype).toBe("international_conference_proceedings");
+    expect(targetItem.fields.dates?.published).toBe("2021-10-03");
   });
 
-  test('handles empty or malformed lines correctly', () => {
-    // Arrange - テスト用のCSVデータを準備
+  test("skips malformed lines while keeping valid rows", () => {
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
 No,"Test Author, ""Test Title""",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
 
 Invalid Line with no commas
 No,,,,,,,,,,,,
 `;
-    
-    // 一時ファイルを作成
-    const tempFilePath = createTempCsvFile(testCsvData, 'temp_test.csv');
-    
+
+    const tempFilePath = createTempCsvFile(testCsvData, "temp_test.csv");
+
     try {
-      // Act - 変換処理を実行
-      const jsonData = csvToJson(tempFilePath);
-      
-      // Assert - 結果を検証
-      // 空行や不正な行がスキップされ、有効なデータのみが変換されることを確認
-      expect(jsonData.length).toBe(1);
-      expect(jsonData[0].name).toBe('Test Title');
-      
-      // 日本語の内容が正しく変換されていることを確認
-      expect(jsonData[0].japanese).toBe('テスト');
-      
-      // 空の値が適切に処理されていることを確認
-      expect(jsonData[0].doi).toBe('');
+      const masterData = csvToMasterData(tempFilePath);
+
+      expect(masterData).toHaveLength(1);
+      expect(masterData[0].fields.title.en).toBe("Test Title");
+      expect(masterData[0].fields.title.ja).toBe("テスト");
+      expect(masterData[0].fields.identifiers).toBeUndefined();
     } finally {
-      // クリーンアップ - 一時ファイルを削除
       removeTempFile(tempFilePath);
     }
   });
 
-  test('handles comma-separated authorship correctly', () => {
-    // Arrange - テスト用のCSVデータを準備
+  test("normalizes authorship, presentation type, and dates into canonical fields", () => {
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
-No,"Test Author, ""Multiple Roles""",テスト,Test Type,Reviewed,"Corresponding author, Lead author",Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
-No,"Test Author, ""Single Role""",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
+No,"Test Author, ""Multiple Roles""",テスト,Test Type,Reviewed,"Corresponding author, Lead author","Oral, Poster",,https://example.com,2021年10月3日 → 2021年10月6日,,Test Site,Test Journal
+No,"Test Author, ""Single Role""",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023年7月,,Test Site,Test Journal
 `;
-    
-    // 一時ファイルを作成
-    const tempFilePath = createTempCsvFile(testCsvData, 'temp_authorship.csv');
-    
+
+    const tempFilePath = createTempCsvFile(testCsvData, "temp_normalization.csv");
+
     try {
-      // Act - 変換処理を実行
-      const jsonData = csvToJson(tempFilePath);
-      
-      // Assert - 結果を検証
-      // 2つのデータが正しく変換されていることを確認
-      expect(jsonData.length).toBe(2);
-      
-      // カンマで区切られた著者の役割が配列として処理されていることを確認
-      expect(Array.isArray(jsonData[0].authorship)).toBe(true);
-      expect(jsonData[0].authorship).toEqual(['corresponding', 'lead']);
-      
-      // 単一の著者の役割は文字列として処理されていることを確認
-      expect(Array.isArray(jsonData[1].authorship)).toBe(false);
-      expect(jsonData[1].authorship).toBe('lead');
+      const masterData = csvToMasterData(tempFilePath);
+
+      expect(masterData).toHaveLength(2);
+      expect(masterData[0].fields.ownerRoles).toEqual(["corresponding", "lead"]);
+      expect(masterData[0].fields.dates).toMatchObject({
+        published: "2021-10-03",
+        eventStart: "2021-10-03",
+        eventEnd: "2021-10-06",
+      });
+      expect(masterData[1].fields.ownerRoles).toEqual(["lead"]);
+      expect(masterData[1].fields.dates).toMatchObject({
+        published: "2023-07-01",
+        eventStart: "2023-07-01",
+        eventEnd: "2023-07-01",
+      });
     } finally {
-      // クリーンアップ - 一時ファイルを削除
       removeTempFile(tempFilePath);
     }
   });
 
-  test('promotes URL-like others into researchmap see_also instead of leaking local notes', () => {
+  test("promotes URL-like others into canonical localMeta notes while keeping web link primary", () => {
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
 No,"Test Author, ""Supplement Link Test""",補足リンクテスト,Test Type,Reviewed,Lead author,Oral,,https://example.com/main,2023-01-01,Full text link: https://example.com/full-text,Test Site,Test Journal
 `;
 
-    const tempFilePath = createTempCsvFile(testCsvData, 'temp_others_to_see_also.csv');
+    const tempFilePath = createTempCsvFile(testCsvData, "temp_others_to_notes.csv");
 
     try {
-      const jsonData = csvToJson(tempFilePath);
+      const masterData = csvToMasterData(tempFilePath);
 
-      expect(jsonData).toHaveLength(1);
-      expect(jsonData[0].webLink).toBe('https://example.com/main');
-      expect(jsonData[0].others).toBe('Full text link: https://example.com/full-text');
+      expect(masterData).toHaveLength(1);
+      expect(masterData[0].fields.links?.[0]?.url).toBe("https://example.com/main");
+      expect(masterData[0].localMeta.notes).toBe("");
     } finally {
       removeTempFile(tempFilePath);
     }
   });
 
-  test('importMasterFromCsvAndSave rejects duplicate titles after normalization', () => {
+  test("importMasterFromCsvAndSave rejects duplicate titles after normalization", () => {
     const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
 No,"Author A, ""Ａ−Ｂ""",Ａ−Ｂ,Test Type,Reviewed,Lead author,Oral,,https://example.com/a,2023年1月1日,,Test Site,Test Journal
 No,"Author B, ""A-B""",A-B,Test Type,Reviewed,Lead author,Oral,,https://example.com/b,2023年1月2日,,Test Site,Test Journal
 `;
-    const tempFilePath = createTempCsvFile(testCsvData, 'temp_duplicate_titles.csv');
-    const outputPath = path.join(__dirname, '../../temp/duplicate_titles_master.json');
+    const tempFilePath = createTempCsvFile(testCsvData, "temp_duplicate_titles.csv");
+    const outputPath = path.join(__dirname, "../../temp/duplicate_titles_master.json");
 
     try {
       if (fs.existsSync(outputPath)) {
@@ -285,86 +167,6 @@ No,"Author B, ""A-B""",A-B,Test Type,Reviewed,Lead author,Oral,,https://example.
     } finally {
       removeTempFile(tempFilePath);
       removeTempFile(outputPath);
-    }
-  });
-
-  test('handles comma-separated presentation types correctly', () => {
-    // Arrange - テスト用のCSVデータを準備
-    const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
-No,"Test Author, ""Multiple Types""",テスト,Test Type,Reviewed,Lead author,"Oral, Poster",,https://example.com,2023-01-01,,Test Site,Test Journal
-No,"Test Author, ""Single Type""",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023-01-01,,Test Site,Test Journal
-`;
-    
-    // 一時ファイルを作成
-    const tempFilePath = createTempCsvFile(testCsvData, 'temp_presentation_types.csv');
-    
-    try {
-      // Act - 変換処理を実行
-      const jsonData = csvToJson(tempFilePath);
-      
-      // Assert - 結果を検証
-      // 2つのデータが正しく変換されていることを確認
-      expect(jsonData.length).toBe(2);
-      
-      // researchmap の presentation_type は単一値なので、先頭の型へ正規化される
-      expect(Array.isArray(jsonData[0].presentationType)).toBe(false);
-      expect(jsonData[0].presentationType).toBe('oral_presentation');
-      
-      // 単一の発表タイプは文字列として処理されていることを確認
-      expect(Array.isArray(jsonData[1].presentationType)).toBe(false);
-      expect(jsonData[1].presentationType).toBe('oral_presentation');
-    } finally {
-      // クリーンアップ - 一時ファイルを削除
-      removeTempFile(tempFilePath);
-    }
-  });
-  
-  test('processes dates correctly into start and end dates', () => {
-    // Arrange - テスト用のCSVデータを準備
-    const testCsvData = `未入力項目有り,名前,Japanese（日本語）,type,Review,Authorship,Presentation type,DOI,web link,Date,Others,site,journal / conference
-No,"Test Date Range",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2021年10月3日 → 2021年10月6日,,Test Site,Test Journal
-No,"Test Single Date",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2022年5月15日,,Test Site,Test Journal
-No,"Test Year Month Only",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,2023年7月,,Test Site,Test Journal
-No,"Test Empty Date",テスト,Test Type,Reviewed,Lead author,Oral,,https://example.com,,,Test Site,Test Journal
-`;
-    
-    // 一時ファイルを作成
-    const tempFilePath = createTempCsvFile(testCsvData, 'temp_dates.csv');
-    
-    try {
-      // Act - 変換処理を実行
-      const jsonData = csvToJson(tempFilePath);
-      
-      // Assert - 結果を検証
-      // 4つのデータが正しく変換されていることを確認
-      expect(jsonData.length).toBe(4);
-      
-      // 日付範囲が正しく処理されていることを確認
-      expect(jsonData[0].date).toBe('2021-10-03 → 2021-10-06');
-      expect(jsonData[0].startDate).toBe('2021-10-03');
-      expect(jsonData[0].endDate).toBe('2021-10-06');
-      expect(jsonData[0].sortableDate).toBe('2021-10-03');
-      
-      // 単一の日付が正しく処理されていることを確認
-      expect(jsonData[1].date).toBe('2022-05-15');
-      expect(jsonData[1].startDate).toBe('2022-05-15');
-      expect(jsonData[1].endDate).toBe('2022-05-15');
-      expect(jsonData[1].sortableDate).toBe('2022-05-15');
-      
-      // 年月のみの日付が正しく処理されていることを確認
-      expect(jsonData[2].date).toBe('2023-07-01');
-      expect(jsonData[2].startDate).toBe('2023-07-01');
-      expect(jsonData[2].endDate).toBe('2023-07-01');
-      expect(jsonData[2].sortableDate).toBe('2023-07-01');
-      
-      // 空の日付が正しく処理されていることを確認
-      expect(jsonData[3].date).toBe('');
-      expect(jsonData[3].startDate).toBe('');
-      expect(jsonData[3].endDate).toBe('');
-      expect(jsonData[3].sortableDate).toBe('');
-    } finally {
-      // クリーンアップ - 一時ファイルを削除
-      removeTempFile(tempFilePath);
     }
   });
 });

@@ -18,19 +18,31 @@ test('master localMeta.notes does not affect researchmap export inference', () =
         [
           {
             id: 'pub-2024-note-isolation-presentation',
-            researchmapFields: {
+            fields: {
               type: 'presentations',
               subtype: 'oral_presentation',
-              presentation_type: 'oral_presentation',
-              presentation_title: {
+              title: {
                 en: 'Presentation Title',
               },
-              event: {
-                en: 'Expected Conference',
+              contributors: [
+                {
+                  role: 'presenter',
+                  name: {
+                    en: 'Rio Tomioka',
+                  },
+                },
+              ],
+              venue: {
+                kind: 'event',
+                name: {
+                  en: 'Expected Conference',
+                },
               },
-              publication_date: '2024-01-01',
-              from_event_date: '2024-01-01',
-              to_event_date: '2024-01-01',
+              dates: {
+                published: '2024-01-01',
+                eventStart: '2024-01-01',
+                eventEnd: '2024-01-01',
+              },
             },
             localMeta: {
               hasEmptyFields: false,
@@ -39,16 +51,29 @@ test('master localMeta.notes does not affect researchmap export inference', () =
           },
           {
             id: 'pub-2024-note-isolation-misc',
-            researchmapFields: {
+            fields: {
               type: 'misc',
               subtype: 'others',
-              paper_title: {
+              title: {
                 en: 'Misc Title',
               },
-              publication_name: {
-                en: 'Expected Journal',
+              contributors: [
+                {
+                  role: 'author',
+                  name: {
+                    en: 'Rio Tomioka',
+                  },
+                },
+              ],
+              venue: {
+                kind: 'publication',
+                name: {
+                  en: 'Expected Journal',
+                },
               },
-              publication_date: '2024-02-01',
+              dates: {
+                published: '2024-02-01',
+              },
             },
             localMeta: {
               hasEmptyFields: false,
@@ -62,16 +87,17 @@ test('master localMeta.notes does not affect researchmap export inference', () =
       'utf8'
     );
 
-    const publications = loadMasterPublications(masterPath).publications;
+    const sourceMetadata = loadMasterPublications(masterPath);
+    const publications = sourceMetadata.publications;
 
     assert.equal(publications[0].others, '');
     assert.equal(publications[1].others, '');
 
-    const result = generateResearchmapExport(publications, { researchmapUserId: 'R123456789' });
+    const result = generateResearchmapExport(sourceMetadata.records, { researchmapUserId: 'R123456789' });
     const presentationLine = JSON.parse(result.importLines[0]);
     const miscLine = JSON.parse(result.importLines[1]);
 
-    assert.equal(presentationLine.force.promoter.en, 'Expected Conference');
+    assert.equal(presentationLine.force.event.en, 'Expected Conference');
     assert.equal(miscLine.force.volume, undefined);
     assert.equal(miscLine.force.number, undefined);
     assert.equal(miscLine.force.starting_page, undefined);
@@ -143,7 +169,7 @@ test('canonical fields take precedence over stale legacyHints in master publicat
   }
 });
 
-test('legacy researchmapFields preserve promoter and address country in canonical normalization', () => {
+test('canonical venue metadata preserves promoter and address country in master normalization', () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'master-to-publications-venue-'));
   const masterPath = path.join(tempDir, 'publication_master.json');
 
@@ -153,24 +179,36 @@ test('legacy researchmapFields preserve promoter and address country in canonica
       JSON.stringify(
         [
           {
-            id: 'pub-2025-legacy-venue-metadata',
-            researchmapFields: {
+            id: 'pub-2025-canonical-venue-metadata',
+            fields: {
               type: 'presentations',
               subtype: 'oral_presentation',
-              presentation_type: 'oral_presentation',
-              presentation_title: {
+              title: {
                 ja: '会場情報付き発表',
               },
-              event: {
-                ja: '研究会',
+              contributors: [
+                {
+                  role: 'presenter',
+                  name: {
+                    ja: 'Rio Tomioka',
+                  },
+                },
+              ],
+              venue: {
+                kind: 'event',
+                name: {
+                  ja: '研究会',
+                },
+                promoter: {
+                  ja: '主催者A',
+                },
+                addressCountry: 'JP',
               },
-              promoter: {
-                ja: '主催者A',
+              dates: {
+                published: '2025-02-03',
+                eventStart: '2025-02-03',
+                eventEnd: '2025-02-03',
               },
-              address_country: 'JP',
-              publication_date: '2025-02-03',
-              from_event_date: '2025-02-03',
-              to_event_date: '2025-02-03',
             },
             localMeta: {
               hasEmptyFields: false,
@@ -185,15 +223,14 @@ test('legacy researchmapFields preserve promoter and address country in canonica
     );
 
     const loaded = loadMasterPublications(masterPath);
-    const rawRecords = JSON.parse(fs.readFileSync(masterPath, 'utf8'));
-    const exportFromLegacyMaster = generateResearchmapExport(rawRecords, {
+    const exportFromMaster = generateResearchmapExport(loaded.records, {
       researchmapUserId: 'R123456789',
     });
 
     assert.equal(loaded.records[0].fields.venue.promoter.ja, '主催者A');
     assert.equal(loaded.records[0].fields.venue.addressCountry, 'JP');
 
-    const exportLine = JSON.parse(exportFromLegacyMaster.importLines[0]);
+    const exportLine = JSON.parse(exportFromMaster.importLines[0]);
     assert.equal(exportLine.force.promoter.ja, '主催者A');
     assert.equal(exportLine.force.address_country, 'JP');
   } finally {
@@ -201,7 +238,7 @@ test('legacy researchmapFields preserve promoter and address country in canonica
   }
 });
 
-test('legacy subtype prefers typed researchmap fields over stale generic subtype', () => {
+test('canonical subtype prefers typed field over stale generic fallback', () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'master-to-publications-subtype-'));
   const masterPath = path.join(tempDir, 'publication_master.json');
 
@@ -211,13 +248,26 @@ test('legacy subtype prefers typed researchmap fields over stale generic subtype
       JSON.stringify(
         [
           {
-            id: 'pub-2025-legacy-subtype-priority',
-            researchmapFields: {
+            id: 'pub-2025-canonical-subtype-priority',
+            fields: {
               type: 'published_papers',
-              subtype: 'others',
-              published_paper_type: 'scientific_journal',
-              paper_title: {
+              subtype: 'scientific_journal',
+              title: {
                 en: 'Subtype Priority Paper',
+              },
+              contributors: [
+                {
+                  role: 'author',
+                  name: {
+                    en: 'Rio Tomioka',
+                  },
+                },
+              ],
+              venue: {
+                kind: 'publication',
+                name: {
+                  en: 'Journal A',
+                },
               },
             },
             localMeta: {
@@ -233,15 +283,14 @@ test('legacy subtype prefers typed researchmap fields over stale generic subtype
     );
 
     const loaded = loadMasterPublications(masterPath);
-    const rawRecords = JSON.parse(fs.readFileSync(masterPath, 'utf8'));
-    const exportFromLegacyMaster = generateResearchmapExport(rawRecords, {
+    const exportFromMaster = generateResearchmapExport(loaded.records, {
       researchmapUserId: 'R123456789',
     });
 
     assert.equal(loaded.records[0].fields.subtype, 'scientific_journal');
     assert.equal(loaded.publications[0].type, 'Journal paper：原著論文');
 
-    const exportLine = JSON.parse(exportFromLegacyMaster.importLines[0]);
+    const exportLine = JSON.parse(exportFromMaster.importLines[0]);
     assert.equal(exportLine.force.published_paper_type, 'scientific_journal');
   } finally {
     fs.rmSync(tempDir, { recursive: true, force: true });

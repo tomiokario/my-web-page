@@ -146,13 +146,13 @@ function validateMasterInput(inputPath) {
       !record ||
       typeof record !== 'object' ||
       typeof record.id !== 'string' ||
-      (!record.fields && !record.researchmapFields)
+      !record.fields
     );
   });
 
   if (hasInvalidRecord) {
     throw new Error(
-      'エラー: publication_master.json には id と fields または researchmapFields を持つ record が必要です'
+      'エラー: publication_master.json には id と canonical fields を持つ record が必要です'
     );
   }
 }
