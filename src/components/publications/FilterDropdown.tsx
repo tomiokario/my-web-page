@@ -1,7 +1,7 @@
 import React from "react";
 import { createStyles } from "@mantine/emotion";
 import { MantineTheme } from "@mantine/core";
-import { SelectedFilters } from "../../hooks/useFilters";
+import { FilterCategory, SelectedFilters } from "../../hooks/useFilters";
 
 // FilterDropdownPropsインターフェースを追加
 interface FilterDropdownProps {
@@ -11,8 +11,8 @@ interface FilterDropdownProps {
   selectedValues: string[];
   getOptionLabel?: (option: string) => string;
   isOpen: boolean;
-  onToggleDropdown: (dropdown: string | null) => void;
-  onToggleFilter: (category: keyof SelectedFilters, value: string) => void;
+  onToggleDropdown: (dropdown: FilterCategory | null) => void;
+  onToggleFilter: (category: FilterCategory, value: string) => void;
   filterRef: (el: HTMLElement | null) => void;
 }
 

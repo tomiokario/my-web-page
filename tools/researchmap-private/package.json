@@ -1,0 +1,9 @@
+{
+  "name": "my-web-page-to-research-map",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "export-researchmap": "node scripts/exportResearchmapJson.mjs",
+    "test": "node --test"
+  }
+}

@@ -289,7 +289,9 @@ function normalizeStringOrArray(value: unknown): string | string[] | undefined {
   }
 
   if (Array.isArray(value)) {
-    const entries = value.filter((entry): entry is string => typeof entry === "string" && entry);
+    const entries = value.filter(
+      (entry): entry is string => typeof entry === "string" && entry.length > 0
+    );
     return entries.length > 0 ? entries : undefined;
   }
 

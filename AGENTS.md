@@ -83,6 +83,7 @@
 - researchmap export (`rm_*.jsonl`) を取り込む場合は `npm run import-publications-researchmap -- --input <path>` を使用し、最初に `--dry-run` で `matched` / `added` / `review` / `invalid` を確認する
 - 正規化タイトル一致の重複は許容しない。researchmap import、手編集、CSV 再生成のいずれでも重複タイトルを正本へ入れない
 - researchmap import の自動 merge は `researchmap record id -> DOI -> canonical fingerprint` の strict match のみとし、title 近傍候補や core field 競合は review / quarantine 扱いで書き込みを止める
+- `tools/researchmap-private` は repo 内の通常ディレクトリとして扱い、`tmp/researchmap/**` と review / quarantine / archive の生成物は local-only とする
 - Web 表示用 JSON の再生成には `npm run convert-publications` を使用する
 - 出版物データは日常運用で GUI 編集せず、researchmap export JSONL から取り込みます。公開用 SPA に editor route を追加しません
 
