@@ -53,7 +53,9 @@
 
 出版物データの正本は `src/data/publication_master.json` です。日常更新は researchmap export JSONL の取り込みを使い、`publications.json` はそこから再生成します。
 
-`tools/researchmap-private` は repo 内の通常ツールです。`tmp/researchmap/**` や review / quarantine / archive の生成物は local-only で、公開リポジトリには含めません。
+通常運用の本線は `researchmap export JSONL -> publication_master.json -> publications.json` で、公開側の tracked data 更新はここで完結します。
+
+`tools/researchmap-private` は、必要なときだけ `publication_master.json` から researchmap へ安全に戻すための補助ツールです。`tmp/researchmap/**` や review / quarantine / archive の生成物は local-only で、公開リポジトリには含めません。
 
 - `publication_master.json` は canonical schema の `fields` を正本とし、researchmap から取り込んだ結果と `sync.researchmap` の同期メタデータを保持します
 - `publications.json` は `publication_master.json` から再生成される Web 表示用の生成物です

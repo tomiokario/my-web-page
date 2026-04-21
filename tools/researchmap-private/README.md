@@ -2,6 +2,14 @@
 
 `my-web-page` の `publication_master.json` から researchmap 一括登録用 JSONL を生成する repo 内ツールです。canonical `fields` を正規入力として、researchmap payload を直接構築します。
 
+## このツールの位置づけ
+
+- 通常運用の本線は `researchmap -> publication_master.json -> publications.json` で、公開側の tracked data 更新はここで完結します
+- このディレクトリは、必要なときだけ `publication_master.json` から researchmap へ安全に戻すための補助ツールをまとめています
+- `researchmapMerge` / `researchmapReversibleExport` / `researchmapConsistency` は、既存 researchmap 情報を壊しにくくし、生成結果の由来や整合を確認しやすくするための補助機能です
+- 一方で、`CSV -> master` の移行経路や旧 `researchmapFields` 互換は日常運用の本線ではなく、段階的に縮小してよい補助経路として扱います
+- local-only に残すのは `tmp/researchmap/**`、review / quarantine / archive の生成物、将来のローカル補助メモで、`publication_master.json` 自体は public 側の tracked canonical data として扱います
+
 ## 使い方
 
 ```bash

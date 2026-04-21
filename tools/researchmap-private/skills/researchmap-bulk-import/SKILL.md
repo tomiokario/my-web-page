@@ -7,6 +7,14 @@ description: Convert publication_master.json into researchmap bulk-import JSONL,
 
 この skill は `publication_master.json` から researchmap 用の一括登録 JSONL を作る repo 内ツールです。`tmp/researchmap/**` や review / quarantine の生成物は local-only で扱います。
 
+## 位置づけ
+
+- 通常運用の本線は `researchmap -> publication_master.json -> publications.json` で、公開側の tracked data 更新はここで完結します
+- この skill は、必要なときだけ `publication_master.json` から researchmap へ安全に戻すための補助です
+- `researchmapMerge` / `researchmapReversibleExport` / `researchmapConsistency` は、既存 researchmap 側の情報を壊しにくくし、生成結果の由来や整合を追えるようにする補助として扱います
+- `CSV -> master` 移行経路や旧 `researchmapFields` 互換は日常運用の本線ではありません
+- local-only に残すのは `tmp/researchmap/**`、review / quarantine / archive の生成物、将来のローカル補助メモです
+
 ## 手順
 
 1. `node scripts/exportResearchmapJson.mjs --input <path-to-publication_master.json> --output-dir <path-to-output> --researchmap-user-id R...` を実行します。

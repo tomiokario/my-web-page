@@ -71,6 +71,14 @@ flowchart LR
     J --> K[archive/history]
 ```
 
+## 本線と補助
+
+- 通常運用の本線は `researchmap export JSONL -> publication_master.json -> publications.json` で、公開側の tracked data 更新はここで完結します
+- 逆向きの `publication_master.json -> researchmap` は、researchmap へ安全に再投入したいときだけ使う補助ツールです
+- `researchmapMerge` / `researchmapReversibleExport` / `researchmapConsistency` は、既存 researchmap 側の情報を壊しにくくし、生成結果の由来や整合を確認するための補助です
+- `CSV -> master` の移行経路、`Publication` 風データ互換、旧 `researchmapFields` 互換は legacy / 補助経路であり、日常運用の中心ではありません
+- local-only に残すのは `tmp/researchmap/**`、review / quarantine / archive の生成物、将来のローカル補助メモで、`publication_master.json` 自体は public 側の tracked canonical data として扱います
+
 ## master data の構造
 
 各業績は次の 3 層で保持します。
