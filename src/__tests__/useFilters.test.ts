@@ -92,6 +92,32 @@ describe('useFilters', () => {
       expect(result.current.filteredPublications[0].year).toBe(2021);
     });
 
+    it('年度フィルター時は year 未設定の出版物を含めない', () => {
+      const publicationsWithUnknownYear = createPublications(4, [
+        ...mockPublications,
+        {
+          id: 3,
+          year: undefined,
+          type: 'Misc',
+          review: '',
+          authorship: '',
+          presentationType: ''
+        }
+      ]);
+      const { result } = renderHook(() =>
+        useFilters({ publications: publicationsWithUnknownYear })
+      );
+
+      act(() => {
+        result.current.toggleFilter('year', '2022');
+      });
+
+      expect(result.current.filteredPublications).toHaveLength(2);
+      expect(
+        result.current.filteredPublications.every((publication) => publication.year === 2022)
+      ).toBe(true);
+    });
+
     it('タイプフィルターが正しく機能する', () => {
       const { result } = renderHook(() => useFilters({ publications: mockPublications }));
       

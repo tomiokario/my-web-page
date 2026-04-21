@@ -8,7 +8,12 @@ import {
   PublicationMasterRecord,
   PublicationSeeAlso,
 } from "../types/publicationMaster";
-import { fromLegacyResearchmapFields, toLegacyResearchmapFields } from "./publicationMasterSchema";
+import { uniquifyWithNumericSuffix, slugify } from "./stringIds";
+import {
+  compactObject,
+  fromLegacyResearchmapFields,
+  toLegacyResearchmapFields,
+} from "./publicationMasterSchema";
 
 export interface ProcessedDate {
   startDate: string;
@@ -219,7 +224,7 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
     const normalizedPresentationType = mapPresentationType(row.presentationType);
     const invited = resolveInvited(row.presentationType, row.type);
 
-    const researchmapFields: LegacyPublicationMasterResearchmapFields = compactObject({
+    const researchmapFields = compactObject({
       type: classification.type,
       subtype: classification.subtype,
       paper_title: classification.type === "presentations" ? undefined : localizedTitle,
@@ -246,7 +251,7 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
       is_international_journal:
         classification.type !== "presentations" ? classification.isInternational : undefined,
       ...bibliographicInfo,
-    });
+    }) as LegacyPublicationMasterResearchmapFields;
 
     const baseId = buildPublicationId({
       year: row.processedDate.startDate || normalizePublicationDate(row.date),
@@ -263,13 +268,15 @@ export function csvRowsToPublicationMaster(rows: CsvPublicationRow[]): Publicati
     return {
       id,
       fields: fromLegacyResearchmapFields(researchmapFields),
-      localMeta: compactObject({
+      localMeta: {
         hasEmptyFields: row.hasEmptyFields,
         notes: supplementalLinks.remainingNotes || "",
-        legacyHints: compactObject({
-          presentationType: normalizedPresentationType ? [normalizedPresentationType] : undefined,
-        }),
-      }),
+        legacyHints: normalizedPresentationType
+          ? {
+              presentationType: [normalizedPresentationType],
+            }
+          : undefined,
+      },
     };
   });
 }
@@ -535,7 +542,7 @@ function extractQuotedTitle(value: string, language: LocalizedLanguage) {
   const patterns =
     language === "ja"
       ? [/「([^」]+)」/, /"([^"]+)"/]
-      : [/\"([^\"]+)\"/, /“([^”]+)”/, /「([^」]+)」/];
+      : [/"([^"]+)"/, /“([^”]+)”/, /「([^」]+)」/];
 
   for (const pattern of patterns) {
     const match = value.match(pattern);
@@ -916,28 +923,8 @@ function buildPublicationId({
   return `pub-${yearPart}-${slug}`;
 }
 
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize("NFKC")
-    .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
 function uniquifyId(baseId: string, seenIds: Set<string>): string {
-  if (!seenIds.has(baseId)) {
-    seenIds.add(baseId);
-    return baseId;
-  }
-
-  let suffix = 2;
-  let candidate = `${baseId}-${suffix}`;
-
-  while (seenIds.has(candidate)) {
-    suffix += 1;
-    candidate = `${baseId}-${suffix}`;
-  }
-
+  const candidate = uniquifyWithNumericSuffix(baseId, (currentValue) => seenIds.has(currentValue));
   seenIds.add(candidate);
   return candidate;
 }
@@ -1012,21 +999,4 @@ function normalizeArrayOutput(values: string[]): string | string[] {
 
 function unique<T>(values: T[]): T[] {
   return [...new Set(values)];
-}
-
-function compactObject<T extends object>(value: T): T {
-  return Object.fromEntries(
-    Object.entries(value).filter(([, entryValue]) => {
-      if (entryValue === undefined || entryValue === null) {
-        return false;
-      }
-      if (Array.isArray(entryValue)) {
-        return entryValue.length > 0;
-      }
-      if (typeof entryValue === "object") {
-        return Object.keys(entryValue).length > 0;
-      }
-      return true;
-    })
-  ) as T;
 }

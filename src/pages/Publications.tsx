@@ -1,49 +1,34 @@
-import React, { useState } from "react";
-import { useLanguage, LanguageContextType } from "../contexts/LanguageContext";
-import usePublications from "../hooks/usePublications"; // UsePublicationsReturn は不要に
-import useFilters from "../hooks/useFilters"; // UseFiltersReturn は不要に
+import React, { useMemo, useState } from "react";
+
 import PublicationsView from "../components/publications/PublicationsView";
-import publicationsData from "../data/publications.json"; // インポートを元に戻す
+import { LanguageContextType, useLanguage } from "../contexts/LanguageContext";
+import useFilters from "../hooks/useFilters";
+import publicationsData from "../data/publications.json";
+import usePublications from "../hooks/usePublications";
+import {
+  groupPublications,
+  PublicationSortOrder,
+} from "../utils/publicationCollections";
 
-/**
- * 出版物ページのメインコンポーネント
- * データ取得と状態管理を担当し、UIレンダリングはPublicationsViewに委譲
- */
 function Publications() {
-  const [sortOrder, setSortOrder] = useState<"type" | "chronological">('type'); // 'chronological' または 'type'
+  const [sortOrder, setSortOrder] = useState<PublicationSortOrder>("type");
   const { language } = useLanguage() as LanguageContextType;
-
-  // usePublications フックを先に呼び出し、publicationsData を渡す
-  const publicationsResult = usePublications({
+  const { sortedPublications } = usePublications({
     sortOrder,
-    filteredPublications: [], // 初期呼び出しではフィルターなし
-    publicationsData // インポートしたデータを渡す
+    publicationsData,
   });
-
-  // useFilters フックに publicationsResult.sortedPublications を渡す
   const filtersResult = useFilters({
-    publications: publicationsResult.sortedPublications
+    publications: sortedPublications,
   });
-
-  // フィルター適用後の groupedPublications を取得 (再度 usePublications を呼び出す必要はない)
-  // groupedPublications は usePublications の内部で計算されるため、
-  // filtersResult.filteredPublications を usePublications に渡す必要があった以前の実装に戻す
-  const { groupedPublications } = usePublications({
-    sortOrder,
-    filteredPublications: filtersResult.filteredPublications, // フィルター結果を渡す
-    publicationsData // publicationsData も渡す
-  });
-
-
-  // 並び順変更ハンドラー
-  const handleSortOrderChange = (newSortOrder: "type" | "chronological") => {
-    setSortOrder(newSortOrder);
-  };
+  const groupedPublications = useMemo(
+    () => groupPublications(filtersResult.filteredPublications, sortOrder),
+    [filtersResult.filteredPublications, sortOrder]
+  );
 
   return (
     <PublicationsView
       sortOrder={sortOrder}
-      onSortOrderChange={handleSortOrderChange}
+      onSortOrderChange={setSortOrder}
       selectedFilters={filtersResult.selectedFilters}
       openDropdown={filtersResult.openDropdown}
       filterOptions={filtersResult.filterOptions}

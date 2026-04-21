@@ -1,38 +1,36 @@
 import React from "react";
-import { createStyles } from "@mantine/emotion";
 import { MantineTheme } from "@mantine/core";
-import PublicationGroup from "./PublicationGroup";
-import FilterDropdown from "./FilterDropdown";
-import ActiveFilters from "./ActiveFilters";
-import { SelectedFilters } from "../../hooks/useFilters";
-import { Language, Publication } from "../../types";
+import { createStyles } from "@mantine/emotion";
+
+import { SelectedFilters, FilterCategory } from "../../hooks/useFilters";
+import { Language } from "../../types";
 import {
   getPublicationAuthorshipLabel,
   getPublicationPresentationTypeLabel,
   getPublicationReviewLabel,
   getPublicationTypeLabel,
 } from "../../utils/publicationLabels";
+import {
+  PUBLICATION_FILTER_CATEGORIES,
+  PublicationFilterLabels,
+  PublicationFilterOptions,
+  PublicationGroup,
+  PublicationSortOrder,
+} from "../../utils/publicationCollections";
+import ActiveFilters from "./ActiveFilters";
+import FilterDropdown from "./FilterDropdown";
+import PublicationGroupView from "./PublicationGroup";
 
-// PublicationsViewPropsインターフェースを追加
 interface PublicationsViewProps {
-  sortOrder: "type" | "chronological";
-  onSortOrderChange: (newSortOrder: "type" | "chronological") => void;
+  sortOrder: PublicationSortOrder;
+  onSortOrderChange: (newSortOrder: PublicationSortOrder) => void;
   selectedFilters: SelectedFilters;
-  openDropdown: string | null;
-  filterOptions: {
-    year: string[];
-    authorship: string[];
-    type: string[];
-    review: string[];
-    presentationType: string[];
-  };
-  groupedPublications: Array<{
-    name: string;
-    items: Publication[];
-  }>;
-  filterRefs: React.MutableRefObject<Record<string, HTMLElement | null>>;
-  toggleDropdown: (dropdown: string | null) => void;
-  toggleFilter: (category: keyof SelectedFilters, value: string) => void;
+  openDropdown: FilterCategory | null;
+  filterOptions: PublicationFilterOptions;
+  groupedPublications: PublicationGroup[];
+  filterRefs: React.MutableRefObject<Record<FilterCategory, HTMLElement | null>>;
+  toggleDropdown: (dropdown: FilterCategory | null) => void;
+  toggleFilter: (category: FilterCategory, value: string) => void;
   resetFilters: () => void;
   language: Language;
 }
@@ -60,10 +58,26 @@ const useStyles = createStyles((theme: MantineTheme) => ({
   },
 }));
 
-/**
- * 出版物一覧の表示コンポーネント
- * UIレンダリングのみを担当し、データ処理ロジックは含まない
- */
+function getFilterValueLabel(category: FilterCategory, value: string, language: Language): string {
+  if (category === "type") {
+    return getPublicationTypeLabel(value, language);
+  }
+
+  if (category === "review") {
+    return getPublicationReviewLabel(value, language);
+  }
+
+  if (category === "authorship") {
+    return getPublicationAuthorshipLabel(value, language);
+  }
+
+  if (category === "presentationType") {
+    return getPublicationPresentationTypeLabel(value, language);
+  }
+
+  return value;
+}
+
 function PublicationsView({
   sortOrder,
   onSortOrderChange,
@@ -78,46 +92,26 @@ function PublicationsView({
   language,
 }: PublicationsViewProps) {
   const { classes } = useStyles();
-
-  // 言語に応じたラベル
-  const filterLabels = {
-    year: language === 'ja' ? '出版年' : 'Year',
-    authorship: language === 'ja' ? '著者の役割' : 'Authorship',
-    type: language === 'ja' ? '種類' : 'Type',
-    review: language === 'ja' ? 'レビュー' : 'Review',
-    presentationType: language === 'ja' ? '発表タイプ' : 'Presentation Type'
+  const filterLabels: PublicationFilterLabels = {
+    year: language === "ja" ? "出版年" : "Year",
+    authorship: language === "ja" ? "著者の役割" : "Authorship",
+    type: language === "ja" ? "種類" : "Type",
+    review: language === "ja" ? "レビュー" : "Review",
+    presentationType: language === "ja" ? "発表タイプ" : "Presentation Type",
   };
-  const resetLabel = language === 'ja' ? 'フィルターをリセット' : 'Reset Filters';
-  const yearBasedLabel = language === 'ja' ? '年別に表示' : 'By year';
-  const typeBasedLabel = language === 'ja' ? '種類別に表示' : 'By type';
-  const getFilterValueLabel = (category: keyof SelectedFilters, value: string): string => {
-    if (category === "type") {
-      return getPublicationTypeLabel(value, language);
-    }
-
-    if (category === "review") {
-      return getPublicationReviewLabel(value, language);
-    }
-
-    if (category === "authorship") {
-      return getPublicationAuthorshipLabel(value, language);
-    }
-
-    if (category === "presentationType") {
-      return getPublicationPresentationTypeLabel(value, language);
-    }
-
-    return value;
-  };
+  const resetLabel = language === "ja" ? "フィルターをリセット" : "Reset Filters";
+  const yearBasedLabel = language === "ja" ? "年別に表示" : "By year";
+  const typeBasedLabel = language === "ja" ? "種類別に表示" : "By type";
 
   return (
     <div className={classes.container}>
-      {/* 並び順選択 */}
       <div className={classes.sortOrderContainer}>
         <select
           id="sortOrder"
           value={sortOrder}
-          onChange={(e) => onSortOrderChange(e.target.value as "type" | "chronological")}
+          onChange={(event) =>
+            onSortOrderChange(event.target.value as PublicationSortOrder)
+          }
           className={classes.sortOrderSelect}
           data-testid="sort-order-select"
         >
@@ -126,41 +120,38 @@ function PublicationsView({
         </select>
       </div>
 
-      {/* フィルターボタン */}
       <div className={classes.filterButtonsContainer}>
-        {Object.entries(filterLabels).map(([category, label]) => (
+        {PUBLICATION_FILTER_CATEGORIES.map((category) => (
           <FilterDropdown
             key={category}
-            category={category as keyof SelectedFilters}
-            label={label}
-            options={filterOptions[category as keyof typeof filterOptions]}
-            selectedValues={selectedFilters[category as keyof SelectedFilters]}
-            getOptionLabel={(option) =>
-              getFilterValueLabel(category as keyof SelectedFilters, option)
-            }
+            category={category}
+            label={filterLabels[category]}
+            options={filterOptions[category]}
+            selectedValues={selectedFilters[category]}
+            getOptionLabel={(option) => getFilterValueLabel(category, option, language)}
             isOpen={openDropdown === category}
             onToggleDropdown={toggleDropdown}
             onToggleFilter={toggleFilter}
-            filterRef={(el: HTMLElement | null) => filterRefs.current[category] = el}
+            filterRef={(element: HTMLElement | null) => {
+              filterRefs.current[category] = element;
+            }}
           />
         ))}
       </div>
-      
-      {/* アクティブフィルターの表示 */}
+
       <ActiveFilters
         selectedFilters={selectedFilters}
         filterLabels={filterLabels}
-        getValueLabel={getFilterValueLabel}
+        getValueLabel={(category, value) => getFilterValueLabel(category, value, language)}
         onToggleFilter={toggleFilter}
         onResetFilters={resetFilters}
         resetLabel={resetLabel}
       />
 
-      {/* グループ化された出版物リスト */}
       <div className={classes.publicationsContainer}>
-        {groupedPublications.map((group, groupIndex) => (
-          <PublicationGroup
-            key={groupIndex}
+        {groupedPublications.map((group) => (
+          <PublicationGroupView
+            key={group.name}
             name={sortOrder === "type" ? getPublicationTypeLabel(group.name, language) : group.name}
             items={group.items}
             language={language}

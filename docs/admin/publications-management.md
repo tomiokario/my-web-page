@@ -10,6 +10,24 @@
 
 この repo では、正規化したタイトルが一致する業績の重複を許容しません。同一タイトルの業績を別 record として追加せず、既存 record を更新する前提で運用します。
 
+## 公開/非公開の境界
+
+- `src/data/publication_master.json`
+  - canonical な publication data の tracked 正本です
+  - `fields` は公開して問題ない書誌情報として扱います
+  - `sync.researchmap` は連携メタですが、現時点では機密情報としては扱わず tracked data に残します
+  - つまり `sync.researchmap` は private 側へ分離する対象ではなく、この repo では public 側の tracked metadata として扱います
+- `src/data/publications.json`
+  - 公開ページ用の生成物です
+  - `localMeta.notes`、`hasEmptyFields`、`sync.researchmap.*` は出力しません
+- 非公開のまま運用するもの
+  - `tmp/researchmap/**` の import/export 入出力
+  - `tmp/researchmap/archive/**` と再取り込み防止の履歴
+  - dry-run で出る review / invalid / quarantine 相当の一時レポート
+  - 将来 unpublished note が必要になった場合のローカル補助メモ
+
+つまり、この repo で private 側に残すのは `tmp/researchmap` / `archive` / review / quarantine / ローカル運用メモだけです。`publication_master.json` に含まれる `fields` と `sync.researchmap` は public 側の tracked data として扱い、private 側とは数えません。
+
 ## 更新ワークフロー
 
 ### researchmap export JSONL を取り込む場合
