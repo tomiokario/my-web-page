@@ -32,7 +32,8 @@ description: Convert publication_master.json into researchmap bulk-import JSONL,
 
 ## 判定順
 
-1. `src/researchmapClassificationRules.mjs` を最優先する
-2. 既存の Web サイト用データの整理を確認する
+1. まず canonical `fields` を正とし、`publication_master.json` から researchmap payload を直接組み立てる本線を確認する
+2. 既存の Web サイト用データや旧 `Publication` 風データは、互換確認が必要なときだけ参照する
 3. 共著者本人や所属機関の公開業績を確認する
 4. それでも曖昧なら researchmap マニュアルの定義に寄せる
+5. `src/researchmapClassificationRules.mjs` は、旧来データ互換や個別例外を吸収する手動分類ルールです。分類処理では先に効きますが、位置づけとしては本線の中心ではなく override 用の補助として扱います

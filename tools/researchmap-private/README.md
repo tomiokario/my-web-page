@@ -32,9 +32,13 @@ node scripts/exportResearchmapJson.mjs \
 ## 主なファイル
 
 - `scripts/exportResearchmapJson.mjs`
+  - `publication_master.json` から researchmap 用 JSONL を生成する入口です
 - `src/researchmapExport.mjs`
-- `src/researchmapClassificationRules.mjs`
+  - canonical `fields` から researchmap payload を直接組み立てる本体です
+- `src/researchmapMerge.mjs` / `src/researchmapReversibleExport.mjs` / `src/researchmapConsistency.mjs`
+  - 既存 researchmap 情報を壊しにくくし、生成結果の由来や整合を確認する補助です
 - `skills/researchmap-bulk-import/SKILL.md`
+  - このツールの使い方と判断順をまとめています
 
 ## 現在の運用メモ
 
@@ -42,6 +46,7 @@ node scripts/exportResearchmapJson.mjs \
 - `tmp/researchmap/**` と `review` / `quarantine` / `archive` の生成物は local-only で、git に載せません
 - `test/fixtures/current-export.jsonl` は synthetic fixture として扱い、実データの raw export は置きません
 - `reversible-export.json` は再現に必要な master/publication 情報だけを保持し、`localMeta.notes` は含めません
+- `src/researchmapClassificationRules.mjs` は、旧来データ互換や個別例外を吸収する手動分類ルールです。分類処理では先に効きますが、canonical `fields` から payload を組み立てる本線そのものを置き換えるものではありません
 
 - merge policy の全体像
   - identity field は `researchmap record id -> DOI -> canonical fingerprint` の順で strict match し、既存側の identity が非空なら既存側を優先します
