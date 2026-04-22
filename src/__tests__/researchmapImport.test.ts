@@ -532,6 +532,64 @@ describe("researchmapImport", () => {
     expect(updatedMaster[1].fields.venue.addressCountry).toBe("JP");
   });
 
+  test("published_papers / misc の from_event_date と to_event_date を dates に保持する", () => {
+    fs.writeFileSync(masterJsonFilePath, "[]\n", "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "published_papers", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Paper With Event Dates" },
+          publication_name: { en: "Journal A" },
+          publication_date: "2024-03-01",
+          from_event_date: "2024-03-01",
+          to_event_date: "2024-03-03",
+          published_paper_type: "scientific_journal",
+        },
+      },
+      {
+        insert: { type: "misc", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Misc With Event Dates" },
+          publication_name: { en: "Report A" },
+          publication_date: "2024-04-01",
+          from_event_date: "2024-04-01",
+          to_event_date: "2024-04-02",
+          misc_type: "technical_report",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.added).toBe(2);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    const paperRecord = updatedMaster.find(
+      (record: { fields: { title?: { en?: string } } }) =>
+        record.fields.title?.en === "Paper With Event Dates"
+    );
+    const miscRecord = updatedMaster.find(
+      (record: { fields: { title?: { en?: string } } }) =>
+        record.fields.title?.en === "Misc With Event Dates"
+    );
+
+    expect(paperRecord.fields.dates).toEqual({
+      published: "2024-03-01",
+      eventStart: "2024-03-01",
+      eventEnd: "2024-03-03",
+    });
+    expect(miscRecord.fields.dates).toEqual({
+      published: "2024-04-01",
+      eventStart: "2024-04-01",
+      eventEnd: "2024-04-02",
+    });
+  });
+
   test("presentation は typed field を優先し legacy field を無視する", () => {
     writeJsonl([
       {

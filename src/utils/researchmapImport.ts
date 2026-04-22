@@ -1092,12 +1092,12 @@ function resolveResearchmapTitle(
 }
 
 function optionalDates(
-  type: PublicationType,
+  _type: PublicationType,
   payload: Record<string, unknown>
 ): PublicationMasterFields["dates"] | undefined {
   const published = optionalString(payload.publication_date) || optionalString(payload.from_event_date);
-  const eventStart = type === "presentations" ? optionalString(payload.from_event_date) : undefined;
-  const eventEnd = type === "presentations" ? optionalString(payload.to_event_date) : undefined;
+  const eventStart = optionalString(payload.from_event_date);
+  const eventEnd = optionalString(payload.to_event_date);
 
   if (!published && !eventStart && !eventEnd) {
     return undefined;

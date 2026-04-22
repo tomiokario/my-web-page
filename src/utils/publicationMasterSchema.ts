@@ -132,7 +132,7 @@ export function stringifyContributors(
 export function normalizeDoi(value: string | undefined | null): string {
   return (value || "")
     .trim()
-    .replace(/^https?:\/\/doi\.org\//i, "")
+    .replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "")
     .toLowerCase();
 }
 

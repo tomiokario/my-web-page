@@ -20,8 +20,7 @@ function mapMasterRecordToPublication(record: PublicationMasterRecord, index: nu
   const primaryWebLink = selectPrimaryWebLink(fields.links, doi);
   const authorshipValues = normalizeArrayOutput(deriveAuthorshipCodes(fields));
   const presentationTypes = normalizeArrayOutput(derivePresentationTypeCodes(fields));
-  const startDate = fields.dates?.eventStart || fields.dates?.published || "";
-  const endDate = fields.dates?.eventEnd || fields.dates?.eventStart || fields.dates?.published || "";
+  const webDate = deriveWebDate(fields);
   const journalConference =
     getPublicationVenueText(fields, "en") || getPublicationVenueText(fields, "ja");
   const site = getLocalizedTextValue(fields.location, "en") || getLocalizedTextValue(fields.location, "ja");
@@ -43,12 +42,39 @@ function mapMasterRecordToPublication(record: PublicationMasterRecord, index: nu
     doi,
     webLink: primaryWebLink?.url || "",
     date: buildWebDateText(fields),
-    startDate,
-    endDate,
-    sortableDate: startDate,
+    startDate: webDate.startDate,
+    endDate: webDate.endDate,
+    sortableDate: webDate.sortableDate,
     others: formatAdditionalSeeAlsoEntries(fields.links, primaryWebLink?.url, doi),
     site,
     journalConference,
+  };
+}
+
+function deriveWebDate(fields: PublicationMasterFields): {
+  startDate: string;
+  endDate: string;
+  sortableDate: string;
+} {
+  const published = fields.dates?.published || "";
+
+  if (fields.type === "published_papers") {
+    const fallback = fields.dates?.eventStart || "";
+
+    return {
+      startDate: published || fallback,
+      endDate: published || fallback,
+      sortableDate: published || fallback,
+    };
+  }
+
+  const startDate = fields.dates?.eventStart || published;
+  const endDate = fields.dates?.eventEnd || fields.dates?.eventStart || published;
+
+  return {
+    startDate,
+    endDate,
+    sortableDate: startDate,
   };
 }
 
@@ -61,7 +87,7 @@ function selectPrimaryWebLink(
   }
 
   const doiUrls = buildKnownDoiUrls(doi);
-  return entries.find((entry) => !doiUrls.has(entry.url)) || entries[0];
+  return entries.find((entry) => !doiUrls.has(entry.url));
 }
 
 function formatAdditionalSeeAlsoEntries(
@@ -142,14 +168,15 @@ function buildWebDateText(fields: PublicationMasterFields): string {
   const eventStart = fields.dates?.eventStart || published;
   const eventEnd = fields.dates?.eventEnd || "";
 
-  if (fields.type === "presentations") {
-    if (!eventStart) {
-      return "";
-    }
-    return eventEnd && eventEnd !== eventStart ? `${eventStart} → ${eventEnd}` : eventStart;
+  if (fields.type === "published_papers") {
+    return published || eventStart;
   }
 
-  return published;
+  if (!eventStart) {
+    return "";
+  }
+
+  return eventEnd && eventEnd !== eventStart ? `${eventStart} → ${eventEnd}` : eventStart;
 }
 
 function normalizeArrayOutput(values: string[]): string | string[] {
