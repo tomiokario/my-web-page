@@ -10,8 +10,6 @@ import {
   PublicationMasterRecord,
 } from "../types/publicationMaster";
 import {
-  csvRowsToPublicationMaster,
-  parseCsvContent,
   publicationMasterToWebPublications,
 } from "./publicationMaster";
 import {
@@ -25,11 +23,6 @@ import { findDuplicatePublicationTitleGroups } from "./publicationTitle";
 export interface PublicationArtifactPaths {
   masterJsonFilePath: string;
   webJsonFilePath: string;
-}
-
-export function csvToPublicationMaster(csvFilePath: string): PublicationMasterRecord[] {
-  const csvData = fs.readFileSync(csvFilePath, "utf8");
-  return csvRowsToPublicationMaster(parseCsvContent(csvData));
 }
 
 export function publicationMasterToJson(publications: PublicationMasterRecord[]): string {
@@ -265,26 +258,7 @@ function validateLocalMeta(
   return compactObject({
     hasEmptyFields: localMeta.hasEmptyFields,
     notes: optionalString(localMeta.notes, `${sourceLabel}.notes`) || "",
-    legacyHints: optionalLegacyHints(localMeta.legacyHints, `${sourceLabel}.legacyHints`),
   }) as PublicationMasterRecord["localMeta"];
-}
-
-function optionalLegacyHints(
-  value: unknown,
-  sourceLabel: string
-): PublicationMasterRecord["localMeta"]["legacyHints"] | undefined {
-  if (value === undefined || value === null) {
-    return undefined;
-  }
-
-  const legacyHints = asObject(value, sourceLabel);
-  return compactObject({
-    authorship: optionalStringArray(legacyHints.authorship, `${sourceLabel}.authorship`),
-    presentationType: optionalStringArray(
-      legacyHints.presentationType,
-      `${sourceLabel}.presentationType`
-    ),
-  });
 }
 
 function optionalSync(

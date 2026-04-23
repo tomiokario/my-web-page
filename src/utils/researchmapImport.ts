@@ -3,9 +3,9 @@ import * as fs from "fs";
 import * as path from "path";
 
 import {
-  LegacyPublicationMasterResearchmapFields,
-  LocalizedPeople,
   LocalizedText,
+  PublicationLink,
+  PublicationContributor,
   PublicationMasterFields,
   PublicationMasterRecord,
 } from "../types/publicationMaster";
@@ -19,7 +19,6 @@ import {
   buildCanonicalFingerprint,
   compactObject,
   describePublicationRecord,
-  fromLegacyResearchmapFields,
   getPublicationDate,
   getPublicationDoi,
   getPublicationTitleText,
@@ -340,8 +339,7 @@ function buildMasterRecordFromResearchmapRecord(
   }
 
   const payload = getPayload(record);
-  const legacyFields = sanitizeResearchmapFields(type, payload);
-  const fields = fromLegacyResearchmapFields(legacyFields);
+  const fields = buildCanonicalFieldsFromResearchmapPayload(type, payload);
   const recordId = buildRecordId(fields, fallbackId);
 
   return compactObject({
@@ -362,49 +360,32 @@ function buildMasterRecordFromResearchmapRecord(
   }) as PublicationMasterRecord;
 }
 
-function sanitizeResearchmapFields(
+function buildCanonicalFieldsFromResearchmapPayload(
   type: PublicationType,
   payload: Record<string, unknown>
-): LegacyPublicationMasterResearchmapFields {
+): PublicationMasterFields {
   const subtype = resolveSubtype(type, payload);
 
   return compactObject({
     type,
     subtype,
-    paper_title: optionalLocalizedText(payload.paper_title),
-    presentation_title: optionalLocalizedText(payload.presentation_title),
-    authors: optionalLocalizedPeople(payload.authors),
-    presenters: optionalLocalizedPeople(payload.presenters),
-    publication_name: optionalLocalizedText(payload.publication_name),
-    event: optionalLocalizedText(payload.event),
-    promoter: optionalLocalizedText(payload.promoter),
-    address_country: optionalString(payload.address_country),
-    publication_date: optionalString(payload.publication_date),
-    from_event_date: optionalString(payload.from_event_date),
-    to_event_date: optionalString(payload.to_event_date),
+    title: resolveResearchmapTitle(type, payload),
+    contributors: optionalContributors(type, payload),
+    venue: optionalVenue(type, payload),
+    dates: optionalDates(type, payload),
     identifiers: optionalIdentifiers(payload.identifiers),
-    see_also: optionalSeeAlso(payload.see_also),
-    volume: optionalString(payload.volume),
-    number: optionalString(payload.number),
-    starting_page: optionalString(payload.starting_page),
-    ending_page: optionalString(payload.ending_page),
+    links: optionalSeeAlso(payload.see_also),
+    bibliographic: optionalBibliographic(payload),
     location: optionalLocalizedText(payload.location),
     description: optionalLocalizedText(payload.description),
-    referee: optionalBoolean(payload.referee),
-    invited: optionalBoolean(payload.invited),
-    published_paper_owner_roles: optionalStringArray(payload.published_paper_owner_roles),
-    presentation_type:
-      type === "presentations" ? optionalString(payload.presentation_type) : undefined,
-    published_paper_type:
-      type === "published_papers" ? optionalString(payload.published_paper_type) : undefined,
-    misc_type: type === "misc" ? optionalString(payload.misc_type) : undefined,
-    is_international_presentation:
+    review: optionalBoolean(payload.referee),
+    invited: optionalBoolean(payload.invited) ?? deriveInvitedFromSubtype(type, subtype),
+    ownerRoles: optionalStringArray(payload.published_paper_owner_roles),
+    isInternational:
       type === "presentations"
         ? optionalBoolean(payload.is_international_presentation)
-        : undefined,
-    is_international_journal:
-      type === "presentations" ? undefined : optionalBoolean(payload.is_international_journal),
-  }) as LegacyPublicationMasterResearchmapFields;
+        : optionalBoolean(payload.is_international_journal),
+  }) as PublicationMasterFields;
 }
 
 function findStrictMatch(
@@ -854,12 +835,12 @@ function resolveSubtype(
   payload: Record<string, unknown>
 ): string | undefined {
   if (type === "published_papers") {
-    return optionalString(payload.published_paper_type) || optionalString(payload.subtype);
+    return optionalString(payload.published_paper_type);
   }
   if (type === "presentations") {
-    return optionalString(payload.presentation_type) || optionalString(payload.subtype);
+    return optionalString(payload.presentation_type);
   }
-  return optionalString(payload.misc_type) || optionalString(payload.subtype);
+  return optionalString(payload.misc_type);
 }
 
 function appendDuplicateTitleIssues(
@@ -1018,45 +999,17 @@ function optionalLocalizedText(value: unknown): LocalizedText | undefined {
   }
 
   const localized = value as Record<string, unknown>;
-  return compactObject({
+  const text = compactObject({
     ja: optionalString(localized.ja),
     en: optionalString(localized.en),
   }) as LocalizedText;
-}
 
-function optionalLocalizedPeople(value: unknown): LocalizedPeople | undefined {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
-    return undefined;
-  }
-
-  const localized = value as Record<string, unknown>;
-  return compactObject({
-    ja: optionalPeopleArray(localized.ja),
-    en: optionalPeopleArray(localized.en),
-  }) as LocalizedPeople;
-}
-
-function optionalPeopleArray(value: unknown): LocalizedPeople["ja"] | undefined {
-  if (!Array.isArray(value)) {
-    return undefined;
-  }
-
-  const people = value
-    .map((person) => {
-      if (!person || typeof person !== "object" || Array.isArray(person)) {
-        return undefined;
-      }
-      const name = optionalString((person as Record<string, unknown>).name);
-      return name ? { name } : undefined;
-    })
-    .filter((person): person is { name: string } => Boolean(person));
-
-  return people.length > 0 ? people : undefined;
+  return Object.keys(text).length > 0 ? text : undefined;
 }
 
 function optionalIdentifiers(
   value: unknown
-): LegacyPublicationMasterResearchmapFields["identifiers"] | undefined {
+): PublicationMasterFields["identifiers"] | undefined {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return undefined;
   }
@@ -1064,12 +1017,12 @@ function optionalIdentifiers(
   const identifiers = value as Record<string, unknown>;
   const doi = optionalStringArray(identifiers.doi);
 
-  return doi?.length ? { doi } : undefined;
+  return doi?.length ? { doi: doi[0] } : undefined;
 }
 
 function optionalSeeAlso(
   value: unknown
-): LegacyPublicationMasterResearchmapFields["see_also"] | undefined {
+): PublicationMasterFields["links"] | undefined {
   if (!Array.isArray(value)) {
     return undefined;
   }
@@ -1086,16 +1039,153 @@ function optionalSeeAlso(
       }
 
       return compactObject({
-        "@id": id,
+        url: id,
         label: optionalString(link.label) || "url",
-        is_downloadable: optionalBoolean(link.is_downloadable),
+        isDownloadable: optionalBoolean(link.is_downloadable),
       });
     })
     .filter(Boolean);
 
-  return links.length > 0
-    ? (links as LegacyPublicationMasterResearchmapFields["see_also"])
-    : undefined;
+  return links.length > 0 ? (links as PublicationMasterFields["links"]) : undefined;
+}
+
+function optionalContributors(
+  type: PublicationType,
+  payload: Record<string, unknown>
+): PublicationMasterFields["contributors"] | undefined {
+  const role = type === "presentations" ? "presenter" : "author";
+  const source = type === "presentations" ? payload.presenters : payload.authors;
+  return localizedPeopleToContributors(source, role);
+}
+
+function optionalVenue(
+  type: PublicationType,
+  payload: Record<string, unknown>
+): PublicationMasterFields["venue"] | undefined {
+  const name = type === "presentations" ? optionalLocalizedText(payload.event) : optionalLocalizedText(payload.publication_name);
+  const kind = type === "presentations" ? "event" : "publication";
+  const promoter = type === "presentations" ? optionalLocalizedText(payload.promoter) : undefined;
+  const addressCountry =
+    type === "presentations" ? optionalString(payload.address_country) : undefined;
+
+  if (!name && !promoter && !addressCountry) {
+    return undefined;
+  }
+
+  return compactObject({
+    kind,
+    name,
+    promoter,
+    addressCountry,
+  }) as PublicationMasterFields["venue"];
+}
+
+function resolveResearchmapTitle(
+  type: PublicationType,
+  payload: Record<string, unknown>
+): LocalizedText | undefined {
+  if (type === "presentations") {
+    return optionalLocalizedText(payload.presentation_title);
+  }
+
+  return optionalLocalizedText(payload.paper_title);
+}
+
+function optionalDates(
+  _type: PublicationType,
+  payload: Record<string, unknown>
+): PublicationMasterFields["dates"] | undefined {
+  const published = optionalString(payload.publication_date) || optionalString(payload.from_event_date);
+  const eventStart = optionalString(payload.from_event_date);
+  const eventEnd = optionalString(payload.to_event_date);
+
+  if (!published && !eventStart && !eventEnd) {
+    return undefined;
+  }
+
+  return compactObject({
+    published,
+    eventStart,
+    eventEnd,
+  }) as PublicationMasterFields["dates"];
+}
+
+function optionalBibliographic(
+  payload: Record<string, unknown>
+): PublicationMasterFields["bibliographic"] | undefined {
+  const volume = optionalString(payload.volume);
+  const number = optionalString(payload.number);
+  const startPage = optionalString(payload.starting_page);
+  const endPage = optionalString(payload.ending_page);
+
+  if (!volume && !number && !startPage && !endPage) {
+    return undefined;
+  }
+
+  return compactObject({
+    volume,
+    number,
+    startPage,
+    endPage,
+  }) as PublicationMasterFields["bibliographic"];
+}
+
+function localizedPeopleToContributors(
+  value: unknown,
+  role: PublicationContributor["role"]
+): PublicationMasterFields["contributors"] | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return undefined;
+  }
+
+  const localized = value as Record<string, unknown>;
+  const ja = optionalPeopleArray(localized.ja);
+  const en = optionalPeopleArray(localized.en);
+  const count = Math.max(ja.length, en.length);
+
+  if (count === 0) {
+    return undefined;
+  }
+
+  const contributors = Array.from({ length: count }, (_, index) => {
+    const name = compactObject({
+      ja: ja[index],
+      en: en[index],
+    }) as LocalizedText;
+
+    return Object.keys(name).length > 0 ? { role, name } : undefined;
+  }).filter((item): item is PublicationContributor => Boolean(item));
+
+  return contributors.length > 0 ? contributors : undefined;
+}
+
+function deriveInvitedFromSubtype(
+  type: PublicationType,
+  subtype: string | undefined
+): boolean | undefined {
+  if (type !== "presentations" || !subtype) {
+    return undefined;
+  }
+
+  return subtype.startsWith("invited_") ? true : undefined;
+}
+
+function optionalPeopleArray(
+  value: unknown
+): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .map((person) => {
+      if (!person || typeof person !== "object" || Array.isArray(person)) {
+        return undefined;
+      }
+      const name = optionalString((person as Record<string, unknown>).name);
+      return name || undefined;
+    })
+    .filter((name): name is string => Boolean(name));
 }
 
 function optionalStringArray(value: unknown): string[] | undefined {

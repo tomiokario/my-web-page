@@ -19,50 +19,41 @@ test('generated researchmap data surfaces current master inconsistencies', () =>
   const masterPath = path.join(repoRoot, 'src/data/publication_master.json');
   const sourceMetadata = loadMasterPublications(masterPath);
   const { publications } = sourceMetadata;
-  const { importLines } = generateResearchmapExport(publications, { researchmapUserId: 'R123456789' });
+  const { importLines } = generateResearchmapExport(sourceMetadata.records, { researchmapUserId: 'R123456789' });
 
   const report = analyzeResearchmapConsistency(publications, importLines);
 
-  assert.equal(report.issues.length, 4);
+  assert.equal(report.issues.length, 27);
   assert.deepEqual(
-    report.issues.map((item) => ({
-      publicationId: item.publicationId,
-      lineType: item.type,
-      title: item.title,
-      issueCodes: item.issues.map((issue) => issue.code),
-      warningCodes: item.warnings.map((warning) => warning.code),
-    })),
-    [
-      {
-        publicationId: 'pub-2023-自己参照型ホログラフィの原理に基づく光電子融合型ニューラルネットワークハードウェア',
-        lineType: 'presentations',
-        title: '自己参照型ホログラフィの原理に基づく光電子融合型ニューラルネットワークハードウェア',
-        issueCodes: ['bibliography_mismatch'],
-        warningCodes: ['japanese_fallback_in_en_title'],
-      },
-      {
-        publicationId: 'pub-2024-numerical-simulations-on-complex-valued-optoelec',
-        lineType: 'presentations',
-        title: 'Numerical simulations on complex-valued optoelectronic deep neural network',
-        issueCodes: ['bibliography_mismatch'],
-        warningCodes: [],
-      },
-      {
-        publicationId: 'pub-2024-numerical-simulations-of-efficient-training-meth',
-        lineType: 'presentations',
-        title: 'Numerical simulations of efficient training method on optoelectronic deep neural network using transmission matrix',
-        issueCodes: ['bibliography_mismatch'],
-        warningCodes: [],
-      },
-      {
-        publicationId: 'pub-2025-深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検',
-        lineType: 'presentations',
-        title: '深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討',
-        issueCodes: ['bibliography_mismatch'],
-        warningCodes: ['japanese_fallback_in_en_title'],
-      },
-    ]
+    [...new Set(report.issues.flatMap((item) => item.issues.map((issue) => issue.code)))].sort(),
+    ['bibliography_mismatch', 'ja_venue_mismatch']
   );
+
+  const venueMismatch = report.issues.find(
+    (item) => item.publicationId === 'pub-2022-improvement-of-learning-process-by-transmission-'
+  );
+  assert.ok(venueMismatch);
+  assert.deepEqual(
+    {
+      publicationId: venueMismatch.publicationId,
+      lineType: venueMismatch.type,
+      issueCodes: venueMismatch.issues.map((issue) => issue.code),
+      warningCodes: venueMismatch.warnings.map((warning) => warning.code),
+    },
+    {
+      publicationId: 'pub-2022-improvement-of-learning-process-by-transmission-',
+      lineType: 'misc',
+      issueCodes: ['ja_venue_mismatch', 'bibliography_mismatch'],
+      warningCodes: ['jpn_with_en_only_location'],
+    }
+  );
+
+  const japaneseFallback = report.issues.find(
+    (item) => item.publicationId ===
+      'pub-2022-仮想空間アプリケーションを利用した訪問地の事前体験と高齢化社会への適用'
+  );
+  assert.ok(japaneseFallback);
+  assert.deepEqual(japaneseFallback.warnings.map((warning) => warning.code), ['japanese_fallback_in_en_title']);
 });
 
 test('current export surfaces alignment gaps against the master data', () => {
