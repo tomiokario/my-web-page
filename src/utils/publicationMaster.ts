@@ -84,7 +84,7 @@ function selectPrimaryWebLink(
   }
 
   const doiUrls = buildKnownDoiUrls(doi);
-  return entries.find((entry) => !doiUrls.has(entry.url));
+  return entries.find((entry) => !isKnownDoiUrl(entry.url, doiUrls));
 }
 
 function formatAdditionalSeeAlsoEntries(
@@ -99,12 +99,16 @@ function formatAdditionalSeeAlsoEntries(
   const doiUrls = buildKnownDoiUrls(doi);
 
   return entries
-    .filter((entry) => entry.url !== primaryLinkId && !doiUrls.has(entry.url))
+    .filter((entry) => entry.url !== primaryLinkId && !isKnownDoiUrl(entry.url, doiUrls))
     .map((entry) => {
       const label = entry.label.trim();
       return label && label.toLowerCase() !== "url" ? `${label}: ${entry.url}` : entry.url;
     })
     .join("\n");
+}
+
+function isKnownDoiUrl(url: string, doiUrls: Set<string>): boolean {
+  return doiUrls.has(url.toLowerCase());
 }
 
 function buildKnownDoiUrls(doi: string): Set<string> {

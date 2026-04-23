@@ -441,6 +441,49 @@ describe("publicationMasterFile", () => {
     expect(publications[0].others).not.toContain("https://dx.doi.org/10.1000/example");
   });
 
+  test("DOI URL は大文字小文字の違いがあっても webLink 候補から除外する", () => {
+    const publications = publicationMasterToWebPublications([
+      {
+        id: "pub-2024-doi-case-insensitive",
+        fields: {
+          type: "published_papers",
+          subtype: "scientific_journal",
+          title: {
+            en: "Case Insensitive DOI Paper",
+          },
+          identifiers: {
+            doi: "10.1000/example",
+          },
+          links: [
+            {
+              url: "https://DOI.ORG/10.1000/EXAMPLE",
+              label: "doi",
+            },
+            {
+              url: "https://example.com/manual-link",
+              label: "manual",
+            },
+            {
+              url: "https://example.com/extra-link",
+              label: "supplement",
+            },
+          ],
+          dates: {
+            published: "2024-01-01",
+          },
+        },
+        localMeta: {
+          hasEmptyFields: false,
+          notes: "",
+        },
+      },
+    ]);
+
+    expect(publications[0].webLink).toBe("https://example.com/manual-link");
+    expect(publications[0].others).toContain("https://example.com/extra-link");
+    expect(publications[0].others).not.toContain("https://DOI.ORG/10.1000/EXAMPLE");
+  });
+
   test("DOI しかない record は webLink を空のままにする", () => {
     const publications = publicationMasterToWebPublications([
       {
@@ -452,11 +495,11 @@ describe("publicationMasterFile", () => {
             en: "DOI Only Paper",
           },
           identifiers: {
-            doi: "https://dx.doi.org/10.1000/example",
+            doi: "10.1000/example",
           },
           links: [
             {
-              url: "https://dx.doi.org/10.1000/example",
+              url: "https://DOI.ORG/10.1000/EXAMPLE",
               label: "doi",
             },
           ],
@@ -471,7 +514,7 @@ describe("publicationMasterFile", () => {
       },
     ]);
 
-    expect(publications[0].doi).toBe("https://dx.doi.org/10.1000/example");
+    expect(publications[0].doi).toBe("10.1000/example");
     expect(publications[0].webLink).toBe("");
     expect(publications[0].others).toBe("");
   });
