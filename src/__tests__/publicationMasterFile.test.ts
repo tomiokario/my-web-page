@@ -476,7 +476,7 @@ describe("publicationMasterFile", () => {
     expect(publications[0].others).toBe("");
   });
 
-  test("published_papers の date は publication date を優先する", () => {
+  test("published_papers は publication date を date に使い、eventStart / eventEnd は保持する", () => {
     const publications = publicationMasterToWebPublications([
       {
         id: "pub-2024-published-paper-date",
@@ -502,12 +502,12 @@ describe("publicationMasterFile", () => {
     expect(publications[0]).toMatchObject({
       date: "2024-04-01",
       startDate: "2024-04-01",
-      endDate: "2024-04-01",
+      endDate: "2024-04-03",
       sortableDate: "2024-04-01",
     });
   });
 
-  test("published_papers は publication date が無いときだけ eventStart に救済する", () => {
+  test("published_papers は publication date が無いときも eventStart / eventEnd を保持する", () => {
     const publications = publicationMasterToWebPublications([
       {
         id: "pub-2024-published-paper-fallback",
@@ -532,7 +532,7 @@ describe("publicationMasterFile", () => {
     expect(publications[0]).toMatchObject({
       date: "2024-05-01",
       startDate: "2024-05-01",
-      endDate: "2024-05-01",
+      endDate: "2024-05-03",
       sortableDate: "2024-05-01",
     });
   });

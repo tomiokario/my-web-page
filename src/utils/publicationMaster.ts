@@ -3,6 +3,8 @@ import { PublicationLink, PublicationMasterFields, PublicationMasterRecord } fro
 import {
   getLocalizedTextValue,
   getPublicationDate,
+  getPublicationEventEnd,
+  getPublicationEventStart,
   getPublicationDoi,
   getPublicationTitle,
   getPublicationVenueText,
@@ -56,24 +58,19 @@ function deriveWebDate(fields: PublicationMasterFields): {
   endDate: string;
   sortableDate: string;
 } {
-  const published = fields.dates?.published || "";
-
   if (fields.type === "published_papers") {
-    const fallback = fields.dates?.eventStart || "";
-
     return {
-      startDate: published || fallback,
-      endDate: published || fallback,
-      sortableDate: published || fallback,
+      startDate: getPublicationEventStart(fields),
+      endDate: getPublicationEventEnd(fields),
+      sortableDate: getPublicationDate(fields),
     };
   }
 
-  const startDate = fields.dates?.eventStart || published;
-  const endDate = fields.dates?.eventEnd || fields.dates?.eventStart || published;
+  const startDate = getPublicationEventStart(fields);
 
   return {
     startDate,
-    endDate,
+    endDate: getPublicationEventEnd(fields),
     sortableDate: startDate,
   };
 }
