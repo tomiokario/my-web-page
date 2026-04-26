@@ -41,6 +41,7 @@
 - `main` へ直接 push する前提の変更や手順を書かない。作業ブランチと PR を前提にする
 - UI や文言の変更では、日本語と英語の両方で片側だけ更新漏れがないか確認する
 - `public/markdown` の更新では、リンク切れ、画像参照切れ、言語切り替え時の導線崩れがないか確認する
+- GitHub Wiki (`https://github.com/tomiokario/my-web-page.wiki.git`) の更新では、旧記事が履歴として残り、新規ページに現行版の構成・見出し粒度・文体・読みやすさの意図が引き継がれているか確認する
 - 出版物データ変更では、正本 `src/data/publication_master.json` と生成物 `src/data/publications.json` の整合、および `convert-publications` / `import-publications-researchmap` の手順反映漏れがないか確認する
 - 実装変更では、ユーザー視点の挙動を守るテストや既存テストの更新が不足していないか確認する
 - ドキュメントや運用ルールの変更では、`AGENTS.md` だけでなく `README` や関連手順書の更新漏れがないか確認する
@@ -102,6 +103,7 @@
 - マークダウンコンテンツは `public/markdown` ディレクトリで管理
 - コンテンツ更新後は開発サーバーで表示を確認してからコミット
 - ユーザー確認が必要な更新では、可能な限りローカル開発サーバーを起動した状態で確認を依頼し、確認完了までは push を保留する
+- GitHub Wiki (`https://github.com/tomiokario/my-web-page.wiki.git`) で古い記事に更新が必要な場合は、古い記事を履歴として残し、新しいページを追加する。新しいページは現行版の構成、見出し粒度、文体、読みやすさを参照し、その意図を保つ
 - `publication_master.json` を別手段で整えた場合は `npm run convert-publications` を実行して `publications.json` を再生成する
 
 ## ドキュメント

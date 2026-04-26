@@ -191,6 +191,22 @@ npm start
 
 詳細については、[マークダウンコンテンツ](./markdown-content.md)のドキュメントを参照してください。
 
+### GitHub Wiki の更新
+
+GitHub Wiki は本体リポジトリではなく、`https://github.com/tomiokario/my-web-page.wiki.git` で管理します。古い記事の内容を更新する必要がある場合は、旧記事を履歴として残し、新しいページを追加します。
+
+新しい Wiki ページは、現行版の構成、見出しの粒度、文体、読みやすさを参照し、その意図を保って作成します。関連する旧記事から新ページへ移動しやすい導線を追加し、既存の目次やリンク集がある場合はあわせて更新します。
+
+Wiki を編集する場合は、Wiki リポジトリを別ディレクトリに clone または pull して作業します。
+
+```bash
+git clone https://github.com/tomiokario/my-web-page.wiki.git
+cd my-web-page.wiki
+git pull --rebase
+```
+
+編集後は `git diff` で旧記事、新記事、導線の差分を確認します。人間の内容確認が必要な更新では、push 前に確認を依頼します。
+
 ### 出版物データの更新
 
 出版物データを更新する場合は、以下の手順に従ってください：
