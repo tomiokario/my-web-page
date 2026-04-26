@@ -24,9 +24,11 @@ const useStyles = createStyles((theme: MantineTheme) => ({
   },
   categoryLabel: {
     fontWeight: "bold",
+    color: "var(--fg-secondary)",
   },
   filterTag: {
-    backgroundColor: theme.colors.gray[2],
+    backgroundColor: "var(--tag-accent-bg)",
+    color: "var(--tag-accent-fg)",
     padding: `${theme.spacing.xs} ${theme.spacing.xs}`,
     borderRadius: theme.radius.sm,
     fontSize: theme.fontSizes.xs,
@@ -34,14 +36,26 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     cursor: "pointer",
     display: "inline-block",
     marginBottom: theme.spacing.xs,
+    lineHeight: 1,
+    transition: "background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out)",
+    "&:hover": {
+      backgroundColor: "var(--accent-soft)",
+      color: "var(--fg-primary)",
+    },
   },
   resetButton: {
     padding: "0.5rem 1rem",
-    backgroundColor: theme.colors.gray[1],
-    border: "none",
+    backgroundColor: "var(--control-bg)",
+    color: "var(--control-fg)",
+    border: "1px solid var(--border)",
     borderRadius: theme.radius.sm,
     cursor: "pointer",
     marginBottom: theme.spacing.sm,
+    transition: "background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out)",
+    "&:hover": {
+      backgroundColor: "var(--control-hover-bg)",
+      borderColor: "var(--border-strong)",
+    },
   },
 }));
 

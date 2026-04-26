@@ -19,7 +19,8 @@ const useStyles = createStyles((theme: MantineTheme) => ({
   header: {
     marginBottom: theme.spacing.xs,
     padding: theme.spacing.md,
-    backgroundColor: theme.colors.gray[1],
+    backgroundColor: "var(--surface-alt)",
+    color: "var(--fg-primary)",
     borderRadius: theme.radius.sm,
   },
   list: {

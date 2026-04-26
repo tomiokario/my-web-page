@@ -23,6 +23,7 @@ const useStyles = createStyles((theme: MantineTheme) => ({
   },
   title: {
     fontWeight: "bold",
+    color: "var(--fg-primary)",
   },
   tagsContainer: {
     display: "flex",
@@ -31,39 +32,60 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     marginTop: theme.spacing.xs,
   },
   tag: {
-    backgroundColor: theme.colors.gray[1],
+    backgroundColor: "var(--tag-bg)",
+    color: "var(--tag-fg)",
     padding: `${theme.spacing.xs} ${theme.spacing.xs}`,
     borderRadius: theme.radius.sm,
     fontSize: theme.fontSizes.xs,
+    lineHeight: 1,
   },
   journal: {
     marginTop: theme.spacing.xs,
+    color: "var(--fg-secondary)",
   },
   dateLocation: {
     marginTop: theme.spacing.xs,
     fontSize: theme.fontSizes.sm,
-    color: theme.colors.gray[6],
+    color: "var(--fg-muted)",
   },
   separator: {
     margin: `0 ${theme.spacing.xs}`,
   },
   link: {
     marginTop: theme.spacing.xs,
+    color: "var(--fg-secondary)",
+    "& a": {
+      color: "var(--link)",
+      textDecoration: "underline",
+      textUnderlineOffset: 2,
+      transition: "color var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out)",
+    },
+    "& a:hover": {
+      color: "var(--link-hover)",
+      opacity: 0.9,
+    },
   },
   others: {
     marginTop: theme.spacing.xs,
     fontSize: theme.fontSizes.sm,
-    color: theme.colors.gray[6],
+    color: "var(--fg-muted)",
   },
   abstractToggle: {
     marginTop: theme.spacing.sm,
+    backgroundColor: "var(--control-bg)",
+    color: "var(--control-fg)",
+    border: "1px solid var(--border)",
+    "&:hover": {
+      backgroundColor: "var(--control-hover-bg)",
+    },
   },
   abstract: {
     marginTop: theme.spacing.xs,
     padding: theme.spacing.sm,
-    backgroundColor: theme.colors.gray[0],
+    backgroundColor: "var(--surface-tinted)",
+    color: "var(--fg-secondary)",
     borderRadius: theme.radius.sm,
-    border: `1px solid ${theme.colors.gray[2]}`,
+    border: "1px solid var(--border)",
     whiteSpace: "pre-wrap",
   }
 }));

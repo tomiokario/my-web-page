@@ -3,11 +3,50 @@
 .footer {
   background-color: var(--footer-bg);
   color: var(--footer-text);
-  text-align: right;
   font-size: 0.75rem;
-  padding-top: 0.7rem;
-  padding-bottom: 0.05rem;
+  padding: 0.6rem 0 0.25rem;
   /* フッターを下部に固定するための追加スタイル */
   margin-top: auto; /* 上部の余白を自動調整して下部に押し出す */
   width: 100%; /* 幅を100%に設定 */
+}
+
+.footer__inner {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
+
+.footer p {
+  color: var(--footer-text);
+  margin: 0;
+}
+
+.theme-toggle {
+  align-items: center;
+  background: var(--theme-toggle-bg);
+  border: 1px solid var(--theme-toggle-border);
+  border-radius: 999px;
+  color: var(--theme-toggle-text);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.7rem;
+  gap: 0.25rem;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+
+.theme-toggle:hover {
+  background: var(--theme-toggle-hover-bg);
+  border-color: var(--theme-toggle-hover-border);
+  opacity: 0.95;
 }

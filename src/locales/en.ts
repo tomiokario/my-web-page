@@ -25,6 +25,12 @@ const en: LocaleMessages = {
   languageSwitch: {
     switchTo: 'Switch to Japanese'
   },
+  themeSwitch: {
+    switchToClassic: 'Switch to gray theme',
+    switchToIce: 'Switch to ice theme',
+    classicShort: 'Gray',
+    iceShort: 'Ice'
+  },
   common: {
     loading: 'Loading...',
     back: 'Back',

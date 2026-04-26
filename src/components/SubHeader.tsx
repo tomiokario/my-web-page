@@ -10,7 +10,7 @@ import { findRouteByPath } from "../routes";
 // スタイルの定義
 const useStyles = createStyles((theme) => ({
   subheader: {
-    backgroundColor: "#f4f4f4",
+    backgroundColor: "var(--subheader-bg)",
     textAlign: "center",
     padding: theme.spacing.md, // 中くらいのパディング
     marginBottom: theme.spacing.lg, // 中くらいのマージン
@@ -19,7 +19,7 @@ const useStyles = createStyles((theme) => ({
     margin: 0,
     fontWeight: 700, // ボールド（太字）に変更
     fontSize: theme.fontSizes.lg, // 元のサイズに近づける
-    color: "#1c1c1c",
+    color: "var(--subheader-text)",
     '@media (max-width: 768px)': {
       fontSize: theme.fontSizes.md, // 元のサイズに近づける
     },

@@ -45,7 +45,9 @@ const useStyles = createStyles((theme: MantineTheme) => ({
   sortOrderSelect: {
     padding: theme.spacing.xs,
     borderRadius: theme.radius.sm,
-    border: `1px solid ${theme.colors.gray[4]}`,
+    border: "1px solid var(--border-strong)",
+    backgroundColor: "var(--surface)",
+    color: "var(--fg-secondary)",
   },
   filterButtonsContainer: {
     display: "flex",

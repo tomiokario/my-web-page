@@ -1,14 +1,116 @@
-/* src/styles/variables.css */
 :root {
-  /* ヘッダー関連 */
-  --header-bg: #3c3c3c;        /* ヘッダーの背景色（ダーク色） */
-  --header-text: #fff;      /* ヘッダーの通常文字色（白） */
+  --font-sans: 'Noto Sans JP', sans-serif;
 
-  /* アクセント：選択中の場合の色（ベージュ） */
-  --accent-bg: #f4f4f4;     /* ベージュ色 */
-  --accent-text: #1c1c1c;      /* 選択時の文字色 */
-  
-  /* フッターなど他の部分も必要に応じて追加 */
-  --footer-bg: #3c3c3c;
-  --footer-text: #f4f4f4;
+  --color-ink: #1c1c1c;
+  --color-ink-muted: #4a484b;
+  --color-white: #ffffff;
+  --color-warm-50: #fafaf9;
+  --color-warm-100: #f1f1f2;
+  --color-warm-200: #e6e5e6;
+  --color-warm-300: #d6d4d6;
+  --color-warm-400: #bcbabe;
+  --color-warm-500: #8a888c;
+  --color-warm-700: #4a484b;
+  --color-ink-header: #3c3c3c;
+  --color-header-classic: #3c3c3c;
+  --color-header-classic-hover: #4c4c4c;
+  --color-ice-50: #eef7fa;
+  --color-ice-100: #d6ebf1;
+  --color-ice-200: #a1d6e2;
+  --color-ice-400: #4bb3c8;
+  --color-ice-600: #1995ad;
+  --color-ice-800: #0f6c7f;
+
+  --dur-fast: 120ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --page-bg: var(--color-warm-50);
+  --page-text: var(--color-ink);
+  --page-bg-image:
+    radial-gradient(1200px 500px at 85% -10%, var(--color-ice-100) 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 30%, var(--color-ice-50) 0%, transparent 55%);
+  --focus-ring: var(--color-ice-600);
+  --surface: var(--color-white);
+  --surface-alt: var(--color-warm-100);
+  --surface-tinted: var(--color-ice-50);
+  --border: var(--color-warm-200);
+  --border-strong: var(--color-warm-300);
+  --fg-primary: var(--color-ink);
+  --fg-secondary: var(--color-warm-700);
+  --fg-muted: var(--color-warm-500);
+  --fg-disabled: var(--color-warm-400);
+  --link: var(--color-ice-600);
+  --link-hover: var(--color-ice-800);
+  --accent: var(--color-ice-600);
+  --accent-soft: var(--color-ice-200);
+  --accent-bg: var(--color-ice-50);
+  --tag-bg: var(--color-warm-100);
+  --tag-fg: var(--color-warm-700);
+  --tag-accent-bg: var(--color-ice-100);
+  --tag-accent-fg: var(--color-ice-800);
+  --control-bg: var(--color-warm-100);
+  --control-fg: var(--color-warm-700);
+  --control-hover-bg: var(--color-ice-50);
+  --control-active-bg: var(--color-ice-100);
+  --control-active-fg: var(--color-ice-800);
+  --shadow-dropdown: 0 2px 5px rgba(28, 28, 28, 0.18);
+
+  --header-bg: var(--color-ink-header);
+  --header-hover-bg: var(--color-header-classic-hover);
+  --header-text: var(--color-white);
+  --nav-active-bg: var(--color-ice-200);
+
+  --subheader-bg: var(--color-ice-50);
+  --subheader-text: var(--color-ice-800);
+
+  --footer-bg: var(--color-ink-header);
+  --footer-text: var(--color-white);
+
+  --theme-toggle-bg: transparent;
+  --theme-toggle-border: rgba(255, 255, 255, 0.45);
+  --theme-toggle-text: var(--footer-text);
+  --theme-toggle-hover-bg: rgba(255, 255, 255, 0.12);
+  --theme-toggle-hover-border: rgba(255, 255, 255, 0.75);
+}
+
+:root[data-theme="classic"] {
+  --page-bg: var(--color-white);
+  --page-text: var(--color-ink);
+  --page-bg-image: none;
+  --focus-ring: var(--color-header-classic);
+  --surface: var(--color-white);
+  --surface-alt: #f4f4f4;
+  --surface-tinted: #fafafa;
+  --border: #e5e5e5;
+  --border-strong: #cccccc;
+  --fg-primary: var(--color-ink);
+  --fg-secondary: var(--color-ink-muted);
+  --fg-muted: #666666;
+  --fg-disabled: #999999;
+  --link: #1f5f75;
+  --link-hover: var(--color-header-classic);
+  --accent: var(--color-header-classic);
+  --accent-soft: #d8d8d8;
+  --accent-bg: #f4f4f4;
+  --tag-bg: #f4f4f4;
+  --tag-fg: var(--color-ink-muted);
+  --tag-accent-bg: #e8e8e8;
+  --tag-accent-fg: var(--color-ink);
+  --control-bg: #f4f4f4;
+  --control-fg: var(--color-ink-muted);
+  --control-hover-bg: #eeeeee;
+  --control-active-bg: #e8e8e8;
+  --control-active-fg: var(--color-ink);
+  --shadow-dropdown: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+  --header-bg: var(--color-header-classic);
+  --header-hover-bg: var(--color-header-classic-hover);
+  --header-text: var(--color-white);
+  --nav-active-bg: var(--color-warm-100);
+
+  --subheader-bg: var(--color-warm-100);
+  --subheader-text: var(--color-ink);
+
+  --footer-bg: var(--color-header-classic);
+  --footer-text: var(--color-warm-100);
 }

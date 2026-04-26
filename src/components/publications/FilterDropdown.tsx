@@ -22,16 +22,24 @@ const useStyles = createStyles((theme: MantineTheme) => ({
   },
   filterButton: {
     padding: "0.5rem 1rem",
-    border: "none",
+    border: "1px solid var(--border)",
     borderRadius: theme.radius.sm,
     cursor: "pointer",
+    color: "var(--control-fg)",
+    transition: "background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out)",
+    "&:hover": {
+      backgroundColor: "var(--control-hover-bg)",
+      borderColor: "var(--border-strong)",
+    },
   },
   activeFilterButton: {
-    backgroundColor: theme.colors.blue[1],
+    backgroundColor: "var(--control-active-bg)",
+    color: "var(--control-active-fg)",
+    borderColor: "var(--accent-soft)",
     fontWeight: "bold",
   },
   inactiveFilterButton: {
-    backgroundColor: theme.colors.gray[1],
+    backgroundColor: "var(--control-bg)",
     fontWeight: "normal",
   },
   dropdown: {
@@ -39,12 +47,13 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     top: "100%",
     left: 0,
     zIndex: 10,
-    backgroundColor: "white",
-    border: `1px solid ${theme.colors.gray[3]}`,
+    backgroundColor: "var(--surface)",
+    color: "var(--fg-secondary)",
+    border: "1px solid var(--border-strong)",
     borderRadius: theme.radius.sm,
     padding: theme.spacing.sm,
     minWidth: "200px",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+    boxShadow: "var(--shadow-dropdown)",
   },
   optionContainer: {
     marginBottom: theme.spacing.xs,
@@ -53,6 +62,10 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     display: "flex",
     alignItems: "center",
     cursor: "pointer",
+    color: "var(--fg-secondary)",
+    "&:hover": {
+      color: "var(--link-hover)",
+    },
   },
   checkbox: {
     marginRight: theme.spacing.xs,

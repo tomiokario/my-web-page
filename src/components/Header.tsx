@@ -20,7 +20,7 @@ const rem = (size: number) => `${size / 16}rem`;
 // スタイルの定義
 const useStyles = createStyles((theme) => ({
   header: {
-    backgroundColor: "#3c3c3c",
+    backgroundColor: "var(--header-bg)",
     borderBottom: 0,
     position: "relative",
     zIndex: 1,
@@ -74,7 +74,7 @@ const useStyles = createStyles((theme) => ({
     padding: `${rem(8)} ${rem(12)}`,
     borderRadius: theme.radius.sm,
     textDecoration: "none",
-    color: "#fff",
+    color: "var(--header-text)",
     fontSize: "0.85rem", // smとxsの中間サイズ
     fontWeight: 400,
     '@media (max-width: 768px)': {
@@ -99,7 +99,7 @@ const useStyles = createStyles((theme) => ({
       left: 0,
       width: "100%",
       height: 4,
-      backgroundColor: "#f4f4f4",
+      backgroundColor: "var(--nav-active-bg)",
     },
     '@media (max-width: 768px)': {
       "&::after": {
@@ -182,14 +182,14 @@ function Header() {
             variant="outline"
             styles={{
               root: {
-                backgroundColor: "#3c3c3c",
-                borderColor: "#fff",
-                color: "#fff",
+                backgroundColor: "var(--header-bg)",
+                borderColor: "var(--header-text)",
+                color: "var(--header-text)",
                 fontFamily: "'Noto Sans JP', sans-serif",
                 fontWeight: 400,
                 "&:hover": {
-                  backgroundColor: "#4c4c4c",
-                  borderColor: "#fff",
+                  backgroundColor: "var(--header-hover-bg)",
+                  borderColor: "var(--header-text)",
                 }
               },
               label: {

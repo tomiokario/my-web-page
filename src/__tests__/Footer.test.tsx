@@ -17,6 +17,7 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Footer from "../components/Footer";
 import { LanguageProvider } from "../contexts/LanguageContext";
+import { SiteThemeProvider } from "../contexts/SiteThemeContext";
 import locales from "../locales";
 
 // テスト用のラッパーコンポーネント
@@ -40,7 +41,9 @@ const TestWrapper = ({ children, initialLanguage = "ja" }) => {
 
   return (
     <LanguageProvider>
-      {children}
+      <SiteThemeProvider>
+        {children}
+      </SiteThemeProvider>
     </LanguageProvider>
   );
 };

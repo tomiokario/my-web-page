@@ -19,6 +19,12 @@ export interface LocaleMessages {
   languageSwitch: {
     switchTo: string;
   };
+  themeSwitch: {
+    switchToClassic: string;
+    switchToIce: string;
+    classicShort: string;
+    iceShort: string;
+  };
   common: {
     loading: string;
     back: string;
