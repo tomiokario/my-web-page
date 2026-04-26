@@ -37,10 +37,14 @@ interface PublicationsViewProps {
 
 const useStyles = createStyles((theme: MantineTheme) => ({
   container: {
+    maxWidth: "100%",
+    minWidth: 0,
     padding: 0,
   },
   sortOrderContainer: {
     marginBottom: theme.spacing.md,
+    maxWidth: "100%",
+    minWidth: 0,
   },
   sortOrderSelect: {
     background: "var(--card-bg)",
@@ -52,6 +56,7 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     fontFamily: "var(--font-sans)",
     fontSize: theme.fontSizes.sm,
     fontWeight: 600,
+    maxWidth: "100%",
     padding: "0.5rem 0.875rem",
   },
   filterButtonsContainer: {
@@ -59,9 +64,13 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     flexWrap: "wrap",
     gap: theme.spacing.xs,
     marginBottom: theme.spacing.md,
+    maxWidth: "100%",
+    minWidth: 0,
   },
   publicationsContainer: {
     marginTop: theme.spacing.md,
+    maxWidth: "100%",
+    minWidth: 0,
   },
 }));
 

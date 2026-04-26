@@ -165,6 +165,67 @@ describe('PublicationItem Component', () => {
 
     expect(screen.queryByTestId('abstract-toggle')).not.toBeInTheDocument();
   });
+
+  test('allows long publication text and links to wrap inside the card', () => {
+    const longTitle = 'C2026' + 'VeryLongUnbrokenPublicationTitle'.repeat(8);
+    const longType = 'Research-' + 'LongTypeSegment'.repeat(8);
+    const longJournal = 'ProceedingsOfTheInternationalSymposiumOnNeuromorphicAIHardware'.repeat(3);
+    const longDoi = '10.1234/' + 'long-doi-segment'.repeat(8);
+    const longWebLink = 'https://example.com/' + 'long-url-segment/'.repeat(8);
+    const longOthers = 'Award-' + 'UnbrokenSupplement'.repeat(8);
+    const longAbstract = 'Abstract-' + 'UnbrokenAbstractText'.repeat(8);
+    const publicationWithLongText = createPublication({
+      ...mockPublication,
+      id: 6,
+      name: longTitle,
+      type: longType,
+      doi: longDoi,
+      webLink: longWebLink,
+      journalConference: longJournal,
+      others: longOthers,
+      abstract: longAbstract,
+    }, 5);
+
+    renderWithProviders(<PublicationItem publication={publicationWithLongText} language="en" />);
+
+    expect(screen.getByTestId('publication-item')).toHaveStyle({
+      maxWidth: '100%',
+      minWidth: '0',
+    });
+    expect(screen.getByTestId('publication-title')).toHaveStyle({
+      overflowWrap: 'anywhere',
+      wordBreak: 'break-word',
+    });
+    expect(screen.getByText(longType)).toHaveStyle({
+      maxWidth: '100%',
+      overflowWrap: 'anywhere',
+      wordBreak: 'break-word',
+    });
+    expect(screen.getByText(longJournal)).toHaveStyle({
+      overflowWrap: 'anywhere',
+      wordBreak: 'break-word',
+    });
+    expect(screen.getByText(longDoi)).toHaveStyle({
+      overflowWrap: 'anywhere',
+      wordBreak: 'break-word',
+    });
+    expect(screen.getByText(longWebLink)).toHaveStyle({
+      overflowWrap: 'anywhere',
+      wordBreak: 'break-word',
+    });
+    expect(screen.getByText(longOthers)).toHaveStyle({
+      overflowWrap: 'anywhere',
+      wordBreak: 'break-word',
+    });
+
+    fireEvent.click(screen.getByTestId('abstract-toggle'));
+
+    expect(screen.getByTestId('abstract-content')).toHaveStyle({
+      overflowWrap: 'anywhere',
+      wordBreak: 'break-word',
+      whiteSpace: 'pre-wrap',
+    });
+  });
   
   // 省略可能なフィールドが欠けている場合のテスト
   test('handles missing optional fields gracefully', () => {

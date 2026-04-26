@@ -27,16 +27,24 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     fontWeight: 700,
     gap: theme.spacing.md,
     marginBottom: theme.spacing.sm,
+    maxWidth: "100%",
+    minWidth: 0,
     padding: `${theme.spacing.md} 1.25rem`,
     "&::after": {
       color: "var(--accent)",
       content: "attr(data-count)",
+      flex: "0 0 auto",
       fontSize: theme.fontSizes.xs,
       fontVariantNumeric: "tabular-nums",
       fontWeight: 600,
       letterSpacing: "0.1em",
       marginLeft: "auto",
       whiteSpace: "nowrap",
+    },
+    '@media (max-width: 640px)': {
+      alignItems: "flex-start",
+      gap: theme.spacing.sm,
+      padding: `${theme.spacing.sm} 1rem`,
     },
   },
   headerAccent: {
@@ -47,10 +55,19 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     height: 22,
     width: 6,
   },
+  headerText: {
+    flex: "1 1 auto",
+    maxWidth: "100%",
+    minWidth: 0,
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
+  },
   list: {
     listStyle: "none",
     marginTop: 0,
     padding: `${theme.spacing.xs} 0 0`,
+    maxWidth: "100%",
+    minWidth: 0,
   },
 }));
 
@@ -75,7 +92,7 @@ function PublicationGroup({ name, items, language }: PublicationGroupProps) {
         }`}
       >
         <span className={classes.headerAccent} aria-hidden="true" />
-        <span>{name}</span>
+        <span className={classes.headerText}>{name}</span>
       </h3>
       
       {/* グループ内の出版物リスト（番号は1から始まる） */}
