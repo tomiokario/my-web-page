@@ -44,7 +44,15 @@ describe("Markdown content pages", () => {
     renderWithProviders(<Home />, { initialLanguage: "ja" });
 
     expect(
-      await screen.findByText("助教", { exact: false })
+      await screen.findByRole("heading", { name: "冨岡 莉生 / TOMIOKA Rio" })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("助教", { exact: false })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("博士（情報工学）", { exact: false })
     ).toBeInTheDocument();
 
     await waitFor(() => {
@@ -66,13 +74,34 @@ describe("Markdown content pages", () => {
       "href",
       "https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/electronics_computer/"
     );
+
+    expect(
+      screen.getByRole("link", { name: "文仙研究室（フォトニクス研究室）" })
+    ).toHaveAttribute("href", "https://www.cis.fukuoka-u.ac.jp/~bunsen/");
+
+    expect(
+      screen.getByRole("link", { name: "福岡大学研究者情報" })
+    ).toHaveAttribute(
+      "href",
+      "https://kenkyusha-db.fukuoka-u.ac.jp/search/detail?systemId=71862344e410b395520e17560c007669&lang=ja"
+    );
   });
 
   test("renders English home content with affiliation links", async () => {
     renderWithProviders(<Home />, { initialLanguage: "en" });
 
     expect(
-      await screen.findByText("Assistant Professor", { exact: false })
+      await screen.findByRole("heading", { name: "Rio Tomioka" })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Assistant Professor", { exact: false })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Ph.D. in Computer Science and Systems Engineering", {
+        exact: false,
+      })
     ).toBeInTheDocument();
 
     await waitFor(() => {
@@ -96,6 +125,17 @@ describe("Markdown content pages", () => {
     expect(
       screen.getByRole("link", { name: "Fukuoka University" })
     ).toHaveAttribute("href", "https://www.fukuoka-u.ac.jp/english/");
+
+    expect(
+      screen.getByRole("link", { name: "Bunsen Lab. (Photonics Lab.)" })
+    ).toHaveAttribute("href", "https://www.cis.fukuoka-u.ac.jp/~bunsen/");
+
+    expect(
+      screen.getByRole("link", { name: "Researcher Information" })
+    ).toHaveAttribute(
+      "href",
+      "https://kenkyusha-db.fukuoka-u.ac.jp/search/detail?systemId=71862344e410b395520e17560c007669&lang=en"
+    );
   });
 
   test("renders Japanese works content with the current and FY2025 sections", async () => {

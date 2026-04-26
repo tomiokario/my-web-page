@@ -1,6 +1,10 @@
-### 所属
-- [福岡大学](https://www.fukuoka-u.ac.jp/) [工学部](https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/) [電子情報工学科](https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/electronics_computer/) 助教（[福岡大学研究者情報](https://kenkyusha-db.fukuoka-u.ac.jp/search/detail?systemId=71862344e410b395520e17560c007669&lang=ja)）
-- [文仙研究室（フォトニクス研究室）](https://www.cis.fukuoka-u.ac.jp/~bunsen/)
+### 冨岡 莉生 / TOMIOKA Rio
+
+**所属**: [福岡大学](https://www.fukuoka-u.ac.jp/) [工学部](https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/) [電子情報工学科](https://www.fukuoka-u.ac.jp/education/undergraduate/engineering/electronics_computer/)（[文仙研究室（フォトニクス研究室）](https://www.cis.fukuoka-u.ac.jp/~bunsen/)）
+
+**職位**: 助教（[福岡大学研究者情報](https://kenkyusha-db.fukuoka-u.ac.jp/search/detail?systemId=71862344e410b395520e17560c007669&lang=ja)）
+
+**学位**: 博士（情報工学）
 
 
 ### 連絡先

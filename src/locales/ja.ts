@@ -11,7 +11,7 @@ const ja: LocaleMessages = {
   },
   // サブヘッダー
   subheader: {
-    home: '冨岡 莉生 (TOMIOKA Rio)',
+    home: 'ホーム',
     profileCV: 'プロフィール & 履歴書 (CV)',
     publications: '出版物',
     works: '仕事',

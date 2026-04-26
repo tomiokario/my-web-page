@@ -37,7 +37,7 @@ describe("SubHeader component", () => {
 
     // ホームページの場合のテスト
     test("displays correct Japanese page name for home path", () => {
-      // テスト内容: ルートパス(/)にアクセスした場合、日本語の「冨岡 莉生 (TOMIOKA Rio)」が表示されることを確認
+      // テスト内容: ルートパス(/)にアクセスした場合、日本語の「ホーム」が表示されることを確認
       renderWithProviders(
         <SubHeader />,
         { 
@@ -110,7 +110,7 @@ describe("SubHeader component", () => {
 
     // ホームページの場合のテスト
     test("displays correct English page name for home path", () => {
-      // テスト内容: ルートパス(/)にアクセスした場合、英語の「TOMIOKA Rio」が表示されることを確認
+      // テスト内容: ルートパス(/)にアクセスした場合、英語の「Home」が表示されることを確認
       renderWithProviders(
         <SubHeader />,
         { 

@@ -58,7 +58,7 @@ describe("App component", () => {
     renderApp();
     
     // ヘッダーが存在するか確認（ナビゲーションリンクで確認）
-    const homeLink = screen.getByText(/ホーム/i);
+    const homeLink = screen.getByRole("link", { name: "ホーム" });
     expect(homeLink).toBeInTheDocument();
     
     // メインコンテンツが存在するか確認
