@@ -36,3 +36,4 @@ yarn-error.log*
 
 # local generated artifacts
 tmp/
+temp/

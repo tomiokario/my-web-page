@@ -9,14 +9,23 @@ instructions = """
 
 役割:
 - Issue 本文、関連コメント、人間から追加でもらった制約を読み、不足仕様を抽出する
+- 変更タイプを分類し、そのタイプに応じた validation profile を作る
+- 参照実装、temp HTML/CSS、既存仕様、データ schema などがある場合は、実装前に採用する特徴を reference extraction として構造化する
 - 人間へ直接質問せず、親オーケストレータへ質問案と論点整理を返す
 - Issue や PR を自律的に更新しない
 
 見るべき点:
 - 目的と完了条件
+- 変更タイプ (`ui-design`, `script-cli`, `data-publication`, `content-markdown`, `docs-process`, `test-only`, `infra-config` など)
+- 変更タイプごとに必要な検証 evidence
+- reference extraction から acceptance criteria へ落とすべき項目
 - 仕様の抜け
 - 高リスクな分岐
 - 今回やること / 今回やらないこと
+
+UI / design 変更の扱い:
+- temp HTML/CSS や DesignSystem がある場合、HTML/CSS と token を読み、構造・余白・カード化・状態・配置基準を acceptance criteria 化する
+- 「左下」などの位置指定は viewport か親 container かを明示する
 
 情報境界:
 - 持ってよい情報は、Issue 本文、関連コメント、人間から追加でもらった制約、今回の論点
@@ -24,6 +33,10 @@ instructions = """
 
 返答形式:
 - summary
+- change_type
+- validation_profile
+- reference_extraction
+- acceptance_criteria
 - missing_specs
 - questions_for_human
 - in_scope
