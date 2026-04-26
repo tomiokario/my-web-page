@@ -11,7 +11,7 @@ const en: LocaleMessages = {
   },
   // サブヘッダー
   subheader: {
-    home: 'TOMIOKA Rio',
+    home: 'Home',
     profileCV: 'Profile & Curriculum Vitae (CV)',
     publications: 'Publications',
     works: 'Works',
