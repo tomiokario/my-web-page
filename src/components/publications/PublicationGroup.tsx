@@ -14,16 +14,43 @@ interface PublicationGroupProps {
 // スタイルの定義
 const useStyles = createStyles((theme: MantineTheme) => ({
   group: {
-    marginBottom: theme.spacing.xl,
+    marginBottom: "2.25rem",
   },
   header: {
-    marginBottom: theme.spacing.xs,
-    padding: theme.spacing.md,
-    backgroundColor: theme.colors.gray[1],
-    borderRadius: theme.radius.sm,
+    alignItems: "center",
+    background: "var(--card-bg)",
+    borderRadius: "var(--radius-md)",
+    boxShadow: "var(--card-shadow)",
+    color: "var(--accent-text)",
+    display: "flex",
+    fontSize: "1.05rem",
+    fontWeight: 700,
+    gap: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
+    padding: `${theme.spacing.md} 1.25rem`,
+    "&::after": {
+      color: "var(--accent)",
+      content: "attr(data-count)",
+      fontSize: theme.fontSizes.xs,
+      fontVariantNumeric: "tabular-nums",
+      fontWeight: 600,
+      letterSpacing: "0.1em",
+      marginLeft: "auto",
+      whiteSpace: "nowrap",
+    },
+  },
+  headerAccent: {
+    background: "var(--accent)",
+    borderRadius: "var(--radius-xs)",
+    display: "inline-block",
+    flex: "0 0 auto",
+    height: 22,
+    width: 6,
   },
   list: {
-    marginTop: theme.spacing.md,
+    listStyle: "none",
+    marginTop: 0,
+    padding: `${theme.spacing.xs} 0 0`,
   },
 }));
 
@@ -41,15 +68,24 @@ function PublicationGroup({ name, items, language }: PublicationGroupProps) {
   return (
     <div className={classes.group}>
       {/* グループヘッダー */}
-      <h3 className={classes.header}>{name}</h3>
+      <h3
+        className={classes.header}
+        data-count={`${String(items.length).padStart(2, "0")} ${
+          items.length === 1 ? "ITEM" : "ITEMS"
+        }`}
+      >
+        <span className={classes.headerAccent} aria-hidden="true" />
+        <span>{name}</span>
+      </h3>
       
       {/* グループ内の出版物リスト（番号は1から始まる） */}
       <ol start={1} className={classes.list}>
-        {items.map((publication) => (
+        {items.map((publication, index) => (
           <PublicationItem
             key={publication.id}
             publication={publication}
             language={language}
+            index={index + 1}
           />
         ))}
       </ol>

@@ -1,14 +1,120 @@
-/* src/styles/variables.css */
 :root {
-  /* ヘッダー関連 */
-  --header-bg: #3c3c3c;        /* ヘッダーの背景色（ダーク色） */
-  --header-text: #fff;      /* ヘッダーの通常文字色（白） */
+  --warm-50: #fafaf9;
+  --warm-100: #f1f1f2;
+  --warm-200: #e6e5e6;
+  --warm-300: #d6d4d6;
+  --warm-400: #bcbabe;
+  --warm-500: #8a888c;
+  --warm-700: #4a484b;
+  --warm-900: #1c1c1c;
+  --ink-header: #3c3c3c;
 
-  /* アクセント：選択中の場合の色（ベージュ） */
-  --accent-bg: #f4f4f4;     /* ベージュ色 */
-  --accent-text: #1c1c1c;      /* 選択時の文字色 */
-  
-  /* フッターなど他の部分も必要に応じて追加 */
+  --ice-50: #eef7fa;
+  --ice-100: #d6ebf1;
+  --ice-200: #a1d6e2;
+  --ice-400: #4bb3c8;
+  --ice-600: #1995ad;
+  --ice-800: #0f6c7f;
+
+  --bg: var(--warm-50);
+  --body-bg:
+    radial-gradient(1200px 500px at 85% -10%, #d6ebf1 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 30%, #eef7fa 0%, transparent 55%),
+    var(--bg);
+  --surface: #ffffff;
+  --surface-alt: var(--warm-100);
+  --border: var(--warm-200);
+  --border-strong: var(--warm-300);
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 2px rgba(15, 108, 127, 0.06), 0 4px 18px rgba(15, 108, 127, 0.05);
+  --control-shadow: 0 1px 2px rgba(15, 108, 127, 0.05), 0 1px 8px rgba(15, 108, 127, 0.04);
+  --dropdown-shadow: 0 4px 16px rgba(15, 108, 127, 0.18);
+
+  --fg1: var(--warm-900);
+  --fg2: var(--warm-700);
+  --fg3: var(--warm-500);
+  --fg4: var(--warm-400);
+  --fg-on-dark: #ffffff;
+
+  --link: var(--ice-600);
+  --link-hover: var(--ice-800);
+  --link-underline: var(--accent-soft);
+  --accent: var(--ice-600);
+  --accent-bg: var(--ice-50);
+  --accent-text: var(--ice-800);
+  --accent-soft: var(--ice-200);
+
+  --header-bg: var(--ice-600);
+  --header-text: #ffffff;
+  --header-control-bg: rgba(255, 255, 255, 0.12);
+  --header-control-hover-bg: rgba(255, 255, 255, 0.22);
+  --footer-bg: var(--ice-600);
+  --footer-text: var(--ice-100);
+
+  --tag-bg: var(--warm-100);
+  --tag-fg: var(--warm-700);
+  --tag-muted-bg: var(--ice-50);
+  --tag-muted-fg: var(--ice-600);
+  --tag-accent-bg: var(--ice-100);
+  --tag-accent-fg: var(--ice-800);
+
+  --font-sans: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Noto Serif JP', 'Times New Roman', serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --page-max: 1100px;
+  --footer-max: 1200px;
+  --header-height: 57px;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  --shadow-card: var(--card-shadow);
+  --shadow-dropdown: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+}
+
+html[data-theme="gray"] {
+  --bg: #ffffff;
+  --body-bg: var(--bg);
+  --surface: #ffffff;
+  --surface-alt: #f4f4f4;
+  --border: #e9ecef;
+  --border-strong: #dee2e6;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 2px rgba(28, 28, 28, 0.04), 0 1px 3px rgba(28, 28, 28, 0.06);
+  --control-shadow: 0 1px 2px rgba(28, 28, 28, 0.04), 0 1px 3px rgba(28, 28, 28, 0.06);
+  --dropdown-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+  --fg1: #1c1c1c;
+  --fg2: #2f2f2f;
+  --fg3: #666666;
+  --fg4: #8a8a8a;
+
+  --link: #0000ee;
+  --link-hover: #0000cc;
+  --link-underline: #0000ee;
+  --accent: #3c3c3c;
+  --accent-bg: #f4f4f4;
+  --accent-text: #1c1c1c;
+  --accent-soft: #f4f4f4;
+
+  --header-bg: #3c3c3c;
+  --header-text: #ffffff;
+  --header-control-bg: #3c3c3c;
+  --header-control-hover-bg: #4c4c4c;
   --footer-bg: #3c3c3c;
   --footer-text: #f4f4f4;
+
+  --tag-bg: #f4f4f4;
+  --tag-fg: #2f2f2f;
+  --tag-muted-bg: #f4f4f4;
+  --tag-muted-fg: #3c3c3c;
+  --tag-accent-bg: #e9ecef;
+  --tag-accent-fg: #1c1c1c;
 }

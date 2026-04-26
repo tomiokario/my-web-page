@@ -12,7 +12,7 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MantineProvider } from "@mantine/core";
 import App from "../App";
 import { MantineEmotionProvider, emotionTransform } from '@mantine/emotion';
@@ -41,6 +41,11 @@ const renderApp = () => {
 
 // ラッパーアプローチを使用したテスト
 describe("App component", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    document.documentElement.removeAttribute("data-theme");
+  });
+
   // 基本的なレンダリングテスト
   test("renders without crashing", () => {
     // テスト内容: Appコンポーネントが正常にレンダリングされることを確認
@@ -63,5 +68,27 @@ describe("App component", () => {
     // フッターが存在するか確認
     const footerElement = screen.getByRole("contentinfo");
     expect(footerElement).toBeInTheDocument();
+  });
+
+  test("uses blue theme by default", () => {
+    renderApp();
+
+    expect(document.documentElement).toHaveAttribute("data-theme", "blue");
+    expect(screen.getByRole("button", { name: "グレーテーマに切り替え" })).toHaveTextContent("Gray");
+  });
+
+  test("restores saved gray theme and persists theme changes", () => {
+    localStorage.setItem("theme", "gray");
+
+    renderApp();
+
+    expect(document.documentElement).toHaveAttribute("data-theme", "gray");
+    expect(screen.getByRole("button", { name: "青テーマに切り替え" })).toHaveTextContent("Blue");
+
+    fireEvent.click(screen.getByRole("button", { name: "青テーマに切り替え" }));
+
+    expect(document.documentElement).toHaveAttribute("data-theme", "blue");
+    expect(localStorage.getItem("theme")).toBe("blue");
+    expect(screen.getByRole("button", { name: "グレーテーマに切り替え" })).toHaveTextContent("Gray");
   });
 });

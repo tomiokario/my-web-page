@@ -10,16 +10,17 @@ import { findRouteByPath } from "../routes";
 // スタイルの定義
 const useStyles = createStyles((theme) => ({
   subheader: {
-    backgroundColor: "#f4f4f4",
+    backgroundColor: "var(--accent-bg)",
     textAlign: "center",
-    padding: theme.spacing.md, // 中くらいのパディング
-    marginBottom: theme.spacing.lg, // 中くらいのマージン
+    padding: `${theme.spacing.xl} ${theme.spacing.md}`,
+    marginBottom: theme.spacing.xl,
   },
   title: {
     margin: 0,
     fontWeight: 700, // ボールド（太字）に変更
-    fontSize: theme.fontSizes.lg, // 元のサイズに近づける
-    color: "#1c1c1c",
+    fontSize: "1.75rem",
+    color: "var(--accent-text)",
+    letterSpacing: "0.01em",
     '@media (max-width: 768px)': {
       fontSize: theme.fontSizes.md, // 元のサイズに近づける
     },

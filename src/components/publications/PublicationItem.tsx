@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createStyles } from "@mantine/emotion";
-import { Button, Collapse, MantineTheme } from "@mantine/core";
+import { MantineTheme } from "@mantine/core";
 import { Language, Publication } from "../../types";
 import locales from "../../locales";
 import {
@@ -14,15 +14,45 @@ import {
 interface PublicationItemProps {
   publication: Publication;
   language: Language;
+  index?: number;
 }
 
 // スタイルの定義
 const useStyles = createStyles((theme: MantineTheme) => ({
   item: {
-    marginBottom: theme.spacing.lg,
+    background: "var(--card-bg)",
+    borderRadius: "var(--radius-md)",
+    boxShadow: "var(--card-shadow)",
+    color: "var(--fg1)",
+    display: "grid",
+    gap: `${theme.spacing.xs} ${theme.spacing.md}`,
+    gridTemplateColumns: "44px 1fr",
+    listStyleType: "none",
+    marginBottom: theme.spacing.sm,
+    padding: "18px 22px 20px",
+    '@media (max-width: 640px)': {
+      gridTemplateColumns: "1fr",
+      padding: "16px 18px 18px",
+    },
+  },
+  number: {
+    color: "var(--accent)",
+    fontSize: theme.fontSizes.xs,
+    fontVariantNumeric: "tabular-nums",
+    fontWeight: 600,
+    gridRow: "1 / span 7",
+    letterSpacing: "0.05em",
+    paddingTop: theme.spacing.xs,
+    '@media (max-width: 640px)': {
+      gridRow: "auto",
+      paddingTop: 0,
+    },
   },
   title: {
+    fontSize: "0.95rem",
     fontWeight: "bold",
+    lineHeight: 1.4,
+    marginBottom: 2,
   },
   tagsContainer: {
     display: "flex",
@@ -31,39 +61,64 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     marginTop: theme.spacing.xs,
   },
   tag: {
-    backgroundColor: theme.colors.gray[1],
-    padding: `${theme.spacing.xs} ${theme.spacing.xs}`,
-    borderRadius: theme.radius.sm,
+    backgroundColor: "var(--tag-muted-bg)",
+    color: "var(--tag-muted-fg)",
+    padding: "5px 9px",
+    borderRadius: "var(--radius-sm)",
     fontSize: theme.fontSizes.xs,
+    fontWeight: 500,
+    lineHeight: 1,
   },
   journal: {
+    color: "var(--fg2)",
+    fontSize: "0.9rem",
     marginTop: theme.spacing.xs,
   },
   dateLocation: {
     marginTop: theme.spacing.xs,
-    fontSize: theme.fontSizes.sm,
-    color: theme.colors.gray[6],
+    fontSize: "0.8rem",
+    color: "var(--fg3)",
   },
   separator: {
+    color: "var(--accent-soft)",
     margin: `0 ${theme.spacing.xs}`,
   },
   link: {
+    color: "var(--fg2)",
+    fontSize: "0.85rem",
     marginTop: theme.spacing.xs,
   },
   others: {
     marginTop: theme.spacing.xs,
     fontSize: theme.fontSizes.sm,
-    color: theme.colors.gray[6],
+    color: "var(--fg3)",
   },
   abstractToggle: {
+    background: "var(--tag-muted-bg)",
+    border: "none",
+    borderRadius: "var(--radius-sm)",
+    color: "var(--tag-muted-fg)",
+    cursor: "pointer",
+    fontFamily: "var(--font-sans)",
+    fontSize: theme.fontSizes.xs,
+    fontWeight: 600,
+    letterSpacing: "0.02em",
     marginTop: theme.spacing.sm,
+    padding: "6px 12px",
+  },
+  abstractToggleOpen: {
+    background: "var(--tag-accent-bg)",
+    color: "var(--tag-accent-fg)",
   },
   abstract: {
     marginTop: theme.spacing.xs,
-    padding: theme.spacing.sm,
-    backgroundColor: theme.colors.gray[0],
-    borderRadius: theme.radius.sm,
-    border: `1px solid ${theme.colors.gray[2]}`,
+    padding: "14px 18px",
+    backgroundColor: "var(--accent-bg)",
+    borderRadius: "var(--radius-sm)",
+    boxShadow: "inset 3px 0 0 var(--accent)",
+    color: "var(--fg1)",
+    fontSize: "0.9rem",
+    lineHeight: 1.6,
     whiteSpace: "pre-wrap",
   }
 }));
@@ -75,8 +130,8 @@ const useStyles = createStyles((theme: MantineTheme) => ({
  * @param {Publication} props.publication - 出版物データ
  * @param {string} props.language - 現在の言語設定（'ja'または'en'）
  */
-function PublicationItem({ publication, language }: PublicationItemProps) {
-  const { classes } = useStyles();
+function PublicationItem({ publication, language, index = 1 }: PublicationItemProps) {
+  const { classes, cx } = useStyles();
   const [isAbstractOpen, setIsAbstractOpen] = useState(false);
   const messages = locales[language] ?? locales.en;
   const abstractText = publication.abstract?.trim();
@@ -85,6 +140,10 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
   
   return (
     <li className={classes.item} data-testid="publication-item">
+      <div className={classes.number} aria-hidden="true">
+        {String(index).padStart(2, "0")}
+      </div>
+
       {/* 一行目: タイトル */}
       <div className={classes.title} data-testid="publication-title">
         {language === 'ja' && publication.japanese ? publication.japanese : publication.name}
@@ -208,11 +267,9 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
 
       {abstractText && (
         <>
-          <Button
-            variant="light"
-            color="gray"
-            size="xs"
-            className={classes.abstractToggle}
+          <button
+            type="button"
+            className={cx(classes.abstractToggle, { [classes.abstractToggleOpen]: isAbstractOpen })}
             onClick={() => setIsAbstractOpen((current) => !current)}
             aria-expanded={isAbstractOpen}
             data-testid="abstract-toggle"
@@ -220,8 +277,8 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
             {isAbstractOpen
               ? messages.publications.hideAbstract
               : messages.publications.showAbstract}
-          </Button>
-          <Collapse in={isAbstractOpen} transitionDuration={0}>
+          </button>
+          {isAbstractOpen && (
             <div
               className={classes.abstract}
               data-testid="abstract-content"
@@ -229,7 +286,7 @@ function PublicationItem({ publication, language }: PublicationItemProps) {
             >
               {abstractText}
             </div>
-          </Collapse>
+          )}
         </>
       )}
     </li>

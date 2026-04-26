@@ -21,6 +21,12 @@ const ja: LocaleMessages = {
   footer: {
     copyright: '© 2026 冨岡 莉生'
   },
+  themeSwitch: {
+    switchToGray: 'グレーテーマに切り替え',
+    switchToBlue: '青テーマに切り替え',
+    currentBlue: 'Blue',
+    currentGray: 'Gray'
+  },
   // 言語切り替えボタン
   languageSwitch: {
     switchTo: '英語に切り替え'

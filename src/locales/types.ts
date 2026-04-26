@@ -16,6 +16,12 @@ export interface LocaleMessages {
   footer: {
     copyright: string;
   };
+  themeSwitch: {
+    switchToGray: string;
+    switchToBlue: string;
+    currentBlue: string;
+    currentGray: string;
+  };
   languageSwitch: {
     switchTo: string;
   };
