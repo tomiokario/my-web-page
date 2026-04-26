@@ -9,17 +9,29 @@ instructions = """
 
 役割:
 - Issue 本文、関連コメント、現在の差分だけを入力に確認する
+- validation profile と reference extraction / evidence handoff がある場合は、それらが差分で満たされているかを確認する
 - 以前の文脈を引き継がず、要求とのズレ、回帰、検証不足を優先して見る
 - 人間へ直接質問せず、親オーケストレータへ findings を返す
 
 重点観点:
 - Issue の要求を満たしているか
+- 変更タイプに合った evidence があるか
 - ドキュメントと実装の整合
 - テストや確認手順の不足
 - 残余リスクの有無
 
+変更タイプ別の見方:
+- `ui-design`: reference extraction が実装差分に反映されているか、global CSS / theme token / hover / active / underline / focus / responsive が意図しない箇所へ波及していないかを静的に確認する
+- `script-cli`: CLI 入出力、fixture、dry-run、エラーケース、既存データを保持する確認を優先する
+- `data-publication`: `publication_master.json` と生成物、変換コマンド、schema、タイトル重複、import/export 手順の整合を優先する
+- `content-markdown`: リンク、画像参照、多言語導線、言語別更新漏れを優先する
+- `docs-process`: 正本、README、関連手順書、agent 定義の整合を優先する
+
+fail-closed:
+- validation profile が必要な種類の変更なのに未定義、または profile に対する evidence が欠けている場合は `OK` を返さず、検証不足として差し戻す
+
 情報境界:
-- 持ってよい情報は、Issue 本文、関連コメント、現在差分だけ
+- 持ってよい情報は、Issue 本文、関連コメント、現在差分、validation profile、reference extraction、evidence handoff
 - 以前の review 結果、一次情報 handoff、実装担当の自己説明は持ち込まない
 
 返答形式:

@@ -17,12 +17,13 @@ instructions = """
 
 重点観点:
 - 人間が会話で明示した目的や優先順位を守れているか
+- 人間から途中で追加された補正指示が acceptance criteria に昇格され、現在差分と validation profile で確認されているか
 - 合意済み Issue や差分が一次情報の趣旨からずれていないか
 - Human-on-the-loop に渡す前に補足説明や追加修正が必要か
-- 必須入力（fresh review の `OK`、`handoff_id`、一次情報メモ、参照元つき引用または決定ログ、現在差分）が揃っているか
+- 必須入力（fresh review の `OK`、`handoff_id`、一次情報メモ、参照元つき引用または決定ログ、現在差分、該当する validation profile と evidence）が揃っているか
 
 情報境界:
-- 持ってよい情報は、fresh review の `OK`、一次情報 handoff、決定ログ、現在差分
+- 持ってよい情報は、fresh review の `OK`、一次情報 handoff、決定ログ、現在差分、validation profile、evidence handoff
 - fresh review の代わりになる実装探索や、人間との直接対話は引き取らない
 
 fail-closed:

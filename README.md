@@ -25,13 +25,15 @@
 - PR マージ後にユーザーから完了連絡があった場合は、`main` を `git pull --rebase` で最新化し、作業ブランチを削除してローカルを同期状態に戻します
 - 重要な変更では、Codex 本体の確認に加えてサブエージェントによるレビューも併用します
 - Issue 対応では、まず質問フェーズで issue 草案と不足仕様を詰め、そのうえで合意済み Issue の実装差分に対して、issue 本文・関連コメント・現在の差分が要求に沿っているかを文脈を引き継がない新規サブエージェントで必ず確認し、`OK` が出るまで別個体で再レビューを繰り返します
+- 質問フェーズでは変更タイプを分類し、validation profile、reference extraction、acceptance criteria を先に整理します。UI / design 変更では参照 HTML/CSS や DesignSystem から構造、token、状態、配置基準を抽出し、script / data / docs 変更ではそれぞれの入出力・整合・手順更新を evidence として定義します
 - Human-on-the-loop に入る前には、fresh review とは別に、一次情報 handoff と現在差分を入力にした intent review で趣旨適合を確認します
 - fresh review の対象は合意済み Issue の実装差分です。issue 草案や質問フェーズは質問担当で詰める前段として扱います
+- fresh review は validation profile と evidence handoff を照合し、変更タイプに必要な evidence が揃っているかを確認します
 - 進捗共有では、fresh review と intent review を実施したかを必ず明記し、未実施なら理由とブロッカーも添えます
 - 親オーケストレータは implementation agent 起動後、仕様・受け入れ条件・review 結果・一次情報 handoff の保持に徹し、実装詳細は必要時に最小 handoff で受け取ります
 - PR / Issue コメントでは、内部 role 名や進行用語をそのまま出さず、何を直したか・何を確認したか・何が残っているかを自然文で共有します
 - Issue や PR への追記は自律的に行わず、質問担当が質問案や Issue 草案を親オーケストレータへ返し、その内容で親オーケストレータが人間と合意した場合、レビュー段階で人間と調整が必要な場合、または検証結果を対応 PR に集約して人間レビューを受ける場合に限ります
-- 運用ルールを更新する場合は、`AGENTS.md` だけでなく関連する `README` や手順書も合わせて更新します
+- 運用ルールを更新する場合は、`AGENTS.md` だけでなく関連する `README` や手順書も合わせて更新します。求められていない確認手段を先に持ち出して否定する書き方ではなく、必要な入力・判断・evidence を肯定形で書きます
 
 ## ローカル環境での使い方
 

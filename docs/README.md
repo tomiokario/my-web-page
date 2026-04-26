@@ -109,14 +109,16 @@ npm test
 - PR マージ後のローカル同期とブランチ削除も標準運用に含めます
 - 重要な変更では、Codex 本体の確認に加えてサブエージェントによるレビューも併用します
 - Issue 対応では、まず question-agent で issue 草案と不足仕様を詰め、そのうえで合意済み Issue の実装差分について、issue 本文・関連コメント・現在の差分が要求に沿っているかを、文脈を引き継がない新規サブエージェントで必ず確認し、`OK` が出るまで別個体で再レビューを繰り返します
+- 質問フェーズでは変更タイプを分類し、validation profile、reference extraction、acceptance criteria を先に整理します。UI / design 変更では参照 HTML/CSS や DesignSystem から構造、token、状態、配置基準を抽出し、script / data / docs 変更ではそれぞれの入出力・整合・手順更新を evidence として定義します
 - 質問フェーズは Human-in-the-loop、合意済み Issue の実装は Human-out-of-the-loop、fresh review の後に intent review を行い、その結果を踏まえた PR 上の最終判断を Human-on-the-loop として扱います
 - fresh review の対象は合意済み Issue の実装差分です。issue 草案や質問フェーズは、質問担当で詰める前段として扱います
+- fresh review は validation profile と evidence handoff を照合し、変更タイプに必要な evidence が揃っているかを確認します
 - 合意済み Issue の実装では、仕様の抜けや高リスクな分岐がない限り追加質問なしで実装・検証・fresh review まで進めます。`intent review` はその後、Human-on-the-loop 前の趣旨適合確認として扱います
 - 進捗共有では、fresh review と intent review を実施したかを必ず明記し、未実施なら理由とブロッカーも併記します
 - 親オーケストレータは implementation agent 起動後、仕様・受け入れ条件・review 結果・一次情報 handoff の保持に徹し、実装都合の詳細は必要時に最小 handoff で受け取ります
 - 人間向けの PR / Issue コメントでは、内部 role 名や進行用語を出さず、変更内容・確認結果・残課題を自然文で共有します
 - Issue / PR への追記は自律的に行わず、人間との合意がある新規 Issue 作成、レビュー段階で人間と調整が必要な補足、または検証結果を対応 PR に集約して人間レビューを受ける場合に限ります
-- 運用ルールを変更した場合は、この索引ページと関連手順書の記述も同時に見直してください
+- 運用ルールを変更した場合は、この索引ページと関連手順書の記述も同時に見直してください。求められていない確認手段を先に持ち出して否定する書き方ではなく、必要な入力・判断・evidence を肯定形で書きます
 
 ## サポート
 
