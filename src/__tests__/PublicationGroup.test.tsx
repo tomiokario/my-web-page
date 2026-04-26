@@ -115,4 +115,26 @@ describe('PublicationGroup Component', () => {
     const list = screen.getByRole('list');
     expect(list.children).toHaveLength(0);
   });
+
+  test('allows long group headings to wrap without pushing the count outside', () => {
+    const longGroupName = 'C2026' + 'LongUnbrokenPublicationGroupHeading'.repeat(6);
+
+    renderWithProviders(
+      <PublicationGroup
+        name={longGroupName}
+        items={mockItems}
+        language="en"
+      />
+    );
+
+    const heading = screen.getByRole('heading', { level: 3 });
+    expect(heading).toHaveStyle({
+      maxWidth: '100%',
+      minWidth: '0',
+    });
+    expect(screen.getByText(longGroupName)).toHaveStyle({
+      overflowWrap: 'anywhere',
+      wordBreak: 'break-word',
+    });
+  });
 });

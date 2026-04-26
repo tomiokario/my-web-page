@@ -13,12 +13,19 @@
  */
 
 import React from "react";
+import fs from "fs";
+import path from "path";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Footer from "../components/Footer";
 import { LanguageProvider } from "../contexts/LanguageContext";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import locales from "../locales";
+
+const footerCss = fs.readFileSync(
+  path.join(__dirname, "../components/Footer.css"),
+  "utf8"
+);
 
 // テスト用のラッパーコンポーネント
 const TestWrapper = ({ children, initialLanguage = "ja" }) => {
@@ -68,6 +75,7 @@ describe("Footer component", () => {
     );
     const copyrightElement = screen.getByText(locales.ja.footer.copyright);
     expect(copyrightElement).toBeInTheDocument();
+    expect(copyrightElement).toHaveClass("footer__copyright");
   });
 
   // 英語のコンテンツが正しく表示されるかテスト
@@ -80,6 +88,7 @@ describe("Footer component", () => {
     );
     const copyrightElement = screen.getByText(locales.en.footer.copyright);
     expect(copyrightElement).toBeInTheDocument();
+    expect(copyrightElement).toHaveClass("footer__copyright");
   });
 
   // フッター要素が存在するかテスト
@@ -112,5 +121,13 @@ describe("Footer component", () => {
     );
 
     expect(screen.getByRole("button", { name: locales.en.themeSwitch.switchToGray })).toHaveTextContent("Gray");
+  });
+
+  test("keeps mobile footer content centered and wrapped", () => {
+    expect(footerCss).toContain(".footer__copyright");
+    expect(footerCss).toContain("overflow-wrap: anywhere");
+    expect(footerCss).toContain("@media (max-width: 480px)");
+    expect(footerCss).toContain("align-items: center");
+    expect(footerCss).toContain("text-align: center");
   });
 });
