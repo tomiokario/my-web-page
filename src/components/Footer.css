@@ -19,8 +19,11 @@
   padding: 0 1rem;
 }
 
-.footer p {
+.footer__copyright {
+  max-width: 100%;
   margin: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .footer__theme-switch {
@@ -42,7 +45,12 @@
 
 @media (max-width: 480px) {
   .footer__inner {
-    align-items: flex-start;
+    align-items: center;
     flex-direction: column-reverse;
+    text-align: center;
+  }
+
+  .footer__copyright {
+    width: 100%;
   }
 }

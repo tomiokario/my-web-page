@@ -22,7 +22,7 @@ function Footer() {
         >
           {targetThemeLabel}
         </button>
-        <p>{t.footer.copyright}</p>
+        <p className="footer__copyright">{t.footer.copyright}</p>
       </div>
     </footer>
   );
