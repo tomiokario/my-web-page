@@ -59,7 +59,7 @@
 }
 
 .markdown-page__section-body a {
-  text-decoration-color: var(--accent-soft);
+  text-decoration-color: var(--link-underline);
   text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
 }

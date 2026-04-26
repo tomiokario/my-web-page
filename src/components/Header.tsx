@@ -110,6 +110,7 @@ const useStyles = createStyles((theme) => ({
       fontSize: "0.7rem", // 超小型画面用のフォントサイズ
     },
     "&:hover": {
+      color: "var(--header-text)",
       opacity: 0.8,
     },
   },

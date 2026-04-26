@@ -38,6 +38,7 @@
 
   --link: var(--ice-600);
   --link-hover: var(--ice-800);
+  --link-underline: var(--accent-soft);
   --accent: var(--ice-600);
   --accent-bg: var(--ice-50);
   --accent-text: var(--ice-800);
@@ -95,8 +96,9 @@ html[data-theme="gray"] {
   --fg3: #666666;
   --fg4: #8a8a8a;
 
-  --link: #1c1c1c;
-  --link-hover: #4c4c4c;
+  --link: #0000ee;
+  --link-hover: #0000cc;
+  --link-underline: #0000ee;
   --accent: #3c3c3c;
   --accent-bg: #f4f4f4;
   --accent-text: #1c1c1c;
