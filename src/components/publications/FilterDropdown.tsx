@@ -21,17 +21,24 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     position: "relative",
   },
   filterButton: {
-    padding: "0.5rem 1rem",
+    boxShadow: "var(--control-shadow)",
+    color: "var(--fg2)",
+    fontFamily: "var(--font-sans)",
+    fontSize: theme.fontSizes.sm,
+    fontWeight: 500,
+    padding: "0.55rem 1rem",
     border: "none",
-    borderRadius: theme.radius.sm,
+    borderRadius: "var(--radius-sm)",
     cursor: "pointer",
+    transition: `background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out)`,
   },
   activeFilterButton: {
-    backgroundColor: theme.colors.blue[1],
+    backgroundColor: "var(--tag-accent-bg)",
+    color: "var(--tag-accent-fg)",
     fontWeight: "bold",
   },
   inactiveFilterButton: {
-    backgroundColor: theme.colors.gray[1],
+    backgroundColor: "var(--card-bg)",
     fontWeight: "normal",
   },
   dropdown: {
@@ -39,12 +46,14 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     top: "100%",
     left: 0,
     zIndex: 10,
-    backgroundColor: "white",
-    border: `1px solid ${theme.colors.gray[3]}`,
-    borderRadius: theme.radius.sm,
+    backgroundColor: "var(--card-bg)",
+    borderRadius: "var(--radius-sm)",
     padding: theme.spacing.sm,
-    minWidth: "200px",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+    marginTop: theme.spacing.xs,
+    minWidth: "220px",
+    maxHeight: 260,
+    overflowY: "auto",
+    boxShadow: "var(--dropdown-shadow)",
   },
   optionContainer: {
     marginBottom: theme.spacing.xs,
@@ -53,8 +62,12 @@ const useStyles = createStyles((theme: MantineTheme) => ({
     display: "flex",
     alignItems: "center",
     cursor: "pointer",
+    color: "var(--fg1)",
+    fontFamily: "var(--font-sans)",
+    fontSize: theme.fontSizes.sm,
   },
   checkbox: {
+    accentColor: "var(--accent)",
     marginRight: theme.spacing.xs,
   },
 }));
@@ -92,6 +105,9 @@ function FilterDropdown({
           className={classes.dropdown}
           data-testid={`${category}-dropdown`}
         >
+          {options.length === 0 && (
+            <div className={classes.optionLabel}>—</div>
+          )}
           {options.map((option) => (
             <div key={option} className={classes.optionContainer}>
               <label className={classes.optionLabel} htmlFor={`${category}-${option}`}>

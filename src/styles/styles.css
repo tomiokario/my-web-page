@@ -1,11 +1,28 @@
 /* src/styles.css */
 body {
-  /* マージン・パディングをリセット */
   margin: 0;
   padding: 0;
-  /* フォント */
-  font-family: 'Noto Sans JP', sans-serif;
-  /* 背景色 */
-  background-color: #fff;
+  font-family: var(--font-sans);
+  color: var(--fg1);
+  background: var(--body-bg);
+  background-attachment: fixed;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: var(--link);
+  transition: color var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+
+a:hover {
+  color: var(--link-hover);
+  opacity: 0.9;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

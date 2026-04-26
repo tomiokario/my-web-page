@@ -42,4 +42,27 @@ describe("MarkdownPage", () => {
       await screen.findByRole("button", { name: "Extra footer action" })
     ).toBeInTheDocument();
   });
+
+  test("renders h3 markdown sections as numbered cards", async () => {
+    mockedLoadMarkdown.mockResolvedValue("### Affiliation\n- Fukuoka University\n\n### Contact\n- tomioka.rio");
+
+    renderWithProviders(<MarkdownPage markdownPath="/markdown/home.md" />);
+
+    expect(await screen.findByRole("heading", { name: "Affiliation" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Contact" })).toBeInTheDocument();
+    expect(screen.getByText("01")).toBeInTheDocument();
+    expect(screen.getByText("02")).toBeInTheDocument();
+    expect(screen.getByText("Fukuoka University")).toBeInTheDocument();
+  });
+
+  test("keeps markdown content before the first h3 section", async () => {
+    mockedLoadMarkdown.mockResolvedValue("# Overview\nIntro text\n\n### Affiliation\n- Fukuoka University");
+
+    renderWithProviders(<MarkdownPage markdownPath="/markdown/home.md" />);
+
+    expect(await screen.findByRole("heading", { name: "Overview" })).toBeInTheDocument();
+    expect(screen.getByText("Intro text")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Affiliation" })).toBeInTheDocument();
+    expect(screen.getByText("01")).toBeInTheDocument();
+  });
 });

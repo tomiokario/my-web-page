@@ -49,6 +49,12 @@
   ```
   - メモ: スクリプトのテストで一時的に`src/data/publications.json`が生成/上書きされます（テスト後に削除されます）。テストを中断した場合などは、必要に応じて変換スクリプトを再実行してください。
 
+## テーマの変更方法
+
+サイトの配色は `src/styles/variables.css` の CSS custom properties で管理します。未指定時は blue / ice accent テーマがデフォルトで、旧グレー系テーマは `html[data-theme="gray"]` の token として残しています。
+
+テーマを追加・調整する場合は、React コンポーネントを分岐させず、`--header-bg`、`--footer-bg`、`--surface-alt`、`--accent` などの semantic token を更新してください。通常閲覧時の切り替え UI は Footer の小さなボタンで、選択値は `localStorage.theme` に保存されます。
+
 ## 出版物データの更新方法
 
 出版物データの正本は `src/data/publication_master.json` です。日常更新は researchmap export JSONL の取り込みを使い、`publications.json` はそこから再生成します。

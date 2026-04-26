@@ -17,6 +17,7 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Footer from "../components/Footer";
 import { LanguageProvider } from "../contexts/LanguageContext";
+import { ThemeProvider } from "../contexts/ThemeContext";
 import locales from "../locales";
 
 // テスト用のラッパーコンポーネント
@@ -40,7 +41,7 @@ const TestWrapper = ({ children, initialLanguage = "ja" }) => {
 
   return (
     <LanguageProvider>
-      {children}
+      <ThemeProvider>{children}</ThemeProvider>
     </LanguageProvider>
   );
 };
@@ -91,5 +92,25 @@ describe("Footer component", () => {
     );
     const footerElement = screen.getByRole("contentinfo");
     expect(footerElement).toBeInTheDocument();
+  });
+
+  test("displays theme switch control in Japanese", () => {
+    render(
+      <TestWrapper initialLanguage="ja">
+        <Footer />
+      </TestWrapper>
+    );
+
+    expect(screen.getByRole("button", { name: locales.ja.themeSwitch.switchToGray })).toHaveTextContent("Gray");
+  });
+
+  test("displays theme switch control in English", () => {
+    render(
+      <TestWrapper initialLanguage="en">
+        <Footer />
+      </TestWrapper>
+    );
+
+    expect(screen.getByRole("button", { name: locales.en.themeSwitch.switchToGray })).toHaveTextContent("Gray");
   });
 });

@@ -21,6 +21,12 @@ const en: LocaleMessages = {
   footer: {
     copyright: '© 2026 TOMIOKA Rio'
   },
+  themeSwitch: {
+    switchToGray: 'Switch to gray theme',
+    switchToBlue: 'Switch to blue theme',
+    currentBlue: 'Blue',
+    currentGray: 'Gray'
+  },
   // 言語切り替えボタン
   languageSwitch: {
     switchTo: 'Switch to Japanese'
