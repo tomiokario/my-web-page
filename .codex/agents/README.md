@@ -16,6 +16,7 @@
 - Issue / PR への書き込み権限は `AGENTS.md` と `docs/technical/issue-validation-loop.md` の条件に従います
 - 親オーケストレータは implementation agent 起動後、仕様・受け入れ条件・review 結果・一次情報 handoff の保持に徹し、実装詳細は必要時に最小 handoff で受け取ります
 - 人間向けコメントでは、内部 role 名や進行用語をそのまま出さず、変更内容・確認結果・残課題を自然文で共有します
+- 人間向け文書は単体で読めること、未定義の独自用語を先に出さないこと、読者に合う詳細度にすること、図表はライトモードとダークモードの両方で読める落ち着いた見た目にすることを基本にします
 - 合意済み Issue を「対応してほしい」と依頼されたときは、原則として question -> implementation -> fresh review -> intent review の流れを一通り回します。question-agent は不足仕様だけでなく、変更タイプ、validation profile、reference extraction、acceptance criteria を先に整理します。issue 草案や質問フェーズは question-agent で詰め、fresh review の対象にはしません。一般制約や上位指示で一部の役割実行ができない場合だけ、開始前に衝突内容と不足している許可を人間へ明示します
 
 役割ごとの入出力契約:
