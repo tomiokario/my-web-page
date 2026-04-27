@@ -514,6 +514,45 @@ describe("researchmapImport", () => {
     expect(updatedMaster[0].fields.invited).toBe(true);
   });
 
+  test("misc の subtype 更新では JSONL に存在しない invited を保持する", () => {
+    const invitedMisc = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "misc" as const,
+        subtype: "others",
+        invited: true,
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([invitedMisc], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "misc", id: "53373093", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Paper" },
+          publication_name: { en: "Journal A" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          misc_type: "technical_report",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.subtype).toBe("technical_report");
+    expect(updatedMaster[0].fields.invited).toBe(true);
+  });
+
   test("localized field は JSONL に ja だけ存在する場合に既存 en を保持する", () => {
     const bilingualPresentation = {
       ...existingMasterRecord,
