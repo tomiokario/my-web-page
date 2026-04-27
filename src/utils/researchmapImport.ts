@@ -497,6 +497,10 @@ function collectConflictingFields(
     conflicts.push("fields.identifiers.doi");
   }
 
+  if (existingFields.type !== importedFields.type && !importedFields.subtype) {
+    conflicts.push("fields.subtype");
+  }
+
   const existingTitle = normalizePublicationTitle(getPublicationTitleText(existingFields));
   const importedTitle = normalizePublicationTitle(getPublicationTitleText(importedFields));
   if (

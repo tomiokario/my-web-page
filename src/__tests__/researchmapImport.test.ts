@@ -443,6 +443,33 @@ describe("researchmapImport", () => {
     });
   });
 
+  test("カテゴリ変更で新カテゴリの subtype が無ければ review に止める", () => {
+    writeJsonl([
+      {
+        insert: { type: "presentations", id: "53373093", user_id: "R000104649" },
+        merge: {
+          presentation_title: { en: "Alpha Paper" },
+          event: { en: "Journal A" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(0);
+    expect(report.summary.review).toBe(1);
+    expect(report.reviewItems[0].matchStrategy).toBe("record_id");
+    expect(report.reviewItems[0].conflictingFields).toContain("fields.subtype");
+    expect(JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"))).toEqual([existingMasterRecord]);
+    expect(fs.existsSync(webJsonFilePath)).toBe(false);
+  });
+
   test("JSONL に存在する空値は明示削除として master と publications.json に反映する", () => {
     writeJsonl([
       {
