@@ -33,6 +33,14 @@ const HISTORY_FILE_NAME = ".researchmap-import-history.json";
 
 type PublicationType = PublicationMasterFields["type"];
 type MatchStrategy = "record_id" | "doi" | "fingerprint" | "title";
+type FieldPresence = Set<string>;
+type LocalizedLanguage = keyof LocalizedText;
+type ContributorSlot = PublicationContributor | undefined;
+
+const LOCALIZED_LANGUAGES: LocalizedLanguage[] = ["ja", "en"];
+
+const importedFieldPresence = new WeakMap<PublicationMasterFields, FieldPresence>();
+const importedContributorSlots = new WeakMap<PublicationMasterFields, ContributorSlot[]>();
 
 interface ResearchmapJsonlRecord {
   insert?: {
@@ -365,12 +373,14 @@ function buildCanonicalFieldsFromResearchmapPayload(
   payload: Record<string, unknown>
 ): PublicationMasterFields {
   const subtype = resolveSubtype(type, payload);
+  const presence = collectFieldPresence(type, payload);
+  const contributorResult = optionalContributors(type, payload);
 
-  return compactObject({
+  const fields = compactObject({
     type,
     subtype,
     title: resolveResearchmapTitle(type, payload),
-    contributors: optionalContributors(type, payload),
+    contributors: contributorResult.contributors,
     venue: optionalVenue(type, payload),
     dates: optionalDates(type, payload),
     identifiers: optionalIdentifiers(payload.identifiers),
@@ -386,6 +396,13 @@ function buildCanonicalFieldsFromResearchmapPayload(
         ? optionalBoolean(payload.is_international_presentation)
         : optionalBoolean(payload.is_international_journal),
   }) as PublicationMasterFields;
+
+  importedFieldPresence.set(fields, presence);
+  if (contributorResult.slots) {
+    importedContributorSlots.set(fields, contributorResult.slots);
+  }
+
+  return fields;
 }
 
 function findStrictMatch(
@@ -467,18 +484,6 @@ function collectConflictingFields(
   const conflicts: string[] = [];
   const existingFields = existingRecord.fields;
   const importedFields = importedRecord.fields;
-
-  if (existingFields.type !== importedFields.type) {
-    conflicts.push("fields.type");
-  }
-
-  if (
-    existingFields.subtype &&
-    importedFields.subtype &&
-    existingFields.subtype !== importedFields.subtype
-  ) {
-    conflicts.push("fields.subtype");
-  }
 
   const existingRecordId = existingRecord.sync?.researchmap?.recordId;
   const importedRecordId = importedRecord.sync?.researchmap?.recordId;
@@ -562,70 +567,241 @@ function mergePublicationFields(
   existingFields: PublicationMasterFields,
   importedFields: PublicationMasterFields
 ): PublicationMasterFields {
+  const presence = importedFieldPresence.get(importedFields) || new Set<string>();
+  const type = importedFields.type;
+  const existingContributors = normalizeContributorRoles(existingFields.contributors, type);
+  const existingVenue = normalizeVenueKind(existingFields.venue, type);
+
   return compactObject({
-    type: importedFields.type,
-    subtype: importedFields.subtype || existingFields.subtype,
-    title: mergeLocalizedText(existingFields.title, importedFields.title),
-    contributors: importedFields.contributors || existingFields.contributors,
-    venue: mergeVenue(existingFields.venue, importedFields.venue),
+    type,
+    subtype: fieldValue(presence, "subtype", importedFields.subtype, existingFields.subtype),
+    title: mergeLocalizedText(
+      presence,
+      "title",
+      existingFields.title,
+      importedFields.title
+    ),
+    contributors: mergeContributors(
+      presence,
+      existingContributors,
+      importedContributorSlots.get(importedFields) || importedFields.contributors,
+      type
+    ),
+    venue: mergeVenue(existingVenue, importedFields.venue, presence),
     dates: compactObject({
-      published: importedFields.dates?.published || existingFields.dates?.published,
-      eventStart: importedFields.dates?.eventStart || existingFields.dates?.eventStart,
-      eventEnd: importedFields.dates?.eventEnd || existingFields.dates?.eventEnd,
+      published: fieldValue(
+        presence,
+        "dates.published",
+        importedFields.dates?.published,
+        existingFields.dates?.published
+      ),
+      eventStart: fieldValue(
+        presence,
+        "dates.eventStart",
+        importedFields.dates?.eventStart,
+        existingFields.dates?.eventStart
+      ),
+      eventEnd: fieldValue(
+        presence,
+        "dates.eventEnd",
+        importedFields.dates?.eventEnd,
+        existingFields.dates?.eventEnd
+      ),
     }),
     identifiers: compactObject({
-      doi: importedFields.identifiers?.doi || existingFields.identifiers?.doi,
+      doi: fieldValue(
+        presence,
+        "identifiers.doi",
+        importedFields.identifiers?.doi,
+        existingFields.identifiers?.doi
+      ),
     }),
-    links: importedFields.links || existingFields.links,
+    links: fieldValue(presence, "links", importedFields.links, existingFields.links),
     bibliographic: compactObject({
-      volume: importedFields.bibliographic?.volume || existingFields.bibliographic?.volume,
-      number: importedFields.bibliographic?.number || existingFields.bibliographic?.number,
+      volume: fieldValue(
+        presence,
+        "bibliographic.volume",
+        importedFields.bibliographic?.volume,
+        existingFields.bibliographic?.volume
+      ),
+      number: fieldValue(
+        presence,
+        "bibliographic.number",
+        importedFields.bibliographic?.number,
+        existingFields.bibliographic?.number
+      ),
       startPage:
-        importedFields.bibliographic?.startPage || existingFields.bibliographic?.startPage,
-      endPage: importedFields.bibliographic?.endPage || existingFields.bibliographic?.endPage,
+        fieldValue(
+          presence,
+          "bibliographic.startPage",
+          importedFields.bibliographic?.startPage,
+          existingFields.bibliographic?.startPage
+        ),
+      endPage: fieldValue(
+        presence,
+        "bibliographic.endPage",
+        importedFields.bibliographic?.endPage,
+        existingFields.bibliographic?.endPage
+      ),
     }),
-    location: mergeLocalizedText(existingFields.location, importedFields.location),
-    description: mergeLocalizedText(existingFields.description, importedFields.description),
-    review:
-      importedFields.review !== undefined ? importedFields.review : existingFields.review,
-    invited:
-      importedFields.invited !== undefined ? importedFields.invited : existingFields.invited,
-    ownerRoles: importedFields.ownerRoles || existingFields.ownerRoles,
-    isInternational:
-      importedFields.isInternational !== undefined
-        ? importedFields.isInternational
-        : existingFields.isInternational,
+    location: mergeLocalizedText(
+      presence,
+      "location",
+      existingFields.location,
+      importedFields.location
+    ),
+    description: mergeLocalizedText(
+      presence,
+      "description",
+      existingFields.description,
+      importedFields.description
+    ),
+    review: fieldValue(presence, "review", importedFields.review, existingFields.review),
+    invited: fieldValue(presence, "invited", importedFields.invited, existingFields.invited),
+    ownerRoles: fieldValue(
+      presence,
+      "ownerRoles",
+      importedFields.ownerRoles,
+      existingFields.ownerRoles
+    ),
+    isInternational: fieldValue(
+      presence,
+      "isInternational",
+      importedFields.isInternational,
+      existingFields.isInternational
+    ),
   }) as PublicationMasterFields;
 }
 
 function mergeVenue(
   existingVenue: PublicationMasterFields["venue"],
-  importedVenue: PublicationMasterFields["venue"]
+  importedVenue: PublicationMasterFields["venue"],
+  presence: FieldPresence
 ): PublicationMasterFields["venue"] {
   if (!existingVenue) {
     return importedVenue;
   }
 
-  if (!importedVenue) {
+  if (!importedVenue && !hasVenuePresence(presence)) {
     return existingVenue;
   }
 
   return {
-    kind: importedVenue.kind || existingVenue.kind,
-    name: mergeLocalizedText(existingVenue.name, importedVenue.name),
-    promoter: mergeLocalizedText(existingVenue.promoter, importedVenue.promoter),
-    addressCountry: importedVenue.addressCountry || existingVenue.addressCountry,
+    kind: importedVenue?.kind || existingVenue.kind,
+    name: mergeLocalizedText(
+      presence,
+      "venue.name",
+      existingVenue.name,
+      importedVenue?.name
+    ),
+    promoter: mergeLocalizedText(
+      presence,
+      "venue.promoter",
+      existingVenue.promoter,
+      importedVenue?.promoter
+    ),
+    addressCountry: fieldValue(
+      presence,
+      "venue.addressCountry",
+      importedVenue?.addressCountry,
+      existingVenue.addressCountry
+    ),
+  };
+}
+
+function hasVenuePresence(presence: FieldPresence): boolean {
+  return (
+    presence.has("venue.name") ||
+    presence.has("venue.promoter") ||
+    presence.has("venue.addressCountry")
+  );
+}
+
+function fieldValue<T>(
+  presence: FieldPresence,
+  fieldPath: string,
+  importedValue: T | undefined,
+  existingValue: T | undefined
+): T | undefined {
+  return presence.has(fieldPath) ? importedValue : existingValue;
+}
+
+function normalizeContributorRoles(
+  contributors: PublicationMasterFields["contributors"],
+  type: PublicationType
+): PublicationMasterFields["contributors"] {
+  if (!contributors) {
+    return undefined;
+  }
+
+  const role = type === "presentations" ? "presenter" : "author";
+  return contributors.map((contributor) => ({
+    ...contributor,
+    role,
+  }));
+}
+
+function normalizeVenueKind(
+  venue: PublicationMasterFields["venue"],
+  type: PublicationType
+): PublicationMasterFields["venue"] {
+  if (!venue) {
+    return undefined;
+  }
+
+  return {
+    ...venue,
+    kind: type === "presentations" ? "event" : "publication",
   };
 }
 
 function mergeLocalizedText(
+  presence: FieldPresence,
+  fieldPath: string,
   existingValue: LocalizedText | undefined,
   importedValue: LocalizedText | undefined
 ): LocalizedText | undefined {
-  return compactObject({
-    ja: importedValue?.ja || existingValue?.ja,
-    en: importedValue?.en || existingValue?.en,
-  }) as LocalizedText;
+  const merged = compactObject(
+    Object.fromEntries(
+      LOCALIZED_LANGUAGES.map((language) => [
+        language,
+        fieldValue(
+          presence,
+          `${fieldPath}.${language}`,
+          importedValue?.[language],
+          existingValue?.[language]
+        ),
+      ])
+    )
+  ) as LocalizedText;
+
+  return Object.keys(merged).length > 0 ? (merged as LocalizedText) : undefined;
+}
+
+function mergeContributors(
+  presence: FieldPresence,
+  existingContributors: PublicationMasterFields["contributors"],
+  importedContributors: ContributorSlot[] | undefined,
+  type: PublicationType
+): PublicationMasterFields["contributors"] {
+  if (!presence.has("contributors")) {
+    return existingContributors;
+  }
+
+  const role = type === "presentations" ? "presenter" : "author";
+  const count = Math.max(existingContributors?.length || 0, importedContributors?.length || 0);
+  const contributors = Array.from({ length: count }, (_, index) => {
+    const name = mergeLocalizedText(
+      presence,
+      `contributors.${index}.name`,
+      existingContributors?.[index]?.name,
+      importedContributors?.[index]?.name
+    );
+
+    return name ? { role, name } : undefined;
+  }).filter((contributor): contributor is PublicationContributor => Boolean(contributor));
+
+  return contributors.length > 0 ? contributors : undefined;
 }
 
 function hasContributorConflict(
@@ -647,7 +823,6 @@ function hasContributorConflict(
     }
 
     return (
-      contributor.role !== importedContributor.role ||
       normalizePublicationTitle(contributor.name.ja || contributor.name.en) !==
         normalizePublicationTitle(importedContributor.name.ja || importedContributor.name.en) ||
       hasLocalizedTextConflict(contributor.name, importedContributor.name)
@@ -828,6 +1003,180 @@ function hasCanonicalTitle(fields: PublicationMasterFields): boolean {
     normalizePublicationTitle(fields.title?.ja || "") ||
       normalizePublicationTitle(fields.title?.en || "")
   );
+}
+
+function collectFieldPresence(
+  type: PublicationType,
+  payload: Record<string, unknown>
+): FieldPresence {
+  const presence: FieldPresence = new Set();
+
+  addPresence(presence, "subtype", getSubtypePayloadKey(type), payload);
+  addPresence(
+    presence,
+    "title",
+    type === "presentations" ? "presentation_title" : "paper_title",
+    payload
+  );
+  addLocalizedPresence(
+    presence,
+    "title",
+    type === "presentations" ? "presentation_title" : "paper_title",
+    payload
+  );
+  addPresence(
+    presence,
+    "contributors",
+    type === "presentations" ? "presenters" : "authors",
+    payload
+  );
+  addIndexedLocalizedPeoplePresence(
+    presence,
+    "contributors",
+    type === "presentations" ? "presenters" : "authors",
+    payload
+  );
+  addPresence(
+    presence,
+    "venue.name",
+    type === "presentations" ? "event" : "publication_name",
+    payload
+  );
+  addLocalizedPresence(
+    presence,
+    "venue.name",
+    type === "presentations" ? "event" : "publication_name",
+    payload
+  );
+  addPresence(presence, "venue.promoter", "promoter", payload);
+  addLocalizedPresence(presence, "venue.promoter", "promoter", payload);
+  addPresence(presence, "venue.addressCountry", "address_country", payload);
+  addPresence(presence, "dates.published", "publication_date", payload);
+  addPresence(presence, "dates.eventStart", "from_event_date", payload);
+  addPresence(presence, "dates.eventEnd", "to_event_date", payload);
+  addPresence(presence, "identifiers.doi", "identifiers", payload, "doi");
+  addPresence(presence, "links", "see_also", payload);
+  addPresence(presence, "bibliographic.volume", "volume", payload);
+  addPresence(presence, "bibliographic.number", "number", payload);
+  addPresence(presence, "bibliographic.startPage", "starting_page", payload);
+  addPresence(presence, "bibliographic.endPage", "ending_page", payload);
+  addPresence(presence, "location", "location", payload);
+  addLocalizedPresence(presence, "location", "location", payload);
+  addPresence(presence, "description", "description", payload);
+  addLocalizedPresence(presence, "description", "description", payload);
+  addPresence(presence, "review", "referee", payload);
+  addPresence(presence, "ownerRoles", "published_paper_owner_roles", payload);
+  addPresence(
+    presence,
+    "isInternational",
+    type === "presentations" ? "is_international_presentation" : "is_international_journal",
+    payload
+  );
+
+  if (hasOwn(payload, "invited") || presence.has("subtype")) {
+    presence.add("invited");
+  }
+
+  return presence;
+}
+
+function getSubtypePayloadKey(type: PublicationType): string {
+  if (type === "published_papers") {
+    return "published_paper_type";
+  }
+  if (type === "presentations") {
+    return "presentation_type";
+  }
+  return "misc_type";
+}
+
+function addPresence(
+  presence: FieldPresence,
+  fieldPath: string,
+  payloadKey: string,
+  payload: Record<string, unknown>,
+  nestedKey?: string
+): void {
+  if (!hasOwn(payload, payloadKey)) {
+    return;
+  }
+
+  if (!nestedKey) {
+    presence.add(fieldPath);
+    return;
+  }
+
+  const nestedValue = payload[payloadKey];
+  if (
+    nestedValue &&
+    typeof nestedValue === "object" &&
+    !Array.isArray(nestedValue) &&
+    hasOwn(nestedValue as Record<string, unknown>, nestedKey)
+  ) {
+    presence.add(fieldPath);
+  }
+}
+
+function addLocalizedPresence(
+  presence: FieldPresence,
+  fieldPath: string,
+  payloadKey: string,
+  payload: Record<string, unknown>
+): void {
+  if (!hasOwn(payload, payloadKey)) {
+    return;
+  }
+
+  const localizedValue = payload[payloadKey];
+  if (!localizedValue || typeof localizedValue !== "object" || Array.isArray(localizedValue)) {
+    return;
+  }
+
+  const localized = localizedValue as Record<string, unknown>;
+  LOCALIZED_LANGUAGES.forEach((language) => {
+    if (hasOwn(localized, language)) {
+      presence.add(`${fieldPath}.${language}`);
+    }
+  });
+}
+
+function addIndexedLocalizedPeoplePresence(
+  presence: FieldPresence,
+  fieldPath: string,
+  payloadKey: string,
+  payload: Record<string, unknown>
+): void {
+  if (!hasOwn(payload, payloadKey)) {
+    return;
+  }
+
+  const localizedValue = payload[payloadKey];
+  if (!localizedValue || typeof localizedValue !== "object" || Array.isArray(localizedValue)) {
+    return;
+  }
+
+  const localized = localizedValue as Record<string, unknown>;
+  LOCALIZED_LANGUAGES.forEach((language) => {
+    const people = localized[language];
+    if (!Array.isArray(people)) {
+      return;
+    }
+
+    people.forEach((person, index) => {
+      if (
+        person &&
+        typeof person === "object" &&
+        !Array.isArray(person) &&
+        hasOwn(person as Record<string, unknown>, "name")
+      ) {
+        presence.add(`${fieldPath}.${index}.name.${language}`);
+      }
+    });
+  });
+}
+
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
 }
 
 function resolveSubtype(
@@ -1052,7 +1401,10 @@ function optionalSeeAlso(
 function optionalContributors(
   type: PublicationType,
   payload: Record<string, unknown>
-): PublicationMasterFields["contributors"] | undefined {
+): {
+  contributors: PublicationMasterFields["contributors"] | undefined;
+  slots: ContributorSlot[] | undefined;
+} {
   const role = type === "presentations" ? "presenter" : "author";
   const source = type === "presentations" ? payload.presenters : payload.authors;
   return localizedPeopleToContributors(source, role);
@@ -1133,9 +1485,12 @@ function optionalBibliographic(
 function localizedPeopleToContributors(
   value: unknown,
   role: PublicationContributor["role"]
-): PublicationMasterFields["contributors"] | undefined {
+): {
+  contributors: PublicationMasterFields["contributors"] | undefined;
+  slots: ContributorSlot[] | undefined;
+} {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
-    return undefined;
+    return { contributors: undefined, slots: undefined };
   }
 
   const localized = value as Record<string, unknown>;
@@ -1144,19 +1499,25 @@ function localizedPeopleToContributors(
   const count = Math.max(ja.length, en.length);
 
   if (count === 0) {
-    return undefined;
+    return { contributors: undefined, slots: undefined };
   }
 
-  const contributors = Array.from({ length: count }, (_, index) => {
+  const slots = Array.from({ length: count }, (_, index) => {
     const name = compactObject({
       ja: ja[index],
       en: en[index],
     }) as LocalizedText;
 
     return Object.keys(name).length > 0 ? { role, name } : undefined;
-  }).filter((item): item is PublicationContributor => Boolean(item));
+  });
+  const contributors = slots.filter(
+    (item): item is PublicationContributor => Boolean(item)
+  );
 
-  return contributors.length > 0 ? contributors : undefined;
+  return {
+    contributors: contributors.length > 0 ? contributors : undefined,
+    slots,
+  };
 }
 
 function deriveInvitedFromSubtype(
@@ -1170,22 +1531,18 @@ function deriveInvitedFromSubtype(
   return subtype.startsWith("invited_") ? true : undefined;
 }
 
-function optionalPeopleArray(
-  value: unknown
-): string[] {
+function optionalPeopleArray(value: unknown): Array<string | undefined> {
   if (!Array.isArray(value)) {
     return [];
   }
 
-  return value
-    .map((person) => {
-      if (!person || typeof person !== "object" || Array.isArray(person)) {
-        return undefined;
-      }
-      const name = optionalString((person as Record<string, unknown>).name);
-      return name || undefined;
-    })
-    .filter((name): name is string => Boolean(name));
+  return value.map((person) => {
+    if (!person || typeof person !== "object" || Array.isArray(person)) {
+      return undefined;
+    }
+
+    return optionalString((person as Record<string, unknown>).name) || undefined;
+  });
 }
 
 function optionalStringArray(value: unknown): string[] | undefined {

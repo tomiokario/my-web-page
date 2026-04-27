@@ -61,7 +61,7 @@
       "researchmap": {
         "recordId": "53373064",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "b50ba3fe2421bae0b9626a0d3262648e2279ed419c3bf6cbb43a51043607381e"
       }
     }
@@ -134,7 +134,7 @@
       "researchmap": {
         "recordId": "53373065",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "579317f887e4432ea0cf9adc71b8ff87902d8be52d6740717725f4adff7dbc2e"
       }
     }
@@ -199,7 +199,7 @@
       "researchmap": {
         "recordId": "53373066",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "b5882fcbf444fb345da825bf24db203944df0b1e8cce2776e9e97cb71f281205"
       }
     }
@@ -266,7 +266,7 @@
       "researchmap": {
         "recordId": "53373067",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "4e4db9f8d8d0d0b818b7c25ef27dc46d5791d63777f00eebfa1bfd61e40f1987"
       }
     }
@@ -334,7 +334,7 @@
       "researchmap": {
         "recordId": "53373068",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "0b547d1175fafcd0fbb0c9f4c1e78e4b46c36db013385de96c28d9efa7cb6be7"
       }
     }
@@ -442,7 +442,7 @@
       "researchmap": {
         "recordId": "53375540",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "bc70e4c3ca0ded6411414ab6607088e89a9538f7006a013a19b0c5b5eba7e1f8"
       }
     }
@@ -552,7 +552,7 @@
       "researchmap": {
         "recordId": "53375541",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "c72bfb43ac85a06d4c9d9e23d3c60917b12459bb4cd1e79405945a15af9cf8ac"
       }
     }
@@ -625,7 +625,7 @@
       "researchmap": {
         "recordId": "53373071",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "f614da309430dc9881d09aaff7b1d65bd5b6fa09c54e48f2168f0c271212db8f"
       }
     }
@@ -692,7 +692,7 @@
       "researchmap": {
         "recordId": "53373072",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "77488c527b34df4d6f8cf6bbf5582082908e8d7eeba30fa6bddb8ebe3f778a13"
       }
     }
@@ -751,7 +751,7 @@
       "researchmap": {
         "recordId": "53373073",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "eec58b5d9fcb167cecb41bc272db8a1ae7388b037366c5d0e529597822822730"
       }
     }
@@ -823,7 +823,7 @@
       "researchmap": {
         "recordId": "53373074",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "43c9ce591f64fb0444591fc512357d23ed5e3d5c7e37041ce3c093ce8e12b9c9"
       }
     }
@@ -831,28 +831,27 @@
   {
     "id": "pub-2023-自己参照型ホログラフィックメモリの光学系を用いたニューラルネットワークハードウェア",
     "fields": {
-      "type": "misc",
-      "subtype": "others",
+      "type": "presentations",
+      "subtype": "poster_presentation",
       "title": {
-        "ja": "自己参照型ホログラフィックメモリの光学系を用いたニューラルネットワークハードウェア",
-        "en": "自己参照型ホログラフィックメモリの光学系を用いたニューラルネットワークハードウェア"
+        "ja": "自己参照型ホログラフィックメモリの光学系を用いたニューラルネットワークハードウェア"
       },
       "contributors": [
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "冨岡莉生"
           }
         },
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "高林正典"
           }
         }
       ],
       "venue": {
-        "kind": "publication",
+        "kind": "event",
         "name": {
           "ja": "情報フォトニクス研究討論会2023"
         }
@@ -869,14 +868,14 @@
           "isDownloadable": false
         }
       ],
-      "location": {
-        "ja": "東京工業大学大岡山キャンパス　西9号館1階　コラボレーションルーム, Tokyo, Japan"
-      },
-      "review": false,
       "invited": false,
+      "review": false,
       "ownerRoles": [
         "lead"
       ],
+      "location": {
+        "ja": "東京工業大学大岡山キャンパス　西9号館1階　コラボレーションルーム, Tokyo, Japan"
+      },
       "isInternational": false
     },
     "localMeta": {
@@ -887,59 +886,60 @@
       "researchmap": {
         "recordId": "53373075",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "6172a6d2fc13907bdb993237258c270ba4879f653242d71ae83452cec60b8a57"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "66ec3275011bd4f1bf8f8c5b6ff4bd6f2e97616ae74e61a75288976677cdff96"
       }
     }
   },
   {
     "id": "pub-2023-複素振幅分布を入出力とする光電子融合型深層ニューラルネットワークハードウェアにおける複素活性化関",
     "fields": {
-      "type": "misc",
-      "subtype": "others",
+      "type": "presentations",
+      "subtype": "poster_presentation",
       "title": {
         "ja": "複素振幅分布を入出力とする光電子融合型深層ニューラルネットワークハードウェアにおける複素活性化関数の影響",
         "en": "複素振幅分布を入出力とする光電子融合型深層ニューラルネットワークハードウェアにおける複素活性化関数の影響"
       },
       "contributors": [
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "冨岡莉生"
           }
         },
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "高林正典"
           }
         }
       ],
       "venue": {
-        "kind": "publication",
+        "kind": "event",
         "name": {
-          "ja": "光の極限性能を生かすフォトニックコンピューティング 第三回領域会議"
+          "ja": "光の極限性能を生かすフォトニックコンピューティング 第3回領域会議"
         }
       },
       "dates": {
         "published": "2023-08-07",
         "eventStart": "2023-08-07",
-        "eventEnd": "2023-08-08"
+        "eventEnd": "2023-08-07"
       },
       "links": [
         {
           "url": "https://www.photoniccomputing.jp/activities/2023_08_07_region_meeting_online.php",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
+      ],
+      "invited": false,
+      "review": false,
+      "ownerRoles": [
+        "lead"
       ],
       "location": {
         "ja": "東京大学工学部６号館３階セミナー室A・D・B・C, Tokyo, Japan"
       },
-      "review": false,
-      "invited": false,
-      "ownerRoles": [
-        "lead"
-      ],
       "isInternational": false
     },
     "localMeta": {
@@ -950,44 +950,40 @@
       "researchmap": {
         "recordId": "53373076",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "617aff95a3f64eb4f5346574a9b87c1ea68a6eabaf847e91c1968ff9bedf129e"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "9bbcde91fe4632eb46b40ffdb7f8ee6379bd661b62bc53f184013d013c8c8a71"
       }
     }
   },
   {
     "id": "pub-2023-numerical-simulation-on-phase-to-intensity-conve",
     "fields": {
-      "type": "presentations",
-      "subtype": "poster_presentation",
+      "type": "misc",
       "title": {
         "en": "Numerical simulation on phase-to-intensity conversion by self-referential holographic deep neural network"
       },
       "contributors": [
         {
-          "role": "presenter",
+          "role": "author",
           "name": {
             "en": "Rio Tomioka"
           }
         },
         {
-          "role": "presenter",
+          "role": "author",
           "name": {
             "en": "Masanori Takabayashi"
           }
         }
       ],
       "venue": {
-        "kind": "event",
+        "kind": "publication",
         "name": {
           "en": "The 13th Japan-Korea Workshop on Digital Holography and Information Photonics"
-        },
-        "addressCountry": "JPN"
+        }
       },
       "dates": {
-        "published": "2023-12-18",
-        "eventStart": "2023-12-18",
-        "eventEnd": "2023-12-18"
+        "published": "2023-12-18"
       },
       "links": [
         {
@@ -1000,15 +996,15 @@
         "startPage": "54",
         "endPage": "54"
       },
-      "location": {
-        "en": "B-con Plaza, Beppu, Oita, Japan"
-      },
       "review": false,
       "invited": false,
       "ownerRoles": [
         "lead"
       ],
-      "isInternational": true
+      "isInternational": true,
+      "location": {
+        "en": "B-con Plaza, Beppu, Oita, Japan"
+      }
     },
     "localMeta": {
       "hasEmptyFields": false,
@@ -1018,8 +1014,8 @@
       "researchmap": {
         "recordId": "53373077",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "eb191cec45cb4e817d269b09136fe6cf940a47a2740621ae7c31f4af9d94f76c"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "056cda00c52dd195a690f30122abb571edb134a88e8e0d1e16b14997cbeab745"
       }
     }
   },
@@ -1085,7 +1081,7 @@
       "researchmap": {
         "recordId": "53373078",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "8d4efd112443be5e122d203f6623680ccee0643bc9f6dff305a98d05c56c497f"
       }
     }
@@ -1158,7 +1154,7 @@
       "researchmap": {
         "recordId": "53373079",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "21e415d8d3e6b5625357a6e3d3c9e7728bb5e2cbdce3c2fadb4579d3e4e0d7f6"
       }
     }
@@ -1225,7 +1221,7 @@
       "researchmap": {
         "recordId": "53373080",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "3e8737e13d74fe381743c68dd384e0d0f40461c6ab28df2f5aaa7b709e57f5fc"
       }
     }
@@ -1313,8 +1309,8 @@
       "researchmap": {
         "recordId": "53373081",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "8025fe111b298b5c236b392f4869b0f415da2296b83360594b6de90462496e0c"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "0e9b47578a41489b418005e33836ab11cc3105aa1abd9ba1a18de66e645679ae"
       }
     }
   },
@@ -1383,8 +1379,8 @@
       "researchmap": {
         "recordId": "53373082",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "bad427fd041b2ed2c5a6fea593a9d1e7f9f5c22f69e743f6b2903021e248a026"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "b0ebbef6ff1b0ce8a1014ca5f5fa9bd26371e561577960620141b67a3a72f4af"
       }
     }
   },
@@ -1451,7 +1447,7 @@
       "researchmap": {
         "recordId": "53373083",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "4b1b6536552914dea3d67b09a7fb3bca0b0c99879b4edebb98b50c997db98e10"
       }
     }
@@ -1525,7 +1521,7 @@
       "researchmap": {
         "recordId": "53373084",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "bfce997756897f44a3bc4ac8d2873734ff548b3c469e720617e5624cab3f3d78"
       }
     }
@@ -1533,29 +1529,29 @@
   {
     "id": "pub-2024-numerical-simulations-on-optoelectronic-deep-neu",
     "fields": {
-      "type": "misc",
-      "subtype": "others",
+      "type": "presentations",
+      "subtype": "poster_presentation",
       "title": {
         "ja": "学習可能な電子演算部を有する光電融合深層ニューラルネットワークに関するシミュレーション",
         "en": "Numerical simulations on optoelectronic deep neural network with trainable electronic processing part"
       },
       "contributors": [
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "冨岡莉生",
             "en": "Rio Tomioka"
           }
         },
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "高津太一",
             "en": "Taichi Takatsu"
           }
         },
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "高林正典",
             "en": "Masanori Takabayashi"
@@ -1563,15 +1559,15 @@
         }
       ],
       "venue": {
-        "kind": "publication",
+        "kind": "event",
         "name": {
-          "ja": "光の極限性能を生かすフォトニックコンピューティング 第四回領域会議"
+          "ja": "光の極限性能を生かすフォトニックコンピューティング 第4回領域会議"
         }
       },
       "dates": {
         "published": "2024-08-05",
         "eventStart": "2024-08-05",
-        "eventEnd": "2024-08-06"
+        "eventEnd": "2024-08-05"
       },
       "links": [
         {
@@ -1580,8 +1576,8 @@
           "isDownloadable": false
         }
       ],
-      "review": false,
       "invited": false,
+      "review": false,
       "ownerRoles": [
         "lead"
       ],
@@ -1595,8 +1591,8 @@
       "researchmap": {
         "recordId": "53373085",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "b044558fa6e7c61961db43b3c391c4cd3aceb11352339f126f1199f003234959"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "309726f1a477f300c22febf0936d4a42c533c3d69fae9e7c8084013fba91d2eb"
       }
     }
   },
@@ -1663,7 +1659,7 @@
       "researchmap": {
         "recordId": "53373086",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "e6c82b6a3940ae222ae5df23ceb882ccf105191da56656d9e85b403479ca6850"
       }
     }
@@ -1737,7 +1733,7 @@
       "researchmap": {
         "recordId": "53373087",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "6718710dafdf091a2307dbeca001d4c895a5e4474023b3d0a6edc5b511e8acc3"
       }
     }
@@ -1784,18 +1780,17 @@
       "venue": {
         "kind": "publication",
         "name": {
-          "ja": "MMS2024(愛媛)"
+          "ja": "映情報学技報"
         }
       },
       "dates": {
-        "published": "2024-12-05",
-        "eventStart": "2024-12-05",
-        "eventEnd": "2024-12-05"
+        "published": "2024-12-05"
       },
       "links": [
         {
           "url": "https://www.ite.or.jp/ken/paper/20241205vAN8/",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "bibliographic": {
@@ -1816,8 +1811,8 @@
       "researchmap": {
         "recordId": "53373088",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "22c3214a6e273eb1168d9df16c817e6cfef86525665813f4f0b7f9aba4114153"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "4100f83925f32364360629851a0232d8e2e346ba7211534386afaa009a192b1b"
       }
     }
   },
@@ -1884,7 +1879,7 @@
       "researchmap": {
         "recordId": "53373089",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "0c05617f31084137d365cacf8f8404290d42bf2378aab5a675c7eb6e133e61db"
       }
     }
@@ -1958,8 +1953,8 @@
       "researchmap": {
         "recordId": "53373090",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "af55986a292f16bec7eeaa6a85dfe47df3777790b3b4af859282947a8cbdf6e5"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "cbbafa9807711628ca72bd2a4ce3122c12063851b08e9b5af4e2954cc00ae66c"
       }
     }
   },
@@ -2019,18 +2014,17 @@
       "venue": {
         "kind": "publication",
         "name": {
-          "ja": "MMS2024(北海道)"
+          "ja": "映情報学技報"
         }
       },
       "dates": {
-        "published": "2025-02-19",
-        "eventStart": "2025-02-19",
-        "eventEnd": "2025-02-19"
+        "published": "2025-02-19"
       },
       "links": [
         {
           "url": "https://www.ite.or.jp/ken/paper/20250219kANt/",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
       "bibliographic": {
@@ -2051,8 +2045,8 @@
       "researchmap": {
         "recordId": "53373091",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "30ce0ffbbcabf7781d3350337ac67b4f0b1f5562e8f732ab1e847ea2c84e8dac"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "e19e7bec3a2d54b36f57b3ea8954a280d8e00b5a9d4df729694c07b13d6d91ce"
       }
     }
   },
@@ -2124,7 +2118,7 @@
       "researchmap": {
         "recordId": "53373092",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "e4133e1ad4e3788853f975e1c9ffb24d4665e49795fc6919aed6b4a849c3f5cd"
       }
     }
@@ -2204,7 +2198,7 @@
       "researchmap": {
         "recordId": "53373093",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "e4ed41aaa23b60464686d3541669e3a13b2891ccc16cfdfc5cb8c4e6ee5f8b1c"
       }
     }
@@ -2212,77 +2206,11 @@
   {
     "id": "pub-2025-自己参照型ホログラフィック深層ニューラルネットワークを用いた画像デノイズに関する数値シミュレーシ",
     "fields": {
-      "type": "misc",
-      "subtype": "others",
+      "type": "presentations",
+      "subtype": "poster_presentation",
       "title": {
         "ja": "自己参照型ホログラフィック深層ニューラルネットワークを用いた画像デノイズに関する数値シミュレーション",
         "en": "自己参照型ホログラフィック深層ニューラルネットワークを用いた画像デノイズに関する数値シミュレーション"
-      },
-      "contributors": [
-        {
-          "role": "author",
-          "name": {
-            "ja": "江藤優太"
-          }
-        },
-        {
-          "role": "author",
-          "name": {
-            "ja": "冨岡莉生"
-          }
-        },
-        {
-          "role": "author",
-          "name": {
-            "ja": "髙林正典"
-          }
-        }
-      ],
-      "venue": {
-        "kind": "publication",
-        "name": {
-          "ja": "光の極限性能を生かすフォトニックコンピューティング 第6回領域会議"
-        }
-      },
-      "dates": {
-        "published": "2025-08-04",
-        "eventStart": "2025-08-04",
-        "eventEnd": "2025-08-05"
-      },
-      "links": [
-        {
-          "url": "https://www.photoniccomputing.jp/activities/2025_08_05_region_meeting_online.php",
-          "label": "url"
-        }
-      ],
-      "location": {
-        "ja": "JR博多シティ 大会議室A・B・C・D／小会議室I, Fukuoka, Japan"
-      },
-      "review": false,
-      "invited": false,
-      "isInternational": false
-    },
-    "localMeta": {
-      "hasEmptyFields": true,
-      "notes": ""
-    },
-    "sync": {
-      "researchmap": {
-        "recordId": "53373094",
-        "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "5f2f5045cdf8fe42e324c55f6c195476957d45fa114815dd31ac44ea2211a32d"
-      }
-    }
-  },
-  {
-    "id": "pub-2025-深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検",
-    "fields": {
-      "type": "presentations",
-      "subtype": "oral_presentation",
-      "title": {
-        "ja": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討",
-        "en": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討"
       },
       "contributors": [
         {
@@ -2307,30 +2235,102 @@
       "venue": {
         "kind": "event",
         "name": {
-          "ja": "2025年第86回応用物理学会秋季学術講演会"
-        },
-        "promoter": {
-          "ja": "2025年第86回応用物理学会秋季学術講演会"
-        },
-        "addressCountry": "JPN"
+          "ja": "光の極限性能を生かすフォトニックコンピューティング 第6回領域会議"
+        }
       },
       "dates": {
-        "published": "2025-09-07",
-        "eventStart": "2025-09-07",
-        "eventEnd": "2025-09-10"
+        "published": "2025-08-04",
+        "eventStart": "2025-08-04",
+        "eventEnd": "2025-08-04"
+      },
+      "links": [
+        {
+          "url": "https://www.photoniccomputing.jp/activities/2025_08_05_region_meeting_online.php",
+          "label": "url",
+          "isDownloadable": false
+        }
+      ],
+      "invited": false,
+      "review": false,
+      "location": {
+        "ja": "JR博多シティ 大会議室A・B・C・D／小会議室I, Fukuoka, Japan"
+      },
+      "isInternational": false
+    },
+    "localMeta": {
+      "hasEmptyFields": true,
+      "notes": ""
+    },
+    "sync": {
+      "researchmap": {
+        "recordId": "53373094",
+        "userId": "R000104649",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "c33a399fa495d8a326c9a85faad18d45448b1b3d45a3342c72c8b466cc02a7fc"
+      }
+    }
+  },
+  {
+    "id": "pub-2025-深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検",
+    "fields": {
+      "type": "misc",
+      "subtype": "summary_national_conference",
+      "title": {
+        "ja": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリのための効率的な学習手法の検討",
+        "en": "Efficient Training Method for Self-Referential Holographic Data Storage with Built-in Denoising Function by Deep Learning"
+      },
+      "contributors": [
+        {
+          "role": "author",
+          "name": {
+            "ja": "江藤優太",
+            "en": "Yuta Eto"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "冨岡莉生",
+            "en": "Rio Tomioka"
+          }
+        },
+        {
+          "role": "author",
+          "name": {
+            "ja": "髙林正典",
+            "en": "Masanori Takabayashi"
+          }
+        }
+      ],
+      "venue": {
+        "kind": "publication",
+        "name": {
+          "ja": "第86回応用物理学会秋季学術講演会"
+        }
+      },
+      "dates": {
+        "published": "2025-09-07"
       },
       "links": [
         {
           "url": "https://pub.confit.atlas.jp/ja/event/jsap2025a",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
+      "bibliographic": {
+        "startPage": "8p-N205-01"
+      },
+      "description": {
+        "ja": "深層学習によるデノイズ機能を内在した自己参照型ホログラフィックメモリにおける効率的な学習方式を提案する．本手法では，データページの一部を用いて行った学習結果を全体に適用することでページサイズに依存しない低コストな学習を実現した．具体的には，16×16ピクセルの学習結果を用いて32×32~128×128のデータページに対してデノイズシミュレーションを実施し，すべてにおいてSNRの向上が確認された．",
+        "en": "We propose an efficient training method for self-referential holographic data storage with built-in denoising function. In the proposed approach, the training is performed using only a portion of the data page, and the trained parameters are applied to the entire page, enabling low-cost training independent of page size. Specifically, denoising simulations were conducted on data pages ranging from 32×32 to 128×128 pixels using training results obtained from 16×16 pixel patches. In all cases, an improvement in signal-to-noise ratio (SNR) was observed."
+      },
+      "invited": false,
+      "isInternational": false,
+      "review": false,
       "location": {
         "ja": "名城大学 天白キャンパス, Nagoya, Aichi, Japan"
-      },
-      "review": false,
-      "invited": false,
-      "isInternational": false
+      }
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -2340,8 +2340,8 @@
       "researchmap": {
         "recordId": "53373095",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "2355c38a6ce6e16e159eef08280fb5905d96d0fdaed7d7c7570d35c920bd3319"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "64a93ff4269a8dd711e55e20bad2e3879e55feff7c15fb8dc7638c2a08b92c51"
       }
     }
   },
@@ -2408,7 +2408,7 @@
       "researchmap": {
         "recordId": "53373096",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "4ccfab15047dc224585a7384978690a609ca5d8e6715d2cb0659e8bd03e8e470"
       }
     }
@@ -2473,7 +2473,7 @@
       "researchmap": {
         "recordId": "53373097",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "3b8d16e74a9858b1977402dab9691aaf40018ea8210cbd2f67c558877f4691ea"
       }
     }
@@ -2541,7 +2541,7 @@
       "researchmap": {
         "recordId": "53373098",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "409317abf5fc71839ce2462398d7c4902354427ebdaee5edddd4abae78bbb29c"
       }
     }
@@ -2616,7 +2616,7 @@
       "researchmap": {
         "recordId": "53373099",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "3d6d2016b1489074ad5668ce972e1554f60d2749aede7cd0b36d6785acd59c32"
       }
     }
@@ -2624,40 +2624,39 @@
   {
     "id": "pub-2025-自己参照型ホログラフィック深層ニューラルネットワークによる並列画像識別",
     "fields": {
-      "type": "misc",
-      "subtype": "others",
+      "type": "presentations",
+      "subtype": "poster_presentation",
       "title": {
-        "ja": "自己参照型ホログラフィック深層ニューラルネットワークによる並列画像識別",
-        "en": "自己参照型ホログラフィック深層ニューラルネットワークによる並列画像識別"
+        "ja": "自己参照型ホログラフィック深層ニューラルネットワークによる並列画像識別"
       },
       "contributors": [
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "坂井翔一"
           }
         },
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "冨岡莉生"
           }
         },
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "江藤優太"
           }
         },
         {
-          "role": "author",
+          "role": "presenter",
           "name": {
             "ja": "髙林正典"
           }
         }
       ],
       "venue": {
-        "kind": "publication",
+        "kind": "event",
         "name": {
           "ja": "光の極限性能を生かすフォトニックコンピューティング 第7回領域会議"
         }
@@ -2665,20 +2664,21 @@
       "dates": {
         "published": "2025-12-15",
         "eventStart": "2025-12-15",
-        "eventEnd": "2025-12-16"
+        "eventEnd": "2025-12-15"
       },
       "links": [
         {
           "url": "https://www.photoniccomputing.jp/activities/2025_12_16_region_meeting_online.php",
-          "label": "url"
+          "label": "url",
+          "isDownloadable": false
         }
       ],
+      "invited": false,
+      "isInternational": false,
+      "review": false,
       "location": {
         "ja": "一橋大学 一橋講堂, Tokyo, Japan"
-      },
-      "review": false,
-      "invited": false,
-      "isInternational": false
+      }
     },
     "localMeta": {
       "hasEmptyFields": true,
@@ -2688,8 +2688,8 @@
       "researchmap": {
         "recordId": "53373100",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
-        "lastPayloadHash": "7ee17404f85b3b4053ce7f2b7ab3c4bb0fc48baaa08d80fc44d1aa18365172f5"
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
+        "lastPayloadHash": "155646ba70a853a2caabb49c9c11d13e6504677b3b2d82ac6ef93c8d37702cf3"
       }
     }
   },
@@ -2771,7 +2771,7 @@
       "researchmap": {
         "recordId": "53373101",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "fd066506e56569487c18eab11a2868f7a2bd422dd0a5f747a02c03fd7e2c591e"
       }
     }
@@ -2833,7 +2833,7 @@
       "researchmap": {
         "recordId": "53373102",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "f90ed6e202c70d239c3aac0e02bf88389f4fba604ae8a654ec1646e338fb327e"
       }
     }
@@ -2905,7 +2905,7 @@
       "researchmap": {
         "recordId": "53373103",
         "userId": "R000104649",
-        "lastImportedAt": "2026-04-20T04:47:55.227Z",
+        "lastImportedAt": "2026-04-27T03:44:26.540Z",
         "lastPayloadHash": "c0b3a6ff1491bee1e5ec06db64793a98afce58fdbbae5de1869fbfb13a8f55a4"
       }
     }
