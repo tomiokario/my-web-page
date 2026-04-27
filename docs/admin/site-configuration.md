@@ -83,8 +83,24 @@
 
 ### Google Analytics（設定する場合）
 
-1. `public/index.html`にトラッキングコードを追加
-2. 環境変数でトラッキングIDを管理（推奨）
+このサイトでは、Google Analytics 4（GA4）のトラッキングコードを `public/index.html` の `<head>` に直接追加して設定します。
+
+1. Google Analytics で測定 ID を確認する
+   `G-XXXXXXXXXX` 形式の ID を使用します。
+2. `public/index.html` の `<head>` に Google tag を追加する
+3. デプロイ後に Google Analytics のリアルタイム画面で計測を確認する
+
+```html
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+```
 
 ### ソーシャルメディア
 
@@ -141,8 +157,10 @@ tar -xzf backup_20240101.tar.gz
 ```env
 # 例
 REACT_APP_API_URL=https://api.example.com
-REACT_APP_GA_ID=UA-XXXXXXXX-X
+REACT_APP_GA_ID=G-XXXXXXXXXX
 ```
+
+現在の Google Analytics 設定は `public/index.html` への直接埋め込みで運用しています。環境ごとに測定 ID を切り替えたい場合のみ、`REACT_APP_GA_ID` のような環境変数管理を検討してください。
 
 **注意**: `.env`ファイルはGitにコミットしないでください。
 
