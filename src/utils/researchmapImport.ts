@@ -1086,7 +1086,7 @@ function collectFieldPresence(
     payload
   );
 
-  if (hasOwn(payload, "invited") || presence.has("subtype")) {
+  if (hasOwn(payload, "invited") || (type === "presentations" && presence.has("subtype"))) {
     presence.add("invited");
   }
 

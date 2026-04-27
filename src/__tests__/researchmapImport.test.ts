@@ -477,6 +477,43 @@ describe("researchmapImport", () => {
     expect(updatedWeb[0].authorship).toBe("");
   });
 
+  test("published_papers の subtype 更新では JSONL に存在しない invited を保持する", () => {
+    const invitedPaper = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        invited: true,
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([invitedPaper], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "published_papers", id: "53373093", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Paper" },
+          publication_name: { en: "Journal A" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          published_paper_type: "research_paper",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.subtype).toBe("research_paper");
+    expect(updatedMaster[0].fields.invited).toBe(true);
+  });
+
   test("localized field は JSONL に ja だけ存在する場合に既存 en を保持する", () => {
     const bilingualPresentation = {
       ...existingMasterRecord,
