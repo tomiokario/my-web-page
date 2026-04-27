@@ -9,9 +9,12 @@ import App from "./App";
 import "./styles/variables.css";
 import "./styles/styles.css";
 import { mantineCache } from "./mantineEmotionCache";
+import { initializeGoogleAnalytics } from "./utils/googleAnalytics";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Failed to find the root element");
+
+initializeGoogleAnalytics();
 
 const root = ReactDOM.createRoot(rootElement);
 root.render(
