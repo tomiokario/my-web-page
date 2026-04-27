@@ -761,6 +761,10 @@ function mergeLocalizedText(
   existingValue: LocalizedText | undefined,
   importedValue: LocalizedText | undefined
 ): LocalizedText | undefined {
+  if (presence.has(fieldPath) && !hasNestedFieldPresence(presence, fieldPath)) {
+    return undefined;
+  }
+
   const merged = compactObject(
     Object.fromEntries(
       LOCALIZED_LANGUAGES.map((language) => [
@@ -788,6 +792,10 @@ function mergeContributors(
     return existingContributors;
   }
 
+  if (!hasNestedFieldPresence(presence, "contributors")) {
+    return undefined;
+  }
+
   const role = type === "presentations" ? "presenter" : "author";
   const count = Math.max(existingContributors?.length || 0, importedContributors?.length || 0);
   const contributors = Array.from({ length: count }, (_, index) => {
@@ -802,6 +810,11 @@ function mergeContributors(
   }).filter((contributor): contributor is PublicationContributor => Boolean(contributor));
 
   return contributors.length > 0 ? contributors : undefined;
+}
+
+function hasNestedFieldPresence(presence: FieldPresence, fieldPath: string): boolean {
+  const nestedPrefix = `${fieldPath}.`;
+  return Array.from(presence).some((path) => path.startsWith(nestedPrefix));
 }
 
 function hasContributorConflict(
