@@ -1065,6 +1065,7 @@ function collectFieldPresence(
   addLocalizedPresence(presence, "venue.promoter", "promoter", payload);
   addPresence(presence, "venue.addressCountry", "address_country", payload);
   addPresence(presence, "dates.published", "publication_date", payload);
+  addPresence(presence, "dates.published", "from_event_date", payload);
   addPresence(presence, "dates.eventStart", "from_event_date", payload);
   addPresence(presence, "dates.eventEnd", "to_event_date", payload);
   addPresence(presence, "identifiers.doi", "identifiers", payload, "doi");

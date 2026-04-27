@@ -1235,6 +1235,47 @@ describe("researchmapImport", () => {
     });
   });
 
+  test("matched record は publication_date が無い from_event_date でも published を更新する", () => {
+    const undatedRecord = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        dates: undefined,
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([undatedRecord], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "published_papers", id: "53373093", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Paper" },
+          publication_name: { en: "Journal A" },
+          from_event_date: "2024-02-10",
+          to_event_date: "2024-02-12",
+          identifiers: { doi: ["10.1000/alpha"] },
+          published_paper_type: "scientific_journal",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.dates).toEqual({
+      published: "2024-02-10",
+      eventStart: "2024-02-10",
+      eventEnd: "2024-02-12",
+    });
+  });
+
   test("presentation は typed field を優先し legacy field を無視する", () => {
     writeJsonl([
       {
