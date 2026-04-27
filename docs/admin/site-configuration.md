@@ -83,8 +83,18 @@
 
 ### Google Analytics（設定する場合）
 
-1. `public/index.html`にトラッキングコードを追加
-2. 環境変数でトラッキングIDを管理（推奨）
+このサイトでは、Google Analytics 4（GA4）の測定 ID を Vercel の本番環境変数で管理します。ローカル開発環境やプレビュー環境に計測を混ぜないため、`REACT_APP_GA_ID` は Production のみに設定します。
+
+1. Google Analytics で測定 ID を確認する  
+   `G-XXXXXXXXXX` 形式の ID を使用します。
+2. Vercel の Project Settings で `REACT_APP_GA_ID` を Production のみに追加する
+3. 本番デプロイ後に Google Analytics のリアルタイム画面で計測を確認する
+
+```env
+REACT_APP_GA_ID=G-XXXXXXXXXX
+```
+
+`REACT_APP_GA_ID` が設定されていないビルドでは、Google Analytics のタグは読み込まれません。
 
 ### ソーシャルメディア
 
@@ -141,8 +151,10 @@ tar -xzf backup_20240101.tar.gz
 ```env
 # 例
 REACT_APP_API_URL=https://api.example.com
-REACT_APP_GA_ID=UA-XXXXXXXX-X
+REACT_APP_GA_ID=G-XXXXXXXXXX
 ```
+
+現在の Google Analytics 設定は、Vercel の Production 環境に `REACT_APP_GA_ID` を設定して運用します。Preview と Development には設定しないことで、検証アクセスが本番分析に混ざらないようにします。
 
 **注意**: `.env`ファイルはGitにコミットしないでください。
 
