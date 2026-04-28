@@ -31,17 +31,12 @@ export const loadMarkdown = async (filePath: string, language: string = 'ja'): P
     const fileName = pathParts[pathParts.length - 1];
     const langPath = `/markdown/${language}/${subPath}${fileName}`;
     
-    console.log('Loading markdown from:', langPath, '(fallback:', filePath, ')');
+    console.log('Loading markdown from:', langPath);
     
-    // まず言語固有のファイルを試す
-    let response: Response = await fetch(langPath);
-    
-    // 言語固有のファイルが存在しない場合は、元のパスを試す（後方互換性のため）
+    const response: Response = await fetch(langPath);
+
     if (!response.ok) {
-      response = await fetch(filePath);
-      if (!response.ok) {
-        throw new Error(`Failed to load markdown file: ${filePath} or ${langPath}`);
-      }
+      throw new Error(`Failed to load markdown file: ${langPath}`);
     }
     
     const text: string = await response.text();

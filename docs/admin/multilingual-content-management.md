@@ -25,9 +25,9 @@ public/markdown/
 │   ├── works.md
 │   └── works/
 │       └── computer-system-2025.md
-├── home.md                  # フォールバック用（廃止予定）
-└── profilecv.md            # フォールバック用（廃止予定）
 ```
+
+`public/markdown/ja/` と `public/markdown/en/` が Markdown コンテンツの正本です。ルート直下の `public/markdown/*.md` は使用しません。
 
 ## コンテンツの更新方法
 
@@ -38,7 +38,7 @@ public/markdown/
 3. 内容を編集
 4. ファイルを保存
 
-言語別ファイルが存在するページでは、`public/markdown/home.md` や `public/markdown/profilecv.md` のようなルート直下のフォールバック用 Markdown は通常更新しません。これらは後方互換用であり、正本は `ja/` と `en/` 配下です。
+言語切り替え後も同じページが表示されるよう、更新対象ページは `ja/` と `en/` の両方を同じ相対パスで管理します。片方の言語ファイルだけを追加すると、その言語に切り替えたときにコンテンツを読み込めません。
 
 ### 2. 新しいページの追加
 
@@ -99,6 +99,7 @@ public/markdown/
 1. ファイルパスが正しいか確認
 2. ファイル名の大文字小文字が一致しているか確認
 3. Markdownの文法エラーがないか確認
+4. `ja/` と `en/` の両方に同じ相対パスのファイルがあるか確認
 
 ### 言語切り替えが機能しない場合
 
