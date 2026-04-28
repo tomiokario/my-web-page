@@ -42,7 +42,6 @@ const ja: LocaleMessages = {
     authorship: '著者の役割',
     type: '種類',
     review: 'レビュー',
-    presentationType: '発表タイプ',
     resetFilters: 'フィルターをリセット',
     sortByType: '種類で表示',
     sortByChronological: '年で表示',

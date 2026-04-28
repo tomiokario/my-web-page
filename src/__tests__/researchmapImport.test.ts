@@ -439,8 +439,8 @@ describe("researchmapImport", () => {
       subtype: "poster_presentation",
       type: "presentations/poster_presentation",
       authorship: "lead",
-      presentationType: "poster_presentation",
     });
+    expect(updatedWeb[0]).not.toHaveProperty("presentationType");
   });
 
   test("カテゴリ変更で新カテゴリの subtype が無ければ review に止める", () => {

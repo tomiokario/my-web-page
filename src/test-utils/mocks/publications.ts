@@ -18,7 +18,6 @@ export const mockPublications = createPublications(5, [
     date: '2022年5月15日',
     sortableDate: '20220515',
     authorship: ['Co-author'],
-    presentationType: 'Poster',
     review: 'Peer-reviewed',
   },
   // Publication 3 (Invited, 2023)
@@ -37,7 +36,6 @@ export const mockPublications = createPublications(5, [
     date: '2022年11月20日',
     sortableDate: '20221120',
     authorship: ['Corresponding author'],
-    presentationType: 'Oral',
     review: 'N/A', // 国内会議は査読なしの場合もある
   },
   // Publication 5 (Journal, 2022) - 著者複数

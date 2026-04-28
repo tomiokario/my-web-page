@@ -10,15 +10,13 @@ describe("ActiveFilters", () => {
       year: ["2021", "2022"],
       authorship: ["First author"],
       type: [],
-      review: [],
-      presentationType: []
+      review: []
     } as SelectedFilters,
     filterLabels: {
       year: "Year",
       authorship: "Authorship",
       type: "Type",
-      review: "Review",
-      presentationType: "Presentation Type"
+      review: "Review"
     },
     onToggleFilter: jest.fn(),
     onResetFilters: jest.fn(),
@@ -59,7 +57,6 @@ describe("ActiveFilters", () => {
     // 選択されていないフィルターのカテゴリラベルが表示されていないことを確認
     expect(screen.queryByText("Type:")).not.toBeInTheDocument();
     expect(screen.queryByText("Review:")).not.toBeInTheDocument();
-    expect(screen.queryByText("Presentation Type:")).not.toBeInTheDocument();
   });
 
   test("renders filter tags for selected values", () => {
@@ -92,8 +89,7 @@ describe("ActiveFilters", () => {
         year: [],
         authorship: [],
         type: [],
-        review: [],
-        presentationType: []
+        review: []
       } as SelectedFilters
     };
     

@@ -3,6 +3,7 @@ import {
   groupPublications,
   normalizePublicationRecord,
 } from "../utils/publicationCollections";
+import { PUBLICATION_TYPE_ORDER, TYPE_LABELS } from "../utils/publicationLabels";
 import { createPublication } from "../test-utils/factories/publicationFactory";
 
 describe("publicationCollections", () => {
@@ -14,7 +15,6 @@ describe("publicationCollections", () => {
         japanese: "例",
         date: "2024年3月1日",
         authorship: ["Lead author"],
-        "Presentation type": ["Oral"],
         "journal / conference": "Venue",
         DOI: "10.1000/example",
         Review: "Peer-reviewed",
@@ -28,7 +28,6 @@ describe("publicationCollections", () => {
       japanese: "例",
       year: 2024,
       authorship: ["Lead author"],
-      presentationType: ["Oral"],
       journalConference: "Venue",
       doi: "10.1000/example",
       review: "Peer-reviewed",
@@ -49,15 +48,65 @@ describe("publicationCollections", () => {
     expect(publication.id).toBe(3);
   });
 
-  it("フィルターオプションを重複なく並び替えて集める", () => {
+  it("フィルターオプションを重複なく仕様順に集める", () => {
     const options = collectPublicationFilterOptions([
-      createPublication({ year: 2022, authorship: ["Lead author", "Co-author"], review: "B" }, 0),
-      createPublication({ year: 2024, authorship: "Lead author", review: "A" }, 1),
+      createPublication({
+        year: 2022,
+        authorship: ["lead", "coauthor"],
+        type: "misc/summary_national_conference",
+        review: "not_peer_reviewed",
+      }, 0),
+      createPublication({
+        year: 2024,
+        authorship: "corresponding",
+        type: "published_papers/scientific_journal",
+        review: "peer_reviewed",
+      }, 1),
+      createPublication({
+        year: 2023,
+        authorship: "lead",
+        type: "presentations/poster_presentation",
+        review: "peer_reviewed",
+      }, 2),
     ]);
 
-    expect(options.year).toEqual(["2024", "2022"]);
-    expect(options.authorship).toEqual(["Co-author", "Lead author"]);
-    expect(options.review).toEqual(["A", "B"]);
+    expect(options.year).toEqual(["2024", "2023", "2022"]);
+    expect(options.authorship).toEqual(["corresponding", "lead", "coauthor"]);
+    expect(options.type).toEqual([
+      "published_papers/scientific_journal",
+      "misc/summary_national_conference",
+      "presentations/poster_presentation",
+    ]);
+    expect(options.review).toEqual(["peer_reviewed", "not_peer_reviewed"]);
+  });
+
+  it("ラベル定義済みの種類をすべて既知の順序として扱う", () => {
+    expect(PUBLICATION_TYPE_ORDER).toEqual(
+      expect.arrayContaining(Object.keys(TYPE_LABELS))
+    );
+  });
+
+  it("有効な presentation subtype を unknown 扱いせず種類順で並べる", () => {
+    const presentationTypes = [
+      "presentations/public_symposium",
+      "presentations/poster_presentation",
+      "presentations/keynote_oral_presentation",
+      "presentations/oral_presentation",
+      "presentations/invited_oral_presentation",
+      "presentations/others",
+    ];
+    const options = collectPublicationFilterOptions(
+      presentationTypes.map((type, index) => createPublication({ type }, index))
+    );
+
+    expect(options.type).toEqual([
+      "presentations/oral_presentation",
+      "presentations/poster_presentation",
+      "presentations/invited_oral_presentation",
+      "presentations/keynote_oral_presentation",
+      "presentations/public_symposium",
+      "presentations/others",
+    ]);
   });
 
   it("種類順と年別でグループを作る", () => {

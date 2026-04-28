@@ -41,7 +41,6 @@ const en: LocaleMessages = {
     authorship: 'Authorship',
     type: 'Type',
     review: 'Review',
-    presentationType: 'Presentation Type',
     resetFilters: 'Reset Filters',
     sortByType: 'By type',
     sortByChronological: 'By year',

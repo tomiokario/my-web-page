@@ -35,7 +35,6 @@ export interface LocaleMessages {
     authorship: string;
     type: string;
     review: string;
-    presentationType: string;
     resetFilters: string;
     sortByType: string;
     sortByChronological: string;

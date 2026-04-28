@@ -162,7 +162,6 @@ describe("convertPublications script", () => {
         subtype: "scientific_journal",
         review: "",
         authorship: "lead",
-        presentationType: "",
         doi: "10.1234/test.1",
         webLink: "https://example.com/1",
         date: "2023-01-01",
@@ -184,7 +183,6 @@ describe("convertPublications script", () => {
         subtype: "poster_presentation",
         review: "",
         authorship: "",
-        presentationType: "poster_presentation",
         doi: "10.1234/test.2",
         webLink: "https://example.com/2",
         date: "2022-12-15",
@@ -210,6 +208,8 @@ describe("convertPublications script", () => {
     execSync("npm run convert-publications", { stdio: "pipe" });
 
     const outputJson = JSON.parse(fs.readFileSync(WEB_JSON_PATH, "utf8"));
+    expect(outputJson[0]).not.toHaveProperty("presentationType");
+    expect(outputJson[1]).not.toHaveProperty("presentationType");
     expect(outputJson[0].localMeta).toBeUndefined();
     expect(outputJson[0].sync).toBeUndefined();
     expect(outputJson[1].localMeta).toBeUndefined();

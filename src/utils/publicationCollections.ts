@@ -7,8 +7,7 @@ export type PublicationFilterCategory =
   | "year"
   | "authorship"
   | "type"
-  | "review"
-  | "presentationType";
+  | "review";
 
 export type PublicationFilterSelections = Record<PublicationFilterCategory, string[]>;
 export type PublicationFilterOptions = Record<PublicationFilterCategory, string[]>;
@@ -24,7 +23,6 @@ const FILTER_CATEGORIES: PublicationFilterCategory[] = [
   "authorship",
   "type",
   "review",
-  "presentationType",
 ];
 
 export const PUBLICATION_FILTER_CATEGORIES = FILTER_CATEGORIES;
@@ -34,7 +32,6 @@ const EMPTY_FILTERS: PublicationFilterSelections = {
   authorship: [],
   type: [],
   review: [],
-  presentationType: [],
 };
 
 const EMPTY_FILTER_OPTIONS: PublicationFilterOptions = {
@@ -42,7 +39,6 @@ const EMPTY_FILTER_OPTIONS: PublicationFilterOptions = {
   authorship: [],
   type: [],
   review: [],
-  presentationType: [],
 };
 
 export function createEmptyPublicationFilters(): PublicationFilterSelections {
@@ -91,10 +87,6 @@ export function normalizePublicationRecord(
     authorship:
       normalizeStringOrArray(readField(rawPublication, ["authorship", "Authorship"])) ||
       "",
-    presentationType:
-      normalizeStringOrArray(
-        readField(rawPublication, ["presentationType", "Presentation type"])
-      ) || "",
     others: readString(rawPublication, ["others"]) || readString(rawPublication, ["Others"]),
     site: readString(rawPublication, ["site"]),
     startDate: readOptionalString(rawPublication, ["startDate"]),
@@ -116,14 +108,12 @@ export function collectPublicationFilterOptions(
     addPublicationValue(options.authorship, publication.authorship);
     addPublicationValue(options.type, publication.type);
     addPublicationValue(options.review, publication.review);
-    addPublicationValue(options.presentationType, publication.presentationType);
   });
 
   options.year.sort((a, b) => Number.parseInt(b, 10) - Number.parseInt(a, 10));
-  options.authorship.sort();
-  options.type.sort();
-  options.review.sort();
-  options.presentationType.sort();
+  options.authorship.sort(compareByAuthorshipOrder);
+  options.type.sort(compareByPublicationTypeOrder);
+  options.review.sort(compareByReviewOrder);
 
   return options;
 }
@@ -152,13 +142,6 @@ export function filterPublications(
     }
 
     if (selectedFilters.review.length > 0 && !selectedFilters.review.includes(publication.review)) {
-      return false;
-    }
-
-    if (
-      selectedFilters.presentationType.length > 0 &&
-      !matchesSelectedValues(publication.presentationType, selectedFilters.presentationType)
-    ) {
       return false;
     }
 
@@ -237,16 +220,55 @@ function compareByChronologicalOrder(left: Publication, right: Publication): num
 }
 
 function compareByTypeOrder(left: Publication, right: Publication): number {
-  const typeIndexLeft = PUBLICATION_TYPE_ORDER.indexOf(left.type);
-  const typeIndexRight = PUBLICATION_TYPE_ORDER.indexOf(right.type);
-
-  if (typeIndexLeft !== typeIndexRight) {
-    if (typeIndexLeft === -1) return 1;
-    if (typeIndexRight === -1) return -1;
-    return typeIndexLeft - typeIndexRight;
+  const typeComparison = compareByPublicationTypeOrder(left.type, right.type);
+  if (typeComparison !== 0) {
+    return typeComparison;
   }
 
   return compareByChronologicalOrder(left, right);
+}
+
+const AUTHORSHIP_ORDER = [
+  "corresponding",
+  "Corresponding author",
+  "lead",
+  "First author",
+  "Lead author",
+  "coauthor",
+  "Co-author",
+];
+const REVIEW_ORDER = [
+  "peer_reviewed",
+  "Peer-reviewed",
+  "Reviewed",
+  "not_peer_reviewed",
+  "Non-peer-reviewed",
+  "Not reviewed",
+];
+
+function compareByPublicationTypeOrder(left: string, right: string): number {
+  return compareByKnownOrder(left, right, PUBLICATION_TYPE_ORDER);
+}
+
+function compareByAuthorshipOrder(left: string, right: string): number {
+  return compareByKnownOrder(left, right, AUTHORSHIP_ORDER);
+}
+
+function compareByReviewOrder(left: string, right: string): number {
+  return compareByKnownOrder(left, right, REVIEW_ORDER);
+}
+
+function compareByKnownOrder(left: string, right: string, orderedValues: string[]): number {
+  const leftIndex = orderedValues.indexOf(left);
+  const rightIndex = orderedValues.indexOf(right);
+
+  if (leftIndex !== rightIndex) {
+    if (leftIndex === -1) return 1;
+    if (rightIndex === -1) return -1;
+    return leftIndex - rightIndex;
+  }
+
+  return left.localeCompare(right);
 }
 
 function compareGroupKeysByYear(leftKey: string, rightKey: string): number {
@@ -346,7 +368,6 @@ function cloneFilterState(filters: PublicationFilterSelections): PublicationFilt
     authorship: [],
     type: [],
     review: [],
-    presentationType: [],
   });
 }
 
@@ -359,6 +380,5 @@ function cloneFilterOptions(options: PublicationFilterOptions): PublicationFilte
     authorship: [],
     type: [],
     review: [],
-    presentationType: [],
   });
 }
