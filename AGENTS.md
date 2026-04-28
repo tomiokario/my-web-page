@@ -75,6 +75,13 @@
 - 親オーケストレータが保持する task state は、対象 Issue、合意済み仕様、受け入れ条件、review 結果、一次情報 handoff 参照、次の依頼先に絞り、実装都合の詳細を常時保持しない
 - role 混線が起きた場合は、親オーケストレータが直接実装 reasoning を継続せず、implementation agent から最小 handoff を取り直して手順書どおりに立て直す
 - Pull Request がマージされた後は、ユーザーから別指示がない限り `main` に戻って `git pull --rebase` し、マージ済みのローカルブランチを削除する。リモートブランチが残っている場合はあわせて削除する
+- 複数 Issue を並列に進める場合は、`docs/technical/parallel-issue-workflow.md` に従い、進行管理スレッドが Issue の棚卸し、close 候補、依存関係、実行順序を整理し、各 Issue を専用 worktree、専用作業ブランチ、専用 Codex スレッドへ分ける
+- 並列 Issue 対応を Codex skill として実行する場合は、`.codex/skills/parallel-issue-processing/SKILL.md` を正本とする `$parallel-issue-processing` を使う
+- 並列 Issue 対応の worktree は、進行管理スレッドの Codex が repo 内の gitignored な `tmp/worktrees/` に作成する。sibling worktree が sandbox 外になる設定では作業や削除ができなくなるため、標準の置き場所にしない
+- `git worktree remove` が `.git/worktrees/` の削除権限で止まる場合は、承認付きで同じコマンドを再実行して後片付けする
+- close してよい Issue は、完了扱いでよい理由を Issue にコメントし、実際の close は人間が行う
+- 並列 Issue 対応では、各作業スレッドは割り当てられた Issue と worktree の差分だけを扱い、進行管理スレッドは実装詳細を抱え込まず、依存関係、review 結果、Pull Request 状態を管理する。merge 後の worktree 削除、ローカルブランチ削除、リモートブランチ削除、worktree prune、全体の完了確認は進行管理スレッドが担当する
+- Codex の sandbox が sibling worktree や `.git` への書き込み、ネットワークアクセスを許可していない場合は、worktree 作成、push、Pull Request 作成、Wiki 更新、チェック確認を実行可能な環境へ分け、未実行の操作と必要な設定を完了報告で明記する
 - 改行コードは `.gitattributes` を正本とし、不要な `CRLF` 差分を持ち込まない
 
 ## テスト規約

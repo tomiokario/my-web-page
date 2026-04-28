@@ -37,6 +37,8 @@ npm start
 
 ## 開発フロー
 
+複数の Issue を同時に進める場合は、通常の作業ブランチ運用に加えて [並列 Issue 対応ワークフロー](./parallel-issue-workflow.md) を参照します。Issue ごとに worktree、作業ブランチ、Codex スレッドを分け、進行管理スレッドが実行順序、依存関係、Pull Request 状態、merge 後の後片付けを管理します。
+
 ### 1. 機能開発
 
 新しい機能を開発する場合は、以下の手順に従ってください：

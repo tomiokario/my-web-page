@@ -1,0 +1,6 @@
+interface:
+  display_name: "Parallel Issue Processing"
+  short_description: "Run multiple GitHub issues with worktrees"
+  default_prompt: "Use $parallel-issue-processing to plan and run multiple GitHub issues in parallel with per-issue worktrees."
+policy:
+  allow_implicit_invocation: true
