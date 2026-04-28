@@ -19,13 +19,13 @@ const mockProps = {
   openDropdown: null,
   filterOptions: {
     year: ['2022', '2021', '2020'],
-    authorship: ['First author', 'Co-author'],
-    type: ['Journal paper：原著論文', 'Research paper (international conference)：国際会議'],
-    review: ['Peer-reviewed', 'Non-peer-reviewed']
+    authorship: ['lead', 'coauthor'],
+    type: ['published_papers/scientific_journal', 'published_papers/international_conference_proceedings'],
+    review: ['peer_reviewed', 'not_peer_reviewed']
   },
   groupedPublications: [
     {
-      name: 'Journal paper：原著論文',
+      name: 'published_papers/scientific_journal',
       // ファクトリ関数を使用してアイテムを生成
       items: [
         createPublication({
@@ -33,7 +33,7 @@ const mockProps = {
           name: 'Test Publication 1',
           japanese: 'テスト出版物1',
           year: 2022,
-          type: 'Journal paper：原著論文'
+          type: 'published_papers/scientific_journal'
         }, 0) // index 0 で生成
       ]
     }
@@ -142,7 +142,7 @@ describe('PublicationsView', () => {
     
     // 出版物グループが正しくレンダリングされていることを確認
     expect(screen.getByTestId('publication-group')).toBeInTheDocument();
-    expect(screen.getByTestId('group-name')).toHaveTextContent('Journal paper：原著論文');
+    expect(screen.getByTestId('group-name')).toHaveTextContent('Published Papers / Scientific Journal');
     expect(screen.getByTestId('items-count')).toHaveTextContent('1');
     expect(screen.getByTestId('language')).toHaveTextContent('en');
   });

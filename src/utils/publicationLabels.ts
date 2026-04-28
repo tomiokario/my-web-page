@@ -13,10 +13,6 @@ export const PUBLICATION_TYPE_ORDER: string[] = [
   "presentations/keynote_oral_presentation",
   "presentations/public_symposium",
   "presentations/others",
-  "Journal paper：原著論文",
-  "Research paper (international conference)：国際会議",
-  "Invited paper：招待論文",
-  "Research paper (domestic conference)：国内会議",
 ];
 
 export const TYPE_LABELS: Record<string, Record<Language, string>> = {

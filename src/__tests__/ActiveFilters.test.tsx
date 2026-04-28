@@ -8,7 +8,7 @@ describe("ActiveFilters", () => {
   const mockProps = {
     selectedFilters: {
       year: ["2021", "2022"],
-      authorship: ["First author"],
+      authorship: ["lead"],
       type: [],
       review: []
     } as SelectedFilters,
@@ -65,12 +65,12 @@ describe("ActiveFilters", () => {
     // 選択されているフィルター値がタグとして表示されていることを確認
     expect(screen.getByTestId("filter-tag-year-2021")).toBeInTheDocument();
     expect(screen.getByTestId("filter-tag-year-2022")).toBeInTheDocument();
-    expect(screen.getByTestId("filter-tag-authorship-First author")).toBeInTheDocument();
+    expect(screen.getByTestId("filter-tag-authorship-lead")).toBeInTheDocument();
     
     // タグのテキストが正しいことを確認
     expect(screen.getByTestId("filter-tag-year-2021")).toHaveTextContent("2021 ✕");
     expect(screen.getByTestId("filter-tag-year-2022")).toHaveTextContent("2022 ✕");
-    expect(screen.getByTestId("filter-tag-authorship-First author")).toHaveTextContent("First author ✕");
+    expect(screen.getByTestId("filter-tag-authorship-lead")).toHaveTextContent("lead ✕");
   });
 
   test("calls onToggleFilter when filter tag is clicked", () => {

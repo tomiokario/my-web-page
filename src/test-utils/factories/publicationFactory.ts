@@ -5,9 +5,9 @@ const getDefaultPublicationValues = (index: number): Publication => ({
   name: `Test Publication ${index + 1}`,
   japanese: `テスト出版物 ${index + 1}`,
   abstract: '',
-  type: 'Journal paper：原著論文',
-  review: 'Peer-reviewed',
-  authorship: ['First author'],
+  type: 'published_papers/scientific_journal',
+  review: 'peer_reviewed',
+  authorship: ['lead'],
   doi: `10.1234/test.${index + 1}`,
   webLink: `https://example.com/test-${index + 1}`,
   date: `${2023 - index}年${10 - index}月${1 + index}日`, // 例として年、月、日を変化させる

@@ -14,10 +14,10 @@ describe("publicationCollections", () => {
         name: "Example",
         japanese: "例",
         date: "2024年3月1日",
-        authorship: ["Lead author"],
-        "journal / conference": "Venue",
-        DOI: "10.1000/example",
-        Review: "Peer-reviewed",
+        authorship: ["lead"],
+        journalConference: "Venue",
+        doi: "10.1000/example",
+        review: "peer_reviewed",
       },
       0
     );
@@ -27,10 +27,10 @@ describe("publicationCollections", () => {
       name: "Example",
       japanese: "例",
       year: 2024,
-      authorship: ["Lead author"],
+      authorship: ["lead"],
       journalConference: "Venue",
       doi: "10.1000/example",
-      review: "Peer-reviewed",
+      review: "peer_reviewed",
     });
   });
 
@@ -111,18 +111,18 @@ describe("publicationCollections", () => {
 
   it("種類順と年別でグループを作る", () => {
     const publications = [
-      createPublication({ type: "Journal paper：原著論文", year: 2024 }, 0),
-      createPublication({ type: "Research paper (international conference)：国際会議", year: 2023 }, 1),
-      createPublication({ type: "Journal paper：原著論文", year: 2022 }, 2),
+      createPublication({ type: "published_papers/scientific_journal", year: 2024 }, 0),
+      createPublication({ type: "published_papers/international_conference_proceedings", year: 2023 }, 1),
+      createPublication({ type: "published_papers/scientific_journal", year: 2022 }, 2),
     ];
 
     const groupedByType = groupPublications(publications, "type");
     expect(groupedByType[0]).toMatchObject({
-      name: "Journal paper：原著論文",
+      name: "published_papers/scientific_journal",
       items: expect.arrayContaining([publications[0], publications[2]]),
     });
     expect(groupedByType[1]).toMatchObject({
-      name: "Research paper (international conference)：国際会議",
+      name: "published_papers/international_conference_proceedings",
       items: [publications[1]],
     });
 

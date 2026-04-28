@@ -207,6 +207,21 @@ test('canonical subtype prefers typed field over stale generic fallback', () => 
                   en: 'Journal A',
                 },
               },
+              identifiers: {
+                doi: '10.1234/example',
+              },
+              links: [
+                {
+                  label: 'DOI',
+                  url: 'https://doi.org/10.1234/example',
+                },
+                {
+                  label: 'Project',
+                  url: 'https://example.com/paper',
+                },
+              ],
+              review: true,
+              ownerRoles: ['lead', 'corresponding'],
             },
             localMeta: {
               hasEmptyFields: false,
@@ -226,7 +241,15 @@ test('canonical subtype prefers typed field over stale generic fallback', () => 
     });
 
     assert.equal(loaded.records[0].fields.subtype, 'scientific_journal');
-    assert.equal(loaded.publications[0].type, 'Journal paper：原著論文');
+    assert.equal(loaded.publications[0].type, 'published_papers/scientific_journal');
+    assert.equal(loaded.publications[0].category, 'published_papers');
+    assert.equal(loaded.publications[0].subtype, 'scientific_journal');
+    assert.equal(loaded.publications[0].review, 'peer_reviewed');
+    assert.deepEqual(loaded.publications[0].authorship, ['lead', 'corresponding']);
+    assert.equal(loaded.publications[0].doi, '10.1234/example');
+    assert.equal(loaded.publications[0].webLink, 'https://example.com/paper');
+    assert.equal(loaded.publications[0].others, '');
+    assert.equal(Object.hasOwn(loaded.publications[0], 'presentationType'), false);
 
     const exportLine = JSON.parse(exportFromMaster.importLines[0]);
     assert.equal(exportLine.force.published_paper_type, 'scientific_journal');

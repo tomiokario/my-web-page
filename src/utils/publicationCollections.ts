@@ -72,22 +72,17 @@ export function normalizePublicationRecord(
     japanese: readString(rawPublication, ["japanese"]),
     abstract: readOptionalString(rawPublication, ["abstract"]),
     year: year || undefined,
-    journalConference:
-      readString(rawPublication, ["journalConference"]) ||
-      readString(rawPublication, ["journal / conference"]),
+    journalConference: readString(rawPublication, ["journalConference"]),
     journal: readOptionalString(rawPublication, ["journal"]),
     date,
-    webLink: readString(rawPublication, ["webLink"]) || readString(rawPublication, ["web link"]),
-    doi: readString(rawPublication, ["doi"]) || readString(rawPublication, ["DOI"]),
+    webLink: readString(rawPublication, ["webLink"]),
+    doi: readString(rawPublication, ["doi"]),
     type: readString(rawPublication, ["type"]),
     category: readOptionalString(rawPublication, ["category"]),
     subtype: readOptionalString(rawPublication, ["subtype"]),
-    review:
-      readString(rawPublication, ["review"]) || readString(rawPublication, ["Review"]),
-    authorship:
-      normalizeStringOrArray(readField(rawPublication, ["authorship", "Authorship"])) ||
-      "",
-    others: readString(rawPublication, ["others"]) || readString(rawPublication, ["Others"]),
+    review: readString(rawPublication, ["review"]),
+    authorship: normalizeStringOrArray(readField(rawPublication, ["authorship"])) || "",
+    others: readString(rawPublication, ["others"]),
     site: readString(rawPublication, ["site"]),
     startDate: readOptionalString(rawPublication, ["startDate"]),
     endDate: readOptionalString(rawPublication, ["endDate"]),
@@ -230,20 +225,13 @@ function compareByTypeOrder(left: Publication, right: Publication): number {
 
 const AUTHORSHIP_ORDER = [
   "corresponding",
-  "Corresponding author",
   "lead",
-  "First author",
-  "Lead author",
+  "last",
   "coauthor",
-  "Co-author",
 ];
 const REVIEW_ORDER = [
   "peer_reviewed",
-  "Peer-reviewed",
-  "Reviewed",
   "not_peer_reviewed",
-  "Non-peer-reviewed",
-  "Not reviewed",
 ];
 
 function compareByPublicationTypeOrder(left: string, right: string): number {
