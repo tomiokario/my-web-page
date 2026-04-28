@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { screen, waitFor } from "@testing-library/react";
 import Home from "../pages/Home";
+import ProfileCV from "../pages/ProfileCV";
 import Works from "../pages/Works";
 import { renderWithProviders } from "../test-utils/test-utils";
 
@@ -12,6 +13,8 @@ const readMarkdown = (relativePath: string) =>
 const markdownByPath = new Map<string, string>([
   ["/markdown/ja/home.md", readMarkdown("public/markdown/ja/home.md")],
   ["/markdown/en/home.md", readMarkdown("public/markdown/en/home.md")],
+  ["/markdown/ja/profilecv.md", readMarkdown("public/markdown/ja/profilecv.md")],
+  ["/markdown/en/profilecv.md", readMarkdown("public/markdown/en/profilecv.md")],
   ["/markdown/ja/works.md", readMarkdown("public/markdown/ja/works.md")],
   ["/markdown/en/works.md", readMarkdown("public/markdown/en/works.md")],
 ]);
@@ -136,6 +139,22 @@ describe("Markdown content pages", () => {
       "href",
       "https://kenkyusha-db.fukuoka-u.ac.jp/search/detail?systemId=71862344e410b395520e17560c007669&lang=en"
     );
+  });
+
+  test("renders Japanese profile content from the language-specific file", async () => {
+    renderWithProviders(<ProfileCV />, { initialLanguage: "ja" });
+
+    expect(await screen.findByRole("heading", { name: "学歴" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "経歴" })).toBeInTheDocument();
+    expect(screen.getByText("助教", { exact: false })).toBeInTheDocument();
+  });
+
+  test("renders English profile content from the language-specific file", async () => {
+    renderWithProviders(<ProfileCV />, { initialLanguage: "en" });
+
+    expect(await screen.findByRole("heading", { name: "Education" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Career" })).toBeInTheDocument();
+    expect(screen.getByText("Assistant Professor", { exact: false })).toBeInTheDocument();
   });
 
   test("renders Japanese works content with the current and FY2025 sections", async () => {

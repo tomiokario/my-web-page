@@ -3,15 +3,13 @@
  *
  * このテストファイルでは、Markdownファイルを読み込むためのユーティリティ関数
  * loadMarkdownの機能をテストします。この関数は、言語設定に応じたパスで
- * Markdownファイルを読み込み、ファイルが見つからない場合はフォールバックする
- * 機能を持っています。
+ * Markdownファイルを読み込みます。
  *
  * テスト内容：
  * 1. デフォルト言語（日本語）でのファイル読み込み
  * 2. 指定した言語（英語）でのファイル読み込み
- * 3. 言語固有のファイルが見つからない場合のフォールバック
- * 4. すべてのファイルが見つからない場合のエラーハンドリング
- * 5. ネットワークエラーなどのfetchエラーのハンドリング
+ * 3. 言語固有のファイルが見つからない場合のエラーハンドリング
+ * 4. ネットワークエラーなどのfetchエラーのハンドリング
  */
 
 import { loadMarkdown } from "../utils/markdownLoader";
@@ -59,37 +57,24 @@ describe("markdownLoader", () => {
     expect(content).toBe("# English Content");
   });
 
-  test("falls back to original path if language-specific file is not found", async () => {
-    // テスト内容: 言語固有のファイルが見つからない場合、元のパスにフォールバックすることを確認
+  test("does not fall back to the original root path if language-specific file is not found", async () => {
+    // テスト内容: 言語固有のファイルが見つからない場合、ルート直下へフォールバックしないことを確認
     // 言語固有のファイルが見つからない場合のレスポンスをモック
     fetch.mockImplementationOnce(() =>
       Promise.resolve({
         ok: false
       })
     );
-    
-    // 元のパスでの成功レスポンスをモック
-    fetch.mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        text: () => Promise.resolve("# Original Content")
-      })
-    );
 
     const content = await loadMarkdown("/markdown/test.md", "en");
     
-    // 最初に言語固有のパスでfetchが呼ばれたか確認
-    expect(fetch).toHaveBeenNthCalledWith(1, "/markdown/en/test.md");
-    
-    // 次に元のパスでfetchが呼ばれたか確認
-    expect(fetch).toHaveBeenNthCalledWith(2, "/markdown/test.md");
-    
-    expect(content).toBe("# Original Content");
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith("/markdown/en/test.md");
+    expect(content).toBe("# Error loading content");
   });
 
-  test("returns error message when both language-specific and original files are not found", async () => {
-    // テスト内容: 言語固有のファイルも元のパスのファイルも見つからない場合、エラーメッセージを返すことを確認
-    // 両方のファイルが見つからない場合のレスポンスをモック
+  test("returns error message when the language-specific file is not found", async () => {
+    // テスト内容: 言語固有のファイルが見つからない場合、エラーメッセージを返すことを確認
     fetch.mockImplementation(() =>
       Promise.resolve({
         ok: false

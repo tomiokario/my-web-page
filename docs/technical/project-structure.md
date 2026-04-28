@@ -12,8 +12,6 @@ my-web-page/
 │   ├── index.html
 │   ├── manifest.json
 │   └── markdown/             # マークダウンコンテンツ（多言語）
-│       ├── home.md
-│       ├── profilecv.md
 │       ├── en/
 │       │   ├── home.md
 │       │   ├── profilecv.md
@@ -113,7 +111,7 @@ my-web-page/
 
 ### ユーティリティ
 
-- **markdownLoader.ts**: マークダウンファイルを読み込むユーティリティ関数。
+- **markdownLoader.ts**: 現在の言語に対応する `public/markdown/ja/` または `public/markdown/en/` 配下の Markdown を読み込むユーティリティ関数。ルート直下の Markdown へのフォールバックは行いません。
 
 ## データフロー
 
