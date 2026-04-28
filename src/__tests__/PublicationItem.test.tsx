@@ -23,9 +23,9 @@ const mockPublication = createPublication({
   id: 1,
   name: "Rio Tomioka and Masanori Takabayashi, \"Numerical simulations of neural network hardware based on self-referential holography,\"",
   japanese: "冨岡莉生, 高林正典, \"自己参照型ホログラフィに基づくニューラルネットワークハードウェアの数値シミュレーション,\"",
-  type: "Research paper (international conference)：国際会議",
-  review: "Reviewed",
-  authorship: "Lead author", // 文字列として渡す
+  type: "published_papers/international_conference_proceedings",
+  review: "peer_reviewed",
+  authorship: "lead", // 文字列として渡す
   doi: "10.1234/example",
   webLink: "https://example.com",
   date: "2021年10月3日 → 2021年10月6日",
@@ -42,7 +42,7 @@ const mockPublication = createPublication({
 const mockPublicationWithArrays = createPublication({
   ...mockPublication, // 基本データをコピー
   id: 2,
-  authorship: ["Corresponding author", "Lead author"], // 配列で上書き
+  authorship: ["corresponding", "lead"], // 配列で上書き
 }, 1); // index 1
 
 describe('PublicationItem Component', () => {
@@ -61,13 +61,15 @@ describe('PublicationItem Component', () => {
     expect(screen.getByText('2021')).toBeInTheDocument();
     
     // authorshipのタグが表示されていることを確認
-    expect(screen.getByText('Lead author')).toBeInTheDocument();
+    expect(screen.getByText('Lead Author')).toBeInTheDocument();
     
     // typeのタグが表示されていることを確認
-    expect(screen.getByText(mockPublication.type)).toBeInTheDocument();
+    expect(
+      screen.getByText('Published Papers / International Conference Proceedings')
+    ).toBeInTheDocument();
     
     // reviewのタグが表示されていることを確認
-    expect(screen.getByText('Reviewed')).toBeInTheDocument();
+    expect(screen.getByText('Peer Reviewed')).toBeInTheDocument();
     
     // ジャーナル名が表示されていることを確認
     expect(screen.getByText('ISOM21')).toBeInTheDocument();
@@ -109,8 +111,8 @@ describe('PublicationItem Component', () => {
     renderWithProviders(<PublicationItem publication={mockPublicationWithArrays} language="en" />);
     
     // 複数のauthorshipタグが表示されていることを確認
-    expect(screen.getByText('Corresponding author')).toBeInTheDocument();
-    expect(screen.getByText('Lead author')).toBeInTheDocument();
+    expect(screen.getByText('Corresponding Author')).toBeInTheDocument();
+    expect(screen.getByText('Lead Author')).toBeInTheDocument();
     expect(screen.queryByText('Oral')).not.toBeInTheDocument();
     expect(screen.queryByText('Poster')).not.toBeInTheDocument();
   });

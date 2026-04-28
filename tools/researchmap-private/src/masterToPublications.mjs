@@ -51,11 +51,11 @@ function normalizeMasterRecord(record) {
 function mapMasterRecordToPublication(record, index) {
   const fields = record.fields || {};
   const localMeta = record.localMeta || {};
-  const startDate = fields.dates?.eventStart || fields.dates?.published || '';
-  const endDate = fields.dates?.eventEnd || fields.dates?.eventStart || fields.dates?.published || '';
+  const webDate = deriveWebDate(fields);
   const title = fields.title || {};
-  const derivedAuthorship = deriveAuthorshipLabels(fields);
-  const derivedPresentationType = derivePresentationTypeLabels(fields);
+  const doi = getDoiValue(fields);
+  const primaryWebLink = selectPrimaryWebLink(fields.links, doi);
+  const derivedAuthorship = deriveAuthorshipCodes(fields);
 
   return {
     id: record.id || index + 1,
@@ -63,79 +63,143 @@ function mapMasterRecordToPublication(record, index) {
     name: title.en || title.ja || '',
     japanese: title.ja || '',
     abstract: fields.description?.en || fields.description?.ja || '',
-    type: getLegacyTypeLabel(fields),
-    review: fields.review === true ? 'Reviewed' : fields.review === false ? 'Not reviewed' : '',
+    type: buildResearchmapClassificationKey(fields),
+    category: fields.type,
+    subtype: fields.subtype,
+    review: deriveReviewCode(fields.review),
     authorship: normalizeArrayOutput(derivedAuthorship),
-    presentationType: normalizeArrayOutput(derivedPresentationType),
-    doi: fields.identifiers?.doi || '',
-    webLink: fields.links?.[0]?.url || '',
-    date: buildLegacyDateText(fields),
-    others: '',
+    doi,
+    webLink: primaryWebLink?.url || '',
+    date: buildWebDateText(fields),
+    others: formatAdditionalSeeAlsoEntries(fields.links, primaryWebLink?.url, doi),
     site: getLocalizedTextValue(fields.location),
     journalConference: getLocalizedTextValue(fields.venue?.name),
-    startDate,
-    endDate,
-    sortableDate: startDate,
+    startDate: webDate.startDate,
+    endDate: webDate.endDate,
+    sortableDate: webDate.sortableDate,
   };
 }
 
-function getLegacyTypeLabel(fields) {
-  if (fields.type === 'published_papers' && fields.subtype === 'scientific_journal') {
-    return 'Journal paper：原著論文';
-  }
-
-  if (fields.type === 'misc' && fields.subtype === 'introduction_scientific_journal') {
-    return 'Invited paper：招待論文';
-  }
-
-  if (
-    fields.type === 'published_papers' &&
-    fields.subtype === 'international_conference_proceedings'
-  ) {
-    return 'Research paper (international conference)：国際会議';
-  }
-
-  if (fields.type === 'misc' && fields.subtype === 'summary_national_conference') {
-    return 'Research paper (domestic conference)：国内会議';
-  }
-
-  return 'Miscellaneous';
+function buildResearchmapClassificationKey(fields) {
+  return `${fields.type}/${fields.subtype || 'others'}`;
 }
 
-function deriveAuthorshipLabels(fields) {
-  const ownerRoleMap = {
-    lead: 'Lead author',
-    corresponding: 'Corresponding author',
-    last: 'Last author',
-  };
+function deriveReviewCode(review) {
+  if (review === true) {
+    return 'peer_reviewed';
+  }
+
+  if (review === false) {
+    return 'not_peer_reviewed';
+  }
+
+  return '';
+}
+
+function deriveAuthorshipCodes(fields) {
   const ownerRoles = fields.ownerRoles || [];
 
   if (ownerRoles.length > 0) {
-    return ownerRoles.map((role) => ownerRoleMap[role] || role);
+    return ownerRoles;
   }
 
   const peopleCount = fields.contributors?.length || 0;
-  return peopleCount > 1 ? ['Co-author'] : [];
+  return peopleCount > 1 ? ['coauthor'] : [];
 }
 
-function derivePresentationTypeLabels(fields) {
-  const presentationTypeMap = {
-    oral_presentation: 'Oral',
-    poster_presentation: 'Poster',
-    invited_oral_presentation: 'Invited',
-    keynote_oral_presentation: 'Keynote',
-    public_symposium: 'Public symposium',
-    others: 'Other',
+function getDoiValue(fields) {
+  return typeof fields.identifiers?.doi === 'string' ? fields.identifiers.doi : '';
+}
+
+function selectPrimaryWebLink(entries, doi) {
+  if (!entries?.length) {
+    return undefined;
+  }
+
+  const doiUrls = buildKnownDoiUrls(doi);
+  return entries.find((entry) => {
+    const url = normalizeLinkUrl(entry);
+    return url && !doiUrls.has(url.toLowerCase());
+  });
+}
+
+function formatAdditionalSeeAlsoEntries(entries, primaryLinkUrl, doi) {
+  if (!entries?.length) {
+    return '';
+  }
+
+  const doiUrls = buildKnownDoiUrls(doi);
+
+  return entries
+    .filter((entry) => {
+      const url = normalizeLinkUrl(entry);
+      return url && url !== primaryLinkUrl && !doiUrls.has(url.toLowerCase());
+    })
+    .map((entry) => {
+      const label = normalizeLinkLabel(entry);
+      return label && label.toLowerCase() !== 'url' ? `${label}: ${entry.url}` : entry.url;
+    })
+    .join('\n');
+}
+
+function normalizeLinkUrl(entry) {
+  return typeof entry?.url === 'string' ? entry.url : '';
+}
+
+function normalizeLinkLabel(entry) {
+  return typeof entry?.label === 'string' ? entry.label.trim() : '';
+}
+
+function buildKnownDoiUrls(doi) {
+  const normalizedDoi = normalizeDoi(doi);
+  if (!normalizedDoi) {
+    return new Set();
+  }
+
+  return new Set([
+    `https://doi.org/${normalizedDoi}`,
+    `http://doi.org/${normalizedDoi}`,
+    `https://dx.doi.org/${normalizedDoi}`,
+    `http://dx.doi.org/${normalizedDoi}`,
+  ]);
+}
+
+function normalizeDoi(doi) {
+  if (typeof doi !== 'string') {
+    return '';
+  }
+
+  return doi.trim().replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '').toLowerCase();
+}
+
+function deriveWebDate(fields) {
+  const published = fields.dates?.published || '';
+  const eventStart = fields.dates?.eventStart || published;
+  const eventEnd = fields.dates?.eventEnd || '';
+
+  if (fields.type === 'published_papers') {
+    return {
+      startDate: eventStart,
+      endDate: eventEnd || eventStart,
+      sortableDate: published || eventStart,
+    };
+  }
+
+  return {
+    startDate: eventStart,
+    endDate: eventEnd || eventStart,
+    sortableDate: eventStart,
   };
-
-  return fields.type === 'presentations' && fields.subtype
-    ? [presentationTypeMap[fields.subtype] || fields.subtype]
-    : [];
 }
 
-function buildLegacyDateText(fields) {
-  const start = fields.dates?.eventStart || fields.dates?.published || '';
+function buildWebDateText(fields) {
+  const published = fields.dates?.published || '';
+  const start = fields.dates?.eventStart || published;
   const end = fields.dates?.eventEnd || '';
+
+  if (fields.type === 'published_papers') {
+    return published || start;
+  }
 
   if (!start) {
     return '';

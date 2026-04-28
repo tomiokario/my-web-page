@@ -261,7 +261,7 @@ test('renders publication groups', () => {
   renderWithProviders(<PublicationsView {...mockProps} />);
   // モックされた PublicationGroup がレンダリングされることを確認
   expect(screen.getByTestId('publication-group')).toBeInTheDocument();
-  expect(screen.getByTestId('group-name')).toHaveTextContent('Journal paper：原著論文');
+  expect(screen.getByTestId('group-name')).toHaveTextContent('published_papers/scientific_journal');
 });
 
 ```

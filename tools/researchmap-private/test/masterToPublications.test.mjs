@@ -207,6 +207,21 @@ test('canonical subtype prefers typed field over stale generic fallback', () => 
                   en: 'Journal A',
                 },
               },
+              identifiers: {
+                doi: '10.1234/example',
+              },
+              links: [
+                {
+                  label: 'DOI',
+                  url: 'https://doi.org/10.1234/example',
+                },
+                {
+                  label: 'Project',
+                  url: 'https://example.com/paper',
+                },
+              ],
+              review: true,
+              ownerRoles: ['lead', 'corresponding'],
             },
             localMeta: {
               hasEmptyFields: false,
@@ -226,10 +241,140 @@ test('canonical subtype prefers typed field over stale generic fallback', () => 
     });
 
     assert.equal(loaded.records[0].fields.subtype, 'scientific_journal');
-    assert.equal(loaded.publications[0].type, 'Journal paper：原著論文');
+    assert.equal(loaded.publications[0].type, 'published_papers/scientific_journal');
+    assert.equal(loaded.publications[0].category, 'published_papers');
+    assert.equal(loaded.publications[0].subtype, 'scientific_journal');
+    assert.equal(loaded.publications[0].review, 'peer_reviewed');
+    assert.deepEqual(loaded.publications[0].authorship, ['lead', 'corresponding']);
+    assert.equal(loaded.publications[0].doi, '10.1234/example');
+    assert.equal(loaded.publications[0].webLink, 'https://example.com/paper');
+    assert.equal(loaded.publications[0].others, '');
+    assert.equal(Object.hasOwn(loaded.publications[0], 'presentationType'), false);
 
     const exportLine = JSON.parse(exportFromMaster.importLines[0]);
     assert.equal(exportLine.force.published_paper_type, 'scientific_journal');
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('web publication conversion skips malformed links and keeps published paper date range complete', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'master-to-publications-web-safety-'));
+  const masterPath = path.join(tempDir, 'publication_master.json');
+
+  try {
+    fs.writeFileSync(
+      masterPath,
+      JSON.stringify(
+        [
+          {
+            id: 'pub-2025-web-safety',
+            fields: {
+              type: 'published_papers',
+              subtype: 'scientific_journal',
+              title: {
+                en: 'Web Safety Paper',
+              },
+              contributors: [
+                {
+                  role: 'author',
+                  name: {
+                    en: 'Rio Tomioka',
+                  },
+                },
+              ],
+              venue: {
+                kind: 'publication',
+                name: {
+                  en: 'Journal B',
+                },
+              },
+              dates: {
+                published: '2025-04-01',
+              },
+              identifiers: {
+                doi: 123,
+              },
+              links: [
+                {
+                  label: 'Missing URL',
+                },
+                {
+                  label: 'DOI',
+                  url: 'https://doi.org/10.1234/web-safety',
+                },
+                {
+                  label: 42,
+                  url: 'https://example.com/dataset',
+                },
+                {
+                  label: 'url',
+                  url: 'https://example.com/web-safety',
+                },
+              ],
+            },
+            localMeta: {
+              hasEmptyFields: false,
+              notes: '',
+            },
+          },
+          {
+            id: 'pub-2025-event-start-only-paper',
+            fields: {
+              type: 'published_papers',
+              subtype: 'scientific_journal',
+              title: {
+                en: 'Event Start Only Paper',
+              },
+              contributors: [
+                {
+                  role: 'author',
+                  name: {
+                    en: 'Rio Tomioka',
+                  },
+                },
+              ],
+              venue: {
+                kind: 'publication',
+                name: {
+                  en: 'Journal C',
+                },
+              },
+              dates: {
+                eventStart: '2025-05-02',
+              },
+            },
+            localMeta: {
+              hasEmptyFields: false,
+              notes: '',
+            },
+          },
+        ],
+        null,
+        2
+      ),
+      'utf8'
+    );
+
+    const loaded = loadMasterPublications(masterPath);
+    const publication = loaded.publications[0];
+
+    assert.equal(publication.webLink, 'https://doi.org/10.1234/web-safety');
+    assert.equal(
+      publication.others,
+      'https://example.com/dataset\nhttps://example.com/web-safety'
+    );
+    assert.equal(publication.doi, '');
+    assert.equal(publication.startDate, '2025-04-01');
+    assert.equal(publication.endDate, '2025-04-01');
+    assert.equal(publication.sortableDate, '2025-04-01');
+    assert.equal(publication.date, '2025-04-01');
+
+    const eventStartOnlyPublication = loaded.publications[1];
+    assert.equal(eventStartOnlyPublication.startDate, '2025-05-02');
+    assert.equal(eventStartOnlyPublication.endDate, '2025-05-02');
+    assert.equal(eventStartOnlyPublication.sortableDate, '2025-05-02');
+    assert.equal(eventStartOnlyPublication.date, '2025-05-02');
   } finally {
     fs.rmSync(tempDir, { recursive: true, force: true });
   }

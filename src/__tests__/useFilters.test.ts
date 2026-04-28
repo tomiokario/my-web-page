@@ -8,23 +8,23 @@ describe('useFilters', () => {
     {
       id: 0,
       year: 2022,
-      type: 'Journal paper：原著論文',
-      review: 'Peer-reviewed',
-      authorship: ['First author']
+      type: 'published_papers/scientific_journal',
+      review: 'peer_reviewed',
+      authorship: ['lead']
     },
     {
       id: 1,
       year: 2021,
-      type: 'Research paper (international conference)：国際会議',
-      review: 'Non-peer-reviewed',
-      authorship: 'Corresponding author' // 文字列も許容
+      type: 'published_papers/international_conference_proceedings',
+      review: 'not_peer_reviewed',
+      authorship: 'corresponding' // 文字列も許容
     },
     {
       id: 2,
       year: 2022,
-      type: 'Invited paper：招待論文',
-      review: 'Peer-reviewed',
-      authorship: ['Co-author']
+      type: 'misc/introduction_scientific_journal',
+      review: 'peer_reviewed',
+      authorship: ['coauthor']
     }
   ]);
 
@@ -36,18 +36,18 @@ describe('useFilters', () => {
       expect(result.current.filterOptions.year).toContain('2021');
       expect(result.current.filterOptions.year).toHaveLength(2);
       
-      expect(result.current.filterOptions.type).toContain('Journal paper：原著論文');
-      expect(result.current.filterOptions.type).toContain('Research paper (international conference)：国際会議');
-      expect(result.current.filterOptions.type).toContain('Invited paper：招待論文');
+      expect(result.current.filterOptions.type).toContain('published_papers/scientific_journal');
+      expect(result.current.filterOptions.type).toContain('published_papers/international_conference_proceedings');
+      expect(result.current.filterOptions.type).toContain('misc/introduction_scientific_journal');
       expect(result.current.filterOptions.type).toHaveLength(3);
       
-      expect(result.current.filterOptions.review).toContain('Peer-reviewed');
-      expect(result.current.filterOptions.review).toContain('Non-peer-reviewed');
+      expect(result.current.filterOptions.review).toContain('peer_reviewed');
+      expect(result.current.filterOptions.review).toContain('not_peer_reviewed');
       expect(result.current.filterOptions.review).toHaveLength(2);
       
-      expect(result.current.filterOptions.authorship).toContain('First author');
-      expect(result.current.filterOptions.authorship).toContain('Corresponding author');
-      expect(result.current.filterOptions.authorship).toContain('Co-author');
+      expect(result.current.filterOptions.authorship).toContain('lead');
+      expect(result.current.filterOptions.authorship).toContain('corresponding');
+      expect(result.current.filterOptions.authorship).toContain('coauthor');
       expect(result.current.filterOptions.authorship).toHaveLength(3);
       expect(result.current.filterOptions).not.toHaveProperty('presentationType');
     });
@@ -114,25 +114,25 @@ describe('useFilters', () => {
       const { result } = renderHook(() => useFilters({ publications: mockPublications }));
       
       act(() => {
-        result.current.toggleFilter('type', 'Journal paper：原著論文');
+        result.current.toggleFilter('type', 'published_papers/scientific_journal');
       });
       
       expect(result.current.filteredPublications).toHaveLength(1);
-      expect(result.current.filteredPublications[0].type).toBe('Journal paper：原著論文');
+      expect(result.current.filteredPublications[0].type).toBe('published_papers/scientific_journal');
     });
 
     it('著者の役割フィルターが正しく機能する（配列と文字列の両方）', () => {
       const { result } = renderHook(() => useFilters({ publications: mockPublications }));
       
       act(() => {
-        result.current.toggleFilter('authorship', 'First author');
+        result.current.toggleFilter('authorship', 'lead');
       });
       
       expect(result.current.filteredPublications).toHaveLength(1);
       expect(result.current.filteredPublications[0].id).toBe(0);
       
       act(() => {
-        result.current.toggleFilter('authorship', 'Corresponding author');
+        result.current.toggleFilter('authorship', 'corresponding');
       });
       
       expect(result.current.filteredPublications).toHaveLength(2);
@@ -141,17 +141,17 @@ describe('useFilters', () => {
     it('複数のフィルターが正しく組み合わさる', () => {
       const { result } = renderHook(() => useFilters({ publications: mockPublications }));
       
-      // 2022年かつPeer-reviewedの出版物
+      // 2022年かつpeer_reviewedの出版物
       act(() => {
         result.current.toggleFilter('year', '2022');
-        result.current.toggleFilter('review', 'Peer-reviewed');
+        result.current.toggleFilter('review', 'peer_reviewed');
       });
       
       expect(result.current.filteredPublications).toHaveLength(2);
       
       // さらにJournal paperに限定
       act(() => {
-        result.current.toggleFilter('type', 'Journal paper：原著論文');
+        result.current.toggleFilter('type', 'published_papers/scientific_journal');
       });
       
       expect(result.current.filteredPublications).toHaveLength(1);
@@ -196,11 +196,11 @@ describe('useFilters', () => {
       // いくつかのフィルターを設定
       act(() => {
         result.current.toggleFilter('year', '2022');
-        result.current.toggleFilter('type', 'Journal paper：原著論文');
+        result.current.toggleFilter('type', 'published_papers/scientific_journal');
       });
       
       expect(result.current.selectedFilters.year).toContain('2022');
-      expect(result.current.selectedFilters.type).toContain('Journal paper：原著論文');
+      expect(result.current.selectedFilters.type).toContain('published_papers/scientific_journal');
       expect(result.current.filteredPublications).toHaveLength(1);
       
       // フィルターをリセット

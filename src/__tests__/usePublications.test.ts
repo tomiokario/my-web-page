@@ -39,15 +39,15 @@ describe("usePublications", () => {
       expect(result.current.formattedPublications[4].year).toBe(2022);
     });
 
-    it("camelCase と legacy キーの両方を表示用フィールドに反映する", () => {
+    it("camelCase キーを表示用フィールドに反映する", () => {
       const publicationsData = [
         {
           id: 42,
           name: "Real JSON entry",
           japanese: "",
-          type: "Journal paper：原著論文",
-          review: "Reviewed",
-          authorship: "Lead author",
+          type: "published_papers/scientific_journal",
+          review: "peer_reviewed",
+          authorship: "lead",
           doi: "https://doi.org/10.1000/example",
           webLink: "https://example.com/paper",
           date: "2025年6月21日",
@@ -57,12 +57,6 @@ describe("usePublications", () => {
           others: "SharedIt link",
           site: "Tokyo",
           journalConference: "Optical Review",
-          "journal / conference": "Legacy venue",
-          "web link": "https://legacy.example.com/paper",
-          DOI: "10.1000/legacy",
-          Review: "Legacy review",
-          Authorship: ["First author"],
-          Others: "Legacy shared link",
         },
       ];
 
@@ -78,46 +72,12 @@ describe("usePublications", () => {
         doi: "https://doi.org/10.1000/example",
         webLink: "https://example.com/paper",
         journalConference: "Optical Review",
-        authorship: "Lead author",
-        review: "Reviewed",
+        authorship: "lead",
+        review: "peer_reviewed",
         others: "SharedIt link",
       });
     });
 
-    it("legacy-only キーでも表示用フィールドへ fallback する", () => {
-      const publicationsData = [
-        {
-          id: "43",
-          name: "Legacy JSON entry",
-          japanese: "",
-          type: "Research paper (international conference)：国際会議",
-          date: "2025年7月1日",
-          "journal / conference": "Legacy venue",
-          "web link": "https://legacy.example.com/paper",
-          DOI: "10.1000/legacy-only",
-          Review: "Legacy review",
-          Authorship: ["First author"],
-          Others: "Legacy shared link",
-        },
-      ];
-
-      const { result } = renderHook(() =>
-        usePublications({
-          sortOrder: "type",
-          publicationsData,
-        })
-      );
-
-      expect(result.current.formattedPublications[0]).toMatchObject({
-        id: 43,
-        journalConference: "Legacy venue",
-        webLink: "https://legacy.example.com/paper",
-        doi: "10.1000/legacy-only",
-        review: "Legacy review",
-        authorship: ["First author"],
-        others: "Legacy shared link",
-      });
-    });
   });
 
   describe("sortedPublications", () => {
@@ -129,14 +89,14 @@ describe("usePublications", () => {
         })
       );
 
-      expect(result.current.sortedPublications[0].type).toBe("Journal paper：原著論文");
-      expect(result.current.sortedPublications[1].type).toBe("Journal paper：原著論文");
+      expect(result.current.sortedPublications[0].type).toBe("published_papers/scientific_journal");
+      expect(result.current.sortedPublications[1].type).toBe("published_papers/scientific_journal");
       expect(result.current.sortedPublications[2].type).toBe(
-        "Research paper (international conference)：国際会議"
+        "published_papers/international_conference_proceedings"
       );
-      expect(result.current.sortedPublications[3].type).toBe("Invited paper：招待論文");
+      expect(result.current.sortedPublications[3].type).toBe("misc/introduction_scientific_journal");
       expect(result.current.sortedPublications[4].type).toBe(
-        "Research paper (domestic conference)：国内会議"
+        "misc/summary_national_conference"
       );
     });
 
@@ -160,7 +120,7 @@ describe("usePublications", () => {
         createPublication(
           {
             id: 1,
-            type: "Journal paper：原著論文",
+            type: "published_papers/scientific_journal",
             date: "2024年1月1日",
             sortableDate: "2024-01-01",
           },
@@ -169,7 +129,7 @@ describe("usePublications", () => {
         createPublication(
           {
             id: 2,
-            type: "Research paper (international conference)：国際会議",
+            type: "published_papers/international_conference_proceedings",
             date: "2023年1月1日",
             sortableDate: "2023-01-01",
           },
@@ -188,7 +148,7 @@ describe("usePublications", () => {
         }
       );
 
-      expect(result.current.sortedPublications[0].type).toBe("Journal paper：原著論文");
+      expect(result.current.sortedPublications[0].type).toBe("published_papers/scientific_journal");
 
       rerender({ order: "chronological" });
 
