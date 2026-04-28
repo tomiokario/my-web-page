@@ -105,7 +105,9 @@ npm install
 
 ### OpenSSLエラーが発生する場合
 
-package.jsonのスクリプトに`NODE_OPTIONS=--openssl-legacy-provider`が設定されています。
+現在の開発環境では `NODE_OPTIONS=--openssl-legacy-provider` を付けずに `npm start` と `npm run build` を実行します。
+
+OpenSSL関連のエラーが再発した場合は、まず Node.js と `react-scripts` のバージョン、依存関係の更新状況を確認してください。古い Node.js / Webpack 系の組み合わせでのみ legacy provider が必要になる場合があります。
 
 ### テストが失敗する場合
 
