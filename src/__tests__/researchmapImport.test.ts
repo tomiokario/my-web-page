@@ -1204,6 +1204,92 @@ describe("researchmapImport", () => {
     expect(updatedMaster[1].fields.venue.addressCountry).toBe("JP");
   });
 
+  test("published_papers / misc は JSONL の venue metadata を無視して既存値を保持する", () => {
+    const paperWithVenueMetadata = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        venue: {
+          ...existingMasterRecord.fields.venue,
+          promoter: { ja: "既存主催者" },
+          addressCountry: "JP",
+        },
+      },
+    };
+    const miscWithVenueMetadata = {
+      ...existingMasterRecord,
+      id: "pub-2024-alpha-misc",
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "misc" as const,
+        subtype: "technical_report",
+        title: { en: "Alpha Misc" },
+        venue: {
+          kind: "publication" as const,
+          name: { en: "Report A" },
+          promoter: { ja: "既存団体" },
+          addressCountry: "JP",
+        },
+        identifiers: {
+          doi: "10.1000/alpha-misc",
+        },
+      },
+      sync: {
+        researchmap: {
+          recordId: "53373096",
+          userId: "R000104649",
+        },
+      },
+    };
+    fs.writeFileSync(
+      masterJsonFilePath,
+      `${JSON.stringify([paperWithVenueMetadata, miscWithVenueMetadata], null, 2)}\n`,
+      "utf8"
+    );
+
+    writeJsonl([
+      {
+        insert: { type: "published_papers", id: "53373093", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Paper" },
+          publication_name: { en: "Journal A" },
+          promoter: { ja: "JSONL 主催者" },
+          address_country: "US",
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          published_paper_type: "scientific_journal",
+        },
+      },
+      {
+        insert: { type: "misc", id: "53373096", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Misc" },
+          publication_name: { en: "Report A" },
+          promoter: { ja: "JSONL 団体" },
+          address_country: "US",
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha-misc"] },
+          misc_type: "technical_report",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(2);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.venue.promoter).toEqual({ ja: "既存主催者" });
+    expect(updatedMaster[0].fields.venue.addressCountry).toBe("JP");
+    expect(updatedMaster[1].fields.venue.promoter).toEqual({ ja: "既存団体" });
+    expect(updatedMaster[1].fields.venue.addressCountry).toBe("JP");
+  });
+
   test("published_papers / misc の from_event_date と to_event_date を dates に保持する", () => {
     fs.writeFileSync(masterJsonFilePath, "[]\n", "utf8");
 

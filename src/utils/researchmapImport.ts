@@ -1065,9 +1065,11 @@ function collectFieldPresence(
     type === "presentations" ? "event" : "publication_name",
     payload
   );
-  addPresence(presence, "venue.promoter", "promoter", payload);
-  addLocalizedPresence(presence, "venue.promoter", "promoter", payload);
-  addPresence(presence, "venue.addressCountry", "address_country", payload);
+  if (type === "presentations") {
+    addPresence(presence, "venue.promoter", "promoter", payload);
+    addLocalizedPresence(presence, "venue.promoter", "promoter", payload);
+    addPresence(presence, "venue.addressCountry", "address_country", payload);
+  }
   addPresence(presence, "dates.published", "publication_date", payload);
   addPresence(presence, "dates.published", "from_event_date", payload);
   addPresence(presence, "dates.eventStart", "from_event_date", payload);
