@@ -113,7 +113,10 @@ function selectPrimaryWebLink(entries, doi) {
   }
 
   const doiUrls = buildKnownDoiUrls(doi);
-  return entries.find((entry) => !doiUrls.has(entry.url.toLowerCase()));
+  return entries.find((entry) => {
+    const url = normalizeLinkUrl(entry);
+    return url && !doiUrls.has(url.toLowerCase());
+  });
 }
 
 function formatAdditionalSeeAlsoEntries(entries, primaryLinkUrl, doi) {
@@ -124,12 +127,19 @@ function formatAdditionalSeeAlsoEntries(entries, primaryLinkUrl, doi) {
   const doiUrls = buildKnownDoiUrls(doi);
 
   return entries
-    .filter((entry) => entry.url !== primaryLinkUrl && !doiUrls.has(entry.url.toLowerCase()))
+    .filter((entry) => {
+      const url = normalizeLinkUrl(entry);
+      return url && url !== primaryLinkUrl && !doiUrls.has(url.toLowerCase());
+    })
     .map((entry) => {
       const label = entry.label?.trim() || '';
       return label && label.toLowerCase() !== 'url' ? `${label}: ${entry.url}` : entry.url;
     })
     .join('\n');
+}
+
+function normalizeLinkUrl(entry) {
+  return typeof entry?.url === 'string' ? entry.url : '';
 }
 
 function buildKnownDoiUrls(doi) {
@@ -158,7 +168,7 @@ function deriveWebDate(fields) {
   if (fields.type === 'published_papers') {
     return {
       startDate: eventStart,
-      endDate: eventEnd,
+      endDate: eventEnd || eventStart,
       sortableDate: published,
     };
   }

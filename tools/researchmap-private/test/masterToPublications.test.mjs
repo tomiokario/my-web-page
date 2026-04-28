@@ -257,3 +257,79 @@ test('canonical subtype prefers typed field over stale generic fallback', () => 
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
 });
+
+test('web publication conversion skips malformed links and keeps published paper date range complete', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'master-to-publications-web-safety-'));
+  const masterPath = path.join(tempDir, 'publication_master.json');
+
+  try {
+    fs.writeFileSync(
+      masterPath,
+      JSON.stringify(
+        [
+          {
+            id: 'pub-2025-web-safety',
+            fields: {
+              type: 'published_papers',
+              subtype: 'scientific_journal',
+              title: {
+                en: 'Web Safety Paper',
+              },
+              contributors: [
+                {
+                  role: 'author',
+                  name: {
+                    en: 'Rio Tomioka',
+                  },
+                },
+              ],
+              venue: {
+                kind: 'publication',
+                name: {
+                  en: 'Journal B',
+                },
+              },
+              dates: {
+                published: '2025-04-01',
+              },
+              identifiers: {
+                doi: '10.1234/web-safety',
+              },
+              links: [
+                {
+                  label: 'Missing URL',
+                },
+                {
+                  label: 'DOI',
+                  url: 'https://doi.org/10.1234/web-safety',
+                },
+                {
+                  label: 'Project',
+                  url: 'https://example.com/web-safety',
+                },
+              ],
+            },
+            localMeta: {
+              hasEmptyFields: false,
+              notes: '',
+            },
+          },
+        ],
+        null,
+        2
+      ),
+      'utf8'
+    );
+
+    const loaded = loadMasterPublications(masterPath);
+    const publication = loaded.publications[0];
+
+    assert.equal(publication.webLink, 'https://example.com/web-safety');
+    assert.equal(publication.others, '');
+    assert.equal(publication.startDate, '2025-04-01');
+    assert.equal(publication.endDate, '2025-04-01');
+    assert.equal(publication.sortableDate, '2025-04-01');
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
