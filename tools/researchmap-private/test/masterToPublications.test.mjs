@@ -293,7 +293,7 @@ test('web publication conversion skips malformed links and keeps published paper
                 published: '2025-04-01',
               },
               identifiers: {
-                doi: '10.1234/web-safety',
+                doi: 123,
               },
               links: [
                 {
@@ -304,7 +304,11 @@ test('web publication conversion skips malformed links and keeps published paper
                   url: 'https://doi.org/10.1234/web-safety',
                 },
                 {
-                  label: 'Project',
+                  label: 42,
+                  url: 'https://example.com/dataset',
+                },
+                {
+                  label: 'url',
                   url: 'https://example.com/web-safety',
                 },
               ],
@@ -324,8 +328,12 @@ test('web publication conversion skips malformed links and keeps published paper
     const loaded = loadMasterPublications(masterPath);
     const publication = loaded.publications[0];
 
-    assert.equal(publication.webLink, 'https://example.com/web-safety');
-    assert.equal(publication.others, '');
+    assert.equal(publication.webLink, 'https://doi.org/10.1234/web-safety');
+    assert.equal(
+      publication.others,
+      'https://example.com/dataset\nhttps://example.com/web-safety'
+    );
+    assert.equal(publication.doi, '');
     assert.equal(publication.startDate, '2025-04-01');
     assert.equal(publication.endDate, '2025-04-01');
     assert.equal(publication.sortableDate, '2025-04-01');

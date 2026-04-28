@@ -53,7 +53,7 @@ function mapMasterRecordToPublication(record, index) {
   const localMeta = record.localMeta || {};
   const webDate = deriveWebDate(fields);
   const title = fields.title || {};
-  const doi = fields.identifiers?.doi || '';
+  const doi = getDoiValue(fields);
   const primaryWebLink = selectPrimaryWebLink(fields.links, doi);
   const derivedAuthorship = deriveAuthorshipCodes(fields);
 
@@ -107,6 +107,10 @@ function deriveAuthorshipCodes(fields) {
   return peopleCount > 1 ? ['coauthor'] : [];
 }
 
+function getDoiValue(fields) {
+  return typeof fields.identifiers?.doi === 'string' ? fields.identifiers.doi : '';
+}
+
 function selectPrimaryWebLink(entries, doi) {
   if (!entries?.length) {
     return undefined;
@@ -132,7 +136,7 @@ function formatAdditionalSeeAlsoEntries(entries, primaryLinkUrl, doi) {
       return url && url !== primaryLinkUrl && !doiUrls.has(url.toLowerCase());
     })
     .map((entry) => {
-      const label = entry.label?.trim() || '';
+      const label = normalizeLinkLabel(entry);
       return label && label.toLowerCase() !== 'url' ? `${label}: ${entry.url}` : entry.url;
     })
     .join('\n');
@@ -140,6 +144,10 @@ function formatAdditionalSeeAlsoEntries(entries, primaryLinkUrl, doi) {
 
 function normalizeLinkUrl(entry) {
   return typeof entry?.url === 'string' ? entry.url : '';
+}
+
+function normalizeLinkLabel(entry) {
+  return typeof entry?.label === 'string' ? entry.label.trim() : '';
 }
 
 function buildKnownDoiUrls(doi) {
@@ -157,6 +165,10 @@ function buildKnownDoiUrls(doi) {
 }
 
 function normalizeDoi(doi) {
+  if (typeof doi !== 'string') {
+    return '';
+  }
+
   return doi.trim().replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '').toLowerCase();
 }
 
