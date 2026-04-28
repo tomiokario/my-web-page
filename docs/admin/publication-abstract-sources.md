@@ -1,6 +1,8 @@
-# abstract 候補ソース
+# 抄録候補ソース
 
-2026年3月15日時点で、web 検索で abstract 原文を確認できた publication データのソースを整理します。
+2026年3月15日時点で、Web 検索で abstract 原文を確認できた publication データのソースを整理します。
+
+このページは `src/data/publication_master.json` の `fields.description` を確認・補完するときの補助メモです。出版物データの正本と更新手順は [出版物データ管理](./publications-management.md) を参照してください。
 
 - `Numerical simulations on optoelectronic deep neural network hardware based on self-referential holography`
   - Source: [10.1007/s10043-023-00810-2](https://doi.org/10.1007/s10043-023-00810-2)
@@ -47,6 +49,6 @@
 - `Numerical Simulations of Parallel Image Recognition with Self-Referential Holographic Deep Neural Network`
   - Source: [IWH 2025 book program PDF](https://www.iwh2025.org/uploads/1/5/2/6/152641567/_ooo_1027_book_program.pdf)
 
-現在の CSV には、上記で原文を確認できた項目のみを反映しています。ITE の一部ページは `Not available yet` だったため未反映です。後で Notion 側の正本を更新する際の確認用メモとして使ってください。
+上記のうち原文を確認できた項目だけを `publication_master.json` へ反映します。ITE の一部ページは `Not available yet` だったため、後日 `fields.description` を補完するときに再確認します。
 
-なお、著作権配慮のため、PDF 等から抽出した長文の verbatim abstract は CSV から空欄に戻しています。
+著作権配慮のため、PDF 等から抽出した長文の verbatim abstract はそのまま転載せず、公開ページに載せる必要がある場合は短い要約または公開元へのリンクで扱います。

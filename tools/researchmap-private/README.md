@@ -7,7 +7,7 @@
 - 通常運用の本線は `researchmap -> publication_master.json -> publications.json` で、公開側の tracked data 更新はここで完結します
 - このディレクトリは、必要なときだけ `publication_master.json` から researchmap へ安全に戻すための補助ツールをまとめています
 - `researchmapMerge` / `researchmapReversibleExport` / `researchmapConsistency` は、既存 researchmap 情報を壊しにくくし、生成結果の由来や整合を確認しやすくするための補助機能です
-- 旧 `researchmapFields` 形式の master は受け付けません。`publication_master.json` は canonical `fields` を持つ record を正本として扱います
+- `publication_master.json` は canonical `fields` を持つ record を正本として扱い、このツールも canonical `fields` から researchmap payload を生成します
 - local-only に残すのは `tmp/researchmap/**`、review / quarantine / archive の生成物、将来のローカル補助メモで、`publication_master.json` 自体は public 側の tracked canonical data として扱います
 
 ## 使い方
