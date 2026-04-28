@@ -351,6 +351,678 @@ describe("researchmapImport", () => {
     expect(JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"))).toEqual([existingMasterRecord]);
   });
 
+  test("カテゴリ変更で JSONL から欠落した既存値を保持し表示用 authorship も維持する", () => {
+    const miscRecord = {
+      ...existingMasterRecord,
+      fields: {
+        type: "misc" as const,
+        subtype: "technical_report",
+        title: {
+          en: "Alpha Paper",
+        },
+        contributors: [
+          {
+            role: "author" as const,
+            name: {
+              en: "Rio Tomioka",
+            },
+          },
+        ],
+        venue: {
+          kind: "publication" as const,
+          name: {
+            en: "Journal A",
+          },
+        },
+        dates: {
+          published: "2024-01-01",
+        },
+        identifiers: {
+          doi: "10.1000/alpha",
+        },
+        bibliographic: {
+          volume: "1",
+          startPage: "1",
+          endPage: "9",
+        },
+        ownerRoles: ["lead"],
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([miscRecord], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "presentations", id: "53373093", user_id: "R000104649" },
+        merge: {
+          presentation_title: { en: "Alpha Paper" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          presentation_type: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields).toMatchObject({
+      type: "presentations",
+      subtype: "poster_presentation",
+      contributors: [
+        {
+          role: "presenter",
+          name: { en: "Rio Tomioka" },
+        },
+      ],
+      venue: {
+        kind: "event",
+        name: { en: "Journal A" },
+      },
+      bibliographic: {
+        volume: "1",
+        startPage: "1",
+        endPage: "9",
+      },
+      ownerRoles: ["lead"],
+    });
+
+    const updatedWeb = JSON.parse(fs.readFileSync(webJsonFilePath, "utf8"));
+    expect(updatedWeb[0]).toMatchObject({
+      category: "presentations",
+      subtype: "poster_presentation",
+      type: "presentations/poster_presentation",
+      authorship: "lead",
+      presentationType: "poster_presentation",
+    });
+  });
+
+  test("カテゴリ変更で新カテゴリの subtype が無ければ review に止める", () => {
+    writeJsonl([
+      {
+        insert: { type: "presentations", id: "53373093", user_id: "R000104649" },
+        merge: {
+          presentation_title: { en: "Alpha Paper" },
+          event: { en: "Journal A" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(0);
+    expect(report.summary.review).toBe(1);
+    expect(report.reviewItems[0].matchStrategy).toBe("record_id");
+    expect(report.reviewItems[0].conflictingFields).toContain("fields.subtype");
+    expect(JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"))).toEqual([existingMasterRecord]);
+    expect(fs.existsSync(webJsonFilePath)).toBe(false);
+  });
+
+  test("JSONL に存在する空値は明示削除として master と publications.json に反映する", () => {
+    writeJsonl([
+      {
+        insert: { type: "published_papers", id: "53373093", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Paper" },
+          publication_name: { en: "Journal A" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          published_paper_owner_roles: [],
+          starting_page: "",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.ownerRoles).toBeUndefined();
+    expect(updatedMaster[0].fields.bibliographic.startPage).toBeUndefined();
+    expect(updatedMaster[0].fields.bibliographic.volume).toBe("1");
+    expect(updatedMaster[0].fields.bibliographic.endPage).toBe("9");
+
+    const updatedWeb = JSON.parse(fs.readFileSync(webJsonFilePath, "utf8"));
+    expect(updatedWeb[0].authorship).toBe("");
+  });
+
+  test("published_papers の subtype 更新では JSONL に存在しない invited を保持する", () => {
+    const invitedPaper = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        invited: true,
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([invitedPaper], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "published_papers", id: "53373093", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Paper" },
+          publication_name: { en: "Journal A" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          published_paper_type: "research_paper",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.subtype).toBe("research_paper");
+    expect(updatedMaster[0].fields.invited).toBe(true);
+  });
+
+  test("misc の subtype 更新では JSONL に存在しない invited を保持する", () => {
+    const invitedMisc = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "misc" as const,
+        subtype: "others",
+        invited: true,
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([invitedMisc], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "misc", id: "53373093", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Paper" },
+          publication_name: { en: "Journal A" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          misc_type: "technical_report",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.subtype).toBe("technical_report");
+    expect(updatedMaster[0].fields.invited).toBe(true);
+  });
+
+  test("localized field は JSONL に ja だけ存在する場合に既存 en を保持する", () => {
+    const bilingualPresentation = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "presentations" as const,
+        subtype: "poster_presentation",
+        title: { ja: "アルファ発表", en: "Alpha Presentation" },
+        contributors: [
+          {
+            role: "presenter" as const,
+            name: { ja: "冨岡莉生", en: "Rio Tomioka" },
+          },
+        ],
+        venue: {
+          kind: "event" as const,
+          name: { ja: "研究会", en: "Workshop" },
+          promoter: { ja: "主催者", en: "Promoter" },
+        },
+        location: { ja: "東京", en: "Tokyo" },
+        description: { ja: "概要", en: "Abstract" },
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([bilingualPresentation], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "presentations", id: "53373093", user_id: "R000104649" },
+        merge: {
+          presentation_title: { ja: "アルファ発表" },
+          presenters: { ja: [{ name: "冨岡莉生" }] },
+          event: { ja: "研究会" },
+          promoter: { ja: "主催者" },
+          location: { ja: "東京" },
+          description: { ja: "概要" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          presentation_type: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields).toMatchObject({
+      title: { ja: "アルファ発表", en: "Alpha Presentation" },
+      contributors: [
+        {
+          role: "presenter",
+          name: { ja: "冨岡莉生", en: "Rio Tomioka" },
+        },
+      ],
+      venue: {
+        name: { ja: "研究会", en: "Workshop" },
+        promoter: { ja: "主催者", en: "Promoter" },
+      },
+      location: { ja: "東京", en: "Tokyo" },
+      description: { ja: "概要", en: "Abstract" },
+    });
+  });
+
+  test("localized field は JSONL に空文字 locale が存在する場合に明示削除する", () => {
+    const bilingualPresentation = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "presentations" as const,
+        subtype: "poster_presentation",
+        title: { ja: "アルファ発表", en: "Alpha Presentation" },
+        contributors: [
+          {
+            role: "presenter" as const,
+            name: { ja: "冨岡莉生", en: "Rio Tomioka" },
+          },
+        ],
+        venue: {
+          kind: "event" as const,
+          name: { ja: "研究会", en: "Workshop" },
+          promoter: { ja: "主催者", en: "Promoter" },
+        },
+        location: { ja: "東京", en: "Tokyo" },
+        description: { ja: "概要", en: "Abstract" },
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([bilingualPresentation], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "presentations", id: "53373093", user_id: "R000104649" },
+        merge: {
+          presentation_title: { ja: "アルファ発表", en: "" },
+          presenters: { ja: [{ name: "冨岡莉生" }], en: [{ name: "" }] },
+          event: { ja: "研究会", en: "" },
+          promoter: { ja: "主催者", en: "" },
+          location: { ja: "東京", en: "" },
+          description: { ja: "概要", en: "" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          presentation_type: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.title).toEqual({ ja: "アルファ発表" });
+    expect(updatedMaster[0].fields.contributors).toEqual([
+      {
+        role: "presenter",
+        name: { ja: "冨岡莉生" },
+      },
+    ]);
+    expect(updatedMaster[0].fields.venue.name).toEqual({ ja: "研究会" });
+    expect(updatedMaster[0].fields.venue.promoter).toEqual({ ja: "主催者" });
+    expect(updatedMaster[0].fields.location).toEqual({ ja: "東京" });
+    expect(updatedMaster[0].fields.description).toEqual({ ja: "概要" });
+  });
+
+  test("localized field は JSONL に null や空オブジェクトで存在する場合に明示削除する", () => {
+    const bilingualPresentation = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "presentations" as const,
+        subtype: "poster_presentation",
+        title: { ja: "アルファ発表", en: "Alpha Presentation" },
+        contributors: [
+          {
+            role: "presenter" as const,
+            name: { ja: "冨岡莉生", en: "Rio Tomioka" },
+          },
+        ],
+        venue: {
+          kind: "event" as const,
+          name: { ja: "研究会", en: "Workshop" },
+          promoter: { ja: "主催者", en: "Promoter" },
+        },
+        location: { ja: "東京", en: "Tokyo" },
+        description: { ja: "概要", en: "Abstract" },
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([bilingualPresentation], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "presentations", id: "53373093", user_id: "R000104649" },
+        merge: {
+          presentation_title: { ja: "アルファ発表", en: "Alpha Presentation" },
+          presenters: { ja: [{ name: "冨岡莉生" }], en: [{ name: "Rio Tomioka" }] },
+          event: {},
+          promoter: null,
+          location: null,
+          description: {},
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          presentation_type: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.venue).toEqual({ kind: "event" });
+    expect(updatedMaster[0].fields.location).toBeUndefined();
+    expect(updatedMaster[0].fields.description).toBeUndefined();
+  });
+
+  test("contributors は JSONL に存在しない index-locale の既存値を保持する", () => {
+    const bilingualPresentation = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "presentations" as const,
+        subtype: "poster_presentation",
+        title: { ja: "共同発表", en: "Joint Presentation" },
+        contributors: [
+          {
+            role: "presenter" as const,
+            name: { ja: "冨岡莉生", en: "Rio Tomioka" },
+          },
+          {
+            role: "presenter" as const,
+            name: { ja: "共同研究者", en: "Collaborator" },
+          },
+        ],
+        venue: {
+          kind: "event" as const,
+          name: { ja: "研究会", en: "Workshop" },
+        },
+        dates: {
+          published: "2024-01-01",
+        },
+        identifiers: {
+          doi: "10.1000/alpha",
+        },
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([bilingualPresentation], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "presentations", id: "53373093", user_id: "R000104649" },
+        merge: {
+          presentation_title: { ja: "共同発表", en: "Joint Presentation" },
+          presenters: {
+            ja: [{ name: "冨岡莉生" }, { name: "共同研究者" }],
+            en: [{ name: "Rio Tomioka" }],
+          },
+          event: { ja: "研究会", en: "Workshop" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          presentation_type: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.contributors).toEqual([
+      {
+        role: "presenter",
+        name: { ja: "冨岡莉生", en: "Rio Tomioka" },
+      },
+      {
+        role: "presenter",
+        name: { ja: "共同研究者", en: "Collaborator" },
+      },
+    ]);
+  });
+
+  test("contributors は JSONL の空文字 index-locale だけを削除する", () => {
+    const bilingualPresentation = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "presentations" as const,
+        subtype: "poster_presentation",
+        title: { ja: "共同発表", en: "Joint Presentation" },
+        contributors: [
+          {
+            role: "presenter" as const,
+            name: { ja: "冨岡莉生", en: "Rio Tomioka" },
+          },
+          {
+            role: "presenter" as const,
+            name: { ja: "共同研究者", en: "Collaborator" },
+          },
+        ],
+        venue: {
+          kind: "event" as const,
+          name: { ja: "研究会", en: "Workshop" },
+        },
+        dates: {
+          published: "2024-01-01",
+        },
+        identifiers: {
+          doi: "10.1000/alpha",
+        },
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([bilingualPresentation], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "presentations", id: "53373093", user_id: "R000104649" },
+        merge: {
+          presentation_title: { ja: "共同発表", en: "Joint Presentation" },
+          presenters: {
+            ja: [{ name: "冨岡莉生" }, { name: "共同研究者" }],
+            en: [{ name: "Rio Tomioka" }, { name: "" }],
+          },
+          event: { ja: "研究会", en: "Workshop" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          presentation_type: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.contributors).toEqual([
+      {
+        role: "presenter",
+        name: { ja: "冨岡莉生", en: "Rio Tomioka" },
+      },
+      {
+        role: "presenter",
+        name: { ja: "共同研究者" },
+      },
+    ]);
+  });
+
+  test("contributors は JSONL に空配列で存在する場合に明示削除する", () => {
+    const bilingualPresentation = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "presentations" as const,
+        subtype: "poster_presentation",
+        title: { ja: "共同発表", en: "Joint Presentation" },
+        contributors: [
+          {
+            role: "presenter" as const,
+            name: { ja: "冨岡莉生", en: "Rio Tomioka" },
+          },
+        ],
+        venue: {
+          kind: "event" as const,
+          name: { ja: "研究会", en: "Workshop" },
+        },
+        dates: {
+          published: "2024-01-01",
+        },
+        identifiers: {
+          doi: "10.1000/alpha",
+        },
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([bilingualPresentation], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "presentations", id: "53373093", user_id: "R000104649" },
+        merge: {
+          presentation_title: { ja: "共同発表", en: "Joint Presentation" },
+          presenters: { ja: [], en: [] },
+          event: { ja: "研究会", en: "Workshop" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          presentation_type: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.contributors).toBeUndefined();
+  });
+
+  test("contributors は JSONL に null で存在する場合に明示削除する", () => {
+    const bilingualPresentation = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "presentations" as const,
+        subtype: "poster_presentation",
+        title: { ja: "共同発表", en: "Joint Presentation" },
+        contributors: [
+          {
+            role: "presenter" as const,
+            name: { ja: "冨岡莉生", en: "Rio Tomioka" },
+          },
+        ],
+        venue: {
+          kind: "event" as const,
+          name: { ja: "研究会", en: "Workshop" },
+        },
+        dates: {
+          published: "2024-01-01",
+        },
+        identifiers: {
+          doi: "10.1000/alpha",
+        },
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([bilingualPresentation], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "presentations", id: "53373093", user_id: "R000104649" },
+        merge: {
+          presentation_title: { ja: "共同発表", en: "Joint Presentation" },
+          presenters: null,
+          event: { ja: "研究会", en: "Workshop" },
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          presentation_type: "poster_presentation",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.contributors).toBeUndefined();
+  });
+
   test("同一 JSONL 内で同じ DOI を持つ 2 行目は review に止める", () => {
     fs.writeFileSync(masterJsonFilePath, "[]\n", "utf8");
 
@@ -532,6 +1204,92 @@ describe("researchmapImport", () => {
     expect(updatedMaster[1].fields.venue.addressCountry).toBe("JP");
   });
 
+  test("published_papers / misc は JSONL の venue metadata を無視して既存値を保持する", () => {
+    const paperWithVenueMetadata = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        venue: {
+          ...existingMasterRecord.fields.venue,
+          promoter: { ja: "既存主催者" },
+          addressCountry: "JP",
+        },
+      },
+    };
+    const miscWithVenueMetadata = {
+      ...existingMasterRecord,
+      id: "pub-2024-alpha-misc",
+      fields: {
+        ...existingMasterRecord.fields,
+        type: "misc" as const,
+        subtype: "technical_report",
+        title: { en: "Alpha Misc" },
+        venue: {
+          kind: "publication" as const,
+          name: { en: "Report A" },
+          promoter: { ja: "既存団体" },
+          addressCountry: "JP",
+        },
+        identifiers: {
+          doi: "10.1000/alpha-misc",
+        },
+      },
+      sync: {
+        researchmap: {
+          recordId: "53373096",
+          userId: "R000104649",
+        },
+      },
+    };
+    fs.writeFileSync(
+      masterJsonFilePath,
+      `${JSON.stringify([paperWithVenueMetadata, miscWithVenueMetadata], null, 2)}\n`,
+      "utf8"
+    );
+
+    writeJsonl([
+      {
+        insert: { type: "published_papers", id: "53373093", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Paper" },
+          publication_name: { en: "Journal A" },
+          promoter: { ja: "JSONL 主催者" },
+          address_country: "US",
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha"] },
+          published_paper_type: "scientific_journal",
+        },
+      },
+      {
+        insert: { type: "misc", id: "53373096", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Misc" },
+          publication_name: { en: "Report A" },
+          promoter: { ja: "JSONL 団体" },
+          address_country: "US",
+          publication_date: "2024-01-01",
+          identifiers: { doi: ["10.1000/alpha-misc"] },
+          misc_type: "technical_report",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(2);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.venue.promoter).toEqual({ ja: "既存主催者" });
+    expect(updatedMaster[0].fields.venue.addressCountry).toBe("JP");
+    expect(updatedMaster[1].fields.venue.promoter).toEqual({ ja: "既存団体" });
+    expect(updatedMaster[1].fields.venue.addressCountry).toBe("JP");
+  });
+
   test("published_papers / misc の from_event_date と to_event_date を dates に保持する", () => {
     fs.writeFileSync(masterJsonFilePath, "[]\n", "utf8");
 
@@ -587,6 +1345,47 @@ describe("researchmapImport", () => {
       published: "2024-04-01",
       eventStart: "2024-04-01",
       eventEnd: "2024-04-02",
+    });
+  });
+
+  test("matched record は publication_date が無い from_event_date でも published を更新する", () => {
+    const undatedRecord = {
+      ...existingMasterRecord,
+      fields: {
+        ...existingMasterRecord.fields,
+        dates: undefined,
+      },
+    };
+    fs.writeFileSync(masterJsonFilePath, `${JSON.stringify([undatedRecord], null, 2)}\n`, "utf8");
+
+    writeJsonl([
+      {
+        insert: { type: "published_papers", id: "53373093", user_id: "R000104649" },
+        merge: {
+          paper_title: { en: "Alpha Paper" },
+          publication_name: { en: "Journal A" },
+          from_event_date: "2024-02-10",
+          to_event_date: "2024-02-12",
+          identifiers: { doi: ["10.1000/alpha"] },
+          published_paper_type: "scientific_journal",
+        },
+      },
+    ]);
+
+    const report = importPublicationMasterFromResearchmap(
+      inputFilePath,
+      { masterJsonFilePath, webJsonFilePath },
+      { archiveDirPath: archiveDir }
+    );
+
+    expect(report.summary.matched).toBe(1);
+    expect(report.summary.review).toBe(0);
+
+    const updatedMaster = JSON.parse(fs.readFileSync(masterJsonFilePath, "utf8"));
+    expect(updatedMaster[0].fields.dates).toEqual({
+      published: "2024-02-10",
+      eventStart: "2024-02-10",
+      eventEnd: "2024-02-12",
     });
   });
 
