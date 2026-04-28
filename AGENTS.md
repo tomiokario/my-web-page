@@ -80,7 +80,7 @@
 - 並列 Issue 対応の worktree は、進行管理スレッドの Codex が repo 内の gitignored な `tmp/worktrees/` に作成する。sibling worktree が sandbox 外になる設定では作業や削除ができなくなるため、標準の置き場所にしない
 - `git worktree remove` が `.git/worktrees/` の削除権限で止まる場合は、承認付きで同じコマンドを再実行して後片付けする
 - close してよい Issue は、完了扱いでよい理由を Issue にコメントし、実際の close は人間が行う
-- 並列 Issue 対応では、各作業スレッドは割り当てられた Issue と worktree の差分だけを扱い、進行管理スレッドは実装詳細を抱え込まず、依存関係、review 結果、Pull Request 状態を管理する。merge 後の worktree 削除は各作業スレッドが担当し、ローカルブランチ削除、リモートブランチ削除、worktree prune、全体の完了確認は進行管理スレッドが担当する
+- 並列 Issue 対応では、各作業スレッドは割り当てられた Issue と worktree の差分だけを扱い、進行管理スレッドは実装詳細を抱え込まず、依存関係、review 結果、Pull Request 状態を管理する。merge 後の worktree 削除、ローカルブランチ削除、リモートブランチ削除、worktree prune、全体の完了確認は進行管理スレッドが担当する
 - Codex の sandbox が sibling worktree や `.git` への書き込み、ネットワークアクセスを許可していない場合は、worktree 作成、push、Pull Request 作成、Wiki 更新、チェック確認を実行可能な環境へ分け、未実行の操作と必要な設定を完了報告で明記する
 - 改行コードは `.gitattributes` を正本とし、不要な `CRLF` 差分を持ち込まない
 

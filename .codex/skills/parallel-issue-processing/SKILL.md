@@ -14,8 +14,8 @@ repo に `docs/technical/parallel-issue-workflow.md` がある場合は、それ
 ## 基本方針
 
 - 進行管理スレッドが Issue 一覧、close 候補、依存関係、並列グループ、Pull Request 状態を管理する
-- 各作業スレッドは 1 Issue だけを担当し、自分の worktree、ブランチ、差分、検証、Pull Request、merge 後の worktree 削除を扱う
-- 進行管理スレッドは merge 後のローカルブランチ削除、リモートブランチ削除、worktree prune、全体の完了確認を扱う
+- 各作業スレッドは 1 Issue だけを担当し、自分の worktree、ブランチ、差分、検証、Pull Request を扱う
+- 進行管理スレッドは merge 後の worktree 削除、ローカルブランチ削除、リモートブランチ削除、worktree prune、全体の完了確認を扱う
 - worktree は repo 内の gitignored な `tmp/worktrees/issueNN` に作る
 - close してよい Issue は、完了扱いでよい理由を Issue にコメントし、実際の close は人間が行う
 - sibling worktree は sandbox 外になりやすいため標準の置き場所にしない
@@ -36,7 +36,7 @@ repo に `docs/technical/parallel-issue-workflow.md` がある場合は、それ
 7. 各 Issue に `codex/issueNN-short-topic` ブランチと `tmp/worktrees/issueNN` worktree を作る
 8. 各作業スレッドへ、対象 Issue、受け入れ条件、validation profile、worktree、ブランチ、触ってよい範囲、検証コマンド、merge 順序を渡す
 9. Pull Request 作成後は、チェック状態、レビュー状態、rebase 要否、merge 順序を一覧で管理する
-10. 人間から merge 完了の連絡を受けたら、各作業スレッドに自分の worktree を後片付けさせ、進行管理スレッドがブランチ削除と完了状態の集約を行う
+10. 人間から merge 完了の連絡を受けたら、進行管理スレッドが worktree 削除、ブランチ削除、完了状態の集約を行う
 
 ## worktree 作成
 
@@ -64,22 +64,16 @@ git -C tmp/worktrees/issue91 status --short --branch
 
 ## merge 後の後片付け
 
-各作業スレッドが、自分の担当 worktree を削除する。
+進行管理スレッドが、primary repo worktree で担当 worktree と merge 済みブランチを削除して全体を確認する。対象 Issue の worktree 内では後片付けコマンドを実行しない。
 
 ```bash
+cd /path/to/my-web-page
 git checkout main
 git pull --rebase origin main
 git worktree remove tmp/worktrees/issue91
-```
-
-進行管理スレッドが、merge 済みブランチを削除して全体を確認する。
-
-```bash
-git checkout main
-git pull --rebase origin main
 git branch -d codex/issue91-publications-test-isolation
 git push origin --delete codex/issue91-publications-test-isolation
 git worktree prune
 ```
 
-未 merge の差分、未 push の変更、削除できない worktree がある場合は、作業スレッドが状態を進行管理スレッドへ報告して worktree 削除を止める。進行管理スレッドは、対象ブランチが merge 済みであることを確認してからブランチを削除する。
+未 merge の差分、未 push の変更、削除できない worktree がある場合は、進行管理スレッドが状態を報告して削除を止める。進行管理スレッドは、対象 Pull Request と対象ブランチが merge 済みであることを確認してから worktree とブランチを削除する。
