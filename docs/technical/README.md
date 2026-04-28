@@ -13,6 +13,7 @@
 ### 開発・テスト
 
 - [開発ワークフロー](./development-workflow.md) - 開発環境のセットアップと作業手順
+- [並列 Issue 対応ワークフロー](./parallel-issue-workflow.md) - `$parallel-issue-processing` skill で複数 Issue を worktree と複数スレッドで同時に進める手順
 - [テスト戦略](./testing-strategy.md) - テストの方針と実装
 - [テスト改善計画](./test-improvement-plan.md) - テスト環境の改善提案
 
@@ -72,6 +73,8 @@ src/
 4. push 前に `git status` を確認して意図しない差分がないことを確かめる
 5. 作業ブランチを push して、日本語のプルリクエストを作成する
 6. レビュー後に `main` へマージする
+
+複数の Issue を同時に扱う場合は、[並列 Issue 対応ワークフロー](./parallel-issue-workflow.md) に従い、Issue ごとに worktree、作業ブランチ、Codex スレッドを分けます。
 
 ## よく使うコマンド
 
