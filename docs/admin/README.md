@@ -7,6 +7,7 @@
 - [多言語コンテンツ管理](./multilingual-content-management.md) - サイトの多言語対応とコンテンツ更新方法
 - [Markdownコンテンツ管理](./markdown-content.md) - 各ページのコンテンツ編集方法
 - [出版物データ管理](./publications-management.md) - master data・researchmap 連携・生成物再生成を含む出版物管理
+- [抄録候補ソース](./publication-abstract-sources.md) - `publication_master.json` の `fields.description` を確認・補完するときの補助メモ
 - [デプロイメント手順](./deployment-guide.md) - サイトの公開と更新手順
 - [サイト設定ガイド](./site-configuration.md) - サイトの基本設定と構成
 

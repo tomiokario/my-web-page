@@ -12,7 +12,7 @@ description: Convert publication_master.json into researchmap bulk-import JSONL,
 - 通常運用の本線は `researchmap -> publication_master.json -> publications.json` で、公開側の tracked data 更新はここで完結します
 - この skill は、必要なときだけ `publication_master.json` から researchmap へ安全に戻すための補助です
 - `researchmapMerge` / `researchmapReversibleExport` / `researchmapConsistency` は、既存 researchmap 側の情報を壊しにくくし、生成結果の由来や整合を追えるようにする補助として扱います
-- 旧 `researchmapFields` 形式の master は受け付けません。canonical `fields` を持つ `publication_master.json` を前提にします
+- canonical `fields` を持つ `publication_master.json` を入力にし、researchmap payload はそこから直接組み立てます
 - local-only に残すのは `tmp/researchmap/**`、review / quarantine / archive の生成物、将来のローカル補助メモです
 
 ## 手順
