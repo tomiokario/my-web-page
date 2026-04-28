@@ -5,7 +5,6 @@ import { Language, Publication } from "../../types";
 import locales from "../../locales";
 import {
   getPublicationAuthorshipLabel,
-  getPublicationPresentationTypeLabel,
   getPublicationReviewLabel,
   getPublicationTypeLabel,
 } from "../../utils/publicationLabels";
@@ -186,7 +185,7 @@ function PublicationItem({ publication, language, index = 1 }: PublicationItemPr
         {language === 'ja' && publication.japanese ? publication.japanese : publication.name}
       </div>
       
-      {/* 二行目: タグ（Year、Authorship、type、Review、Presentation） */}
+      {/* 二行目: タグ（Year、Authorship、type、Review） */}
       <div className={classes.tagsContainer} data-testid="tags-container">
         {publication.year && (
           <span className={classes.tag} data-testid="tag">
@@ -228,27 +227,6 @@ function PublicationItem({ publication, language, index = 1 }: PublicationItemPr
           </span>
         )}
         
-        {publication.presentationType && (
-          <>
-            {Array.isArray(publication.presentationType) ? (
-              // 配列の場合は各要素を個別のタグとして表示
-              publication.presentationType.map((type, index) => (
-                <span
-                  key={`type-${index}`}
-                  className={classes.tag}
-                  data-testid="tag"
-                >
-                  {getPublicationPresentationTypeLabel(type, language)}
-                </span>
-              ))
-            ) : (
-              // 文字列の場合は単一のタグとして表示
-              <span className={classes.tag} data-testid="tag">
-                {getPublicationPresentationTypeLabel(publication.presentationType, language)}
-              </span>
-            )}
-          </>
-        )}
       </div>
       
       {/* 三行目: ジャーナル名 */}

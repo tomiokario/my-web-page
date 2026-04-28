@@ -35,7 +35,6 @@ function useFilters({ publications }: { publications: Publication[] }): UseFilte
     authorship: null,
     type: null,
     review: null,
-    presentationType: null,
   });
 
   const filterOptions = useMemo(() => collectPublicationFilterOptions(publications), [publications]);

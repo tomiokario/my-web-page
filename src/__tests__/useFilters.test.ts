@@ -10,24 +10,21 @@ describe('useFilters', () => {
       year: 2022,
       type: 'Journal paper：原著論文',
       review: 'Peer-reviewed',
-      authorship: ['First author'],
-      presentationType: ['Oral']
+      authorship: ['First author']
     },
     {
       id: 1,
       year: 2021,
       type: 'Research paper (international conference)：国際会議',
       review: 'Non-peer-reviewed',
-      authorship: 'Corresponding author', // 文字列も許容
-      presentationType: 'Poster' // 文字列も許容
+      authorship: 'Corresponding author' // 文字列も許容
     },
     {
       id: 2,
       year: 2022,
       type: 'Invited paper：招待論文',
       review: 'Peer-reviewed',
-      authorship: ['Co-author'],
-      presentationType: ['Oral', 'Invited']
+      authorship: ['Co-author']
     }
   ]);
 
@@ -52,11 +49,7 @@ describe('useFilters', () => {
       expect(result.current.filterOptions.authorship).toContain('Corresponding author');
       expect(result.current.filterOptions.authorship).toContain('Co-author');
       expect(result.current.filterOptions.authorship).toHaveLength(3);
-      
-      expect(result.current.filterOptions.presentationType).toContain('Oral');
-      expect(result.current.filterOptions.presentationType).toContain('Poster');
-      expect(result.current.filterOptions.presentationType).toContain('Invited');
-      expect(result.current.filterOptions.presentationType).toHaveLength(3);
+      expect(result.current.filterOptions).not.toHaveProperty('presentationType');
     });
   });
 
@@ -100,8 +93,7 @@ describe('useFilters', () => {
           year: undefined,
           type: 'Misc',
           review: '',
-          authorship: '',
-          presentationType: ''
+          authorship: ''
         }
       ]);
       const { result } = renderHook(() =>
@@ -221,7 +213,7 @@ describe('useFilters', () => {
       expect(result.current.selectedFilters.type).toHaveLength(0);
       expect(result.current.selectedFilters.authorship).toHaveLength(0);
       expect(result.current.selectedFilters.review).toHaveLength(0);
-      expect(result.current.selectedFilters.presentationType).toHaveLength(0);
+      expect(result.current.selectedFilters).not.toHaveProperty('presentationType');
       
       // すべての出版物が表示される
       expect(result.current.filteredPublications).toHaveLength(3);

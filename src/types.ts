@@ -13,7 +13,6 @@ export interface Publication {
   subtype?: string;
   review: string;
   authorship: string | string[];
-  presentationType: string | string[];
   doi: string;
   webLink: string;
   date: string;

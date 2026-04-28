@@ -21,7 +21,6 @@ function mapMasterRecordToPublication(record: PublicationMasterRecord, index: nu
   const doi = getPublicationDoi(fields);
   const primaryWebLink = selectPrimaryWebLink(fields.links, doi);
   const authorshipValues = normalizeArrayOutput(deriveAuthorshipCodes(fields));
-  const presentationTypes = normalizeArrayOutput(derivePresentationTypeCodes(fields));
   const webDate = deriveWebDate(fields);
   const journalConference =
     getPublicationVenueText(fields, "en") || getPublicationVenueText(fields, "ja");
@@ -40,7 +39,6 @@ function mapMasterRecordToPublication(record: PublicationMasterRecord, index: nu
     subtype: fields.subtype,
     review: deriveReviewCode(fields.review),
     authorship: authorshipValues,
-    presentationType: presentationTypes,
     doi,
     webLink: primaryWebLink?.url || "",
     date: buildWebDateText(fields),
@@ -146,14 +144,6 @@ function deriveAuthorshipCodes(fields: PublicationMasterFields): string[] {
   const peopleCount = fields.contributors?.length || 0;
 
   return peopleCount > 1 ? ["coauthor"] : [];
-}
-
-function derivePresentationTypeCodes(fields: PublicationMasterFields): string[] {
-  if (fields.type !== "presentations" || !fields.subtype) {
-    return [];
-  }
-
-  return [fields.subtype];
 }
 
 function buildResearchmapClassificationKey(fields: PublicationMasterFields): string {

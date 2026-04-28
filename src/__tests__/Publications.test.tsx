@@ -10,10 +10,9 @@ jest.mock('../data/publications.json', () => ({
       id: 1,
       name: 'Alpha Journal Paper',
       japanese: 'アルファ原著論文',
-      type: 'Journal paper：原著論文',
+      type: 'published_papers/scientific_journal',
       review: 'Reviewed',
       authorship: 'Lead author',
-      presentationType: '',
       abstract: 'Alpha abstract text',
       doi: 'https://doi.org/10.1000/alpha',
       webLink: 'https://example.com/alpha',
@@ -29,10 +28,9 @@ jest.mock('../data/publications.json', () => ({
       id: 2,
       name: 'Beta Conference Paper',
       japanese: '',
-      type: 'Research paper (international conference)：国際会議',
+      type: 'presentations/poster_presentation',
       review: 'Reviewed',
       authorship: 'Co-author',
-      presentationType: 'Poster',
       doi: '',
       webLink: 'https://example.com/beta',
       date: '2023年8月10日',
@@ -47,10 +45,9 @@ jest.mock('../data/publications.json', () => ({
       id: 3,
       name: 'Gamma Misc Talk',
       japanese: 'ガンマ発表',
-      type: 'Miscellaneous',
+      type: 'presentations/oral_presentation',
       review: 'Not reviewed',
       authorship: 'Corresponding author',
-      presentationType: 'Oral',
       doi: '',
       webLink: '',
       date: '2022年2月1日',
@@ -70,7 +67,9 @@ describe('Publications Component', () => {
 
     expect(screen.getByText('Alpha Journal Paper')).toBeInTheDocument();
     expect(screen.getAllByTestId('publication-item')).toHaveLength(3);
-    expect(screen.getByRole('heading', { name: 'Journal paper：原著論文' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Published Papers / Scientific Journal' })
+    ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: '10.1000/alpha' })).toHaveAttribute(
       'href',
       'https://doi.org/10.1000/alpha'
@@ -85,8 +84,10 @@ describe('Publications Component', () => {
   test('フィルターで publication を絞り込み、リセットできる', () => {
     renderWithProviders(<Publications />, { initialLanguage: 'en' });
 
-    fireEvent.click(screen.getByTestId('presentationType-filter-button'));
-    fireEvent.click(screen.getByLabelText('Poster'));
+    expect(screen.queryByTestId('presentationType-filter-button')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('type-filter-button'));
+    fireEvent.click(screen.getByLabelText('Presentations / Poster Presentation'));
 
     expect(screen.getByTestId('active-filters')).toBeInTheDocument();
     expect(screen.getByText('Beta Conference Paper')).toBeInTheDocument();
@@ -106,9 +107,9 @@ describe('Publications Component', () => {
     expect(
       screen.getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent)
     ).toEqual([
-      'Journal paper：原著論文',
-      'Research paper (international conference)：国際会議',
-      'Miscellaneous',
+      'Published Papers / Scientific Journal',
+      'Presentations / Oral Presentation',
+      'Presentations / Poster Presentation',
     ]);
 
     fireEvent.change(screen.getByTestId('sort-order-select'), {

@@ -38,9 +38,9 @@ jest.mock('../components/publications/PublicationItem', () => {
 
 // ファクトリ関数を使用してテストデータを生成
 const mockItems = createPublications(3, [
-  { id: 1, name: "Publication 1", japanese: "出版物 1", type: "Type A", year: 2021, journalConference: "Conf A", presentationType: "Oral" },
-  { id: 2, name: "Publication 2", japanese: "出版物 2", type: "Type B", year: 2021, journalConference: "Conf B", presentationType: "Poster" },
-  { id: 3, name: "Publication 3", japanese: "出版物 3", type: "Type C", year: 2021, journalConference: "Conf C", presentationType: "Oral" },
+  { id: 1, name: "Publication 1", japanese: "出版物 1", type: "Type A", year: 2021, journalConference: "Conf A" },
+  { id: 2, name: "Publication 2", japanese: "出版物 2", type: "Type B", year: 2021, journalConference: "Conf B" },
+  { id: 3, name: "Publication 3", japanese: "出版物 3", type: "Type C", year: 2021, journalConference: "Conf C" },
 ]);
 
 

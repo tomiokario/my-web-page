@@ -8,7 +8,7 @@
  * 1. コンポーネントが正しくレンダリングされること
  * 2. 出版物データが正しく表示されること
  * 3. 言語設定に応じて適切なテキストが表示されること
- * 4. 配列形式のデータ（authorship, presentationType）が正しく表示されること
+ * 4. 配列形式の authorship が正しく表示されること
  */
 
 import React from 'react';
@@ -26,7 +26,6 @@ const mockPublication = createPublication({
   type: "Research paper (international conference)：国際会議",
   review: "Reviewed",
   authorship: "Lead author", // 文字列として渡す
-  presentationType: "Oral", // 文字列として渡す
   doi: "10.1234/example",
   webLink: "https://example.com",
   date: "2021年10月3日 → 2021年10月6日",
@@ -39,12 +38,11 @@ const mockPublication = createPublication({
   journalConference: "ISOM21"
 }, 0); // index 0
 
-// 配列形式のauthorshipとpresentationTypeを持つモックデータ
+// 配列形式のauthorshipを持つモックデータ
 const mockPublicationWithArrays = createPublication({
   ...mockPublication, // 基本データをコピー
   id: 2,
   authorship: ["Corresponding author", "Lead author"], // 配列で上書き
-  presentationType: ["Oral", "Poster"] // 配列で上書き
 }, 1); // index 1
 
 describe('PublicationItem Component', () => {
@@ -70,9 +68,6 @@ describe('PublicationItem Component', () => {
     
     // reviewのタグが表示されていることを確認
     expect(screen.getByText('Reviewed')).toBeInTheDocument();
-    
-    // presentationTypeのタグが表示されていることを確認
-    expect(screen.getByText('Oral')).toBeInTheDocument();
     
     // ジャーナル名が表示されていることを確認
     expect(screen.getByText('ISOM21')).toBeInTheDocument();
@@ -110,16 +105,26 @@ describe('PublicationItem Component', () => {
   });
   
   // 配列形式のデータ表示のテスト
-  test('renders array-type authorship and presentationType correctly', () => {
+  test('renders array-type authorship correctly without standalone presentation type tags', () => {
     renderWithProviders(<PublicationItem publication={mockPublicationWithArrays} language="en" />);
     
     // 複数のauthorshipタグが表示されていることを確認
     expect(screen.getByText('Corresponding author')).toBeInTheDocument();
     expect(screen.getByText('Lead author')).toBeInTheDocument();
-    
-    // 複数のpresentationTypeタグが表示されていることを確認
-    expect(screen.getByText('Oral')).toBeInTheDocument();
-    expect(screen.getByText('Poster')).toBeInTheDocument();
+    expect(screen.queryByText('Oral')).not.toBeInTheDocument();
+    expect(screen.queryByText('Poster')).not.toBeInTheDocument();
+  });
+
+  test('renders presentation subtype through the type tag', () => {
+    const presentation = createPublication({
+      ...mockPublication,
+      id: 7,
+      type: 'presentations/poster_presentation',
+    }, 6);
+
+    renderWithProviders(<PublicationItem publication={presentation} language="ja" />);
+
+    expect(screen.getByText('講演・口頭発表等 / ポスター')).toBeInTheDocument();
   });
 
   test('renders DOI URLs without duplicating the doi.org prefix', () => {

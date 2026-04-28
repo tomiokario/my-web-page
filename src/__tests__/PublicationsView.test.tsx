@@ -14,16 +14,14 @@ const mockProps = {
     year: ['2022'],
     authorship: [],
     type: [],
-    review: [],
-    presentationType: []
+    review: []
   } as SelectedFilters,
   openDropdown: null,
   filterOptions: {
     year: ['2022', '2021', '2020'],
     authorship: ['First author', 'Co-author'],
     type: ['Journal paper：原著論文', 'Research paper (international conference)：国際会議'],
-    review: ['Peer-reviewed', 'Non-peer-reviewed'],
-    presentationType: ['Oral', 'Poster']
+    review: ['Peer-reviewed', 'Non-peer-reviewed']
   },
   groupedPublications: [
     {
@@ -136,7 +134,7 @@ describe('PublicationsView', () => {
     expect(screen.getByTestId('filter-dropdown-authorship')).toBeInTheDocument();
     expect(screen.getByTestId('filter-dropdown-type')).toBeInTheDocument();
     expect(screen.getByTestId('filter-dropdown-review')).toBeInTheDocument();
-    expect(screen.getByTestId('filter-dropdown-presentationType')).toBeInTheDocument();
+    expect(screen.queryByTestId('filter-dropdown-presentationType')).not.toBeInTheDocument();
     
     // アクティブフィルターが正しくレンダリングされていることを確認
     expect(screen.getByTestId('active-filters')).toBeInTheDocument();

@@ -48,7 +48,6 @@ describe("usePublications", () => {
           type: "Journal paper：原著論文",
           review: "Reviewed",
           authorship: "Lead author",
-          presentationType: "Oral",
           doi: "https://doi.org/10.1000/example",
           webLink: "https://example.com/paper",
           date: "2025年6月21日",
@@ -63,7 +62,6 @@ describe("usePublications", () => {
           DOI: "10.1000/legacy",
           Review: "Legacy review",
           Authorship: ["First author"],
-          "Presentation type": ["Poster"],
           Others: "Legacy shared link",
         },
       ];
@@ -81,7 +79,6 @@ describe("usePublications", () => {
         webLink: "https://example.com/paper",
         journalConference: "Optical Review",
         authorship: "Lead author",
-        presentationType: "Oral",
         review: "Reviewed",
         others: "SharedIt link",
       });
@@ -100,7 +97,6 @@ describe("usePublications", () => {
           DOI: "10.1000/legacy-only",
           Review: "Legacy review",
           Authorship: ["First author"],
-          "Presentation type": ["Poster"],
           Others: "Legacy shared link",
         },
       ];
@@ -119,7 +115,6 @@ describe("usePublications", () => {
         doi: "10.1000/legacy-only",
         review: "Legacy review",
         authorship: ["First author"],
-        presentationType: ["Poster"],
         others: "Legacy shared link",
       });
     });
@@ -136,10 +131,10 @@ describe("usePublications", () => {
 
       expect(result.current.sortedPublications[0].type).toBe("Journal paper：原著論文");
       expect(result.current.sortedPublications[1].type).toBe("Journal paper：原著論文");
-      expect(result.current.sortedPublications[2].type).toBe("Invited paper：招待論文");
-      expect(result.current.sortedPublications[3].type).toBe(
+      expect(result.current.sortedPublications[2].type).toBe(
         "Research paper (international conference)：国際会議"
       );
+      expect(result.current.sortedPublications[3].type).toBe("Invited paper：招待論文");
       expect(result.current.sortedPublications[4].type).toBe(
         "Research paper (domestic conference)：国内会議"
       );

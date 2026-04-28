@@ -6,7 +6,6 @@ import { SelectedFilters, FilterCategory } from "../../hooks/useFilters";
 import { Language } from "../../types";
 import {
   getPublicationAuthorshipLabel,
-  getPublicationPresentationTypeLabel,
   getPublicationReviewLabel,
   getPublicationTypeLabel,
 } from "../../utils/publicationLabels";
@@ -87,10 +86,6 @@ function getFilterValueLabel(category: FilterCategory, value: string, language: 
     return getPublicationAuthorshipLabel(value, language);
   }
 
-  if (category === "presentationType") {
-    return getPublicationPresentationTypeLabel(value, language);
-  }
-
   return value;
 }
 
@@ -113,7 +108,6 @@ function PublicationsView({
     authorship: language === "ja" ? "著者の役割" : "Authorship",
     type: language === "ja" ? "種類" : "Type",
     review: language === "ja" ? "レビュー" : "Review",
-    presentationType: language === "ja" ? "発表タイプ" : "Presentation Type",
   };
   const resetLabel = language === "ja" ? "フィルターをリセット" : "Reset Filters";
   const yearBasedLabel = language === "ja" ? "年別に表示" : "By year";

@@ -2,19 +2,17 @@ import { Language } from "../types";
 
 export const PUBLICATION_TYPE_ORDER: string[] = [
   "published_papers/scientific_journal",
-  "Journal paper：原著論文",
-  "misc/introduction_scientific_journal",
-  "Invited paper：招待論文",
   "published_papers/international_conference_proceedings",
-  "Research paper (international conference)：国際会議",
+  "misc/introduction_scientific_journal",
+  "misc/technical_report",
   "misc/summary_national_conference",
-  "Research paper (domestic conference)：国内会議",
+  "misc/others",
   "presentations/oral_presentation",
   "presentations/poster_presentation",
-  "presentations/invited_oral_presentation",
-  "presentations/keynote_oral_presentation",
-  "presentations/public_symposium",
-  "misc/others",
+  "Journal paper：原著論文",
+  "Research paper (international conference)：国際会議",
+  "Invited paper：招待論文",
+  "Research paper (domestic conference)：国内会議",
 ];
 
 const TYPE_LABELS: Record<string, Record<Language, string>> = {
@@ -98,33 +96,6 @@ const AUTHORSHIP_LABELS: Record<string, Record<Language, string>> = {
   },
 };
 
-const PRESENTATION_TYPE_LABELS: Record<string, Record<Language, string>> = {
-  oral_presentation: {
-    ja: "口頭発表",
-    en: "Oral Presentation",
-  },
-  poster_presentation: {
-    ja: "ポスター",
-    en: "Poster Presentation",
-  },
-  invited_oral_presentation: {
-    ja: "招待講演",
-    en: "Invited Oral Presentation",
-  },
-  keynote_oral_presentation: {
-    ja: "基調講演",
-    en: "Keynote Oral Presentation",
-  },
-  public_symposium: {
-    ja: "公開シンポジウム",
-    en: "Public Symposium",
-  },
-  others: {
-    ja: "その他",
-    en: "Others",
-  },
-};
-
 export function getPublicationTypeLabel(type: string, language: Language): string {
   return TYPE_LABELS[type]?.[language] || type;
 }
@@ -135,11 +106,4 @@ export function getPublicationReviewLabel(review: string, language: Language): s
 
 export function getPublicationAuthorshipLabel(authorship: string, language: Language): string {
   return AUTHORSHIP_LABELS[authorship]?.[language] || authorship;
-}
-
-export function getPublicationPresentationTypeLabel(
-  presentationType: string,
-  language: Language
-): string {
-  return PRESENTATION_TYPE_LABELS[presentationType]?.[language] || presentationType;
 }
