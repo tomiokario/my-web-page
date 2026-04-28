@@ -1,12 +1,8 @@
 import fs from "fs";
+import os from "os";
 import path from "path";
-import { execSync } from "child_process";
 
-const DATA_DIR = path.join(__dirname, "../../data");
-const MASTER_JSON_PATH = path.join(DATA_DIR, "publication_master.json");
-const WEB_JSON_PATH = path.join(DATA_DIR, "publications.json");
-const MASTER_BACKUP_PATH = path.join(DATA_DIR, "publication_master.json.test-backup");
-const WEB_BACKUP_PATH = path.join(DATA_DIR, "publications.json.test-backup");
+import { convertPublications } from "../../../scripts/convertPublications";
 
 const sampleMasterData = [
   {
@@ -118,38 +114,36 @@ const sampleMasterData = [
 ];
 
 describe("convertPublications script", () => {
+  let tempDir: string;
+  let masterJsonPath: string;
+  let webJsonPath: string;
+
   beforeEach(() => {
-    if (fs.existsSync(MASTER_JSON_PATH) && !fs.existsSync(MASTER_BACKUP_PATH)) {
-      fs.renameSync(MASTER_JSON_PATH, MASTER_BACKUP_PATH);
-    }
-    if (fs.existsSync(WEB_JSON_PATH) && !fs.existsSync(WEB_BACKUP_PATH)) {
-      fs.renameSync(WEB_JSON_PATH, WEB_BACKUP_PATH);
-    }
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "convert-publications-test-"));
+    masterJsonPath = path.join(tempDir, "publication_master.json");
+    webJsonPath = path.join(tempDir, "publications.json");
   });
 
   afterEach(() => {
-    if (fs.existsSync(MASTER_JSON_PATH)) {
-      fs.unlinkSync(MASTER_JSON_PATH);
-    }
-    if (fs.existsSync(WEB_JSON_PATH)) {
-      fs.unlinkSync(WEB_JSON_PATH);
-    }
-    if (fs.existsSync(MASTER_BACKUP_PATH)) {
-      fs.renameSync(MASTER_BACKUP_PATH, MASTER_JSON_PATH);
-    }
-    if (fs.existsSync(WEB_BACKUP_PATH)) {
-      fs.renameSync(WEB_BACKUP_PATH, WEB_JSON_PATH);
-    }
+    fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
   test("reads publication_master.json and regenerates publications.json", () => {
-    fs.writeFileSync(MASTER_JSON_PATH, `${JSON.stringify(sampleMasterData, null, 2)}\n`, "utf8");
+    fs.writeFileSync(masterJsonPath, `${JSON.stringify(sampleMasterData, null, 2)}\n`, "utf8");
 
-    execSync("npm run convert-publications", { stdio: "pipe" });
+    const result = convertPublications({
+      masterJsonFilePath: masterJsonPath,
+      webJsonFilePath: webJsonPath,
+    });
 
-    expect(fs.existsSync(WEB_JSON_PATH)).toBe(true);
+    expect(result).toEqual({
+      masterRecordCount: 2,
+      webRecordCount: 2,
+      webJsonFilePath: webJsonPath,
+    });
+    expect(fs.existsSync(webJsonPath)).toBe(true);
 
-    const outputJson = JSON.parse(fs.readFileSync(WEB_JSON_PATH, "utf8"));
+    const outputJson = JSON.parse(fs.readFileSync(webJsonPath, "utf8"));
     expect(outputJson).toEqual([
       {
         id: 1,
@@ -198,16 +192,23 @@ describe("convertPublications script", () => {
 
   test("fails when publication_master.json does not exist", () => {
     expect(() => {
-      execSync("npm run convert-publications", { stdio: "pipe" });
-    }).toThrow();
+      convertPublications({
+        masterJsonFilePath: masterJsonPath,
+        webJsonFilePath: webJsonPath,
+      });
+    }).toThrow(`master JSON ファイル ${masterJsonPath} が見つかりません`);
+    expect(fs.existsSync(webJsonPath)).toBe(false);
   });
 
   test("publications.json には localMeta や sync.researchmap を出力しない", () => {
-    fs.writeFileSync(MASTER_JSON_PATH, `${JSON.stringify(sampleMasterData, null, 2)}\n`, "utf8");
+    fs.writeFileSync(masterJsonPath, `${JSON.stringify(sampleMasterData, null, 2)}\n`, "utf8");
 
-    execSync("npm run convert-publications", { stdio: "pipe" });
+    convertPublications({
+      masterJsonFilePath: masterJsonPath,
+      webJsonFilePath: webJsonPath,
+    });
 
-    const outputJson = JSON.parse(fs.readFileSync(WEB_JSON_PATH, "utf8"));
+    const outputJson = JSON.parse(fs.readFileSync(webJsonPath, "utf8"));
     expect(outputJson[0]).not.toHaveProperty("presentationType");
     expect(outputJson[1]).not.toHaveProperty("presentationType");
     expect(outputJson[0].localMeta).toBeUndefined();
