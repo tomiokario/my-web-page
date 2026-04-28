@@ -3,6 +3,7 @@ import {
   groupPublications,
   normalizePublicationRecord,
 } from "../utils/publicationCollections";
+import { PUBLICATION_TYPE_ORDER, TYPE_LABELS } from "../utils/publicationLabels";
 import { createPublication } from "../test-utils/factories/publicationFactory";
 
 describe("publicationCollections", () => {
@@ -77,6 +78,35 @@ describe("publicationCollections", () => {
       "presentations/poster_presentation",
     ]);
     expect(options.review).toEqual(["peer_reviewed", "not_peer_reviewed"]);
+  });
+
+  it("ラベル定義済みの種類をすべて既知の順序として扱う", () => {
+    expect(PUBLICATION_TYPE_ORDER).toEqual(
+      expect.arrayContaining(Object.keys(TYPE_LABELS))
+    );
+  });
+
+  it("有効な presentation subtype を unknown 扱いせず種類順で並べる", () => {
+    const presentationTypes = [
+      "presentations/public_symposium",
+      "presentations/poster_presentation",
+      "presentations/keynote_oral_presentation",
+      "presentations/oral_presentation",
+      "presentations/invited_oral_presentation",
+      "presentations/others",
+    ];
+    const options = collectPublicationFilterOptions(
+      presentationTypes.map((type, index) => createPublication({ type }, index))
+    );
+
+    expect(options.type).toEqual([
+      "presentations/oral_presentation",
+      "presentations/poster_presentation",
+      "presentations/invited_oral_presentation",
+      "presentations/keynote_oral_presentation",
+      "presentations/public_symposium",
+      "presentations/others",
+    ]);
   });
 
   it("種類順と年別でグループを作る", () => {

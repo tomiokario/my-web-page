@@ -9,13 +9,17 @@ export const PUBLICATION_TYPE_ORDER: string[] = [
   "misc/others",
   "presentations/oral_presentation",
   "presentations/poster_presentation",
+  "presentations/invited_oral_presentation",
+  "presentations/keynote_oral_presentation",
+  "presentations/public_symposium",
+  "presentations/others",
   "Journal paper：原著論文",
   "Research paper (international conference)：国際会議",
   "Invited paper：招待論文",
   "Research paper (domestic conference)：国内会議",
 ];
 
-const TYPE_LABELS: Record<string, Record<Language, string>> = {
+export const TYPE_LABELS: Record<string, Record<Language, string>> = {
   "published_papers/scientific_journal": {
     ja: "研究論文 / 学術誌",
     en: "Published Papers / Scientific Journal",
