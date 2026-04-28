@@ -181,7 +181,7 @@ function deriveWebDate(fields) {
     return {
       startDate: eventStart,
       endDate: eventEnd || eventStart,
-      sortableDate: published,
+      sortableDate: published || eventStart,
     };
   }
 

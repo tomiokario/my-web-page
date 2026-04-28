@@ -318,6 +318,37 @@ test('web publication conversion skips malformed links and keeps published paper
               notes: '',
             },
           },
+          {
+            id: 'pub-2025-event-start-only-paper',
+            fields: {
+              type: 'published_papers',
+              subtype: 'scientific_journal',
+              title: {
+                en: 'Event Start Only Paper',
+              },
+              contributors: [
+                {
+                  role: 'author',
+                  name: {
+                    en: 'Rio Tomioka',
+                  },
+                },
+              ],
+              venue: {
+                kind: 'publication',
+                name: {
+                  en: 'Journal C',
+                },
+              },
+              dates: {
+                eventStart: '2025-05-02',
+              },
+            },
+            localMeta: {
+              hasEmptyFields: false,
+              notes: '',
+            },
+          },
         ],
         null,
         2
@@ -337,6 +368,13 @@ test('web publication conversion skips malformed links and keeps published paper
     assert.equal(publication.startDate, '2025-04-01');
     assert.equal(publication.endDate, '2025-04-01');
     assert.equal(publication.sortableDate, '2025-04-01');
+    assert.equal(publication.date, '2025-04-01');
+
+    const eventStartOnlyPublication = loaded.publications[1];
+    assert.equal(eventStartOnlyPublication.startDate, '2025-05-02');
+    assert.equal(eventStartOnlyPublication.endDate, '2025-05-02');
+    assert.equal(eventStartOnlyPublication.sortableDate, '2025-05-02');
+    assert.equal(eventStartOnlyPublication.date, '2025-05-02');
   } finally {
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
