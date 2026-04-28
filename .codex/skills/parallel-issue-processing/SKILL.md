@@ -48,7 +48,7 @@ git worktree add tmp/worktrees/issue91 -b codex/issue91-publications-test-isolat
 git -C tmp/worktrees/issue91 status --short --branch
 ```
 
-作成後、その worktree を担当する Codex スレッドへ渡す。作業スレッドは他 Issue の worktree を触らない。
+作成後、その worktree を担当する Codex スレッドへ渡す。作業スレッドは自分の Issue の worktree だけを扱う。
 
 ## 作業スレッドの完了条件
 
@@ -74,4 +74,4 @@ git push origin --delete codex/issue91-publications-test-isolation
 git worktree prune
 ```
 
-未 merge の差分、未 push の変更、削除できない worktree がある場合は、削除せず進行管理スレッドへ報告する。
+未 merge の差分、未 push の変更、削除できない worktree がある場合は、状態を進行管理スレッドへ報告して削除を止める。

@@ -21,7 +21,7 @@ Codex からこの運用を呼び出す場合は、repo 内の `.codex/skills/pa
 
 ### Codex 設定ごとの注意点
 
-`承認ポリシー: Never`、`サンドボックス: Workspace write`、`ネットワークアクセス: 無効` の設定では、ローカルファイル編集は進められますが、次の操作は環境により止まります。
+`承認ポリシー: Never`、`サンドボックス: Workspace write`、`ネットワークアクセス: 無効` の設定では、ローカルファイル編集を進められます。ただし、次の操作は環境により止まります。
 
 - GitHub からの最新 Issue 取得
 - Wiki の clone / pull / push
@@ -30,9 +30,9 @@ Codex からこの運用を呼び出す場合は、repo 内の `.codex/skills/pa
 - Pull Request 作成
 - GitHub Actions や Vercel のチェック結果確認
 
-この repo の標準手順では、進行管理スレッドの Codex が worktree と作業ブランチを作成し、その後に各作業スレッドへ渡します。
+この repo の標準手順として、進行管理スレッドの Codex が worktree と作業ブランチを作成し、その後に各作業スレッドへ渡します。
 
-worktree は Codex の書き込み可能範囲内に置きます。sibling ディレクトリが sandbox 外になる設定では、削除や後片付けができなくなるため、repo 内の gitignored な `tmp/worktrees/` を標準の置き場所にします。
+worktree は Codex の書き込み可能範囲内に置きます。sibling ディレクトリが sandbox 外になる設定では削除や後片付けができなくなるため、repo 内の gitignored な `tmp/worktrees/` を標準の置き場所にします。
 
 ネットワークアクセスを必要とする push、Pull Request 作成、チェック確認、Wiki 更新は、Codex のネットワークアクセスが有効な環境で Codex が行います。ネットワークアクセスが無効な場合は、進行管理スレッドが未実行の操作と必要な設定を人間へまとめて報告します。
 
@@ -186,7 +186,7 @@ git push origin --delete codex/issue91-publications-test-isolation
 git worktree prune
 ```
 
-`git worktree remove` が `.git/worktrees/` の削除権限で止まる場合は、承認付きで同じコマンドを再実行します。リモートブランチがすでに削除済みの場合は、その結果を確認して次へ進みます。未 merge の worktree や未 push の差分が残っている場合は、削除せず状態を報告します。
+`git worktree remove` が `.git/worktrees/` の削除権限で止まる場合は、承認付きで同じコマンドを再実行します。リモートブランチがすでに削除済みの場合は、その結果を確認して次へ進みます。未 merge の worktree や未 push の差分が残っている場合は、状態を報告して削除を止めます。
 
 ## 並列化の判断基準
 

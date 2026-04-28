@@ -77,7 +77,7 @@
 - Pull Request がマージされた後は、ユーザーから別指示がない限り `main` に戻って `git pull --rebase` し、マージ済みのローカルブランチを削除する。リモートブランチが残っている場合はあわせて削除する
 - 複数 Issue を並列に進める場合は、`docs/technical/parallel-issue-workflow.md` に従い、進行管理スレッドが Issue の棚卸し、close 候補、依存関係、実行順序を整理し、各 Issue を専用 worktree、専用作業ブランチ、専用 Codex スレッドへ分ける
 - 並列 Issue 対応を Codex skill として実行する場合は、`.codex/skills/parallel-issue-processing/SKILL.md` を正本とする `$parallel-issue-processing` を使う
-- 並列 Issue 対応の worktree は、進行管理スレッドの Codex が repo 内の gitignored な `tmp/worktrees/` に作成する。sibling worktree が sandbox 外になる設定では、作業や削除ができなくなるため標準の置き場所にしない
+- 並列 Issue 対応の worktree は、進行管理スレッドの Codex が repo 内の gitignored な `tmp/worktrees/` に作成する。sibling worktree が sandbox 外になる設定では作業や削除ができなくなるため、標準の置き場所にしない
 - `git worktree remove` が `.git/worktrees/` の削除権限で止まる場合は、承認付きで同じコマンドを再実行して後片付けする
 - close してよい Issue は、完了扱いでよい理由を Issue にコメントし、実際の close は人間が行う
 - 並列 Issue 対応では、各作業スレッドは割り当てられた Issue と worktree の差分だけを扱い、進行管理スレッドは実装詳細を抱え込まず、依存関係、review 結果、Pull Request 状態を管理する。merge 後の worktree とブランチの後片付けは、各作業スレッドが担当する
