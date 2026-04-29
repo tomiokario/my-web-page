@@ -129,11 +129,11 @@ function isCodexAuthored(item, authorRegex) {
   return authorRegex.test(normalizeAuthor(item));
 }
 
-function summarizeReactions(reactions, authorRegex, watchStartedAt) {
+function summarizeReactions(reactions, authorRegex, approvalSince) {
   const codexReactions = reactions.filter((reaction) => isCodexAuthored(reaction, authorRegex));
   const freshCodexReactions = codexReactions.filter((reaction) => {
     const createdAt = Date.parse(reaction.created_at || "");
-    return Number.isFinite(createdAt) && createdAt >= watchStartedAt;
+    return Number.isFinite(createdAt) && createdAt >= approvalSince;
   });
 
   return {
@@ -169,9 +169,13 @@ function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
   const issueComments = ghJson([`${base}/issues/${prNumber}/comments?per_page=100`]) || [];
   const reviews = ghJson([`${base}/pulls/${prNumber}/reviews?per_page=100`]) || [];
   const reviewComments = ghJson([`${base}/pulls/${prNumber}/comments?per_page=100`]) || [];
+  const commits = ghJson([`${base}/pulls/${prNumber}/commits?per_page=100`]) || [];
   const reactions = ghJson([`${base}/issues/${prNumber}/reactions?per_page=100`]) || [];
+  const latestCommit = commits[commits.length - 1];
+  const latestCommitAt = Date.parse(latestCommit?.commit?.committer?.date || latestCommit?.commit?.author?.date || "");
+  const approvalSince = Number.isFinite(latestCommitAt) ? latestCommitAt : watchStartedAt;
 
-  const reactionSummary = summarizeReactions(reactions, authorRegex, watchStartedAt);
+  const reactionSummary = summarizeReactions(reactions, authorRegex, approvalSince);
   const codexComments = [
     ...issueComments.filter((comment) => isCodexAuthored(comment, authorRegex)).map((comment) => toCommentRecord("issue-comment", comment)),
     ...reviews
