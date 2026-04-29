@@ -12,7 +12,8 @@ metadata:
 ## 役割
 
 - PR の先頭メッセージにつく `eyes` / `+1` reaction を監視する
-- Codex Review 由来の Issue comment / PR review / review thread comment を検出する
+- Codex Review 由来の Issue comment / review thread comment を検出する
+- PR review summary は通知用の定型文として扱い、actionable feedback 判定には使わない
 - 問題コメントが見つかったら、コメント本文と URL を Markdown または JSON で出力して停止する
 - `+1` reaction が確認できたら成功として停止する
 
@@ -30,7 +31,7 @@ node .codex/skills/codex-review-watch/scripts/watch-codex-review.mjs --pr <PR番
 - `--repo <owner/name>`: 対象 repo。省略時は `gh repo view` で取得する
 - `--interval <seconds>`: polling 間隔。既定は 30 秒
 - `--timeout <seconds>`: timeout。既定は 1800 秒
-- `--author-pattern <regex>`: Codex Review の投稿者判定。既定は `codex|openai`
+- `--author-pattern <regex>`: Codex Review の投稿者判定。既定は `^chatgpt-codex-connector\[bot\](\s|$)`
 - `--state <path>`: 既読 comment ID を保存する state file。既定は `tmp/codex-review-watch/pr-<number>.json`
 - `--once`: 1 回だけ確認して終了する
 - `--json`: 結果を JSON で出力する

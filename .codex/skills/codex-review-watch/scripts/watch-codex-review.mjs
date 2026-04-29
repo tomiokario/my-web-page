@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "
 import { dirname } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 
-const DEFAULT_AUTHOR_PATTERN = "codex|openai";
+const DEFAULT_AUTHOR_PATTERN = "^chatgpt-codex-connector\\[bot\\](\\s|$)";
 
 function parseArgs(argv) {
   const options = {
@@ -203,18 +203,6 @@ function isFreshComment(comment, headSha, approvalSince) {
   return Number.isFinite(createdAt) && createdAt >= approvalSince;
 }
 
-function isActionableReviewBody(body) {
-  const normalized = (body || "").trim();
-  if (!normalized) return false;
-
-  return !(
-    normalized.includes("### 💡 Codex Review") &&
-    normalized.includes("Here are some automated review suggestions for this pull request.") &&
-    normalized.includes("<details>") &&
-    normalized.includes("About Codex in GitHub")
-  );
-}
-
 function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
   const [owner, name] = repo.split("/");
   if (!owner || !name) {
@@ -224,7 +212,6 @@ function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
   const base = `/repos/${owner}/${name}`;
   const pull = ghJson([`${base}/pulls/${prNumber}`]);
   const issueComments = ghJson([`${base}/issues/${prNumber}/comments?per_page=100`]) || [];
-  const reviews = ghJson([`${base}/pulls/${prNumber}/reviews?per_page=100`]) || [];
   const reviewComments = ghJson([`${base}/pulls/${prNumber}/comments?per_page=100`]) || [];
   const commits = ghJson([`${base}/pulls/${prNumber}/commits?per_page=100`]) || [];
   const events = ghJson([`${base}/events?per_page=100`]) || [];
@@ -239,10 +226,6 @@ function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
   const reactionSummary = summarizeReactions(reactions, authorRegex, approvalSince);
   const codexComments = [
     ...issueComments.filter((comment) => isCodexAuthored(comment, authorRegex)).map((comment) => toCommentRecord("issue-comment", comment)),
-    ...reviews
-      .filter((review) => isCodexAuthored(review, authorRegex))
-      .filter((review) => isActionableReviewBody(review.body))
-      .map((review) => toCommentRecord("pull-review", review)),
     ...reviewComments
       .filter((comment) => isCodexAuthored(comment, authorRegex))
       .map((comment) => toCommentRecord("review-comment", comment)),
