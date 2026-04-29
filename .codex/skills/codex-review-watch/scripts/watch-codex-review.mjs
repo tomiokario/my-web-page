@@ -156,6 +156,13 @@ function findLatestPushTime(events, branchName, headSha) {
   return Number.isFinite(pushedAt) ? pushedAt : null;
 }
 
+function findLatestSignalTime(statuses, checkRuns) {
+  const statusTimes = (statuses || []).map((status) => Date.parse(status.created_at || ""));
+  const checkTimes = (checkRuns || []).map((checkRun) => Date.parse(checkRun.started_at || checkRun.created_at || ""));
+  const validTimes = [...statusTimes, ...checkTimes].filter(Number.isFinite);
+  return validTimes.length > 0 ? Math.min(...validTimes) : null;
+}
+
 function toCommentRecord(kind, comment) {
   return {
     key: `${kind}:${comment.id}`,
@@ -189,8 +196,11 @@ function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
   const latestCommit = commits[commits.length - 1];
   const headSha = pull?.head?.sha || latestCommit?.sha;
   const branchName = pull?.head?.ref;
+  const status = headSha ? ghJson([`${base}/commits/${headSha}/status`]) : null;
+  const checkRuns = headSha ? ghJson([`${base}/commits/${headSha}/check-runs?per_page=100`]) : null;
   const latestPushAt = branchName && headSha ? findLatestPushTime(events, branchName, headSha) : null;
-  const approvalSince = latestPushAt || watchStartedAt;
+  const latestSignalAt = findLatestSignalTime(status?.statuses, checkRuns?.check_runs);
+  const approvalSince = latestPushAt || latestSignalAt || watchStartedAt;
 
   const reactionSummary = summarizeReactions(reactions, authorRegex, approvalSince);
   const codexComments = [
