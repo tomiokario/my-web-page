@@ -169,12 +169,16 @@ function toCommentRecord(kind, comment) {
 }
 
 function isFreshComment(comment, headSha, approvalSince) {
+  const createdAt = parseTime(comment.createdAt);
+  if (!Number.isFinite(createdAt) || createdAt < approvalSince) {
+    return false;
+  }
+
   if (comment.commitId) {
     return comment.commitId === headSha;
   }
 
-  const createdAt = parseTime(comment.createdAt);
-  return Number.isFinite(createdAt) && createdAt >= approvalSince;
+  return true;
 }
 
 function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
