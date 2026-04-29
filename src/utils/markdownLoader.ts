@@ -41,7 +41,7 @@ export const loadMarkdown = async (filePath: string, language: string = 'ja'): P
     const response: Response = await fetch(langPath);
 
     if (!response.ok) {
-      const statusInfo = response.status ? ` (status: ${response.status})` : '';
+      const statusInfo = typeof response.status === 'number' ? ` (status: ${response.status})` : '';
       throw new Error(`Failed to load markdown file: ${langPath}${statusInfo}`);
     }
 

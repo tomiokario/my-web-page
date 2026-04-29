@@ -147,6 +147,28 @@ describe("markdownLoader", () => {
     consoleErrorSpy.mockClear();
   });
 
+  test("logs status 0 diagnostics outside the test environment", async () => {
+    const originalNodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "production";
+    fetch.mockImplementation(() =>
+      Promise.resolve({
+        ok: false,
+        status: 0
+      })
+    );
+
+    const content = await loadMarkdown("/markdown/test.md", "en");
+
+    expect(content).toBe("# Error loading content");
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error loading markdown:",
+      "/markdown/en/test.md: Failed to load markdown file: /markdown/en/test.md (status: 0)"
+    );
+
+    process.env.NODE_ENV = originalNodeEnv;
+    consoleErrorSpy.mockClear();
+  });
+
   // サブディレクトリを含むパスのテスト
   test("loads markdown file from subdirectory with language", async () => {
     // テスト内容: サブディレクトリを含むパスで言語固有のMarkdownファイルを読み込むことを確認
