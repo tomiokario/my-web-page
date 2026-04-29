@@ -86,6 +86,9 @@ function ghJson(args) {
   if (Array.isArray(parsed) && parsed.every((item) => Array.isArray(item))) {
     return parsed.flat();
   }
+  if (Array.isArray(parsed) && parsed.length === 1 && !Array.isArray(parsed[0])) {
+    return parsed[0];
+  }
   return parsed;
 }
 
