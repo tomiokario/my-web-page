@@ -3,11 +3,7 @@ import { createStyles } from "@mantine/emotion";
 import { MantineTheme } from "@mantine/core";
 import { Language, Publication } from "../../types";
 import locales from "../../locales";
-import {
-  getPublicationAuthorshipLabel,
-  getPublicationReviewLabel,
-  getPublicationTypeLabel,
-} from "../../utils/publicationLabels";
+import { buildPublicationItemViewModel } from "../../utils/publicationItemViewModel";
 
 // PublicationItemPropsインターフェースを追加
 interface PublicationItemProps {
@@ -170,9 +166,7 @@ function PublicationItem({ publication, language, index = 1 }: PublicationItemPr
   const { classes, cx } = useStyles();
   const [isAbstractOpen, setIsAbstractOpen] = useState(false);
   const messages = locales[language] ?? locales.en;
-  const abstractText = publication.abstract?.trim();
-  const normalizedDoi = publication.doi.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "");
-  const doiHref = normalizedDoi ? `https://doi.org/${normalizedDoi}` : "";
+  const viewModel = buildPublicationItemViewModel(publication, language);
   
   return (
     <li className={classes.item} data-testid="publication-item">
@@ -182,55 +176,20 @@ function PublicationItem({ publication, language, index = 1 }: PublicationItemPr
 
       {/* 一行目: タイトル */}
       <div className={classes.title} data-testid="publication-title">
-        {language === 'ja' && publication.japanese ? publication.japanese : publication.name}
+        {viewModel.title}
       </div>
       
       {/* 二行目: タグ（Year、Authorship、type、Review） */}
       <div className={classes.tagsContainer} data-testid="tags-container">
-        {publication.year && (
-          <span className={classes.tag} data-testid="tag">
-            {publication.year}
+        {viewModel.tags.map((tag, index) => (
+          <span key={`${tag}-${index}`} className={classes.tag} data-testid="tag">
+            {tag}
           </span>
-        )}
-        
-        {publication.authorship && (
-          <>
-            {Array.isArray(publication.authorship) ? (
-              // 配列の場合は各要素を個別のタグとして表示
-              publication.authorship.map((role, index) => (
-                <span
-                  key={`role-${index}`}
-                  className={classes.tag}
-                  data-testid="tag"
-                >
-                  {getPublicationAuthorshipLabel(role, language)}
-                </span>
-              ))
-            ) : (
-              // 文字列の場合は単一のタグとして表示
-              <span className={classes.tag} data-testid="tag">
-                {getPublicationAuthorshipLabel(publication.authorship, language)}
-              </span>
-            )}
-          </>
-        )}
-        
-        {publication.type && (
-          <span className={classes.tag} data-testid="tag">
-            {getPublicationTypeLabel(publication.type, language)}
-          </span>
-        )}
-        
-        {publication.review && (
-          <span className={classes.tag} data-testid="tag">
-            {getPublicationReviewLabel(publication.review, language)}
-          </span>
-        )}
-        
+        ))}
       </div>
       
       {/* 三行目: ジャーナル名 */}
-      <div className={classes.journal}>{publication.journalConference || publication.journal}</div>
+      <div className={classes.journal}>{viewModel.journal}</div>
       
       {/* 四行目: 開始日、終了日、場所 */}
       {(publication.startDate || publication.site) && (
@@ -238,11 +197,8 @@ function PublicationItem({ publication, language, index = 1 }: PublicationItemPr
           {/* 開始日と終了日が同じ場合は開始日のみ表示 */}
           {publication.startDate && (
             <>
-              {language === 'ja' ? '日付: ' : 'Date: '}
-              {publication.startDate === publication.endDate ?
-                publication.startDate :
-                `${publication.startDate} → ${publication.endDate}`
-              }
+              {viewModel.dateLocation.dateLabel}
+              {viewModel.dateLocation.dateValue}
             </>
           )}
           
@@ -250,37 +206,37 @@ function PublicationItem({ publication, language, index = 1 }: PublicationItemPr
           {publication.site && (
             <>
               {publication.startDate && <span className={classes.separator}>|</span>}
-              {language === 'ja' ? '場所: ' : 'Location: '}
-              {publication.site}
+              {viewModel.dateLocation.locationLabel}
+              {viewModel.dateLocation.location}
             </>
           )}
         </div>
       )}
       
       {/* 五行目以降: DOI、URL、Others */}
-      {normalizedDoi && (
+      {viewModel.doi && (
         <div className={classes.link}>
-          DOI: <a href={doiHref} target="_blank" rel="noopener noreferrer">
-            {normalizedDoi}
+          DOI: <a href={viewModel.doi.href} target="_blank" rel="noopener noreferrer">
+            {viewModel.doi.label}
           </a>
         </div>
       )}
       
-      {publication.webLink && (
+      {viewModel.webLink && (
         <div className={classes.link}>
-          <a href={publication.webLink} target="_blank" rel="noopener noreferrer">
-            {publication.webLink}
+          <a href={viewModel.webLink.href} target="_blank" rel="noopener noreferrer">
+            {viewModel.webLink.label}
           </a>
         </div>
       )}
       
-      {publication.others && (
+      {viewModel.others && (
         <div className={classes.others}>
-          {publication.others}
+          {viewModel.others}
         </div>
       )}
 
-      {abstractText && (
+      {viewModel.abstractText && (
         <>
           <button
             type="button"
@@ -299,7 +255,7 @@ function PublicationItem({ publication, language, index = 1 }: PublicationItemPr
               data-testid="abstract-content"
               aria-label={messages.publications.abstractLabel}
             >
-              {abstractText}
+              {viewModel.abstractText}
             </div>
           )}
         </>
