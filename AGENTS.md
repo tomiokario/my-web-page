@@ -68,7 +68,7 @@
 - PR を作成する場合は、タイトルと本文を日本語で記述する
 - Pull Request で対応する Issue をマージ時に閉じたい場合は、本文に `close: #20` のようなクローズ記法を明記する
 - Pull Request 作成後に補足や修正内容を伝える場合、既存コメントや本文を安易に更新せず、新規コメントとして投稿する
-- push 反応型の Codex Review が有効な Pull Request では、push 後に `.codex/skills/codex-review-watch/SKILL.md` の監視手順を使い、問題コメントが届いたらローカルのマルチエージェント対応を再開し、修正・検証・返信案作成・再 push を `+1` reaction が確認できるまで繰り返す
+- push 反応型の Codex Review が有効な Pull Request では、fresh review と intent review が `OK` になった後に push / PR 更新を行い、`.codex/skills/codex-review-watch/SKILL.md` の監視手順を PR 上の最終チェックとして使う。問題コメントが届いたら親オーケストレータが妥当性を判断し、妥当な指摘には該当 review comment へ `+1` reaction を付けて修正・検証・fresh review・intent review・返信案作成・再 push を繰り返す。妥当でない指摘には `-1` reaction を付け、その時点で人間へ相談する
 - Issue 対応中の実装前方針や構成案は、まず親オーケストレータがこの会話で人間と合意し、Issue / PR への追記が必要かどうかもその合意に従って判断する
 - Issue 対応では、合意済み仕様に入る前に変更タイプを分類し、validation profile と reference extraction を定義する。UI / design の場合は HTML/CSS 参照元や既存デザインから採用する構造、token、状態、配置基準を抽出する
 - Issue 対応では、Issue 草案や質問フェーズは質問担当で詰め、push や PR 更新の前に、合意済み Issue の実装差分を対象に issue 本文・関連コメント・差分を入力にした fresh なサブエージェントレビューを必ず実施する。指摘を反映したら別個体で再レビューし、`OK` が出るまで完了扱いにしない

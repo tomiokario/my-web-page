@@ -19,6 +19,7 @@
 - 変更作業は原則として `main` へ直接コミットせず、作業ブランチを切って進めます
 - push 前には `git status` を確認し、PR は日本語で作成します
 - ユーザーがローカル確認を希望した場合は、`npm start` で確認環境を用意し、確認完了までは push を行いません
+- Issue 対応や運用変更では、push / PR 更新の前に fresh review と intent review を通し、PR 上の Codex Review はその後の最終チェックとして扱います
 - PR マージ後にユーザーから完了連絡があった場合は、`main` を `git pull --rebase` で最新化し、作業ブランチを削除してローカルを同期状態に戻します
 - 開発・レビュー運用の詳細は [技術者向けドキュメント](docs/technical/README.md) を参照してください
 - 複数 Issue を同時に扱う場合は、Issue ごとに worktree、作業ブランチ、Codex スレッドを分ける [並列 Issue 対応ワークフロー](docs/technical/parallel-issue-workflow.md) を参照してください

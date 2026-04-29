@@ -1,13 +1,13 @@
 ---
 name: codex-review-watch
-description: Use after pushing a Pull Request branch when the repository has push-triggered Codex Review enabled. Poll the PR reactions and review comments until Codex Review either reports issues to address or marks the PR reviewed with a thumbs-up reaction.
+description: Use after fresh review and intent review have passed, then a Pull Request branch is pushed in a repository with push-triggered Codex Review enabled. Poll the PR reactions and review comments until Codex Review either reports issues to address or marks the PR reviewed with a thumbs-up reaction.
 metadata:
   short-description: Watch push-triggered Codex Review on PRs
 ---
 
 # Codex Review Watch
 
-この skill は、push 後に GitHub 上で動く Codex Review の完了状態を監視し、問題コメントが届いたらローカル Codex の通常フローへ戻すために使う。
+この skill は、fresh review と intent review が `OK` になった差分を push した後に、GitHub 上で動く Codex Review の完了状態を監視するために使う。Codex Review は PR 上の最終チェックとして扱い、問題コメントが届いたらローカル Codex の通常フローへ戻す。
 
 ## 役割
 
@@ -45,17 +45,19 @@ node .codex/skills/codex-review-watch/scripts/watch-codex-review.mjs --pr <PR番
 
 ## push 後の運用
 
-1. 作業ブランチへ push する
-2. `watch-codex-review.mjs` を実行する
-3. exit code `2` の場合は、出力された comment URL と本文を確認し、妥当な指摘には `+1` reaction を付けて修正へ進む。妥当でない指摘には `-1` reaction を付け、その時点で人間へ相談する
-4. 修正後に commit / push する
-5. script を再実行する
-6. exit code `0` になるまで繰り返す
-7. `+1` reaction が確認できたら、人間へ PR 作成と Codex Review 完了を報告する
+1. 最新差分に対する fresh review と intent review が `OK` であることを確認する
+2. 作業ブランチへ push する
+3. `watch-codex-review.mjs` を実行する
+4. exit code `2` の場合は、出力された comment URL と本文を確認し、妥当な指摘には該当 review comment へ `+1` reaction を付けて修正へ進む。妥当でない指摘には `-1` reaction を付け、その時点で人間へ相談する
+5. 妥当な指摘を修正したら、ローカル検証、fresh review、intent review を再実施する
+6. fresh review と intent review が `OK` になった差分を commit / push する
+7. script を再実行する
+8. exit code `0` になるまで繰り返す
+9. `+1` reaction が確認できたら、人間へ PR 作成と Codex Review 完了を報告する
 
 ## 妥当性リアクション
 
-Codex Review の問題コメントを検出したら、親オーケストレータが内容を判断する。妥当な指摘は該当 review comment に `+1` reaction を付け、修正、検証、返信、再 push へ進む。妥当でない指摘は該当 review comment に `-1` reaction を付け、修正せず人間へ相談する。判断に迷う場合も、その時点で人間へ相談する。
+Codex Review の問題コメントを検出したら、親オーケストレータが内容を判断する。妥当な指摘は該当 review comment に `+1` reaction を付け、修正、検証、fresh review、intent review、返信、再 push へ進む。妥当でない指摘は該当 review comment に `-1` reaction を付け、修正せず人間へ相談する。判断に迷う場合も、その時点で人間へ相談する。
 
 ## コメント返信
 
