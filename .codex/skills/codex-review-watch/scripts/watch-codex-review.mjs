@@ -73,6 +73,7 @@ function gh(args) {
   return execFileSync("gh", args, {
     encoding: "utf8",
     env,
+    maxBuffer: 16 * 1024 * 1024,
     stdio: ["ignore", "pipe", "pipe"],
   }).trim();
 }
@@ -143,6 +144,15 @@ function summarizeReactions(reactions, authorRegex, approvalSince) {
   };
 }
 
+function findLatestPushTime(events, branchName, headSha) {
+  const refName = `refs/heads/${branchName}`;
+  const matchingPush = events.find((event) => {
+    return event.type === "PushEvent" && event.payload?.ref === refName && event.payload?.head === headSha;
+  });
+  const pushedAt = Date.parse(matchingPush?.created_at || "");
+  return Number.isFinite(pushedAt) ? pushedAt : null;
+}
+
 function toCommentRecord(kind, comment) {
   return {
     key: `${kind}:${comment.id}`,
@@ -166,14 +176,18 @@ function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
   }
 
   const base = `/repos/${owner}/${name}`;
+  const pull = ghJson([`${base}/pulls/${prNumber}`]);
   const issueComments = ghJson([`${base}/issues/${prNumber}/comments?per_page=100`]) || [];
   const reviews = ghJson([`${base}/pulls/${prNumber}/reviews?per_page=100`]) || [];
   const reviewComments = ghJson([`${base}/pulls/${prNumber}/comments?per_page=100`]) || [];
   const commits = ghJson([`${base}/pulls/${prNumber}/commits?per_page=100`]) || [];
+  const events = ghJson([`${base}/events?per_page=100`]) || [];
   const reactions = ghJson([`${base}/issues/${prNumber}/reactions?per_page=100`]) || [];
   const latestCommit = commits[commits.length - 1];
-  const latestCommitAt = Date.parse(latestCommit?.commit?.committer?.date || latestCommit?.commit?.author?.date || "");
-  const approvalSince = Number.isFinite(latestCommitAt) ? latestCommitAt : watchStartedAt;
+  const headSha = pull?.head?.sha || latestCommit?.sha;
+  const branchName = pull?.head?.ref;
+  const latestPushAt = branchName && headSha ? findLatestPushTime(events, branchName, headSha) : null;
+  const approvalSince = latestPushAt || watchStartedAt;
 
   const reactionSummary = summarizeReactions(reactions, authorRegex, approvalSince);
   const codexComments = [
