@@ -129,12 +129,17 @@ function isCodexAuthored(item, authorRegex) {
   return authorRegex.test(normalizeAuthor(item));
 }
 
-function summarizeReactions(reactions, authorRegex) {
+function summarizeReactions(reactions, authorRegex, watchStartedAt) {
   const codexReactions = reactions.filter((reaction) => isCodexAuthored(reaction, authorRegex));
+  const freshCodexReactions = codexReactions.filter((reaction) => {
+    const createdAt = Date.parse(reaction.created_at || "");
+    return Number.isFinite(createdAt) && createdAt >= watchStartedAt;
+  });
+
   return {
     eyes: codexReactions.some((reaction) => reaction.content === "eyes"),
-    thumbsUp: codexReactions.some((reaction) => reaction.content === "+1"),
-    authors: [...new Set(codexReactions.map(normalizeAuthor).filter(Boolean))],
+    thumbsUp: freshCodexReactions.some((reaction) => reaction.content === "+1"),
+    authors: [...new Set(freshCodexReactions.map(normalizeAuthor).filter(Boolean))],
   };
 }
 
@@ -154,7 +159,7 @@ function toCommentRecord(kind, comment) {
   };
 }
 
-function fetchReviewState({ repo, prNumber, authorRegex }) {
+function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
   const [owner, name] = repo.split("/");
   if (!owner || !name) {
     throw new Error(`Invalid repo: ${repo}`);
@@ -166,7 +171,7 @@ function fetchReviewState({ repo, prNumber, authorRegex }) {
   const reviewComments = ghJson([`${base}/pulls/${prNumber}/comments?per_page=100`]) || [];
   const reactions = ghJson([`${base}/issues/${prNumber}/reactions?per_page=100`]) || [];
 
-  const reactionSummary = summarizeReactions(reactions, authorRegex);
+  const reactionSummary = summarizeReactions(reactions, authorRegex, watchStartedAt);
   const codexComments = [
     ...issueComments.filter((comment) => isCodexAuthored(comment, authorRegex)).map((comment) => toCommentRecord("issue-comment", comment)),
     ...reviews
@@ -265,7 +270,7 @@ async function main() {
   const startedAt = Date.now();
 
   while (true) {
-    const snapshot = fetchReviewState({ repo, prNumber, authorRegex });
+    const snapshot = fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt: startedAt });
     const result = classifyResult(snapshot, state);
 
     if (result.status === "comments") {
