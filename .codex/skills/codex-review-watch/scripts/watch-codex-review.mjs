@@ -148,7 +148,7 @@ function isCodexAuthored(item, authorRegex) {
 function summarizeReactions(reactions, authorRegex, approvalSince) {
   const codexReactions = reactions.filter((reaction) => isCodexAuthored(reaction, authorRegex));
   const freshCodexReactions = codexReactions.filter((reaction) => {
-    const createdAt = Date.parse(reaction.created_at || "");
+    const createdAt = parseTime(reaction.created_at);
     return Number.isFinite(createdAt) && createdAt >= approvalSince;
   });
 
@@ -159,20 +159,22 @@ function summarizeReactions(reactions, authorRegex, approvalSince) {
   };
 }
 
+function parseTime(value) {
+  const parsed = Date.parse(value || "");
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 function findLatestPushTime(events, branchName, headSha) {
   const refName = `refs/heads/${branchName}`;
   const matchingPush = events.find((event) => {
     return event.type === "PushEvent" && event.payload?.ref === refName && event.payload?.head === headSha;
   });
-  const pushedAt = Date.parse(matchingPush?.created_at || "");
-  return Number.isFinite(pushedAt) ? pushedAt : null;
+  return parseTime(matchingPush?.created_at);
 }
 
-function findLatestSignalTime(statuses, checkRuns) {
-  const statusTimes = (statuses || []).map((status) => Date.parse(status.created_at || ""));
-  const checkTimes = (checkRuns || []).map((checkRun) => Date.parse(checkRun.started_at || checkRun.created_at || ""));
-  const validTimes = [...statusTimes, ...checkTimes].filter(Number.isFinite);
-  return validTimes.length > 0 ? Math.min(...validTimes) : null;
+function findHeadCommitTime(commits, headSha) {
+  const headCommit = commits.find((commit) => commit.sha === headSha);
+  return parseTime(headCommit?.commit?.committer?.date || headCommit?.commit?.author?.date);
 }
 
 function toCommentRecord(kind, comment) {
@@ -184,11 +186,33 @@ function toCommentRecord(kind, comment) {
     url: comment.html_url || comment.pull_request_url || comment.issue_url || null,
     path: comment.path || null,
     line: comment.line || comment.original_line || null,
+    commitId: comment.commit_id || null,
     state: comment.state || null,
     body: comment.body || "",
     createdAt: comment.created_at || null,
     updatedAt: comment.updated_at || null,
   };
+}
+
+function isFreshComment(comment, headSha, approvalSince) {
+  if (comment.commitId) {
+    return comment.commitId === headSha;
+  }
+
+  const createdAt = parseTime(comment.createdAt);
+  return Number.isFinite(createdAt) && createdAt >= approvalSince;
+}
+
+function isActionableReviewBody(body) {
+  const normalized = (body || "").trim();
+  if (!normalized) return false;
+
+  return !(
+    normalized.includes("### 💡 Codex Review") &&
+    normalized.includes("Here are some automated review suggestions for this pull request.") &&
+    normalized.includes("<details>") &&
+    normalized.includes("About Codex in GitHub")
+  );
 }
 
 function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
@@ -208,23 +232,21 @@ function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
   const latestCommit = commits[commits.length - 1];
   const headSha = pull?.head?.sha || latestCommit?.sha;
   const branchName = pull?.head?.ref;
-  const status = headSha ? ghJson([`${base}/commits/${headSha}/status`]) : null;
-  const checkRuns = headSha ? ghJson([`${base}/commits/${headSha}/check-runs?per_page=100`]) : null;
   const latestPushAt = branchName && headSha ? findLatestPushTime(events, branchName, headSha) : null;
-  const latestSignalAt = findLatestSignalTime(status?.statuses, checkRuns?.check_runs);
-  const approvalSince = latestPushAt || latestSignalAt || watchStartedAt;
+  const headCommitAt = headSha ? findHeadCommitTime(commits, headSha) : null;
+  const approvalSince = latestPushAt || headCommitAt || watchStartedAt;
 
   const reactionSummary = summarizeReactions(reactions, authorRegex, approvalSince);
   const codexComments = [
     ...issueComments.filter((comment) => isCodexAuthored(comment, authorRegex)).map((comment) => toCommentRecord("issue-comment", comment)),
     ...reviews
       .filter((review) => isCodexAuthored(review, authorRegex))
-      .filter((review) => (review.body || "").trim().length > 0)
+      .filter((review) => isActionableReviewBody(review.body))
       .map((review) => toCommentRecord("pull-review", review)),
     ...reviewComments
       .filter((comment) => isCodexAuthored(comment, authorRegex))
       .map((comment) => toCommentRecord("review-comment", comment)),
-  ];
+  ].filter((comment) => isFreshComment(comment, headSha, approvalSince));
 
   return {
     repo,
