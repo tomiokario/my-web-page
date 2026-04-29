@@ -17,7 +17,7 @@
 - 親オーケストレータは implementation agent 起動後、仕様・受け入れ条件・review 結果・一次情報 handoff の保持に徹し、実装詳細は必要時に最小 handoff で受け取ります
 - 人間向けコメントでは、内部 role 名や進行用語をそのまま出さず、変更内容・確認結果・残課題を自然文で共有します
 - 人間向け文書は単体で読めること、未定義の独自用語を先に出さないこと、読者に合う詳細度にすること、図表はライトモードとダークモードの両方で読める落ち着いた見た目にすることを基本にします
-- 合意済み Issue を「対応してほしい」と依頼されたときは、原則として question -> implementation -> fresh review -> intent review の流れを一通り回します。question-agent は不足仕様だけでなく、変更タイプ、validation profile、reference extraction、acceptance criteria を先に整理します。issue 草案や質問フェーズは question-agent で詰め、fresh review の対象にはしません。一般制約や上位指示で一部の役割実行ができない場合だけ、開始前に衝突内容と不足している許可を人間へ明示します
+- 合意済み Issue を「対応してほしい」と依頼されたときは、原則として question -> implementation -> fresh review -> intent review の流れを一通り回します。question-agent は不足仕様だけでなく、変更タイプ、validation profile、reference extraction、acceptance criteria を先に整理します。issue 草案や質問フェーズは question-agent で詰め、fresh review の対象にはしません。fresh review と intent review が `OK` になった後、push 反応型の Codex Review が有効な PR では PR 上の最終チェックとして監視します。一般制約や上位指示で一部の役割実行ができない場合だけ、開始前に衝突内容と不足している許可を人間へ明示します
 
 役割ごとの入出力契約:
 
@@ -25,7 +25,7 @@
 - `implementation-agent`: 合意済み仕様、対象ファイル、完了条件、validation profile を受け取り、差分、検証結果、profile に対応する evidence handoff を返す
 - `fresh-review-agent`: 合意済み Issue の本文、関連コメント、現在の実装差分、validation profile、evidence handoff を受け取り、二次情報ベースの findings を返す
 - `intent-review-agent`: fresh review が `OK` になった後に、親オーケストレータが保持する `handoff_id`、一次情報メモ、参照元つき引用または決定ログ、現在差分、該当する validation profile と evidence を受け取り、いずれかが欠ける場合は `OK` を返さず差し戻す
-- 完了報告では、fresh review と intent review を実施したかを必ず示し、未実施なら理由とブロッカーを添える
+- 完了報告では、fresh review と intent review を実施したかを必ず示し、PR 上の Codex Review を最終チェックとして実施した場合はその結果も添える。未実施の確認がある場合は理由とブロッカーを添える
 
 validation profile の例:
 

@@ -70,9 +70,12 @@ src/
 1. `main` を最新化するときは原則 `git pull --rebase` を使う
 2. `main` から作業ブランチを作成し、`main` へ直接コミットしない
 3. 機能実装とテスト、必要なドキュメント更新をまとめて行う
-4. push 前に `git status` を確認して意図しない差分がないことを確かめる
-5. 作業ブランチを push して、日本語のプルリクエストを作成する
-6. レビュー後に `main` へマージする
+4. Issue 対応や運用変更では、push / PR 更新の前に fresh review と intent review を通す
+5. push 前に `git status` を確認して意図しない差分がないことを確かめる
+6. 作業ブランチを push して、日本語のプルリクエストを作成する
+7. PR 上の最終チェックを終えてから `main` へマージする
+
+push 反応型の Codex Review が有効な Pull Request では、fresh review と intent review の後に [Codex Review 最終チェック](./codex-review-final-check.md) を実施します。問題コメントが届いた場合は妥当性を判断し、妥当な指摘には `+1` reaction を付けて修正・検証・fresh review・intent review・再 push を行います。妥当でない指摘には `-1` reaction を付け、人間へ相談します。
 
 複数の Issue を同時に扱う場合は、[並列 Issue 対応ワークフロー](./parallel-issue-workflow.md) に従い、Issue ごとに worktree、作業ブランチ、Codex スレッドを分けます。
 

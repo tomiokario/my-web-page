@@ -35,8 +35,10 @@ repo に `docs/technical/parallel-issue-workflow.md` がある場合は、それ
 6. 並列グループと単独実行 Issue を決める
 7. 各 Issue に `codex/issueNN-short-topic` ブランチと `tmp/worktrees/issueNN` worktree を作る
 8. 各作業スレッドへ、対象 Issue、受け入れ条件、validation profile、worktree、ブランチ、触ってよい範囲、検証コマンド、merge 順序を渡す
-9. Pull Request 作成後は、チェック状態、レビュー状態、rebase 要否、merge 順序を一覧で管理する
-10. 人間から merge 完了の連絡を受けたら、進行管理スレッドが worktree 削除、ブランチ削除、完了状態の集約を行う
+9. Pull Request 作成前に各 Issue の fresh review と intent review が `OK` であることを確認する
+10. Pull Request 作成後は、チェック状態、レビュー状態、rebase 要否、merge 順序を一覧で管理する
+11. push 反応型の Codex Review が有効な Pull Request では、PR 上の最終チェックとして `codex-review-watch` skill で監視する。妥当な指摘は `+1` reaction を付けて修正し、fresh review と intent review を再実施してから再 push する。妥当でない指摘は `-1` reaction を付けて人間へ相談する
+12. 人間から merge 完了の連絡を受けたら、進行管理スレッドが worktree 削除、ブランチ削除、完了状態の集約を行う
 
 ## worktree 作成
 

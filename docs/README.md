@@ -105,6 +105,7 @@ npm test
 - デプロイ運用の詳細は [デプロイメント手順](./admin/deployment-guide.md) を参照してください
 - ユーザーがローカル確認を希望する変更では、push より前に開発サーバーでの確認を優先します
 - PR マージ後のローカル同期とブランチ削除も標準運用に含めます
+- push / PR 更新の前に fresh review と intent review を通し、PR 上の Codex Review はその後の最終チェックとして監視します
 - 開発・レビュー運用の詳細は [技術者向けドキュメント](./technical/README.md) を参照してください
 
 ## サポート
