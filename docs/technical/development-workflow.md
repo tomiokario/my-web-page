@@ -281,7 +281,7 @@ npm test -- --coverage
 
 1. fresh review と intent review が `OK` になった差分を作業ブランチへ push し、GitHub 上で日本語の PR を作成します。
 2. push 反応型の Codex Review が有効な PR では、PR 上の最終チェックとして Codex Review を監視します。妥当な指摘には `+1` reaction を付けて修正し、fresh review と intent review を再実施してから再 push します。妥当でない指摘には `-1` reaction を付けて人間へ相談します。
-3. PR 上では必要に応じて補足コメントを新規投稿します。Issue を閉じたい場合は PR 本文に `close: #番号` を記載します。
+3. Codex Review コメントへの対応で修正した場合は該当 review thread へ返信します。それとは別に見つけた独自の追加修正や補足は、新規 PR コメントとして投稿します。Issue を閉じたい場合は PR 本文に `close: #番号` を記載します。
 4. PR が `main` にマージされると、Vercel が本番用の新しいビルドを作成し、デプロイします。
 
 手動でデプロイする場合は、Vercelのダッシュボードから行うことができます。
