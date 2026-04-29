@@ -12,15 +12,43 @@
  * 4. ネットワークエラーなどのfetchエラーのハンドリング
  */
 
-import { loadMarkdown } from "../utils/markdownLoader";
+import { buildMarkdownPath, loadMarkdown } from "../utils/markdownLoader";
 
 // fetchのモック
 global.fetch = jest.fn();
 
 describe("markdownLoader", () => {
+  let consoleLogSpy: jest.SpyInstance;
+  let consoleErrorSpy: jest.SpyInstance;
+
   beforeEach(() => {
     // モックをリセット
     fetch.mockClear();
+    consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    expect(consoleLogSpy).not.toHaveBeenCalled();
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+    jest.restoreAllMocks();
+  });
+
+  test("builds markdown path with default language (ja)", () => {
+    expect(buildMarkdownPath("/markdown/test.md")).toBe("/markdown/ja/test.md");
+  });
+
+  test("builds markdown path with specified language", () => {
+    expect(buildMarkdownPath("/markdown/test.md", "en")).toBe("/markdown/en/test.md");
+  });
+
+  test("builds markdown path for subdirectories", () => {
+    expect(buildMarkdownPath("/markdown/works/test.md", "ja")).toBe(
+      "/markdown/ja/works/test.md"
+    );
+    expect(buildMarkdownPath("/markdown/works/2025/test.md", "en")).toBe(
+      "/markdown/en/works/2025/test.md"
+    );
   });
 
   test("loads markdown file with default language (ja)", async () => {
