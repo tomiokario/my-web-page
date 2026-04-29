@@ -67,15 +67,25 @@ Options:
 }
 
 function gh(args) {
+  const env = { ...process.env };
+  delete env.CODEX_SANDBOX_NETWORK_DISABLED;
+
   return execFileSync("gh", args, {
     encoding: "utf8",
+    env,
     stdio: ["ignore", "pipe", "pipe"],
   }).trim();
 }
 
 function ghJson(args) {
-  const output = gh(["api", "-H", "Accept: application/vnd.github+json", ...args]);
-  return output ? JSON.parse(output) : null;
+  const output = gh(["api", "--paginate", "--slurp", "-H", "Accept: application/vnd.github+json", ...args]);
+  if (!output) return null;
+
+  const parsed = JSON.parse(output);
+  if (Array.isArray(parsed) && parsed.every((item) => Array.isArray(item))) {
+    return parsed.flat();
+  }
+  return parsed;
 }
 
 function getRepo() {
