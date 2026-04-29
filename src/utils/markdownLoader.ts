@@ -25,12 +25,12 @@ const getErrorMessage = (error: unknown): string => {
   return String(error);
 };
 
-const logMarkdownLoadError = (error: unknown): void => {
+const logMarkdownLoadError = (error: unknown, path: string): void => {
   if (!shouldLogMarkdownError()) {
     return;
   }
 
-  console.error('Error loading markdown:', getErrorMessage(error));
+  console.error('Error loading markdown:', `${path}: ${getErrorMessage(error)}`);
 };
 
 // Markdownファイルを読み込む関数
@@ -44,11 +44,11 @@ export const loadMarkdown = async (filePath: string, language: string = 'ja'): P
       const statusInfo = response.status ? ` (status: ${response.status})` : '';
       throw new Error(`Failed to load markdown file: ${langPath}${statusInfo}`);
     }
-    
+
     const text: string = await response.text();
     return text;
   } catch (error: unknown) {
-    logMarkdownLoadError(error);
+    logMarkdownLoadError(error, langPath);
     return ERROR_MARKDOWN_CONTENT;
   }
 };

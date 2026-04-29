@@ -128,6 +128,25 @@ describe("markdownLoader", () => {
     expect(content).toBe("# Error loading content");
   });
 
+  test("logs the generated path with fetch errors outside the test environment", async () => {
+    const originalNodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "production";
+    fetch.mockImplementation(() =>
+      Promise.reject(new Error("Network error"))
+    );
+
+    const content = await loadMarkdown("/markdown/test.md", "en");
+
+    expect(content).toBe("# Error loading content");
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error loading markdown:",
+      "/markdown/en/test.md: Network error"
+    );
+
+    process.env.NODE_ENV = originalNodeEnv;
+    consoleErrorSpy.mockClear();
+  });
+
   // サブディレクトリを含むパスのテスト
   test("loads markdown file from subdirectory with language", async () => {
     // テスト内容: サブディレクトリを含むパスで言語固有のMarkdownファイルを読み込むことを確認
