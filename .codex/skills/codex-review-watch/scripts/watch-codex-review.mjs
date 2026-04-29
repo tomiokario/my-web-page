@@ -146,11 +146,6 @@ function findLatestPushTime(events, branchName, headSha) {
   return parseTime(matchingPush?.created_at);
 }
 
-function findHeadCommitTime(commits, headSha) {
-  const headCommit = commits.find((commit) => commit.sha === headSha);
-  return parseTime(headCommit?.commit?.committer?.date || headCommit?.commit?.author?.date);
-}
-
 function toCommentRecord(kind, comment) {
   return {
     key: `${kind}:${comment.id}`,
@@ -198,8 +193,7 @@ function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
   const headSha = pull?.head?.sha || latestCommit?.sha;
   const branchName = pull?.head?.ref;
   const latestPushAt = branchName && headSha ? findLatestPushTime(events, branchName, headSha) : null;
-  const headCommitAt = headSha ? findHeadCommitTime(commits, headSha) : null;
-  const approvalSince = latestPushAt || headCommitAt || watchStartedAt;
+  const approvalSince = latestPushAt || watchStartedAt;
 
   const reactionSummary = summarizeReactions(reactions, authorRegex, approvalSince);
   const codexComments = [

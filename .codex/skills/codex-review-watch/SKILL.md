@@ -66,5 +66,5 @@ Codex Review コメントへの対応で修正した場合は、該当する rev
 ## 注意
 
 - `.env` や token file は読まない。GitHub 認証は `gh` の既存ログインを使う
-- approval 判定は PR の最新 push 以降の `+1` reaction だけを使い、古い push に対する thumbs-up を新しい push の完了扱いにしない
+- approval 判定は PR の最新 push 以降の `+1` reaction だけを使い、古い push に対する thumbs-up を新しい push の完了扱いにしない。GitHub events から対象 push を特定できない場合は監視開始以降の `+1` reaction だけを完了扱いにする
 - 未対応の Codex Review コメントは watcher rerun 後も exit code `2` で再表示し、ローカル state で既読化しない
