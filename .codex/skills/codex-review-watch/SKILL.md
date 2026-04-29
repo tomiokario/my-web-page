@@ -32,7 +32,6 @@ node .codex/skills/codex-review-watch/scripts/watch-codex-review.mjs --pr <PR番
 - `--interval <seconds>`: polling 間隔。既定は 30 秒
 - `--timeout <seconds>`: timeout。既定は 1800 秒
 - `--author-pattern <regex>`: Codex Review の投稿者判定。既定は `^chatgpt-codex-connector\[bot\](\s|$)`
-- `--state <path>`: 既読 comment ID を保存する state file。既定は `tmp/codex-review-watch/pr-<number>.json`
 - `--once`: 1 回だけ確認して終了する
 - `--json`: 結果を JSON で出力する
 
@@ -67,5 +66,5 @@ Codex Review コメントへの対応で修正した場合は、該当する rev
 ## 注意
 
 - `.env` や token file は読まない。GitHub 認証は `gh` の既存ログインを使う
-- state file は `tmp/codex-review-watch/` に置き、repo へコミットしない
 - approval 判定は PR の最新 push 以降の `+1` reaction だけを使い、古い push に対する thumbs-up を新しい push の完了扱いにしない
+- 未対応の Codex Review コメントは watcher rerun 後も exit code `2` で再表示し、ローカル state で既読化しない

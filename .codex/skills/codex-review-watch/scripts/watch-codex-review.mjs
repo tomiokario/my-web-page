@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 
 const DEFAULT_AUTHOR_PATTERN = "^chatgpt-codex-connector\\[bot\\](\\s|$)";
@@ -31,7 +29,6 @@ function parseArgs(argv) {
     else if (arg === "--interval") options.intervalSeconds = Number(next());
     else if (arg === "--timeout") options.timeoutSeconds = Number(next());
     else if (arg === "--author-pattern") options.authorPattern = next();
-    else if (arg === "--state") options.statePath = next();
     else if (arg === "--once") options.once = true;
     else if (arg === "--json") options.json = true;
     else if (arg === "--help" || arg === "-h") options.help = true;
@@ -60,7 +57,6 @@ Options:
   --interval <seconds>       Poll interval. Default: 30.
   --timeout <seconds>        Timeout. Default: 1800.
   --author-pattern <regex>   Reviewer author matcher. Default: ${DEFAULT_AUTHOR_PATTERN}.
-  --state <path>             State file for seen comment IDs.
   --once                     Check once and exit.
   --json                     Print JSON output.
 `);
@@ -110,28 +106,6 @@ function getRepo() {
 
 function getCurrentPrNumber() {
   return Number(gh(["pr", "view", "--json", "number", "-q", ".number"]));
-}
-
-function readState(path) {
-  if (!path || !existsSync(path)) {
-    return { seenCommentKeys: [] };
-  }
-
-  try {
-    const parsed = JSON.parse(readFileSync(path, "utf8"));
-    return {
-      seenCommentKeys: Array.isArray(parsed.seenCommentKeys) ? parsed.seenCommentKeys : [],
-    };
-  } catch {
-    return { seenCommentKeys: [] };
-  }
-}
-
-function writeState(path, state) {
-  if (!path) return;
-  mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(`${path}.tmp`, `${JSON.stringify(state, null, 2)}\n`);
-  renameSync(`${path}.tmp`, path);
 }
 
 function normalizeAuthor(item) {
@@ -240,12 +214,9 @@ function fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt }) {
   };
 }
 
-function classifyResult(snapshot, state) {
-  const seen = new Set(state.seenCommentKeys);
-  const newComments = snapshot.codexComments.filter((comment) => !seen.has(comment.key));
-
-  if (newComments.length > 0) {
-    return { status: "comments", exitCode: 2, newComments };
+function classifyResult(snapshot) {
+  if (snapshot.codexComments.length > 0) {
+    return { status: "comments", exitCode: 2, newComments: snapshot.codexComments };
   }
 
   if (snapshot.reactionSummary.thumbsUp) {
@@ -257,13 +228,6 @@ function classifyResult(snapshot, state) {
   }
 
   return { status: "pending", exitCode: null, newComments: [] };
-}
-
-function markSeen(state, comments) {
-  return {
-    ...state,
-    seenCommentKeys: [...new Set([...state.seenCommentKeys, ...comments.map((comment) => comment.key)])],
-  };
 }
 
 function printResult(result, snapshot, json) {
@@ -312,24 +276,19 @@ async function main() {
 
   const repo = options.repo || getRepo();
   const prNumber = options.prNumber || getCurrentPrNumber();
-  const statePath = options.statePath || `tmp/codex-review-watch/pr-${prNumber}.json`;
   const authorRegex = new RegExp(options.authorPattern, "i");
-  let state = readState(statePath);
   const startedAt = Date.now();
 
   while (true) {
     const snapshot = fetchReviewState({ repo, prNumber, authorRegex, watchStartedAt: startedAt });
-    const result = classifyResult(snapshot, state);
+    const result = classifyResult(snapshot);
 
     if (result.status === "comments") {
-      state = markSeen(state, result.newComments);
-      writeState(statePath, state);
       printResult(result, snapshot, options.json);
       return result.exitCode;
     }
 
     if (result.status === "approved") {
-      writeState(statePath, state);
       printResult(result, snapshot, options.json);
       return result.exitCode;
     }
