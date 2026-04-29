@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import { setTimeout as sleep } from "node:timers/promises";
 
 const DEFAULT_AUTHOR_PATTERN = "^chatgpt-codex-connector\\[bot\\](\\s|$)";
+const GH_COMMAND_TIMEOUT_MS = 60_000;
 
 function parseArgs(argv) {
   const options = {
@@ -63,14 +64,11 @@ Options:
 }
 
 function gh(args) {
-  const env = { ...process.env };
-  delete env.CODEX_SANDBOX_NETWORK_DISABLED;
-
   return execFileSync("gh", args, {
     encoding: "utf8",
-    env,
     maxBuffer: 16 * 1024 * 1024,
     stdio: ["ignore", "pipe", "pipe"],
+    timeout: GH_COMMAND_TIMEOUT_MS,
   }).trim();
 }
 

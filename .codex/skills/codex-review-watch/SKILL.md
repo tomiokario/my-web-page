@@ -66,5 +66,7 @@ Codex Review コメントへの対応で修正した場合は、該当する rev
 ## 注意
 
 - `.env` や token file は読まない。GitHub 認証は `gh` の既存ログインを使う
+- 1 回の `gh` 呼び出しは 60 秒で打ち切り、監視ループ全体が API / DNS / ネットワーク詰まりで戻らなくなる状態を避ける
+- sandbox や実行環境が設定したネットワーク制御の環境変数はそのまま継承し、取得できない場合は GitHub API 取得失敗として exit code `4` で止める
 - approval 判定は PR の最新 push 以降の `+1` reaction だけを使い、古い push に対する thumbs-up を新しい push の完了扱いにしない。GitHub events から対象 push を特定できない場合は監視開始以降の `+1` reaction だけを完了扱いにする
 - 未対応の Codex Review コメントは watcher rerun 後も exit code `2` で再表示し、ローカル state で既読化しない
