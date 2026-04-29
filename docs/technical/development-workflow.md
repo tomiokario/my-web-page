@@ -86,6 +86,8 @@ npm start
 
 8. タイトルと本文を日本語でプルリクエストを作成し、レビューを依頼します。
 
+push 反応型の Codex Review が有効な Pull Request では、push 後に `.codex/skills/codex-review-watch/scripts/watch-codex-review.mjs` で PR の review 状態を監視します。問題コメントが届いた場合は、そのコメント URL と本文を入力に修正、検証、必要なレビュー、返信案作成、再 push を行い、`+1` reaction が確認できるまで繰り返します。
+
 ユーザーがローカルでの事前確認を希望した場合は、この手順の push / PR 作成より前に `npm start` で開発サーバーを起動し、確認が完了するまで push を保留します。
 
 ### 2. バグ修正

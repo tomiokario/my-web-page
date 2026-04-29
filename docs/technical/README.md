@@ -74,6 +74,8 @@ src/
 5. 作業ブランチを push して、日本語のプルリクエストを作成する
 6. レビュー後に `main` へマージする
 
+push 反応型の Codex Review が有効な Pull Request では、`.codex/skills/codex-review-watch/SKILL.md` を使って review 状態を監視します。問題コメントが届いた場合は修正と再 push を行い、`+1` reaction が確認できた時点で PR 作成と review 完了を報告します。
+
 複数の Issue を同時に扱う場合は、[並列 Issue 対応ワークフロー](./parallel-issue-workflow.md) に従い、Issue ごとに worktree、作業ブランチ、Codex スレッドを分けます。
 
 ## よく使うコマンド
