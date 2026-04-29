@@ -89,6 +89,18 @@ function ghJson(args) {
   if (Array.isArray(parsed) && parsed.length === 1 && !Array.isArray(parsed[0])) {
     return parsed[0];
   }
+  if (Array.isArray(parsed) && parsed.every((item) => item && typeof item === "object" && !Array.isArray(item))) {
+    return parsed.reduce((merged, page) => {
+      for (const [key, value] of Object.entries(page)) {
+        if (Array.isArray(value)) {
+          merged[key] = [...(Array.isArray(merged[key]) ? merged[key] : []), ...value];
+        } else if (merged[key] === undefined) {
+          merged[key] = value;
+        }
+      }
+      return merged;
+    }, {});
+  }
   return parsed;
 }
 
