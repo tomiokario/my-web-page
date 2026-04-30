@@ -52,6 +52,8 @@
 
 通常運用の本線は `researchmap export JSONL -> publication_master.json -> publications.json` で、公開側の tracked data 更新はここで完結します。
 
+researchmap 登録区分は、査読付き学術誌と査読あり国際会議プロシーディングを `published_papers`、それ以外で原稿がある業績を `misc`、原稿がなく発表のみの業績を `presentations` として扱います。同一内容は 1 record に寄せ、詳細な判断基準は[出版物データ管理](docs/admin/publications-management.md)にまとめています。
+
 `tools/researchmap-private` は、必要なときだけ `publication_master.json` から researchmap へ安全に戻すための補助ツールです。`tmp/researchmap/**` や review / quarantine / archive の生成物は local-only で、公開リポジトリには含めません。
 
 - `publication_master.json` は canonical schema の `fields` を正本とし、researchmap から取り込んだ結果と `sync.researchmap` の同期メタデータを保持します

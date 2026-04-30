@@ -87,6 +87,8 @@ npm test
 
 出版物データでは、正規化タイトル一致の重複を許容しません。日常運用は `researchmap export JSONL -> dry-run -> import -> publications.json 再生成` を主導線にし、`publication_master.json` を researchmap 取り込み結果を保持する正本、`publications.json` をそこから再生成される生成物として扱います。researchmap import でもタイトル重複・review・invalid が 1 件でも見つかれば書き込みを停止します。
 
+researchmap 登録区分の基準は、査読付き学術誌と査読あり国際会議プロシーディングを `published_papers`、それ以外で原稿がある業績を `misc`、原稿がなく発表のみの業績を `presentations` とする運用です。Web 表示と researchmap への戻し方を含む詳細は [出版物データ管理](./admin/publications-management.md) を参照してください。
+
 ## クイックアクセス
 
 ### よく使う操作

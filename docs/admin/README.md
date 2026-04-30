@@ -21,6 +21,7 @@
 2. **出版物リストを更新したい場合**
    - [出版物データ管理](./publications-management.md)を参照
    - researchmap export JSONL の `dry-run` 確認と import を使う
+   - researchmap 登録区分、Web 表示、researchmap へ戻す補足情報の扱いも同じ文書で確認する
 
 3. **新しい言語を追加したい場合**
    - [多言語コンテンツ管理](./multilingual-content-management.md)を参照
