@@ -12,15 +12,43 @@
  * 4. ネットワークエラーなどのfetchエラーのハンドリング
  */
 
-import { loadMarkdown } from "../utils/markdownLoader";
+import { buildMarkdownPath, loadMarkdown } from "../utils/markdownLoader";
 
 // fetchのモック
 global.fetch = jest.fn();
 
 describe("markdownLoader", () => {
+  let consoleLogSpy: jest.SpyInstance;
+  let consoleErrorSpy: jest.SpyInstance;
+
   beforeEach(() => {
     // モックをリセット
     fetch.mockClear();
+    consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    expect(consoleLogSpy).not.toHaveBeenCalled();
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+    jest.restoreAllMocks();
+  });
+
+  test("builds markdown path with default language (ja)", () => {
+    expect(buildMarkdownPath("/markdown/test.md")).toBe("/markdown/ja/test.md");
+  });
+
+  test("builds markdown path with specified language", () => {
+    expect(buildMarkdownPath("/markdown/test.md", "en")).toBe("/markdown/en/test.md");
+  });
+
+  test("builds markdown path for subdirectories", () => {
+    expect(buildMarkdownPath("/markdown/works/test.md", "ja")).toBe(
+      "/markdown/ja/works/test.md"
+    );
+    expect(buildMarkdownPath("/markdown/works/2025/test.md", "en")).toBe(
+      "/markdown/en/works/2025/test.md"
+    );
   });
 
   test("loads markdown file with default language (ja)", async () => {
@@ -98,6 +126,47 @@ describe("markdownLoader", () => {
     
     // エラーメッセージが返されるか確認
     expect(content).toBe("# Error loading content");
+  });
+
+  test("logs the generated path with fetch errors outside the test environment", async () => {
+    const originalNodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "production";
+    fetch.mockImplementation(() =>
+      Promise.reject(new Error("Network error"))
+    );
+
+    const content = await loadMarkdown("/markdown/test.md", "en");
+
+    expect(content).toBe("# Error loading content");
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error loading markdown:",
+      "/markdown/en/test.md: Network error"
+    );
+
+    process.env.NODE_ENV = originalNodeEnv;
+    consoleErrorSpy.mockClear();
+  });
+
+  test("logs status 0 diagnostics outside the test environment", async () => {
+    const originalNodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "production";
+    fetch.mockImplementation(() =>
+      Promise.resolve({
+        ok: false,
+        status: 0
+      })
+    );
+
+    const content = await loadMarkdown("/markdown/test.md", "en");
+
+    expect(content).toBe("# Error loading content");
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error loading markdown:",
+      "/markdown/en/test.md: Failed to load markdown file: /markdown/en/test.md (status: 0)"
+    );
+
+    process.env.NODE_ENV = originalNodeEnv;
+    consoleErrorSpy.mockClear();
   });
 
   // サブディレクトリを含むパスのテスト
