@@ -17,6 +17,7 @@ import '@testing-library/jest-dom';
 import PublicationItem from '../components/publications/PublicationItem';
 import { renderWithProviders } from '../test-utils/test-utils';
 import { createPublication } from '../test-utils/factories/publicationFactory'; // ファクトリ関数をインポート
+import { buildPublicationItemViewModel } from '../utils/publicationItemViewModel';
 
 // ファクトリ関数を使用してテストデータを生成
 const mockPublication = createPublication({
@@ -44,6 +45,79 @@ const mockPublicationWithArrays = createPublication({
   id: 2,
   authorship: ["corresponding", "lead"], // 配列で上書き
 }, 1); // index 1
+
+describe('buildPublicationItemViewModel', () => {
+  test('builds English display values for PublicationItem', () => {
+    const viewModel = buildPublicationItemViewModel(mockPublicationWithArrays, 'en');
+
+    expect(viewModel).toMatchObject({
+      title: mockPublication.name,
+      tags: [
+        '2021',
+        'Corresponding Author',
+        'Lead Author',
+        'Published Papers / International Conference Proceedings',
+        'Peer Reviewed',
+      ],
+      journal: 'ISOM21',
+      dateLocation: {
+        dateLabel: 'Date: ',
+        dateValue: '2021-10-03 → 2021-10-06',
+        locationLabel: 'Location: ',
+        location: 'online',
+      },
+      doi: {
+        href: 'https://doi.org/10.1234/example',
+        label: '10.1234/example',
+      },
+      webLink: {
+        href: 'https://example.com',
+        label: 'https://example.com',
+      },
+      others: 'Best Paper Award',
+    });
+  });
+
+  test('builds Japanese display values through the same view model', () => {
+    const viewModel = buildPublicationItemViewModel(mockPublicationWithArrays, 'ja');
+
+    expect(viewModel.title).toBe(mockPublication.japanese);
+    expect(viewModel.tags).toEqual([
+      '2021',
+      '責任著者',
+      '筆頭著者',
+      '研究論文 / 国際会議プロシーディングス',
+      '査読あり',
+    ]);
+    expect(viewModel.dateLocation).toMatchObject({
+      dateLabel: '日付: ',
+      dateValue: '2021-10-03 → 2021-10-06',
+      locationLabel: '場所: ',
+      location: 'online',
+    });
+  });
+
+  test('normalizes DOI URLs and trims abstract text without changing link labels', () => {
+    const publication = createPublication({
+      ...mockPublication,
+      id: 8,
+      abstract: '  Abstract text  ',
+      doi: 'https://dx.doi.org/10.9999/example',
+    }, 7);
+
+    const viewModel = buildPublicationItemViewModel(publication, 'en');
+
+    expect(viewModel.doi).toEqual({
+      href: 'https://doi.org/10.9999/example',
+      label: '10.9999/example',
+    });
+    expect(viewModel.webLink).toEqual({
+      href: 'https://example.com',
+      label: 'https://example.com',
+    });
+    expect(viewModel.abstractText).toBe('Abstract text');
+  });
+});
 
 describe('PublicationItem Component', () => {
   // 基本的なレンダリングテスト
