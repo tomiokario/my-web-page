@@ -64,7 +64,9 @@ my-web-page/
 │   │   └── factories/, mocks/
 │   ├── types.ts              # 共通型定義（Publication など）
 │   └── utils/
-│       └── markdownLoader.ts # Markdown ローダ
+│       ├── markdownLoader.ts # Markdown ローダ
+│       ├── researchmapImport.ts # researchmap import の orchestration と public API
+│       └── researchmapImport*.ts # JSONL/mapper/matching/merge/report など責務別の import 処理
 ├── jest.config.js
 ├── jest.setup.ts
 ├── package.json
@@ -130,6 +132,8 @@ flowchart LR
     K[researchmap Export JSONL<br>rm_*.jsonl] --> L[importPublicationMasterFromResearchmap.ts]
     L --> A
 ```
+
+researchmap import の実装は `src/utils/researchmapImport.ts` を入口にし、JSONL と archive/history の扱い、canonical field への変換、strict match と review 判定、merge、report 生成を `src/utils/researchmapImport*.ts` に分けています。CLI と外部呼び出しは引き続き `importPublicationMasterFromResearchmap` を使います。
 
 ## コンポーネント階層
 

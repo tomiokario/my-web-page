@@ -3,6 +3,8 @@ import os from "os";
 import path from "path";
 
 import { importPublicationMasterFromResearchmap } from "../utils/researchmapImport";
+import { splitJsonlContent } from "../utils/researchmapImportFile";
+import { buildCanonicalFieldsFromResearchmapPayload } from "../utils/researchmapImportMapper";
 
 describe("researchmapImport", () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "researchmap-import-"));
@@ -1711,6 +1713,45 @@ describe("researchmapImport", () => {
     expect(report.summary.review).toBe(1);
     expect(report.reviewItems[0].reason).toContain("review");
     expect(fs.existsSync(webJsonFilePath)).toBe(false);
+  });
+
+  test("JSONL 行分割は空行を除外し元ファイルの行番号を保持する", () => {
+    const lines = splitJsonlContent('\n{"a":1}\r\n\n{"b":2}\n');
+
+    expect(lines).toEqual([
+      { line: '{"a":1}', lineNumber: 2 },
+      { line: '{"b":2}', lineNumber: 4 },
+    ]);
+  });
+
+  test("canonical mapper は typed field を優先して researchmap payload を変換する", () => {
+    const fields = buildCanonicalFieldsFromResearchmapPayload("presentations", {
+      presentation_title: { ja: "発表タイトル" },
+      paper_title: { ja: "legacy title" },
+      presenters: { ja: [{ name: "発表者" }], en: [] },
+      authors: { ja: [{ name: "legacy author" }], en: [] },
+      event: { ja: "研究会" },
+      publication_name: { ja: "legacy venue" },
+      presentation_type: "invited_oral_presentation",
+      subtype: "poster_presentation",
+    });
+
+    expect(fields).toMatchObject({
+      type: "presentations",
+      subtype: "invited_oral_presentation",
+      title: { ja: "発表タイトル" },
+      contributors: [
+        {
+          role: "presenter",
+          name: { ja: "発表者" },
+        },
+      ],
+      venue: {
+        kind: "event",
+        name: { ja: "研究会" },
+      },
+      invited: true,
+    });
   });
 
   function writeJsonl(records: unknown[]) {
